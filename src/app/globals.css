@@ -1,0 +1,50 @@
+@import "tailwindcss";
+
+/*
+ * Paleta "Papudo": mar, arena, tierra, cerro. Fuente única de color del sitio;
+ * no hardcodear colores en componentes (ver docs/DESIGN.md).
+ */
+:root {
+  --background: #fbf7f0; /* arena */
+  --surface: #ffffff;
+  --foreground: #12303a; /* mar profundo */
+  --muted: #5d747b;
+  --border: #e6dccb;
+  --sea: #0e6e86;
+  --sea-soft: #d9eef2;
+  --sea-foreground: #ffffff;
+  --earth: #c9743b; /* tierra / atardecer */
+  --earth-soft: #f7e6d8;
+  --hill: #587a4d; /* cerro / vegetación */
+  --hill-soft: #e4eedd;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-sea: var(--sea);
+  --color-sea-soft: var(--sea-soft);
+  --color-sea-foreground: var(--sea-foreground);
+  --color-earth: var(--earth);
+  --color-earth-soft: var(--earth-soft);
+  --color-hill: var(--hill);
+  --color-hill-soft: var(--hill-soft);
+  --font-sans:
+    ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  --font-display: ui-serif, Georgia, "Times New Roman", serif;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}
+
+:focus-visible {
+  outline: 3px solid var(--sea);
+  outline-offset: 2px;
+}
