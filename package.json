@@ -12,7 +12,8 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "test:db": "bash tests/db/run.sh"
   },
   "packageManager": "pnpm@10.28.0",
   "dependencies": {
