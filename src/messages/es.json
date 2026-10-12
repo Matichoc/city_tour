@@ -1,0 +1,56 @@
+{
+  "brand": {
+    "name": "Papudo en tu mano",
+    "tagline": "Playas, patrimonio y sabores de Papudo, en tu bolsillo."
+  },
+  "nav": {
+    "home": "Inicio",
+    "explore": "Explorar",
+    "routes": "Rutas",
+    "trip": "Mi recorrido",
+    "info": "Información",
+    "language": "Idioma",
+    "main": "Navegación principal"
+  },
+  "home": {
+    "title": "Descubre Papudo a tu manera",
+    "subtitle": "Playas, patrimonio, sabores y rincones con historia. Sin crear cuenta.",
+    "search": "Buscar lugares",
+    "whatToDo": "¿Qué quieres hacer?",
+    "featured": "Para empezar",
+    "seeAll": "Ver todo",
+    "buildTrip": "Armar mi recorrido",
+    "demoNotice": "Versión de prueba: los datos son de demostración y están pendientes de verificación."
+  },
+  "explore": {
+    "title": "Explorar Papudo",
+    "all": "Todo",
+    "results": "{count, plural, =0 {Sin resultados} one {# lugar} other {# lugares}}",
+    "empty": "No encontramos lugares con ese filtro.",
+    "clear": "Quitar filtro"
+  },
+  "place": {
+    "back": "Volver a explorar",
+    "pending": "Pendiente de verificación",
+    "verified": "Verificado",
+    "outdated": "Desactualizado",
+    "fictitious": "Ficha ficticia de ejemplo",
+    "source": "Fuente",
+    "navigate": "Cómo llegar",
+    "navigateSoon": "Disponible cuando las coordenadas estén verificadas.",
+    "hours": "Horarios",
+    "hoursPending": "Por confirmar",
+    "lastVerified": "Última verificación",
+    "never": "Aún sin verificar"
+  },
+  "soon": {
+    "title": "Próximamente",
+    "body": "Esta sección se construye en una próxima fase.",
+    "routes": "Rutas",
+    "trip": "Mi recorrido",
+    "info": "Información"
+  },
+  "footer": {
+    "disclaimer": "Información en revisión junto a la Municipalidad de Papudo."
+  }
+}

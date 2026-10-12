@@ -1,0 +1,56 @@
+{
+  "brand": {
+    "name": "Papudo en tu mano",
+    "tagline": "Papudo's beaches, heritage and flavours, in your pocket."
+  },
+  "nav": {
+    "home": "Home",
+    "explore": "Explore",
+    "routes": "Routes",
+    "trip": "My trip",
+    "info": "Info",
+    "language": "Language",
+    "main": "Main navigation"
+  },
+  "home": {
+    "title": "Discover Papudo your way",
+    "subtitle": "Beaches, heritage, flavours and corners with history. No account needed.",
+    "search": "Search places",
+    "whatToDo": "What do you want to do?",
+    "featured": "To get started",
+    "seeAll": "See all",
+    "buildTrip": "Build my trip",
+    "demoNotice": "Test version: data is for demonstration and pending verification."
+  },
+  "explore": {
+    "title": "Explore Papudo",
+    "all": "All",
+    "results": "{count, plural, =0 {No results} one {# place} other {# places}}",
+    "empty": "We found no places with that filter.",
+    "clear": "Clear filter"
+  },
+  "place": {
+    "back": "Back to explore",
+    "pending": "Pending verification",
+    "verified": "Verified",
+    "outdated": "Outdated",
+    "fictitious": "Fictitious sample listing",
+    "source": "Source",
+    "navigate": "Get directions",
+    "navigateSoon": "Available once coordinates are verified.",
+    "hours": "Opening hours",
+    "hoursPending": "To be confirmed",
+    "lastVerified": "Last verified",
+    "never": "Not verified yet"
+  },
+  "soon": {
+    "title": "Coming soon",
+    "body": "This section is built in an upcoming phase.",
+    "routes": "Routes",
+    "trip": "My trip",
+    "info": "Info"
+  },
+  "footer": {
+    "disclaimer": "Information under review with the Municipality of Papudo."
+  }
+}
