@@ -50,7 +50,8 @@ export const PAPUDO_CENTER = {
 
 /**
  * Contacto de la Municipalidad. El sitio web lo entregó el usuario; el resto
- * viene del repo de referencia y falta confirmarlo con la municipalidad.
+ * viene del repo de referencia (donde el sitio figuraba como
+ * municipalidadpapudo.cl) y falta confirmarlo con la municipalidad.
  */
 export const MUNICIPALITY = {
   name: "Municipalidad de Papudo",
@@ -59,5 +60,18 @@ export const MUNICIPALITY = {
     { kind: "facebook", value: "https://www.facebook.com/munipapudo/" },
     { kind: "instagram", value: "https://www.instagram.com/munipapudo/" },
     { kind: "phone", value: "+56332325100" },
+    { kind: "email", value: "contacto@municipalidadpapudo.cl" },
   ],
+} as const;
+
+/** Auspiciador permanente del sitio (como en directorio_turistico). */
+export const SPONSOR = {
+  slug: "matichoc",
+  name: "Matichoc",
+  logoPath: "/brand/matichoc-logo.webp",
+  websiteUrl: "https://www.matichoc.cl",
+  tagline: {
+    es: "Chocolate artesanal hecho en La Ligua",
+    en: "Artisanal chocolate made in La Ligua",
+  },
 } as const;

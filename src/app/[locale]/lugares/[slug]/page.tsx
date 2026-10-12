@@ -65,7 +65,20 @@ export default async function PlacePage({
         <header>
           <p className="text-field text-xs font-bold tracking-wide uppercase">
             {place.categoryName}
-            {place.localityName ? ` · ${place.localityName}` : ""}
+            {place.localitySlug ? (
+              <>
+                {" · "}
+                <Link
+                  href={{
+                    pathname: "/pueblos/[slug]",
+                    params: { slug: place.localitySlug },
+                  }}
+                  className="underline"
+                >
+                  {place.localityName}
+                </Link>
+              </>
+            ) : null}
           </p>
           <h1 className="font-display mt-1 text-3xl leading-tight font-extrabold">
             {place.name}

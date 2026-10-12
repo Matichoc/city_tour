@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { listPlaceSlugs, listRouteSlugs } from "@/lib/data";
+import { listLocalitySlugs, listPlaceSlugs, listRouteSlugs } from "@/lib/data";
 import { localizedUrl } from "@/lib/seo";
 import { routing } from "@/i18n/routing";
 
@@ -19,6 +19,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
       entries.push({
         url: localizedUrl(locale, {
           pathname: "/lugares/[slug]",
+          params: { slug },
+        }),
+      });
+    }
+    for (const slug of listLocalitySlugs()) {
+      entries.push({
+        url: localizedUrl(locale, {
+          pathname: "/pueblos/[slug]",
           params: { slug },
         }),
       });

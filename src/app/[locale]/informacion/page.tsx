@@ -1,8 +1,9 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { Metadata } from "next";
+import { Link } from "@/i18n/navigation";
 import { resolveLocale } from "@/i18n/utils";
 import { listLocalities } from "@/lib/data";
-import { MUNICIPALITY } from "@/content/catalog";
+import { MUNICIPALITY, SPONSOR } from "@/content/catalog";
 import { buildPageMetadata } from "@/lib/seo";
 import { PageHero } from "@/components/ui/page-hero";
 
@@ -44,7 +45,17 @@ export default async function InfoPage({
               key={l.slug}
               className="border-border bg-surface rounded-2xl border p-4"
             >
-              <h3 className="font-display text-lg font-extrabold">{l.name}</h3>
+              <h3 className="font-display text-lg font-extrabold">
+                <Link
+                  href={{
+                    pathname: "/pueblos/[slug]",
+                    params: { slug: l.slug },
+                  }}
+                  className="hover:underline"
+                >
+                  {l.name}
+                </Link>
+              </h3>
               <p className="mt-1 text-sm">{l.summary}</p>
               {l.source ? (
                 <p className="text-muted mt-2 text-xs">
@@ -85,9 +96,19 @@ export default async function InfoPage({
               <li key={l.kind}>
                 <a
                   className="text-sea underline"
-                  href={l.kind === "phone" ? `tel:${l.value}` : l.value}
+                  href={
+                    l.kind === "phone"
+                      ? `tel:${l.value}`
+                      : l.kind === "email"
+                        ? `mailto:${l.value}`
+                        : l.value
+                  }
                   rel="noopener noreferrer"
-                  target={l.kind === "phone" ? undefined : "_blank"}
+                  target={
+                    l.kind === "phone" || l.kind === "email"
+                      ? undefined
+                      : "_blank"
+                  }
                 >
                   {t(`kind.${l.kind}`)}
                 </a>
@@ -95,6 +116,24 @@ export default async function InfoPage({
             ))}
           </ul>
           <p className="text-muted mt-3 text-xs">{t("contactPending")}</p>
+        </section>
+
+        <section
+          aria-labelledby="auspicio"
+          className="bg-sponsor text-sponsor-foreground rounded-2xl p-4"
+        >
+          <h2 id="auspicio" className="font-display text-xl font-extrabold">
+            {t("sponsorTitle")}
+          </h2>
+          <p className="mt-2 text-sm">{t("sponsorBody")}</p>
+          <a
+            className="text-sponsor-accent mt-3 inline-block font-bold underline"
+            href={SPONSOR.websiteUrl}
+            rel="noopener noreferrer sponsored"
+            target="_blank"
+          >
+            matichoc.cl
+          </a>
         </section>
 
         <section

@@ -66,6 +66,14 @@ export function listLocalities(locale: Locale): Locality[] {
   }));
 }
 
+export function getLocality(
+  slug: string,
+  locale: Locale,
+): Locality | undefined {
+  return listLocalities(locale).find((l) => l.slug === slug);
+}
+export const listLocalitySlugs = () => LOCALITIES.map((l) => l.slug);
+
 function toPlace(slug: string, locale: Locale): Place | undefined {
   const p = PLACES.find((x) => x.slug === slug);
   if (!p) return undefined;

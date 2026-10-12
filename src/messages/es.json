@@ -14,7 +14,9 @@
   },
   "common": {
     "share": "Compartir",
-    "copied": "¡Enlace copiado!"
+    "copied": "¡Enlace copiado!",
+    "sponsoredBy": "Con el apoyo de",
+    "sponsorCta": "Conocer Matichoc"
   },
   "home": {
     "metaTitle": "Guía turística de Papudo",
@@ -118,10 +120,20 @@
     "kind": {
       "facebook": "Facebook",
       "instagram": "Instagram",
-      "phone": "Llamar a la Municipalidad"
+      "phone": "Llamar a la Municipalidad",
+      "email": "Escribir a la Municipalidad"
     },
     "contactPending": "Redes y teléfono en verificación con la municipalidad.",
     "dataTitle": "Sobre estos datos",
-    "dataBody": "Cada lugar muestra su fuente y su estado de verificación. Nada se da por confirmado hasta que lo revisa una persona: horarios, precios y accesos pueden cambiar."
+    "dataBody": "Cada lugar muestra su fuente y su estado de verificación. Nada se da por confirmado hasta que lo revisa una persona: horarios, precios y accesos pueden cambiar.",
+    "sponsorTitle": "Con el apoyo de Matichoc",
+    "sponsorBody": "Esta guía cuenta con el apoyo de Matichoc, chocolatería artesanal de La Ligua."
+  },
+  "village": {
+    "back": "Información",
+    "places": "Lugares en este pueblo",
+    "noPlaces": "Aún no hay lugares publicados en este pueblo.",
+    "source": "Fuente",
+    "approx": "Ubicación referencial del pueblo."
   }
 }

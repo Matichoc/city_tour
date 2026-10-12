@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
 import { LOCALITIES, PLACES } from "@/content/papudo-places";
 import { ROUTES } from "@/content/papudo-routes";
+import { MUNICIPALITY, SPONSOR } from "@/content/catalog";
 import {
+  getLocality,
   getPlace,
   getRoute,
   isCategorySlug,
@@ -107,5 +109,40 @@ describe("formato de recorridos", () => {
 describe("traducciones", () => {
   it("es.json y en.json tienen las mismas claves", () => {
     expect(keys(en).sort()).toEqual(keys(es).sort());
+  });
+});
+
+describe("completitud respecto de directorio_turistico (auditoría de Papudo)", () => {
+  it("incluye todos los lugares de la comuna de Papudo del repo de referencia", () => {
+    const esperados = [
+      "playa-papudo",
+      "playa-chica-papudo",
+      "papudo-pullally",
+      "papudo-salinas-pullally",
+      "papudo-playa-los-lilenes",
+      "papudo-parque",
+      "papudo-plaza",
+    ];
+    expect(PLACES.map((p) => p.slug).sort()).toEqual([...esperados].sort());
+  });
+  it("incluye los tres pueblos de la comuna", () => {
+    expect(LOCALITIES.map((l) => l.slug).sort()).toEqual([
+      "las-salinas-papudo",
+      "papudo",
+      "pullally",
+    ]);
+  });
+  it("cada pueblo tiene página y sus lugares", () => {
+    expect(getLocality("pullally", "es")!.name).toBe("Pullally");
+    expect(listPlaces("es", { locality: "papudo" }).length).toBeGreaterThan(0);
+  });
+  it("el contacto de la municipalidad incluye sitio, redes, teléfono y correo", () => {
+    const kinds = MUNICIPALITY.links.map((l) => l.kind).sort();
+    expect(kinds).toEqual(["email", "facebook", "instagram", "phone"]);
+    expect(MUNICIPALITY.website).toContain("munipapudo.cl");
+  });
+  it("Matichoc figura como auspiciador con su enlace", () => {
+    expect(SPONSOR.name).toBe("Matichoc");
+    expect(SPONSOR.websiteUrl).toBe("https://www.matichoc.cl");
   });
 });

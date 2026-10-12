@@ -14,7 +14,9 @@
   },
   "common": {
     "share": "Share",
-    "copied": "Link copied!"
+    "copied": "Link copied!",
+    "sponsoredBy": "Supported by",
+    "sponsorCta": "Visit Matichoc"
   },
   "home": {
     "metaTitle": "Papudo travel guide",
@@ -118,10 +120,20 @@
     "kind": {
       "facebook": "Facebook",
       "instagram": "Instagram",
-      "phone": "Call the Municipality"
+      "phone": "Call the Municipality",
+      "email": "Email the Municipality"
     },
     "contactPending": "Social media and phone are being verified with the municipality.",
     "dataTitle": "About this data",
-    "dataBody": "Every place shows its source and verification status. Nothing is treated as confirmed until a person reviews it: opening hours, prices and access may change."
+    "dataBody": "Every place shows its source and verification status. Nothing is treated as confirmed until a person reviews it: opening hours, prices and access may change.",
+    "sponsorTitle": "Supported by Matichoc",
+    "sponsorBody": "This guide is supported by Matichoc, an artisanal chocolate maker from La Ligua."
+  },
+  "village": {
+    "back": "Info",
+    "places": "Places in this village",
+    "noPlaces": "There are no published places in this village yet.",
+    "source": "Source",
+    "approx": "Approximate location of the village."
   }
 }
