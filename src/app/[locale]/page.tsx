@@ -7,6 +7,7 @@ import { buildPageMetadata } from "@/lib/seo";
 import { HeroScene } from "@/components/ui/hero-scene";
 import { CategoryIcon } from "@/components/ui/category-icon";
 import { PlaceCard } from "@/components/place/place-card";
+import { RouteCard } from "@/components/route/route-card";
 
 export async function generateMetadata({
   params,
@@ -20,6 +21,7 @@ export async function generateMetadata({
     href: "/",
     title: t("metaTitle"),
     description: t("subtitle"),
+    image: "/rutas/ruta-costera-papudo.webp",
   });
 }
 
@@ -102,26 +104,7 @@ export default async function HomePage({
         </section>
 
         {routes[0] ? (
-          <Link
-            href={{
-              pathname: "/rutas/[slug]",
-              params: { slug: routes[0].slug },
-            }}
-            className="card-lift rise-in relative overflow-hidden rounded-3xl bg-[linear-gradient(120deg,#07495a,#0b7285_60%,#4a7a37)] p-6 text-white shadow-md"
-          >
-            <p className="text-xs font-bold tracking-widest text-[#ffe3a8] uppercase">
-              {t("featuredRoute")}
-            </p>
-            <h2 className="font-display mt-1 text-2xl font-extrabold">
-              {routes[0].name}
-            </h2>
-            <p className="mt-2 max-w-md text-sm text-white/90">
-              {routes[0].description}
-            </p>
-            <span className="bg-coral text-coral-ink mt-4 inline-block rounded-full px-5 py-2.5 text-sm font-bold">
-              {t("seeRoute")}
-            </span>
-          </Link>
+          <RouteCard route={routes[0]} kicker={t("featuredRoute")} />
         ) : null}
 
         <section aria-labelledby="destacados">

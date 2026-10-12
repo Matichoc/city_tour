@@ -50,7 +50,11 @@ export default async function RoutePage({
 
   return (
     <main className="flex flex-col">
-      <PageHero title={route.name} subtitle={route.description}>
+      <PageHero
+        title={route.name}
+        subtitle={route.description}
+        image={route.cover ?? undefined}
+      >
         <p className="mt-3 text-sm font-bold text-[#ffe3a8]">
           {t("stops", { count: route.stops.length })}
           {route.durationMinutes

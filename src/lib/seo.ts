@@ -23,16 +23,20 @@ export function buildPageMetadata({
   href,
   title,
   description,
+  image,
 }: {
   locale: Locale;
   href: Href;
   title: string;
   description?: string;
+  /** Ruta de una imagen en /public para compartir (WhatsApp, redes). */
+  image?: string;
 }): Metadata {
   const languages: Record<string, string> = Object.fromEntries(
     routing.locales.map((l) => [l, localizedUrl(l, href)]),
   );
   languages["x-default"] = localizedUrl(routing.defaultLocale, href);
+  const imageUrl = image ? `${getSiteUrl()}${image}` : undefined;
   return {
     title,
     description,
@@ -44,7 +48,15 @@ export function buildPageMetadata({
       locale,
       type: "website",
       url: localizedUrl(locale, href),
+      ...(imageUrl
+        ? { images: [{ url: imageUrl, width: 1448, height: 1086 }] }
+        : {}),
     },
+    ...(imageUrl
+      ? {
+          twitter: { card: "summary_large_image" as const, images: [imageUrl] },
+        }
+      : {}),
   };
 }
 

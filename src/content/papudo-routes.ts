@@ -25,6 +25,13 @@ export const ROUTES: RouteContent[] = [
       { slug: "playa-papudo" },
       { slug: "playa-chica-papudo" },
     ],
+    cover: {
+      src: "/rutas/ruta-costera-papudo.webp",
+      alt: {
+        es: "Ilustración de la bahía de Papudo al atardecer: playa, paseo costero, humedal con aves y lomas de campo.",
+        en: "Illustration of Papudo bay at sunset: beach, seafront promenade, wetland with birds and countryside hills.",
+      },
+    },
     source: {
       url: "https://www.minube.com/tips/actualidad/rincones-unicos-que-visitar-en-papudo-mar-y-montana-te-esperan",
       label: "minube — Qué ver en Papudo",

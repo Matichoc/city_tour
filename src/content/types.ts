@@ -39,6 +39,8 @@ export type RouteContent = {
   en?: { name: string; description: string };
   stops: RouteStopContent[];
   source?: Source;
+  /** Ilustración de portada (hecha con IA: se rotula como ilustración). */
+  cover?: { src: string; alt: { es: string; en: string } };
 };
 
 export type CategorySlug =

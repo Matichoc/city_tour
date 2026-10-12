@@ -46,6 +46,7 @@ export type Route = {
   durationMinutes: number | null;
   stops: RouteStop[];
   source: Source | null;
+  cover: { src: string; alt: string } | null;
 };
 
 export type Category = { slug: CategorySlug; name: string; count: number };
@@ -168,6 +169,12 @@ export function getRoute(slug: string, locale: Locale): Route | undefined {
         : [];
     }),
     source: r.source ?? null,
+    cover: r.cover
+      ? {
+          src: r.cover.src,
+          alt: locale === "en" ? r.cover.alt.en : r.cover.alt.es,
+        }
+      : null,
   };
 }
 

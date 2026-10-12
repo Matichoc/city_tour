@@ -146,3 +146,13 @@ describe("completitud respecto de directorio_turistico (auditoría de Papudo)", 
     expect(SPONSOR.websiteUrl).toBe("https://www.matichoc.cl");
   });
 });
+
+describe("portada de la ruta", () => {
+  it("la ruta costera tiene ilustración con texto alternativo en ambos idiomas", () => {
+    const es = getRoute("ruta-costera-papudo", "es")!.cover!;
+    const en = getRoute("ruta-costera-papudo", "en")!.cover!;
+    expect(es.src).toBe("/rutas/ruta-costera-papudo.webp");
+    expect(es.alt).not.toBe(en.alt);
+    expect(es.alt.length).toBeGreaterThan(20);
+  });
+});
