@@ -1,7 +1,7 @@
 {
   "brand": {
     "name": "Papudo en tu mano",
-    "tagline": "Papudo's beaches, heritage and flavours, in your pocket."
+    "tagline": "Papudo's beaches, countryside and heritage, in your pocket."
   },
   "nav": {
     "home": "Home",
@@ -12,45 +12,116 @@
     "language": "Language",
     "main": "Main navigation"
   },
+  "common": {
+    "share": "Share",
+    "copied": "Link copied!"
+  },
   "home": {
-    "title": "Discover Papudo your way",
-    "subtitle": "Beaches, heritage, flavours and corners with history. No account needed.",
-    "search": "Search places",
+    "metaTitle": "Papudo travel guide",
+    "kicker": "Papudo · Valparaíso Region",
+    "title": "Sea, dunes and countryside: discover Papudo your way",
+    "subtitle": "Beaches, wetlands and town corners in a guide made for your phone. No account needed.",
+    "search": "Search beaches, places…",
+    "searchGo": "Search",
     "whatToDo": "What do you want to do?",
+    "placesCount": "{count, plural, =0 {Soon} one {# place} other {# places}}",
+    "featuredRoute": "Featured route",
+    "seeRoute": "See the route",
     "featured": "To get started",
     "seeAll": "See all",
-    "buildTrip": "Build my trip",
-    "demoNotice": "Test version: data is for demonstration and pending verification."
+    "demoNotice": "Test version: places list their source but are still pending on-site verification. Lodging and food are being added with the Municipality and the Chamber of Commerce."
   },
   "explore": {
     "title": "Explore Papudo",
+    "subtitle": "Beaches, countryside and heritage of the commune.",
+    "search": "Search by name or village",
+    "searchGo": "Search",
+    "categories": "Categories",
     "all": "All",
+    "localities": "Villages",
+    "allLocalities": "Whole commune",
     "results": "{count, plural, =0 {No results} one {# place} other {# places}}",
-    "empty": "We found no places with that filter.",
-    "clear": "Clear filter"
+    "view": "View",
+    "list": "List",
+    "map": "Map",
+    "empty": "No places here yet",
+    "emptyComing": "We are adding this category together with the Municipality and Papudo's Chamber of Commerce.",
+    "emptyHint": "Try another search or remove a filter.",
+    "clear": "Clear filters"
   },
   "place": {
-    "back": "Back to explore",
-    "pending": "Pending verification",
-    "verified": "Verified",
-    "outdated": "Outdated",
-    "fictitious": "Fictitious sample listing",
-    "source": "Source",
+    "back": "Explore",
+    "onlySpanish": "Spanish only",
     "navigate": "Get directions",
-    "navigateSoon": "Available once coordinates are verified.",
+    "approxLocation": "Approximate location: to be confirmed on site with the municipality.",
+    "visitTime": "Visit time",
+    "estimated": "estimated",
     "hours": "Opening hours",
     "hoursPending": "To be confirmed",
     "lastVerified": "Last verified",
-    "never": "Not verified yet"
+    "never": "Not verified yet",
+    "source": "Source",
+    "pending": "Pending verification",
+    "verified": "Verified",
+    "outdated": "Outdated"
   },
-  "soon": {
-    "title": "Coming soon",
-    "body": "This section is built in an upcoming phase.",
-    "routes": "Routes",
-    "trip": "My trip",
-    "info": "Info"
+  "routes": {
+    "title": "Routes",
+    "subtitle": "Ready-made itineraries for your day.",
+    "stops": "{count, plural, one {# stop} other {# stops}}",
+    "source": "Source",
+    "pendingNote": "The places on this route are pending verification; check opening hours and access before you go."
   },
-  "footer": {
-    "disclaimer": "Information under review with the Municipality of Papudo."
+  "trip": {
+    "title": "My trip",
+    "subtitle": "Order your stops, see timings and share it.",
+    "shareTitle": "My trip around Papudo",
+    "add": "Add to my trip",
+    "added": "In my trip",
+    "addRoute": "Add the route to my trip",
+    "emptyTitle": "Your trip is empty",
+    "emptyBody": "Add places from Explore and we will order them along the shortest path.",
+    "goExplore": "Explore places",
+    "suggested": "Or start from a route",
+    "options": "Trip options",
+    "startTime": "Start time",
+    "startPlace": "Start from",
+    "startAuto": "Choose automatically",
+    "returnToStart": "Return to the starting point",
+    "orderAuto": "Shortest order",
+    "orderManual": "Manual order",
+    "optimize": "Optimise order",
+    "summary": "Summary",
+    "totalTime": "Duration",
+    "totalDistance": "Distance",
+    "stops": "Stops",
+    "travel": "{time} travel · {distance}",
+    "directions": "Get directions",
+    "moveUp": "Move {name} up",
+    "moveDown": "Move {name} down",
+    "remove": "Remove",
+    "returnLeg": "Back to start: {time} · {distance}",
+    "estimateNote": "Estimated times: straight-line distance at 40 km/h plus the suggested visit time. Use it as a guide, not an exact timetable.",
+    "shareTrip": "Share my trip",
+    "copied": "Link copied!"
+  },
+  "map": {
+    "unavailable": "The map is unavailable right now. You can keep using the list.",
+    "viewPlace": "View details"
+  },
+  "info": {
+    "title": "Info",
+    "subtitle": "About Papudo and this data.",
+    "localities": "Villages of the commune",
+    "source": "Source",
+    "website": "Municipality website",
+    "kind": {
+      "facebook": "Facebook",
+      "instagram": "Instagram",
+      "phone": "Call the Municipality"
+    },
+    "contactPending": "Social media and phone are being verified with the municipality.",
+    "dataTitle": "About this data",
+    "dataBody": "Every place shows its source and verification status. Nothing is treated as confirmed until a person reviews it: opening hours, prices and access may change."
   }
 }

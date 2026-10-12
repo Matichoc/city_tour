@@ -1,87 +1,157 @@
-import { useLocale, useTranslations } from "next-intl";
-import { setRequestLocale } from "next-intl/server";
-import { use } from "react";
-import { Link } from "@/i18n/navigation";
-import type { Locale } from "@/i18n/routing";
-import { CATEGORIES, PLACES, localize } from "@/lib/demo-data";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import type { Metadata } from "next";
+import { Link, getPathname } from "@/i18n/navigation";
+import { resolveLocale } from "@/i18n/utils";
+import { listCategories, listPlaces, listRoutes } from "@/lib/data";
+import { buildPageMetadata } from "@/lib/seo";
+import { HeroScene } from "@/components/ui/hero-scene";
+import { CategoryIcon } from "@/components/ui/category-icon";
 import { PlaceCard } from "@/components/place/place-card";
 
-export default function HomePage({
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const locale = resolveLocale((await params).locale);
+  const t = await getTranslations({ locale, namespace: "home" });
+  return buildPageMetadata({
+    locale,
+    href: "/",
+    title: t("metaTitle"),
+    description: t("subtitle"),
+  });
+}
+
+export default async function HomePage({
   params,
 }: {
   params: Promise<{ locale: string }>;
 }) {
-  const { locale } = use(params);
+  const locale = resolveLocale((await params).locale);
   setRequestLocale(locale);
-  const t = useTranslations("home");
-  const current = useLocale() as Locale;
+  const t = await getTranslations("home");
+  const categories = listCategories(locale);
+  const places = listPlaces(locale).slice(0, 4);
+  const routes = listRoutes(locale);
 
   return (
-    <main className="flex flex-col gap-8 px-4 pb-10">
-      <section className="from-sea text-sea-foreground -mx-4 bg-gradient-to-b to-[#0a4f61] px-4 pt-8 pb-10">
-        <h1 className="font-display text-4xl leading-tight font-bold">
+    <main className="flex flex-col">
+      <HeroScene>
+        <p className="text-sm font-bold tracking-widest text-[#ffe3a8] uppercase">
+          {t("kicker")}
+        </p>
+        <h1 className="shimmer-title font-display mt-2 text-4xl leading-[1.08] font-extrabold sm:text-5xl">
           {t("title")}
         </h1>
-        <p className="text-sea-foreground/90 mt-3 max-w-md text-base">
-          {t("subtitle")}
-        </p>
-        <Link
-          href="/explorar"
-          className="bg-surface text-muted mt-6 flex min-h-12 items-center rounded-full px-5 text-sm font-medium shadow"
+        <p className="mt-3 max-w-md text-base text-white/90">{t("subtitle")}</p>
+        <form
+          action={getPathname({ locale, href: "/explorar" })}
+          className="mt-6 flex max-w-md gap-2"
         >
-          {t("search")}
-        </Link>
-      </section>
+          <label className="sr-only" htmlFor="home-q">
+            {t("search")}
+          </label>
+          <input
+            id="home-q"
+            name="q"
+            type="search"
+            placeholder={t("search")}
+            className="text-foreground placeholder:text-muted min-h-12 min-w-0 flex-1 rounded-full border-0 bg-white px-5 shadow-lg"
+          />
+          <button
+            type="submit"
+            className="bg-coral text-coral-ink min-h-12 shrink-0 rounded-full px-5 font-bold shadow-lg active:scale-95"
+          >
+            {t("searchGo")}
+          </button>
+        </form>
+      </HeroScene>
 
-      <section aria-labelledby="que-hacer">
-        <h2 id="que-hacer" className="font-display text-xl font-bold">
-          {t("whatToDo")}
-        </h2>
-        <ul className="mt-3 flex flex-wrap gap-2">
-          {CATEGORIES.map((c) => (
-            <li key={c.slug}>
-              <Link
-                href={{ pathname: "/explorar", query: { categoria: c.slug } }}
-                className="border-border bg-surface hover:border-sea hover:text-sea flex min-h-11 items-center rounded-full border px-4 text-sm font-semibold"
-              >
-                {localize(c.name, current)}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      <section aria-labelledby="destacados">
-        <div className="flex items-baseline justify-between">
-          <h2 id="destacados" className="font-display text-xl font-bold">
-            {t("featured")}
+      <div className="mx-auto flex w-full max-w-3xl flex-col gap-9 px-4 pt-2 pb-10">
+        <section aria-labelledby="que-hacer">
+          <h2 id="que-hacer" className="font-display text-2xl font-extrabold">
+            {t("whatToDo")}
           </h2>
-          <Link href="/explorar" className="text-sea text-sm font-semibold">
-            {t("seeAll")}
+          <ul className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
+            {categories.map((c, i) => (
+              <li
+                key={c.slug}
+                className="rise-in"
+                style={{ "--i": i } as React.CSSProperties}
+              >
+                <Link
+                  href={{ pathname: "/explorar", query: { categoria: c.slug } }}
+                  className="card-lift border-border bg-surface flex min-h-20 items-center gap-3 rounded-2xl border p-3 shadow-sm"
+                >
+                  <span className="bg-sea-soft text-sea-deep grid size-11 shrink-0 place-items-center rounded-xl">
+                    <CategoryIcon category={c.slug} className="size-6" />
+                  </span>
+                  <span>
+                    <span className="block text-sm leading-tight font-extrabold">
+                      {c.name}
+                    </span>
+                    <span className="text-muted text-xs">
+                      {t("placesCount", { count: c.count })}
+                    </span>
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        {routes[0] ? (
+          <Link
+            href={{
+              pathname: "/rutas/[slug]",
+              params: { slug: routes[0].slug },
+            }}
+            className="card-lift rise-in relative overflow-hidden rounded-3xl bg-[linear-gradient(120deg,#07495a,#0b7285_60%,#4a7a37)] p-6 text-white shadow-md"
+          >
+            <p className="text-xs font-bold tracking-widest text-[#ffe3a8] uppercase">
+              {t("featuredRoute")}
+            </p>
+            <h2 className="font-display mt-1 text-2xl font-extrabold">
+              {routes[0].name}
+            </h2>
+            <p className="mt-2 max-w-md text-sm text-white/90">
+              {routes[0].description}
+            </p>
+            <span className="bg-coral text-coral-ink mt-4 inline-block rounded-full px-5 py-2.5 text-sm font-bold">
+              {t("seeRoute")}
+            </span>
           </Link>
-        </div>
-        <ul className="mt-3 grid gap-3 sm:grid-cols-2">
-          {PLACES.slice(0, 4).map((p) => (
-            <li key={p.slug}>
-              <PlaceCard place={p} />
-            </li>
-          ))}
-        </ul>
-      </section>
+        ) : null}
 
-      <Link
-        href="/recorrido"
-        className="bg-earth flex min-h-12 items-center justify-center rounded-full px-6 font-semibold text-white"
-      >
-        {t("buildTrip")}
-      </Link>
+        <section aria-labelledby="destacados">
+          <div className="flex items-baseline justify-between">
+            <h2
+              id="destacados"
+              className="font-display text-2xl font-extrabold"
+            >
+              {t("featured")}
+            </h2>
+            <Link href="/explorar" className="text-sea text-sm font-bold">
+              {t("seeAll")}
+            </Link>
+          </div>
+          <ul className="mt-3 grid gap-4 sm:grid-cols-2">
+            {places.map((p, i) => (
+              <li key={p.slug}>
+                <PlaceCard place={p} index={i} />
+              </li>
+            ))}
+          </ul>
+        </section>
 
-      <p
-        role="note"
-        className="bg-earth-soft text-earth rounded-xl p-3 text-sm"
-      >
-        {t("demoNotice")}
-      </p>
+        <p
+          role="note"
+          className="bg-earth-soft text-earth rounded-xl p-3 text-sm"
+        >
+          {t("demoNotice")}
+        </p>
+      </div>
     </main>
   );
 }
