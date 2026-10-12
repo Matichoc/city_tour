@@ -28,12 +28,6 @@
   --field: #4a7a37; /* campo */
   --field-deep: #2f5233;
   --field-soft: #e4efd7;
-
-  /* Identidad de marca de Matichoc (auspiciador), como en directorio_turistico. */
-  --sponsor: #4b2e2e;
-  --sponsor-foreground: #fff8f0;
-  --sponsor-accent: #f2589f;
-  --sponsor-accent-foreground: #3a0d22;
 }
 
 @theme inline {
@@ -56,10 +50,6 @@
   --color-field: var(--field);
   --color-field-deep: var(--field-deep);
   --color-field-soft: var(--field-soft);
-  --color-sponsor: var(--sponsor);
-  --color-sponsor-foreground: var(--sponsor-foreground);
-  --color-sponsor-accent: var(--sponsor-accent);
-  --color-sponsor-accent-foreground: var(--sponsor-accent-foreground);
   --font-sans:
     ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
     "Helvetica Neue", Arial, sans-serif;

@@ -15,8 +15,7 @@
   "common": {
     "share": "Compartir",
     "copied": "¡Enlace copiado!",
-    "sponsoredBy": "Con el apoyo de",
-    "sponsorCta": "Conocer Matichoc"
+    "poweredBy": "Desarrollado por"
   },
   "home": {
     "metaTitle": "Guía turística de Papudo",
@@ -125,9 +124,7 @@
     },
     "contactPending": "Redes y teléfono en verificación con la municipalidad.",
     "dataTitle": "Sobre estos datos",
-    "dataBody": "Cada lugar muestra su fuente y su estado de verificación. Nada se da por confirmado hasta que lo revisa una persona: horarios, precios y accesos pueden cambiar.",
-    "sponsorTitle": "Con el apoyo de Matichoc",
-    "sponsorBody": "Esta guía cuenta con el apoyo de Matichoc, chocolatería artesanal de La Ligua."
+    "dataBody": "Cada lugar muestra su fuente y su estado de verificación. Nada se da por confirmado hasta que lo revisa una persona: horarios, precios y accesos pueden cambiar."
   },
   "village": {
     "back": "Información",

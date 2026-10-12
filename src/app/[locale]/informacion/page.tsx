@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { Link } from "@/i18n/navigation";
 import { resolveLocale } from "@/i18n/utils";
 import { listLocalities } from "@/lib/data";
-import { MUNICIPALITY, SPONSOR } from "@/content/catalog";
+import { MUNICIPALITY } from "@/content/catalog";
 import { buildPageMetadata } from "@/lib/seo";
 import { PageHero } from "@/components/ui/page-hero";
 
@@ -116,24 +116,6 @@ export default async function InfoPage({
             ))}
           </ul>
           <p className="text-muted mt-3 text-xs">{t("contactPending")}</p>
-        </section>
-
-        <section
-          aria-labelledby="auspicio"
-          className="bg-sponsor text-sponsor-foreground rounded-2xl p-4"
-        >
-          <h2 id="auspicio" className="font-display text-xl font-extrabold">
-            {t("sponsorTitle")}
-          </h2>
-          <p className="mt-2 text-sm">{t("sponsorBody")}</p>
-          <a
-            className="text-sponsor-accent mt-3 inline-block font-bold underline"
-            href={SPONSOR.websiteUrl}
-            rel="noopener noreferrer sponsored"
-            target="_blank"
-          >
-            matichoc.cl
-          </a>
         </section>
 
         <section

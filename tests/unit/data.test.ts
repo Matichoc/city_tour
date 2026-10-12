@@ -141,7 +141,7 @@ describe("completitud respecto de directorio_turistico (auditoría de Papudo)", 
     expect(kinds).toEqual(["email", "facebook", "instagram", "phone"]);
     expect(MUNICIPALITY.website).toContain("munipapudo.cl");
   });
-  it("Matichoc figura como auspiciador con su enlace", () => {
+  it("Matichoc figura como créditos con su enlace", () => {
     expect(SPONSOR.name).toBe("Matichoc");
     expect(SPONSOR.websiteUrl).toBe("https://www.matichoc.cl");
   });

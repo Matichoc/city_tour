@@ -5,7 +5,7 @@ import { setRequestLocale } from "next-intl/server";
 import { routing } from "@/i18n/routing";
 import { TopNav } from "@/components/ui/top-nav";
 import { BottomNav } from "@/components/ui/bottom-nav";
-import { SponsorBanner } from "@/components/ui/sponsor-banner";
+import { PoweredBy } from "@/components/ui/powered-by";
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
@@ -29,7 +29,7 @@ export default async function LocaleLayout({
         <div className="mx-auto flex w-full max-w-3xl flex-1 flex-col">
           {children}
         </div>
-        <SponsorBanner locale={locale} />
+        <PoweredBy locale={locale} />
       </div>
       <BottomNav />
     </NextIntlClientProvider>
