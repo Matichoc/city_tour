@@ -1,7 +1,7 @@
 {
   "brand": {
     "name": "Papudo en tu mano",
-    "tagline": "Playas, patrimonio y sabores de Papudo, en tu bolsillo."
+    "tagline": "Playas, campo y patrimonio de Papudo, en tu bolsillo."
   },
   "nav": {
     "home": "Inicio",
@@ -12,45 +12,126 @@
     "language": "Idioma",
     "main": "Navegación principal"
   },
+  "common": {
+    "share": "Compartir",
+    "copied": "¡Enlace copiado!",
+    "poweredBy": "Desarrollado por",
+    "aiIllustration": "Ilustración IA"
+  },
   "home": {
-    "title": "Descubre Papudo a tu manera",
-    "subtitle": "Playas, patrimonio, sabores y rincones con historia. Sin crear cuenta.",
-    "search": "Buscar lugares",
+    "metaTitle": "Guía turística de Papudo",
+    "kicker": "Papudo · Región de Valparaíso",
+    "title": "Mar, dunas y campo: descubre Papudo a tu manera",
+    "subtitle": "Playas, humedales y rincones del pueblo en una guía hecha para el celular. Sin crear cuenta.",
+    "search": "Buscar playas, lugares…",
+    "searchGo": "Buscar",
     "whatToDo": "¿Qué quieres hacer?",
+    "placesCount": "{count, plural, =0 {Pronto} one {# lugar} other {# lugares}}",
+    "featuredRoute": "Ruta destacada",
+    "seeRoute": "Ver la ruta",
     "featured": "Para empezar",
     "seeAll": "Ver todo",
-    "buildTrip": "Armar mi recorrido",
-    "demoNotice": "Versión de prueba: los datos son de demostración y están pendientes de verificación."
+    "demoNotice": "Versión de prueba: los lugares tienen su fuente, pero aún están pendientes de verificación en terreno. Alojamiento y gastronomía se suman con la Municipalidad y la Cámara de Comercio."
   },
   "explore": {
     "title": "Explorar Papudo",
+    "subtitle": "Playas, campo y patrimonio de la comuna.",
+    "search": "Buscar por nombre o pueblo",
+    "searchGo": "Buscar",
+    "categories": "Categorías",
     "all": "Todo",
+    "localities": "Pueblos",
+    "allLocalities": "Toda la comuna",
     "results": "{count, plural, =0 {Sin resultados} one {# lugar} other {# lugares}}",
-    "empty": "No encontramos lugares con ese filtro.",
-    "clear": "Quitar filtro"
+    "view": "Vista",
+    "list": "Lista",
+    "map": "Mapa",
+    "empty": "Aún no hay lugares aquí",
+    "emptyComing": "Estamos sumando esta categoría junto a la Municipalidad y la Cámara de Comercio de Papudo.",
+    "emptyHint": "Prueba con otra búsqueda o quita un filtro.",
+    "clear": "Quitar filtros"
   },
   "place": {
-    "back": "Volver a explorar",
-    "pending": "Pendiente de verificación",
-    "verified": "Verificado",
-    "outdated": "Desactualizado",
-    "fictitious": "Ficha ficticia de ejemplo",
-    "source": "Fuente",
+    "back": "Explorar",
+    "onlySpanish": "Solo en español",
     "navigate": "Cómo llegar",
-    "navigateSoon": "Disponible cuando las coordenadas estén verificadas.",
+    "approxLocation": "Ubicación referencial: se confirma en terreno con la municipalidad.",
+    "visitTime": "Tiempo de visita",
+    "estimated": "estimado",
     "hours": "Horarios",
     "hoursPending": "Por confirmar",
     "lastVerified": "Última verificación",
-    "never": "Aún sin verificar"
+    "never": "Aún sin verificar",
+    "source": "Fuente",
+    "pending": "Pendiente de verificación",
+    "verified": "Verificado",
+    "outdated": "Desactualizado"
   },
-  "soon": {
-    "title": "Próximamente",
-    "body": "Esta sección se construye en una próxima fase.",
-    "routes": "Rutas",
-    "trip": "Mi recorrido",
-    "info": "Información"
+  "routes": {
+    "title": "Rutas",
+    "subtitle": "Recorridos listos para armar tu día.",
+    "stops": "{count, plural, one {# parada} other {# paradas}}",
+    "source": "Fuente",
+    "pendingNote": "Los lugares de esta ruta están pendientes de verificación; revisa horarios y acceso antes de salir."
   },
-  "footer": {
-    "disclaimer": "Información en revisión junto a la Municipalidad de Papudo."
+  "trip": {
+    "title": "Mi recorrido",
+    "subtitle": "Ordena tus paradas, mira tiempos y compártelo.",
+    "shareTitle": "Mi recorrido por Papudo",
+    "add": "Agregar a mi recorrido",
+    "added": "En mi recorrido",
+    "addRoute": "Agregar la ruta a mi recorrido",
+    "emptyTitle": "Tu recorrido está vacío",
+    "emptyBody": "Agrega lugares desde Explorar y aquí los ordenamos por el camino más corto.",
+    "goExplore": "Explorar lugares",
+    "suggested": "O parte con una ruta",
+    "options": "Opciones del recorrido",
+    "startTime": "Hora de inicio",
+    "startPlace": "Partir desde",
+    "startAuto": "Calcular automáticamente",
+    "returnToStart": "Volver al punto de partida",
+    "orderAuto": "Orden más corto",
+    "orderManual": "Orden manual",
+    "optimize": "Optimizar orden",
+    "summary": "Resumen",
+    "totalTime": "Duración",
+    "totalDistance": "Distancia",
+    "stops": "Paradas",
+    "travel": "{time} de traslado · {distance}",
+    "directions": "Cómo llegar",
+    "moveUp": "Subir {name}",
+    "moveDown": "Bajar {name}",
+    "remove": "Quitar",
+    "returnLeg": "Vuelta al inicio: {time} · {distance}",
+    "estimateNote": "Tiempos estimados: distancia en línea recta a 40 km/h más el tiempo de visita sugerido. Úsalo como guía, no como horario exacto.",
+    "shareTrip": "Compartir mi recorrido",
+    "copied": "¡Enlace copiado!"
+  },
+  "map": {
+    "unavailable": "El mapa no está disponible en este momento. Puedes seguir usando la lista.",
+    "viewPlace": "Ver ficha"
+  },
+  "info": {
+    "title": "Información",
+    "subtitle": "Sobre Papudo y estos datos.",
+    "localities": "Pueblos de la comuna",
+    "source": "Fuente",
+    "website": "Sitio web de la Municipalidad",
+    "kind": {
+      "facebook": "Facebook",
+      "instagram": "Instagram",
+      "phone": "Llamar a la Municipalidad",
+      "email": "Escribir a la Municipalidad"
+    },
+    "contactPending": "Redes y teléfono en verificación con la municipalidad.",
+    "dataTitle": "Sobre estos datos",
+    "dataBody": "Cada lugar muestra su fuente y su estado de verificación. Nada se da por confirmado hasta que lo revisa una persona: horarios, precios y accesos pueden cambiar."
+  },
+  "village": {
+    "back": "Información",
+    "places": "Lugares en este pueblo",
+    "noPlaces": "Aún no hay lugares publicados en este pueblo.",
+    "source": "Fuente",
+    "approx": "Ubicación referencial del pueblo."
   }
 }

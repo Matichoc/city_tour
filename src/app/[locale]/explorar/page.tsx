@@ -1,85 +1,243 @@
-import { useLocale, useTranslations } from "next-intl";
-import { setRequestLocale } from "next-intl/server";
-import { use } from "react";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import type { Metadata } from "next";
 import { Link } from "@/i18n/navigation";
-import type { Locale } from "@/i18n/routing";
+import { resolveLocale } from "@/i18n/utils";
 import {
-  CATEGORIES,
+  illustrationFor,
   isCategorySlug,
+  listCategories,
+  listLocalities,
   listPlaces,
-  localize,
-} from "@/lib/demo-data";
+} from "@/lib/data";
+import { buildPageMetadata } from "@/lib/seo";
+import { EmptyState } from "@/components/ui/empty-state";
+import { PageHero } from "@/components/ui/page-hero";
 import { PlaceCard } from "@/components/place/place-card";
+import { PlacesMap } from "@/components/map/places-map";
 
-export default function ExplorePage({
+type SearchParams = {
+  categoria?: string;
+  pueblo?: string;
+  q?: string;
+  vista?: string;
+};
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const locale = resolveLocale((await params).locale);
+  const t = await getTranslations({ locale, namespace: "explore" });
+  return buildPageMetadata({
+    locale,
+    href: "/explorar",
+    title: t("title"),
+    description: t("subtitle"),
+  });
+}
+
+export default async function ExplorePage({
   params,
   searchParams,
 }: {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<{ categoria?: string }>;
+  searchParams: Promise<SearchParams>;
 }) {
-  const { locale } = use(params);
+  const locale = resolveLocale((await params).locale);
   setRequestLocale(locale);
-  const { categoria } = use(searchParams);
-  const active = isCategorySlug(categoria) ? categoria : undefined;
-  const places = listPlaces(active);
-  const t = useTranslations("explore");
-  const current = useLocale() as Locale;
+  const sp = await searchParams;
+  const t = await getTranslations("explore");
 
-  const chip = (selected: boolean) =>
-    `flex min-h-11 items-center rounded-full border px-4 text-sm font-semibold ${
-      selected
-        ? "border-sea bg-sea text-sea-foreground"
-        : "border-border bg-surface"
-    }`;
+  const category = isCategorySlug(sp.categoria) ? sp.categoria : undefined;
+  const localities = listLocalities(locale);
+  const locality = localities.some((l) => l.slug === sp.pueblo)
+    ? sp.pueblo
+    : undefined;
+  const query = sp.q?.trim() || undefined;
+  const view = sp.vista === "mapa" ? "map" : "list";
+
+  const places = listPlaces(locale, { category, locality, query });
+  const categories = listCategories(locale);
+
+  const base = { categoria: category, pueblo: locality, q: query };
+  const q = (extra: Partial<SearchParams>) =>
+    Object.fromEntries(
+      Object.entries({
+        ...base,
+        vista: view === "map" ? "mapa" : undefined,
+        ...extra,
+      }).filter(([, v]) => v),
+    );
+
+  const chip = (on: boolean) =>
+    `flex min-h-11 items-center rounded-full border px-4 text-sm font-bold transition ${on ? "border-sea bg-sea text-white" : "border-border bg-surface hover:border-sea"}`;
 
   return (
-    <main className="flex flex-col gap-4 px-4 py-6">
-      <h1 className="font-display text-3xl font-bold">{t("title")}</h1>
-      <ul className="flex flex-wrap gap-2">
-        <li>
-          <Link
-            href="/explorar"
-            aria-current={!active ? "true" : undefined}
-            className={chip(!active)}
+    <main className="flex flex-col">
+      <PageHero title={t("title")} subtitle={t("subtitle")} />
+      <div className="mx-auto flex w-full max-w-3xl flex-col gap-4 px-4 pb-10">
+        <form role="search" className="flex gap-2">
+          {category ? (
+            <input type="hidden" name="categoria" value={category} />
+          ) : null}
+          {locality ? (
+            <input type="hidden" name="pueblo" value={locality} />
+          ) : null}
+          {view === "map" ? (
+            <input type="hidden" name="vista" value="mapa" />
+          ) : null}
+          <label className="sr-only" htmlFor="q">
+            {t("search")}
+          </label>
+          <input
+            id="q"
+            name="q"
+            type="search"
+            defaultValue={query}
+            placeholder={t("search")}
+            className="border-border bg-surface min-h-12 min-w-0 flex-1 rounded-full border px-5"
+          />
+          <button
+            type="submit"
+            className="bg-sea min-h-12 shrink-0 rounded-full px-5 font-bold text-white active:scale-95"
           >
-            {t("all")}
-          </Link>
-        </li>
-        {CATEGORIES.map((c) => (
-          <li key={c.slug}>
-            <Link
-              href={{ pathname: "/explorar", query: { categoria: c.slug } }}
-              aria-current={active === c.slug ? "true" : undefined}
-              className={chip(active === c.slug)}
-            >
-              {localize(c.name, current)}
-            </Link>
-          </li>
-        ))}
-      </ul>
-      <p aria-live="polite" className="text-muted text-sm">
-        {t("results", { count: places.length })}
-      </p>
-      {places.length === 0 ? (
-        <div className="border-border rounded-2xl border border-dashed p-6 text-center">
-          <p>{t("empty")}</p>
-          <Link
-            href="/explorar"
-            className="text-sea mt-2 inline-block font-semibold"
-          >
-            {t("clear")}
-          </Link>
-        </div>
-      ) : (
-        <ul className="grid gap-3 sm:grid-cols-2">
-          {places.map((p) => (
-            <li key={p.slug}>
-              <PlaceCard place={p} />
+            {t("searchGo")}
+          </button>
+        </form>
+
+        <nav aria-label={t("categories")}>
+          <ul className="flex flex-wrap gap-2">
+            <li>
+              <Link
+                href={{
+                  pathname: "/explorar",
+                  query: q({ categoria: undefined }),
+                }}
+                aria-current={!category ? "true" : undefined}
+                className={chip(!category)}
+              >
+                {t("all")}
+              </Link>
             </li>
-          ))}
-        </ul>
-      )}
+            {categories.map((c) => (
+              <li key={c.slug}>
+                <Link
+                  href={{
+                    pathname: "/explorar",
+                    query: q({ categoria: c.slug }),
+                  }}
+                  aria-current={category === c.slug ? "true" : undefined}
+                  className={chip(category === c.slug)}
+                >
+                  {c.name}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
+        <nav aria-label={t("localities")}>
+          <ul className="flex flex-wrap gap-2">
+            <li>
+              <Link
+                href={{
+                  pathname: "/explorar",
+                  query: q({ pueblo: undefined }),
+                }}
+                className={chip(!locality)}
+              >
+                {t("allLocalities")}
+              </Link>
+            </li>
+            {localities.map((l) => (
+              <li key={l.slug}>
+                <Link
+                  href={{ pathname: "/explorar", query: q({ pueblo: l.slug }) }}
+                  aria-current={locality === l.slug ? "true" : undefined}
+                  className={chip(locality === l.slug)}
+                >
+                  {l.name}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
+        <div className="flex items-center justify-between gap-3">
+          <p aria-live="polite" className="text-muted text-sm font-semibold">
+            {t("results", { count: places.length })}
+          </p>
+          <div
+            role="group"
+            aria-label={t("view")}
+            className="border-border flex overflow-hidden rounded-full border text-sm font-bold"
+          >
+            <Link
+              href={{
+                pathname: "/explorar",
+                query: { ...base, vista: undefined },
+              }}
+              aria-current={view === "list" ? "true" : undefined}
+              className={`min-h-11 px-4 py-2.5 ${view === "list" ? "bg-sea text-white" : "bg-surface text-muted"}`}
+            >
+              {t("list")}
+            </Link>
+            <Link
+              href={{
+                pathname: "/explorar",
+                query: { ...base, vista: "mapa" },
+              }}
+              aria-current={view === "map" ? "true" : undefined}
+              className={`min-h-11 px-4 py-2.5 ${view === "map" ? "bg-sea text-white" : "bg-surface text-muted"}`}
+            >
+              {t("map")}
+            </Link>
+          </div>
+        </div>
+
+        {places.length === 0 ? (
+          <EmptyState
+            title={t("empty")}
+            picture={
+              category === "alojamiento" || category === "gastronomia"
+                ? illustrationFor("hostales", locale)
+                : undefined
+            }
+          >
+            <p>
+              {category === "alojamiento" || category === "gastronomia"
+                ? t("emptyComing")
+                : t("emptyHint")}
+            </p>
+            <Link
+              href="/explorar"
+              className="text-sea mt-3 inline-block font-bold"
+            >
+              {t("clear")}
+            </Link>
+          </EmptyState>
+        ) : view === "map" ? (
+          <PlacesMap
+            className="h-[28rem]"
+            markers={places.map((p) => ({
+              slug: p.slug,
+              name: p.name,
+              latitude: p.latitude,
+              longitude: p.longitude,
+              category: p.categorySlug,
+            }))}
+          />
+        ) : (
+          <ul className="grid gap-4 sm:grid-cols-2">
+            {places.map((p, i) => (
+              <li key={p.slug}>
+                <PlaceCard place={p} index={i} />
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     </main>
   );
 }
