@@ -340,7 +340,45 @@ marcados como ficticios; sin scraping indiscriminado ni copiar textos con derech
 
 ---
 
-## 11. Próximo paso
+## 11. Flujo de ramas y pruebas
+
+| Rama                 | Para qué                                                       | Reglas |
+| -------------------- | -------------------------------------------------------------- | ------ |
+| `main`               | Producción. Solo recibe merges desde `develop`.                | Protegida; CI verde; despliegue a producción |
+| `develop`            | Integración y pruebas (staging).                               | Protegida; CI verde; despliegue de previsualización |
+| `claude/...`, `feat/...` | Trabajo diario, una por tarea/fase.                        | PR hacia `develop`; `pre-push` en verde |
+
+Flujo: rama de trabajo → PR a `develop` (CI + pruebas + revisión) → pruebas en
+staging (proyecto Supabase de desarrollo) → PR `develop` → `main` al cerrar una
+fase. Dos proyectos Supabase separados (dev y prod); migraciones se aplican
+primero en dev. Pendiente: activar protección de ramas en GitHub (Settings →
+Branches).
+
+## 12. Experiencia actual del sitio municipal (auditoría pendiente)
+
+El sitio de la Municipalidad de Papudo **no se pudo abrir desde este entorno**
+(el DNS/proxy bloquea el dominio) y no se recibió la URL exacta. Para auditarlo:
+pegar la URL o capturas de pantalla. Criterios que se evaluarán:
+
+1. Claridad: ¿se entiende en 5 s qué hacer, ver y dónde dormir/comer?
+2. Móvil: ¿se usa con una mano, carga rápido con señal débil?
+3. Información turística separada de trámites y noticias.
+4. Fechas de actualización, horarios y contactos visibles.
+5. Mapa, filtros y búsqueda.
+6. Accesibilidad (contraste, tamaño de letra, textos alternativos).
+7. Idiomas.
+8. Compartir y navegación por GPS.
+
+Resultado esperado: `docs/AUDITORIA-UX.md` con hallazgos y una maqueta simple
+"antes / después" para mostrar a la municipalidad.
+
+## 13. Financiamiento y herramientas
+
+Ver [`docs/FINANCIAMIENTO.md`](./FINANCIAMIENTO.md): dimensionamiento (500.000
+turistas, meta 10 %), herramientas reales, presupuesto, fuentes de
+financiamiento y escenarios de ingreso.
+
+## 14. Próximo paso
 
 Aprobar (o ajustar) la sección 2 y arrancar **Fase 0**. Primer comando de trabajo:
 
