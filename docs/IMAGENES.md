@@ -90,3 +90,22 @@
 2. Avisarme y las conecto: portada de la ruta, fondo de cada categoría y la imagen de
    compartir (Open Graph).
 3. Marcar en el sitio "Ilustración generada con IA" en cada imagen.
+
+## Estado de las ilustraciones
+
+| # | Pieza | Estado | Dónde se usa |
+| - | ----- | ------ | ------------ |
+| 1 | Portada ruta costera | Entregada | `public/rutas/ruta-costera-papudo.webp`: ruta, portada y vista al compartir |
+| 2 | Humedal | Entregada | `public/ilustraciones/humedal.webp`: Laguna y Salinas de Pullally, categoría "Campo y naturaleza", pueblos Pullally y Las Salinas |
+| 5 | Paseo costero | Entregada | `paseo-costanera.webp`: Costanera, categoría Actividades, pueblo Papudo |
+| 6 | Plaza | Entregada | `plaza.webp`: Plaza de Papudo y categoría Patrimonio |
+| 9a | Terraza sin letrero (estado vacío) | Entregada | `hostales.webp`: Alojamiento y Gastronomía sin lugares |
+| 3 | Playa | Entregada | `playa.webp`: categoría Playas (las tres playas) |
+| 4 | Campo y cerros | Pendiente | |
+| 7 | Imagen para compartir 1200×630 | Pendiente (hoy se usa la portada de la ruta) | |
+| 8 | Íconos de categoría | Pendiente (hoy íconos SVG propios) | |
+| 9b, 9c | Estados vacíos "recorrido vacío" y "mapa no disponible" | Pendiente | |
+| 10 | Ícono de la app (PWA) | Pendiente (hoy `src/app/icon.svg`) | |
+
+Cada ilustración se muestra con el rótulo discreto "Ilustración IA". Las fotos reales
+de cada lugar, cuando existan, reemplazan a la ilustración de su ficha.

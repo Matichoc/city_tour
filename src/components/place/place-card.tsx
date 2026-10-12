@@ -1,7 +1,8 @@
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import type { Place } from "@/lib/data";
-import { CategoryScene } from "@/components/ui/category-scene";
+import { CategoryIcon } from "@/components/ui/category-icon";
+import { IllustratedImage } from "@/components/ui/illustrated-image";
 import { StatusBadge } from "@/components/place/status-badge";
 
 export function PlaceCard({
@@ -18,7 +19,11 @@ export function PlaceCard({
       style={{ "--i": index } as React.CSSProperties}
       className="card-lift rise-in border-border bg-surface block rounded-2xl border shadow-sm"
     >
-      <CategoryScene category={place.categorySlug} />
+      <IllustratedImage picture={place.picture} className="h-36">
+        <span className="text-sea-deep absolute top-3 right-3 grid size-9 place-items-center rounded-full bg-white/85 shadow-sm">
+          <CategoryIcon category={place.categorySlug} />
+        </span>
+      </IllustratedImage>
       <div className="p-4">
         <p className="text-field text-xs font-bold tracking-wide uppercase">
           {place.categoryName}

@@ -8,7 +8,7 @@ import { getPlace, listPlaceSlugs } from "@/lib/data";
 import { directionsUrl } from "@/lib/map-config";
 import { buildPageMetadata, truncate } from "@/lib/seo";
 import { formatDuration } from "@/lib/itinerary-format";
-import { CategoryScene } from "@/components/ui/category-scene";
+import { IllustratedImage } from "@/components/ui/illustrated-image";
 import { StatusBadge } from "@/components/place/status-badge";
 import { ShareButton } from "@/components/place/share-button";
 import { AddToTripButton } from "@/components/trip/add-to-trip-button";
@@ -52,7 +52,7 @@ export default async function PlacePage({
   return (
     <main className="flex flex-col gap-5 pb-10">
       <div className="relative">
-        <CategoryScene category={place.categorySlug} className="h-44" />
+        <IllustratedImage picture={place.picture} className="h-56" priority />
         <Link
           href="/explorar"
           className="text-sea-deep absolute top-3 left-3 rounded-full bg-white/90 px-4 py-2 text-sm font-bold shadow"

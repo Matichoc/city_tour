@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Link } from "@/i18n/navigation";
 import { resolveLocale } from "@/i18n/utils";
 import {
+  illustrationFor,
   isCategorySlug,
   listCategories,
   listLocalities,
@@ -95,11 +96,11 @@ export default async function ExplorePage({
             type="search"
             defaultValue={query}
             placeholder={t("search")}
-            className="border-border bg-surface min-h-12 flex-1 rounded-full border px-5"
+            className="border-border bg-surface min-h-12 min-w-0 flex-1 rounded-full border px-5"
           />
           <button
             type="submit"
-            className="bg-sea min-h-12 rounded-full px-5 font-bold text-white active:scale-95"
+            className="bg-sea min-h-12 shrink-0 rounded-full px-5 font-bold text-white active:scale-95"
           >
             {t("searchGo")}
           </button>
@@ -196,7 +197,14 @@ export default async function ExplorePage({
         </div>
 
         {places.length === 0 ? (
-          <EmptyState title={t("empty")}>
+          <EmptyState
+            title={t("empty")}
+            picture={
+              category === "alojamiento" || category === "gastronomia"
+                ? illustrationFor("hostales", locale)
+                : undefined
+            }
+          >
             <p>
               {category === "alojamiento" || category === "gastronomia"
                 ? t("emptyComing")

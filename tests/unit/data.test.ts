@@ -156,3 +156,30 @@ describe("portada de la ruta", () => {
     expect(es.alt.length).toBeGreaterThan(20);
   });
 });
+
+describe("ilustraciones", () => {
+  it("todo lugar tiene ilustración y el archivo existe", async () => {
+    const { existsSync } = await import("node:fs");
+    const { join } = await import("node:path");
+    for (const p of listPlaces("es")) {
+      expect(p.picture.alt.length, p.slug).toBeGreaterThan(20);
+      expect(
+        existsSync(join(process.cwd(), "public", p.picture.src)),
+        p.picture.src,
+      ).toBe(true);
+    }
+  });
+  it("las escenas específicas se asignan a su lugar", () => {
+    expect(getPlace("papudo-plaza", "es")!.picture.src).toContain("plaza");
+    expect(getPlace("papudo-pullally", "es")!.picture.src).toContain("humedal");
+    expect(getPlace("papudo-parque", "es")!.picture.src).toContain("paseo");
+    expect(getPlace("playa-chica-papudo", "es")!.picture.src).toContain(
+      "playa",
+    );
+  });
+  it("el texto alternativo cambia con el idioma", () => {
+    expect(getPlace("playa-papudo", "en")!.picture.alt).not.toBe(
+      getPlace("playa-papudo", "es")!.picture.alt,
+    );
+  });
+});

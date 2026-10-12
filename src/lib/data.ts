@@ -4,6 +4,13 @@
  * de la app usa estos tipos.
  */
 import { CATEGORY_DEFS } from "@/content/catalog";
+import {
+  CATEGORY_ILLUSTRATION,
+  ILLUSTRATIONS,
+  LOCALITY_ILLUSTRATION,
+  PLACE_ILLUSTRATION,
+  type IllustrationKey,
+} from "@/content/images";
 import { LOCALITIES, PLACES } from "@/content/papudo-places";
 import { ROUTES } from "@/content/papudo-routes";
 import type { CategorySlug, Source } from "@/content/types";
@@ -26,6 +33,8 @@ export type Place = {
   verification: "pending" | "verified" | "outdated";
   /** `true` si el texto mostrado es español porque falta la traducción. */
   fallbackToSpanish: boolean;
+  /** Ilustración (IA) de la ficha: la del lugar o, si no, la de su categoría. */
+  picture: Picture;
 };
 
 export type Locality = {
@@ -35,6 +44,7 @@ export type Locality = {
   source: Source | null;
   latitude: number | null;
   longitude: number | null;
+  picture: Picture | null;
 };
 
 export type RouteStop = { place: Place; notes: string | null };
@@ -51,6 +61,26 @@ export type Route = {
 
 export type Category = { slug: CategorySlug; name: string; count: number };
 
+export type Picture = {
+  src: string;
+  width: number;
+  height: number;
+  alt: string;
+};
+
+function picture(key: IllustrationKey, locale: Locale): Picture {
+  const i = ILLUSTRATIONS[key];
+  return {
+    src: i.src,
+    width: i.width,
+    height: i.height,
+    alt: locale === "en" ? i.alt.en : i.alt.es,
+  };
+}
+
+export const illustrationFor = (key: IllustrationKey, locale: Locale) =>
+  picture(key, locale);
+
 const pick = <T>(locale: Locale, es: T, en?: T): T =>
   locale === "en" && en ? en : es;
 
@@ -64,6 +94,9 @@ export function listLocalities(locale: Locale): Locality[] {
       : null,
     latitude: l.latitude,
     longitude: l.longitude,
+    picture: LOCALITY_ILLUSTRATION[l.slug]
+      ? picture(LOCALITY_ILLUSTRATION[l.slug]!, locale)
+      : null,
   }));
 }
 
@@ -98,6 +131,10 @@ function toPlace(slug: string, locale: Locale): Place | undefined {
     sources: [p.source, p.tvSource].filter((s): s is Source => Boolean(s)),
     verification: "pending",
     fallbackToSpanish: locale === "en" && !p.en,
+    picture: picture(
+      PLACE_ILLUSTRATION[p.slug] ?? CATEGORY_ILLUSTRATION[p.categorySlug],
+      locale,
+    ),
   };
 }
 

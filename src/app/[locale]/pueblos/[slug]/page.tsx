@@ -48,7 +48,11 @@ export default async function VillagePage({
 
   return (
     <main className="flex flex-col">
-      <PageHero title={village.name} subtitle={village.summary ?? undefined} />
+      <PageHero
+        title={village.name}
+        subtitle={village.summary ?? undefined}
+        image={village.picture ?? undefined}
+      />
       <div className="mx-auto flex w-full max-w-3xl flex-col gap-5 px-4 pb-10">
         {village.source ? (
           <p className="text-muted text-sm">
