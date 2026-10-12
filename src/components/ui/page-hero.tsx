@@ -31,7 +31,7 @@ export function PageHero({
             className="absolute inset-0 -z-10 bg-[linear-gradient(180deg,rgb(7_73_90_/_0.86)_0%,rgb(7_73_90_/_0.62)_60%,rgb(7_73_90_/_0.3)_100%)]"
             aria-hidden="true"
           />
-          <AiBadge className="absolute right-3 bottom-2 z-10" />
+          <AiBadge className="absolute right-3 bottom-1.5 z-10" />
         </>
       ) : null}
       <div
