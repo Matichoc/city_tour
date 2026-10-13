@@ -34,8 +34,20 @@ describe("contenido de Papudo", () => {
     }
   });
   it("los lugares agregados desde la web tienen al menos dos fuentes", () => {
-    for (const p of listPlaces("es").filter((x) => !x.hasLocation)) {
+    for (const p of listPlaces("es").filter(
+      (x) => !x.hasLocation && !x.mapsUrl,
+    )) {
       expect(p.sources.length, p.slug).toBeGreaterThanOrEqual(2);
+    }
+  });
+
+  it("los lugares aportados con un enlace de Maps lo citan como fuente", () => {
+    for (const p of listPlaces("es").filter((x) => x.mapsUrl)) {
+      expect(p.hasLocation, p.slug).toBe(false);
+      expect(
+        p.sources.some((s) => s.url === p.mapsUrl),
+        p.slug,
+      ).toBe(true);
     }
   });
   it("los locales de muestra están marcados como comercio local", () => {
@@ -46,6 +58,7 @@ describe("contenido de Papudo", () => {
       "fuente-papudo",
       "hotel-carande",
       "restaurante-donde-pablo",
+      "roots-salinas",
     ]);
   });
   it("el Santuario de Pullally cita el decreto de 2021 y la fuente oficial", () => {

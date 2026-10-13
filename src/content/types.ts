@@ -23,6 +23,8 @@ export type PlaceContent = {
   longitude: number | null;
   /** Dirección publicada por una fuente (sirve para "Cómo llegar" sin coordenada). */
   address?: string;
+  /** Enlace directo a Google Maps cuando aún no hay coordenadas verificadas. */
+  mapsUrl?: string;
   /** Negocio local (alojamiento, restaurante...). */
   business?: boolean;
   es: PlaceText;

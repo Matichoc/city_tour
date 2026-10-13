@@ -175,6 +175,36 @@ export const PLACES: PlaceContent[] = [
       },
     ],
   },
+  // Aportado por el usuario con su enlace de Google Maps (2026-10-13). No se
+  // encontraron fuentes web adicionales: queda pendiente de verificación y sin
+  // coordenadas hasta confirmarlas (el enlace corto no se pudo resolver aquí).
+  {
+    slug: "roots-salinas",
+    localitySlug: "las-salinas-papudo",
+    categorySlug: "gastronomia",
+    latitude: null,
+    longitude: null,
+    mapsUrl: "https://maps.app.goo.gl/WvgJMnmpLjk8AnFU9",
+    business: true,
+    es: {
+      name: "Roots Salinas",
+      short:
+        "Local de comida en el sector Las Salinas de Pullally, comuna de Papudo. Información pendiente de verificación.",
+      description:
+        "Local de comida en el sector Las Salinas de Pullally, en la comuna de Papudo. Su ubicación proviene de un enlace de Google Maps; horarios, carta y contacto están pendientes de verificación.",
+    },
+    en: {
+      name: "Roots Salinas",
+      short:
+        "Food spot in the Las Salinas de Pullally area, commune of Papudo. Information pending verification.",
+      description:
+        "Food spot in the Las Salinas de Pullally area, in the commune of Papudo. Its location comes from a Google Maps link; opening hours, menu and contact details are pending verification.",
+    },
+    source: {
+      url: "https://maps.app.goo.gl/WvgJMnmpLjk8AnFU9",
+      label: "Google Maps — Roots Salinas",
+    },
+  },
   {
     slug: "papudo-playa-los-lilenes",
     localitySlug: null,
