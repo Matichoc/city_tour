@@ -38,6 +38,7 @@ describe("contenido de Papudo", () => {
       expect(p.sources.length, p.slug).toBeGreaterThanOrEqual(2);
     }
   });
+
   it("los locales de muestra están marcados como comercio local", () => {
     const negocios = listPlaces("es")
       .filter((p) => p.business)
@@ -46,6 +47,7 @@ describe("contenido de Papudo", () => {
       "fuente-papudo",
       "hotel-carande",
       "restaurante-donde-pablo",
+      "roots-salinas",
     ]);
   });
   it("el Santuario de Pullally cita el decreto de 2021 y la fuente oficial", () => {
