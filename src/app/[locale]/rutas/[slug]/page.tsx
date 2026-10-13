@@ -5,7 +5,8 @@ import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import { resolveLocale } from "@/i18n/utils";
 import { getRoute, listRouteSlugs } from "@/lib/data";
-import { buildPageMetadata, truncate } from "@/lib/seo";
+import { buildPageMetadata, localizedUrl, truncate } from "@/lib/seo";
+import { JsonLd } from "@/components/seo/json-ld";
 import { formatDuration } from "@/lib/itinerary-format";
 import { PageHero } from "@/components/ui/page-hero";
 import { PlacesMap } from "@/components/map/places-map";
@@ -50,6 +51,33 @@ export default async function RoutePage({
 
   return (
     <main className="flex flex-col">
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "TouristTrip",
+          name: route.name,
+          description: route.description,
+          url: localizedUrl(locale, {
+            pathname: "/rutas/[slug]",
+            params: { slug: route.slug },
+          }),
+          itinerary: {
+            "@type": "ItemList",
+            itemListElement: route.stops.map((s, i) => ({
+              "@type": "ListItem",
+              position: i + 1,
+              item: {
+                "@type": "TouristAttraction",
+                name: s.place.name,
+                url: localizedUrl(locale, {
+                  pathname: "/lugares/[slug]",
+                  params: { slug: s.place.slug },
+                }),
+              },
+            })),
+          },
+        }}
+      />
       <PageHero
         title={route.name}
         subtitle={route.description}

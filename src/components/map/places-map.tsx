@@ -145,19 +145,20 @@ export function PlacesMap({
               setSelected(m);
             }}
           >
-            <button
-              type="button"
-              aria-label={m.name}
+            {/* Sin <button>: MapLibre ya da al pin un rol propio. Los mismos
+                lugares siempre están en la lista accesible de la página. */}
+            <span
+              title={m.name}
               style={
                 {
                   "--i": i,
                   background: CATEGORY_PIN_COLOR[m.category],
                 } as React.CSSProperties
               }
-              className="pin-drop grid size-9 [transform:rotate(-45deg)] place-items-center rounded-full rounded-bl-none border-2 border-white text-sm font-extrabold text-white shadow-lg"
+              className="pin-drop grid size-9 [transform:rotate(-45deg)] cursor-pointer place-items-center rounded-full rounded-bl-none border-2 border-white text-sm font-extrabold text-white shadow-lg"
             >
               <span className="[transform:rotate(45deg)]">{m.order ?? ""}</span>
-            </button>
+            </span>
           </Marker>
         ))}
         {selected ? (

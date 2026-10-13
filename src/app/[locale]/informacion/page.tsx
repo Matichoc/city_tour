@@ -119,6 +119,38 @@ export default async function InfoPage({
         </section>
 
         <section
+          aria-labelledby="emergencias"
+          className="border-border bg-surface rounded-2xl border p-4"
+        >
+          <h2 id="emergencias" className="font-display text-2xl font-extrabold">
+            {t("emergencyTitle")}
+          </h2>
+          <ul className="mt-3 grid grid-cols-2 gap-2">
+            {(
+              [
+                ["131", "ambulance"],
+                ["132", "firefighters"],
+                ["133", "police"],
+                ["137", "maritime"],
+              ] as const
+            ).map(([number, key]) => (
+              <li key={number}>
+                <a
+                  href={`tel:${number}`}
+                  className="bg-sea-soft flex min-h-14 flex-col justify-center rounded-xl px-3 py-2"
+                >
+                  <span className="font-display text-sea-deep text-xl font-extrabold">
+                    {number}
+                  </span>
+                  <span className="text-xs">{t(`emergency.${key}`)}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+          <p className="text-muted mt-3 text-xs">{t("emergencyNote")}</p>
+        </section>
+
+        <section
           aria-labelledby="datos"
           className="bg-earth-soft text-earth rounded-2xl p-4"
         >

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
+import { track } from "@/lib/analytics";
 
 /** Comparte el enlace de la página (Web Share en el celular; si no, copia). */
 export function ShareButton({
@@ -16,6 +17,7 @@ export function ShareButton({
 
   async function share() {
     const url = window.location.href;
+    track("share", { path: window.location.pathname });
     try {
       if (navigator.share) {
         await navigator.share({ title, url });

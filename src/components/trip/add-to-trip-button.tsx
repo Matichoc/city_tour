@@ -2,6 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { addToTrip, removeFromTrip, useTrip } from "@/lib/trip-store";
+import { track } from "@/lib/analytics";
 
 export function AddToTripButton({
   slug,
@@ -17,7 +18,13 @@ export function AddToTripButton({
     <button
       type="button"
       aria-pressed={inTrip}
-      onClick={() => (inTrip ? removeFromTrip(slug) : addToTrip(slug))}
+      onClick={() => {
+        if (inTrip) removeFromTrip(slug);
+        else {
+          addToTrip(slug);
+          track("add_to_trip", { slug });
+        }
+      }}
       className={`min-h-11 rounded-full px-5 text-sm font-bold transition active:scale-95 ${
         inTrip
           ? "border-sea bg-sea-soft text-sea-deep border-2"

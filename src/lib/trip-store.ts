@@ -62,6 +62,11 @@ function snapshot(): TripState {
   return cache.value;
 }
 
+/** Lee el recorrido guardado ahora mismo (no el del primer render). */
+export function readTrip(): TripState {
+  return snapshot();
+}
+
 export function setTrip(next: TripState): void {
   const raw = JSON.stringify(next);
   try {

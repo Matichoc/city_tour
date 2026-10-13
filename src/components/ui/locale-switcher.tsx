@@ -35,7 +35,7 @@ export function LocaleSwitcher() {
           aria-pressed={locale === current}
           className={`min-h-9 min-w-11 px-3 uppercase ${
             locale === current
-              ? "bg-sea text-sea-foreground"
+              ? "bg-sea text-white"
               : "text-muted hover:bg-sea-soft"
           }`}
         >

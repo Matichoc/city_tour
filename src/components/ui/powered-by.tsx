@@ -6,7 +6,7 @@ import type { Locale } from "@/i18n/routing";
 export async function PoweredBy({ locale }: { locale: Locale }) {
   const t = await getTranslations({ locale, namespace: "common" });
   return (
-    <footer className="text-muted px-4 pt-6 pb-4 text-center text-xs">
+    <footer className="text-muted px-4 pt-6 pb-4 text-center text-xs print:hidden">
       <a
         href={SPONSOR.websiteUrl}
         target="_blank"

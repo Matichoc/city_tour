@@ -6,7 +6,14 @@ import { routing } from "@/i18n/routing";
 import { resolveLocale } from "@/i18n/utils";
 import { getPlace, listPlaceSlugs } from "@/lib/data";
 import { directionsUrl } from "@/lib/map-config";
-import { buildPageMetadata, truncate } from "@/lib/seo";
+import { TrackedAnchor } from "@/components/analytics/tracked-link";
+import {
+  buildPageMetadata,
+  getSiteUrl,
+  localizedUrl,
+  truncate,
+} from "@/lib/seo";
+import { JsonLd } from "@/components/seo/json-ld";
 import { formatDuration } from "@/lib/itinerary-format";
 import { IllustratedImage } from "@/components/ui/illustrated-image";
 import { StatusBadge } from "@/components/place/status-badge";
@@ -51,6 +58,31 @@ export default async function PlacePage({
 
   return (
     <main className="flex flex-col gap-5 pb-10">
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type":
+            place.categorySlug === "playas" ? "Beach" : "TouristAttraction",
+          name: place.name,
+          description: place.shortDescription,
+          url: localizedUrl(locale, {
+            pathname: "/lugares/[slug]",
+            params: { slug: place.slug },
+          }),
+          image: `${getSiteUrl()}${place.picture.src}`,
+          geo: {
+            "@type": "GeoCoordinates",
+            latitude: place.latitude,
+            longitude: place.longitude,
+          },
+          address: {
+            "@type": "PostalAddress",
+            addressLocality: place.localityName ?? "Papudo",
+            addressRegion: "Valparaíso",
+            addressCountry: "CL",
+          },
+        }}
+      />
       <div className="relative">
         <IllustratedImage picture={place.picture} className="h-56" priority />
         <Link
@@ -93,14 +125,16 @@ export default async function PlacePage({
 
         <div className="flex flex-wrap gap-2">
           <AddToTripButton slug={place.slug} />
-          <a
+          <TrackedAnchor
+            event="navigate_click"
+            eventProps={{ slug: place.slug }}
             href={directionsUrl(place.latitude, place.longitude)}
             target="_blank"
             rel="noopener noreferrer"
             className="bg-sea inline-flex min-h-11 items-center rounded-full px-5 text-sm font-bold text-white"
           >
             {t("navigate")}
-          </a>
+          </TrackedAnchor>
           <ShareButton title={place.name} />
         </div>
 

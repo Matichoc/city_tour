@@ -27,3 +27,15 @@ teléfono vienen del repo de referencia y están por confirmar con la municipali
 
 Primera visita siempre en español (`localeDetection: false`). El inglés es
 opcional: si falta la traducción de un lugar, se muestra el español y se avisa.
+
+## Analítica
+
+Vercel Web Analytics (sin cookies, sin datos personales). Eventos propios en
+`src/lib/analytics.ts`: `add_to_trip`, `add_route`, `navigate_click`, `share`,
+`qr_visit` (con el `origen` del QR) y `business_cta`. Se activa en Vercel →
+Analytics; sin activar, no envía nada.
+
+## QR para negocios
+
+`/es/qr?nombre=...` genera un afiche imprimible cuyo QR abre la guía con
+`?origen=<nombre-normalizado>`, para saber qué local trae visitas (sin datos personales).

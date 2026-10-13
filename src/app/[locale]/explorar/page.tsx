@@ -206,16 +206,30 @@ export default async function ExplorePage({
             }
           >
             <p>
-              {category === "alojamiento" || category === "gastronomia"
+              {category === "alojamiento" ||
+              category === "gastronomia" ||
+              category === "actividades"
                 ? t("emptyComing")
                 : t("emptyHint")}
             </p>
-            <Link
-              href="/explorar"
-              className="text-sea mt-3 inline-block font-bold"
-            >
-              {t("clear")}
-            </Link>
+            <div className="mt-3 flex flex-wrap justify-center gap-3">
+              {category === "alojamiento" ||
+              category === "gastronomia" ||
+              category === "actividades" ? (
+                <Link
+                  href="/negocios"
+                  className="bg-coral text-coral-ink inline-flex min-h-11 items-center rounded-full px-5 font-bold"
+                >
+                  {t("addBusiness")}
+                </Link>
+              ) : null}
+              <Link
+                href="/explorar"
+                className="text-sea inline-flex min-h-11 items-center font-bold"
+              >
+                {t("clear")}
+              </Link>
+            </div>
           </EmptyState>
         ) : view === "map" ? (
           <PlacesMap
