@@ -30,7 +30,6 @@ export type Place = {
   longitude: number | null;
   hasLocation: boolean;
   address: string | null;
-  mapsUrl: string | null;
   business: boolean;
   visitMinutes: number;
   sources: Source[];
@@ -134,7 +133,6 @@ function toPlace(slug: string, locale: Locale): Place | undefined {
     longitude: p.longitude,
     hasLocation: p.latitude !== null && p.longitude !== null,
     address: p.address ?? null,
-    mapsUrl: p.mapsUrl ?? null,
     business: p.business === true,
     visitMinutes: cat.defaultVisitMinutes,
     sources: [p.source, p.tvSource, ...(p.extraSources ?? [])].filter(

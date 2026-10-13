@@ -136,10 +136,9 @@ export default async function PlacePage({
             href={
               place.latitude !== null && place.longitude !== null
                 ? directionsUrl(place.latitude, place.longitude)
-                : (place.mapsUrl ??
-                  searchUrl(
+                : searchUrl(
                     `${place.name}, ${place.address ?? "Papudo"}, Chile`,
-                  ))
+                  )
             }
             target="_blank"
             rel="noopener noreferrer"
