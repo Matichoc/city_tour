@@ -8,6 +8,7 @@ export function AiBadge({ className = "" }: { className?: string }) {
   const t = useTranslations("common");
   return (
     <span
+      data-ai-badge=""
       className={`text-[10px] font-medium tracking-wide text-white/65 [text-shadow:0_1px_2px_rgb(0_0_0_/_0.55)] ${className}`}
     >
       {t("aiIllustration")}

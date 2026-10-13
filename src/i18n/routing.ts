@@ -21,5 +21,7 @@ export const routing = defineRouting({
     "/pueblos/[slug]": { es: "/pueblos/[slug]", en: "/villages/[slug]" },
     "/recorrido": { es: "/recorrido", en: "/my-trip" },
     "/informacion": { es: "/informacion", en: "/info" },
+    "/negocios": { es: "/negocios", en: "/for-business" },
+    "/qr": "/qr",
   },
 });

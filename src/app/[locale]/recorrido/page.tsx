@@ -1,7 +1,7 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { Metadata } from "next";
 import { resolveLocale } from "@/i18n/utils";
-import { listPlaces, listRoutes } from "@/lib/data";
+import { isLocated, listPlaces, listRoutes } from "@/lib/data";
 import { buildPageMetadata } from "@/lib/seo";
 import { PageHero } from "@/components/ui/page-hero";
 import { TripView } from "@/components/trip/trip-view";
@@ -35,7 +35,8 @@ export default async function TripPage({
   setRequestLocale(locale);
   const sp = await searchParams;
   const t = await getTranslations("trip");
-  const places = listPlaces(locale);
+  // Solo lugares con coordenada verificada pueden ordenarse en un recorrido.
+  const places = listPlaces(locale).filter(isLocated);
   const known = new Set(places.map((p) => p.slug));
 
   // Enlace compartido: ?l=a,b,c&h=10:00&v=1 (solo se aceptan lugares conocidos).

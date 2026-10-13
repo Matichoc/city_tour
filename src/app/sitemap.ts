@@ -12,6 +12,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       "/rutas",
       "/recorrido",
       "/informacion",
+      "/negocios",
     ] as const) {
       entries.push({ url: localizedUrl(locale, href) });
     }

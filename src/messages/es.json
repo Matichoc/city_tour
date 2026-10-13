@@ -10,7 +10,8 @@
     "trip": "Mi recorrido",
     "info": "Información",
     "language": "Idioma",
-    "main": "Navegación principal"
+    "main": "Navegación principal",
+    "business": "Para negocios"
   },
   "common": {
     "share": "Compartir",
@@ -47,7 +48,7 @@
     "list": "Lista",
     "map": "Mapa",
     "empty": "Aún no hay lugares aquí",
-    "emptyComing": "Estamos sumando esta categoría junto a la Municipalidad y la Cámara de Comercio de Papudo.",
+    "emptyComing": "Estamos sumando más lugares de esta categoría junto a la Municipalidad y la Cámara de Comercio de Papudo.",
     "emptyHint": "Prueba con otra búsqueda o quita un filtro.",
     "clear": "Quitar filtros"
   },
@@ -65,7 +66,10 @@
     "source": "Fuente",
     "pending": "Pendiente de verificación",
     "verified": "Verificado",
-    "outdated": "Desactualizado"
+    "outdated": "Desactualizado",
+    "noLocation": "Ubicación exacta por confirmar: usa \"Cómo llegar\" para buscarla por nombre y dirección.",
+    "address": "Dirección",
+    "business": "Comercio local"
   },
   "routes": {
     "title": "Rutas",
@@ -105,7 +109,10 @@
     "returnLeg": "Vuelta al inicio: {time} · {distance}",
     "estimateNote": "Tiempos estimados: distancia en línea recta a 40 km/h más el tiempo de visita sugerido. Úsalo como guía, no como horario exacto.",
     "shareTrip": "Compartir mi recorrido",
-    "copied": "¡Enlace copiado!"
+    "copied": "¡Enlace copiado!",
+    "sharedTitle": "Te compartieron un recorrido de {count, plural, one {# parada} other {# paradas}}. ¿Quieres cargarlo?",
+    "sharedLoad": "Cargar el recorrido compartido",
+    "sharedKeep": "Mantener el mío"
   },
   "map": {
     "unavailable": "El mapa no está disponible en este momento. Puedes seguir usando la lista.",
@@ -118,14 +125,21 @@
     "source": "Fuente",
     "website": "Sitio web de la Municipalidad",
     "kind": {
-      "facebook": "Facebook",
-      "instagram": "Instagram",
-      "phone": "Llamar a la Municipalidad",
-      "email": "Escribir a la Municipalidad"
+      "phone": "Llamar a la Municipalidad"
     },
-    "contactPending": "Redes y teléfono en verificación con la municipalidad.",
     "dataTitle": "Sobre estos datos",
-    "dataBody": "Cada lugar muestra su fuente y su estado de verificación. Nada se da por confirmado hasta que lo revisa una persona: horarios, precios y accesos pueden cambiar."
+    "dataBody": "Cada lugar muestra su fuente y su estado de verificación. Nada se da por confirmado hasta que lo revisa una persona: horarios, precios y accesos pueden cambiar.",
+    "emergencyTitle": "Números de emergencia",
+    "emergency": {
+      "ambulance": "Ambulancia (SAMU)",
+      "firefighters": "Bomberos",
+      "police": "Carabineros",
+      "maritime": "Emergencias en el mar (Armada)"
+    },
+    "emergencyNote": "Números nacionales de Chile, gratuitos desde cualquier teléfono.",
+    "practicalTitle": "Antes de ir",
+    "historyTitle": "Historia",
+    "forBusiness": "Para negocios (próximamente)"
   },
   "village": {
     "back": "Información",
@@ -133,5 +147,77 @@
     "noPlaces": "Aún no hay lugares publicados en este pueblo.",
     "source": "Fuente",
     "approx": "Ubicación referencial del pueblo."
+  },
+  "errors": {
+    "notFoundTitle": "No encontramos esta página",
+    "notFoundBody": "Puede que el enlace esté mal escrito o que el lugar ya no esté publicado.",
+    "goHome": "Ir al inicio",
+    "goExplore": "Explorar Papudo",
+    "errorTitle": "Algo salió mal",
+    "errorBody": "Tuvimos un problema al mostrar esta página. Inténtalo de nuevo.",
+    "retry": "Reintentar"
+  },
+  "business": {
+    "title": "Para negocios",
+    "subtitle": "Suma tu alojamiento, restaurante o actividad a la guía turística de Papudo.",
+    "pitchTitle": "Los visitantes ya están buscando dónde dormir, comer y qué hacer",
+    "pitchBody": "Papudo en tu mano reúne playas, rutas y recorridos de la comuna. Tu negocio puede aparecer justo cuando alguien arma su día.",
+    "benefitsTitle": "Qué obtienes",
+    "benefit": {
+      "free": {
+        "title": "Ficha gratuita",
+        "body": "Nombre, descripción, horarios y contacto de tu negocio en la guía."
+      },
+      "verified": {
+        "title": "Información verificada",
+        "body": "Revisamos tus datos contigo: el visitante confía en lo que ve."
+      },
+      "routes": {
+        "title": "En rutas y recorridos",
+        "body": "Tu negocio puede sumarse a \"Mi recorrido\" con un toque."
+      },
+      "directions": {
+        "title": "Cómo llegar",
+        "body": "Botón directo a la navegación del celular."
+      },
+      "qr": {
+        "title": "Tu QR para el local",
+        "body": "Un afiche imprimible para que tus clientes descubran Papudo."
+      },
+      "stats": {
+        "title": "Estadísticas",
+        "body": "Cuántas personas vieron tu ficha y pidieron cómo llegar (próximamente)."
+      }
+    },
+    "stepsTitle": "Cómo sumarte",
+    "step": {
+      "contact": {
+        "title": "Escríbenos",
+        "body": "Cuéntanos qué ofreces y dónde estás."
+      },
+      "verify": {
+        "title": "Verificamos",
+        "body": "Confirmamos ubicación, horarios y contacto contigo."
+      },
+      "publish": {
+        "title": "Publicamos",
+        "body": "Tu ficha aparece en la guía, en español y en inglés."
+      }
+    },
+    "muniTitle": "Para la Municipalidad y la Cámara de Comercio",
+    "muniBody": "Un catastro turístico actualizado, información verificada con fuente y métricas de uso para medir el impacto de cada temporada.",
+    "notOpen": "Esta es una versión de prueba: las inscripciones de negocios todavía no están abiertas. Los locales que ves en la guía son de muestra, con datos públicos y sus fuentes."
+  },
+  "qr": {
+    "poster": "Afiche con código QR",
+    "nameLabel": "Nombre de tu local (opcional)",
+    "namePlaceholder": "Ej.: Hostal Las Gaviotas",
+    "generate": "Generar",
+    "help": "El QR lleva a la guía y nos dice desde qué local llegó la visita, sin datos personales.",
+    "headline": "Descubre Papudo desde tu celular",
+    "qrAlt": "Código QR a la guía Papudo en tu mano",
+    "scan": "Escanea con la cámara: playas, rutas y recorridos, sin descargar nada.",
+    "from": "Te lo recomienda {name}",
+    "print": "Imprimir afiche"
   }
 }

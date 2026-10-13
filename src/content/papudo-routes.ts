@@ -1,3 +1,4 @@
+import { ILLUSTRATIONS } from "@/content/images";
 import type { RouteContent } from "@/content/types";
 
 /**
@@ -36,5 +37,32 @@ export const ROUTES: RouteContent[] = [
       url: "https://www.minube.com/tips/actualidad/rincones-unicos-que-visitar-en-papudo-mar-y-montana-te-esperan",
       label: "minube — Qué ver en Papudo",
     },
+  },
+  {
+    // Recorrido a pie por el centro del balneario, armado con lugares que ya
+    // tienen fuente. No se fija duración: la calcula "Mi recorrido".
+    slug: "papudo-a-pie",
+    durationMinutes: null,
+    es: {
+      name: "Papudo a pie",
+      description:
+        "Un paseo por el centro del balneario: la Plaza, Playa Chica y la playa principal, siguiendo el paseo La Terraza.",
+    },
+    en: {
+      name: "Papudo on foot",
+      description:
+        "A stroll through the heart of the resort: the main square, Playa Chica and the main beach, along the La Terraza promenade.",
+    },
+    stops: [
+      { slug: "papudo-plaza" },
+      { slug: "playa-chica-papudo" },
+      { slug: "playa-papudo" },
+      { slug: "papudo-parque" },
+    ],
+    source: {
+      url: "https://www.playasdechile.com/playas-en-papudo/",
+      label: "PlayasDeChile.com — Playas en Papudo",
+    },
+    cover: { src: ILLUSTRATIONS.paseo.src, alt: ILLUSTRATIONS.paseo.alt },
   },
 ];

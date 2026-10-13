@@ -4,6 +4,7 @@ import { Link } from "@/i18n/navigation";
 import { resolveLocale } from "@/i18n/utils";
 import { listLocalities } from "@/lib/data";
 import { MUNICIPALITY } from "@/content/catalog";
+import { INFO_BLOCKS } from "@/content/papudo-info";
 import { buildPageMetadata } from "@/lib/seo";
 import { PageHero } from "@/components/ui/page-hero";
 
@@ -74,6 +75,51 @@ export default async function InfoPage({
           ))}
         </section>
 
+        {(["practical", "history"] as const).map((group) => (
+          <section
+            key={group}
+            aria-labelledby={`info-${group}`}
+            className="flex flex-col gap-3"
+          >
+            <h2
+              id={`info-${group}`}
+              className="font-display text-2xl font-extrabold"
+            >
+              {t(group === "practical" ? "practicalTitle" : "historyTitle")}
+            </h2>
+            {INFO_BLOCKS.filter((b) => b.group === group).map((b) => {
+              const text = locale === "en" ? b.en : b.es;
+              return (
+                <article
+                  key={b.id}
+                  className="border-border bg-surface rounded-2xl border p-4"
+                >
+                  <h3 className="font-display text-lg font-extrabold">
+                    {text.title}
+                  </h3>
+                  <p className="mt-1 text-sm">{text.body}</p>
+                  <p className="text-muted mt-2 text-xs">
+                    {t("source")}:{" "}
+                    {b.sources.map((src, i) => (
+                      <span key={src.url}>
+                        {i > 0 ? " · " : null}
+                        <a
+                          className="text-sea underline"
+                          href={src.url}
+                          rel="noopener noreferrer"
+                          target="_blank"
+                        >
+                          {src.label}
+                        </a>
+                      </span>
+                    ))}
+                  </p>
+                </article>
+              );
+            })}
+          </section>
+        ))}
+
         <section
           aria-labelledby="muni"
           className="border-border bg-surface rounded-2xl border p-4"
@@ -92,30 +138,64 @@ export default async function InfoPage({
                 {t("website")}
               </a>
             </li>
-            {MUNICIPALITY.links.map((l) => (
-              <li key={l.kind}>
+            <li>
+              <a
+                className="text-sea underline"
+                href={`tel:${MUNICIPALITY.links[0].value}`}
+              >
+                {t("kind.phone")}
+              </a>
+            </li>
+            <li className="text-muted">{MUNICIPALITY.address}</li>
+          </ul>
+          <p className="text-muted mt-3 text-xs">
+            {t("source")}:{" "}
+            {MUNICIPALITY.sources.map((src, i) => (
+              <span key={src.url}>
+                {i > 0 ? " · " : null}
                 <a
                   className="text-sea underline"
-                  href={
-                    l.kind === "phone"
-                      ? `tel:${l.value}`
-                      : l.kind === "email"
-                        ? `mailto:${l.value}`
-                        : l.value
-                  }
+                  href={src.url}
                   rel="noopener noreferrer"
-                  target={
-                    l.kind === "phone" || l.kind === "email"
-                      ? undefined
-                      : "_blank"
-                  }
+                  target="_blank"
                 >
-                  {t(`kind.${l.kind}`)}
+                  {src.label}
+                </a>
+              </span>
+            ))}
+          </p>
+        </section>
+
+        <section
+          aria-labelledby="emergencias"
+          className="border-border bg-surface rounded-2xl border p-4"
+        >
+          <h2 id="emergencias" className="font-display text-2xl font-extrabold">
+            {t("emergencyTitle")}
+          </h2>
+          <ul className="mt-3 grid grid-cols-2 gap-2">
+            {(
+              [
+                ["131", "ambulance"],
+                ["132", "firefighters"],
+                ["133", "police"],
+                ["137", "maritime"],
+              ] as const
+            ).map(([number, key]) => (
+              <li key={number}>
+                <a
+                  href={`tel:${number}`}
+                  className="bg-sea-soft flex min-h-14 flex-col justify-center rounded-xl px-3 py-2"
+                >
+                  <span className="font-display text-sea-deep text-xl font-extrabold">
+                    {number}
+                  </span>
+                  <span className="text-xs">{t(`emergency.${key}`)}</span>
                 </a>
               </li>
             ))}
           </ul>
-          <p className="text-muted mt-3 text-xs">{t("contactPending")}</p>
+          <p className="text-muted mt-3 text-xs">{t("emergencyNote")}</p>
         </section>
 
         <section
@@ -127,6 +207,12 @@ export default async function InfoPage({
           </h2>
           <p className="mt-2 text-sm">{t("dataBody")}</p>
         </section>
+        <Link
+          href="/negocios"
+          className="text-sea self-start text-sm font-bold underline"
+        >
+          {t("forBusiness")}
+        </Link>
       </div>
     </main>
   );

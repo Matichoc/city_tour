@@ -5,6 +5,7 @@ import { MUNICIPALITY, SPONSOR } from "@/content/catalog";
 import {
   getLocality,
   getPlace,
+  isLocated,
   getRoute,
   isCategorySlug,
   listCategories,
@@ -21,13 +22,47 @@ const keys = (o: object, p = ""): string[] =>
   );
 
 describe("contenido de Papudo", () => {
-  it("todo lugar tiene fuente y coordenadas válidas", () => {
+  it("todo lugar tiene fuente, y coordenadas válidas cuando las tiene", () => {
     for (const p of PLACES) {
       expect(p.source, p.slug).toBeDefined();
-      expect(p.latitude).toBeLessThan(-32);
-      expect(p.latitude).toBeGreaterThan(-33);
-      expect(p.longitude).toBeLessThan(-71);
+      expect(p.latitude === null, p.slug).toBe(p.longitude === null);
+      if (p.latitude !== null && p.longitude !== null) {
+        expect(p.latitude).toBeLessThan(-32);
+        expect(p.latitude).toBeGreaterThan(-33);
+        expect(p.longitude).toBeLessThan(-71);
+      }
     }
+  });
+  it("los lugares agregados desde la web tienen al menos dos fuentes", () => {
+    for (const p of listPlaces("es").filter((x) => !x.hasLocation)) {
+      expect(p.sources.length, p.slug).toBeGreaterThanOrEqual(2);
+    }
+  });
+  it("los locales de muestra están marcados como comercio local", () => {
+    const negocios = listPlaces("es")
+      .filter((p) => p.business)
+      .map((p) => p.slug);
+    expect(negocios.sort()).toEqual([
+      "fuente-papudo",
+      "hotel-carande",
+      "restaurante-donde-pablo",
+    ]);
+  });
+  it("el Santuario de Pullally cita el decreto de 2021 y la fuente oficial", () => {
+    for (const slug of ["papudo-pullally", "papudo-salinas-pullally"]) {
+      const p = getPlace(slug, "es")!;
+      expect(p.shortDescription).toContain("2021");
+      expect(p.shortDescription).not.toContain("2020");
+      expect(
+        p.sources.some((s) => s.url.includes("monumentos.gob.cl")),
+        slug,
+      ).toBe(true);
+    }
+  });
+  it("solo los lugares con coordenada entran al mapa y a los recorridos", () => {
+    const sinUbicacion = listPlaces("es").filter((p) => !isLocated(p));
+    expect(sinUbicacion.length).toBeGreaterThan(0);
+    expect(sinUbicacion.every((p) => p.latitude === null)).toBe(true);
   });
   it("los slugs son únicos", () => {
     expect(new Set(PLACES.map((p) => p.slug)).size).toBe(PLACES.length);
@@ -80,9 +115,10 @@ describe("capa de datos", () => {
     );
     expect(listPlaces("es", { query: "zzz" })).toHaveLength(0);
   });
-  it("las categorías vacías cuentan cero (alojamiento, gastronomía)", () => {
+  it("cuenta lugares por categoría (actividades aún vacía)", () => {
     const c = listCategories("es");
-    expect(c.find((x) => x.slug === "alojamiento")!.count).toBe(0);
+    expect(c.find((x) => x.slug === "actividades")!.count).toBe(0);
+    expect(c.find((x) => x.slug === "alojamiento")!.count).toBe(1);
     expect(isCategorySlug("playas")).toBe(true);
     expect(isCategorySlug("nada")).toBe(false);
   });
@@ -123,7 +159,8 @@ describe("completitud respecto de directorio_turistico (auditoría de Papudo)", 
       "papudo-parque",
       "papudo-plaza",
     ];
-    expect(PLACES.map((p) => p.slug).sort()).toEqual([...esperados].sort());
+    const slugs = PLACES.map((p) => p.slug);
+    for (const e of esperados) expect(slugs, e).toContain(e);
   });
   it("incluye los tres pueblos de la comuna", () => {
     expect(LOCALITIES.map((l) => l.slug).sort()).toEqual([
@@ -136,10 +173,10 @@ describe("completitud respecto de directorio_turistico (auditoría de Papudo)", 
     expect(getLocality("pullally", "es")!.name).toBe("Pullally");
     expect(listPlaces("es", { locality: "papudo" }).length).toBeGreaterThan(0);
   });
-  it("el contacto de la municipalidad incluye sitio, redes, teléfono y correo", () => {
-    const kinds = MUNICIPALITY.links.map((l) => l.kind).sort();
-    expect(kinds).toEqual(["email", "facebook", "instagram", "phone"]);
+  it("el contacto de la municipalidad solo tiene datos con fuente", () => {
+    expect(MUNICIPALITY.links.map((l) => l.kind)).toEqual(["phone"]);
     expect(MUNICIPALITY.website).toContain("munipapudo.cl");
+    expect(MUNICIPALITY.sources.length).toBeGreaterThanOrEqual(2);
   });
   it("Matichoc figura como créditos con su enlace", () => {
     expect(SPONSOR.name).toBe("Matichoc");

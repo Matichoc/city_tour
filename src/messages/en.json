@@ -10,7 +10,8 @@
     "trip": "My trip",
     "info": "Info",
     "language": "Language",
-    "main": "Main navigation"
+    "main": "Main navigation",
+    "business": "For business"
   },
   "common": {
     "share": "Share",
@@ -47,7 +48,7 @@
     "list": "List",
     "map": "Map",
     "empty": "No places here yet",
-    "emptyComing": "We are adding this category together with the Municipality and Papudo's Chamber of Commerce.",
+    "emptyComing": "We are adding more places in this category with the Municipality and Papudo's Chamber of Commerce.",
     "emptyHint": "Try another search or remove a filter.",
     "clear": "Clear filters"
   },
@@ -65,7 +66,10 @@
     "source": "Source",
     "pending": "Pending verification",
     "verified": "Verified",
-    "outdated": "Outdated"
+    "outdated": "Outdated",
+    "noLocation": "Exact location to be confirmed: use \"Get directions\" to search by name and address.",
+    "address": "Address",
+    "business": "Local business"
   },
   "routes": {
     "title": "Routes",
@@ -105,7 +109,10 @@
     "returnLeg": "Back to start: {time} · {distance}",
     "estimateNote": "Estimated times: straight-line distance at 40 km/h plus the suggested visit time. Use it as a guide, not an exact timetable.",
     "shareTrip": "Share my trip",
-    "copied": "Link copied!"
+    "copied": "Link copied!",
+    "sharedTitle": "Someone shared a trip with {count, plural, one {# stop} other {# stops}}. Load it?",
+    "sharedLoad": "Load the shared trip",
+    "sharedKeep": "Keep mine"
   },
   "map": {
     "unavailable": "The map is unavailable right now. You can keep using the list.",
@@ -118,14 +125,21 @@
     "source": "Source",
     "website": "Municipality website",
     "kind": {
-      "facebook": "Facebook",
-      "instagram": "Instagram",
-      "phone": "Call the Municipality",
-      "email": "Email the Municipality"
+      "phone": "Call the Municipality"
     },
-    "contactPending": "Social media and phone are being verified with the municipality.",
     "dataTitle": "About this data",
-    "dataBody": "Every place shows its source and verification status. Nothing is treated as confirmed until a person reviews it: opening hours, prices and access may change."
+    "dataBody": "Every place shows its source and verification status. Nothing is treated as confirmed until a person reviews it: opening hours, prices and access may change.",
+    "emergencyTitle": "Emergency numbers",
+    "emergency": {
+      "ambulance": "Ambulance (SAMU)",
+      "firefighters": "Fire brigade",
+      "police": "Police (Carabineros)",
+      "maritime": "Sea emergencies (Navy)"
+    },
+    "emergencyNote": "Chile's national numbers, free from any phone.",
+    "practicalTitle": "Before you go",
+    "historyTitle": "History",
+    "forBusiness": "For business (coming soon)"
   },
   "village": {
     "back": "Info",
@@ -133,5 +147,77 @@
     "noPlaces": "There are no published places in this village yet.",
     "source": "Source",
     "approx": "Approximate location of the village."
+  },
+  "errors": {
+    "notFoundTitle": "We couldn't find this page",
+    "notFoundBody": "The link may be mistyped or the place is no longer published.",
+    "goHome": "Go home",
+    "goExplore": "Explore Papudo",
+    "errorTitle": "Something went wrong",
+    "errorBody": "We had a problem showing this page. Please try again.",
+    "retry": "Try again"
+  },
+  "business": {
+    "title": "For business",
+    "subtitle": "Add your lodging, restaurant or activity to Papudo's travel guide.",
+    "pitchTitle": "Visitors are already looking for where to stay, eat and what to do",
+    "pitchBody": "Papudo en tu mano brings together the commune's beaches, routes and trips. Your business can show up right when someone plans their day.",
+    "benefitsTitle": "What you get",
+    "benefit": {
+      "free": {
+        "title": "Free listing",
+        "body": "Your business name, description, opening hours and contact in the guide."
+      },
+      "verified": {
+        "title": "Verified information",
+        "body": "We check your details with you, so visitors trust what they see."
+      },
+      "routes": {
+        "title": "In routes and trips",
+        "body": "Your business can be added to \"My trip\" with one tap."
+      },
+      "directions": {
+        "title": "Get directions",
+        "body": "A direct button to phone navigation."
+      },
+      "qr": {
+        "title": "Your QR for the shop",
+        "body": "A printable poster so your customers discover Papudo."
+      },
+      "stats": {
+        "title": "Statistics",
+        "body": "How many people viewed your listing and asked for directions (coming soon)."
+      }
+    },
+    "stepsTitle": "How to join",
+    "step": {
+      "contact": {
+        "title": "Get in touch",
+        "body": "Tell us what you offer and where you are."
+      },
+      "verify": {
+        "title": "We verify",
+        "body": "We confirm location, hours and contact with you."
+      },
+      "publish": {
+        "title": "We publish",
+        "body": "Your listing appears in the guide, in Spanish and English."
+      }
+    },
+    "muniTitle": "For the Municipality and the Chamber of Commerce",
+    "muniBody": "An up-to-date tourism inventory, sourced and verified information, and usage metrics to measure each season's impact.",
+    "notOpen": "This is a test version: business sign-ups are not open yet. The places you see in the guide are samples, built from public data with their sources."
+  },
+  "qr": {
+    "poster": "Poster with QR code",
+    "nameLabel": "Your shop's name (optional)",
+    "namePlaceholder": "e.g. Las Gaviotas Hostel",
+    "generate": "Generate",
+    "help": "The QR opens the guide and tells us which shop the visit came from, with no personal data.",
+    "headline": "Discover Papudo from your phone",
+    "qrAlt": "QR code to the Papudo en tu mano guide",
+    "scan": "Scan with your camera: beaches, routes and trips, no download needed.",
+    "from": "Recommended by {name}",
+    "print": "Print poster"
   }
 }

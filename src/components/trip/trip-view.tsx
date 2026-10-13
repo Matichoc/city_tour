@@ -10,14 +10,16 @@ import {
   formatKm,
 } from "@/lib/itinerary-format";
 import { directionsUrl } from "@/lib/map-config";
+import { track } from "@/lib/analytics";
 import {
   EMPTY_TRIP,
+  readTrip,
   removeFromTrip,
   setTrip,
   useTrip,
   type TripState,
 } from "@/lib/trip-store";
-import type { Place } from "@/lib/data";
+import type { LocatedPlace } from "@/lib/data";
 import { EmptyState } from "@/components/ui/empty-state";
 import { PlacesMap } from "@/components/map/places-map";
 import { AddRouteToTripButton } from "@/components/trip/add-route-to-trip-button";
@@ -33,7 +35,7 @@ export function TripView({
   routes,
   initial,
 }: {
-  places: Place[];
+  places: LocatedPlace[];
   routes: TripRouteOption[];
   /** Recorrido recibido por enlace compartido. */
   initial: Partial<TripState> | null;
@@ -46,22 +48,66 @@ export function TripView({
     [places],
   );
 
-  // Si se abre un enlace compartido y el recorrido local está vacío, se carga.
+  // Enlace compartido: si no hay recorrido guardado, se carga solo; si hay
+  // uno distinto, se ofrece cargarlo (nunca se pisa en silencio).
+  const shared = useMemo<TripState | null>(
+    () =>
+      initial?.slugs?.length
+        ? {
+            ...EMPTY_TRIP,
+            ...initial,
+            slugs: initial.slugs.filter((s) => bySlug.has(s)),
+          }
+        : null,
+    [initial, bySlug],
+  );
+  const [offerDismissed, setOfferDismissed] = useState(false);
   useEffect(() => {
-    if (initial && initial.slugs?.length && trip.slugs.length === 0) {
-      setTrip({
-        ...EMPTY_TRIP,
-        ...initial,
-        slugs: initial.slugs.filter((s) => bySlug.has(s)),
-      });
-    }
+    if (shared && readTrip().slugs.length === 0) setTrip(shared);
     // Solo al abrir la página.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  const sharedOffer =
+    shared &&
+    !offerDismissed &&
+    trip.slugs.length > 0 &&
+    trip.slugs.join(",") !== shared.slugs.join(",")
+      ? shared
+      : null;
+
+  const offerBanner = sharedOffer ? (
+    <div
+      role="status"
+      className="border-sea bg-sea-soft flex flex-col gap-3 rounded-2xl border-2 p-4"
+    >
+      <p className="font-bold">
+        {t("sharedTitle", { count: sharedOffer.slugs.length })}
+      </p>
+      <div className="flex flex-wrap gap-2">
+        <button
+          type="button"
+          onClick={() => {
+            setTrip(sharedOffer);
+            setOfferDismissed(true);
+          }}
+          className="bg-sea min-h-11 rounded-full px-5 font-bold text-white"
+        >
+          {t("sharedLoad")}
+        </button>
+        <button
+          type="button"
+          onClick={() => setOfferDismissed(true)}
+          className="border-sea text-sea-deep min-h-11 rounded-full border-2 px-5 font-bold"
+        >
+          {t("sharedKeep")}
+        </button>
+      </div>
+    </div>
+  ) : null;
 
   const selected = trip.slugs
     .map((s) => bySlug.get(s))
-    .filter((p): p is Place => Boolean(p));
+    .filter((p): p is LocatedPlace => Boolean(p));
 
   const itinerary = useMemo(() => {
     if (selected.length === 0) return null;
@@ -172,6 +218,7 @@ export function TripView({
 
   return (
     <div className="flex flex-col gap-5 px-4 py-6">
+      {offerBanner}
       <section
         aria-label={t("options")}
         className="border-border bg-surface grid gap-3 rounded-2xl border p-4 sm:grid-cols-2"
@@ -292,6 +339,9 @@ export function TripView({
                   <div className="mt-2 flex flex-wrap gap-2">
                     <a
                       href={directionsUrl(place.latitude, place.longitude)}
+                      onClick={() =>
+                        track("navigate_click", { slug: place.slug })
+                      }
                       target="_blank"
                       rel="noopener noreferrer"
                       className="bg-coral text-coral-ink inline-flex min-h-11 items-center rounded-full px-4 text-sm font-bold"

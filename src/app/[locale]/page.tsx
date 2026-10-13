@@ -3,11 +3,14 @@ import type { Metadata } from "next";
 import { Link, getPathname } from "@/i18n/navigation";
 import { resolveLocale } from "@/i18n/utils";
 import { listCategories, listPlaces, listRoutes } from "@/lib/data";
-import { buildPageMetadata } from "@/lib/seo";
+import { buildPageMetadata, getSiteUrl, localizedUrl } from "@/lib/seo";
 import { HeroScene } from "@/components/ui/hero-scene";
 import { CategoryIcon } from "@/components/ui/category-icon";
 import { PlaceCard } from "@/components/place/place-card";
 import { RouteCard } from "@/components/route/route-card";
+import { QrVisit } from "@/components/analytics/qr-visit";
+import { JsonLd } from "@/components/seo/json-ld";
+import { PAPUDO_CENTER } from "@/content/catalog";
 
 export async function generateMetadata({
   params,
@@ -39,6 +42,25 @@ export default async function HomePage({
 
   return (
     <main className="flex flex-col">
+      <QrVisit />
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "TouristDestination",
+          name: "Papudo",
+          url: localizedUrl(locale, "/"),
+          image: `${getSiteUrl()}/rutas/ruta-costera-papudo.webp`,
+          geo: {
+            "@type": "GeoCoordinates",
+            latitude: PAPUDO_CENTER.latitude,
+            longitude: PAPUDO_CENTER.longitude,
+          },
+          containedInPlace: {
+            "@type": "AdministrativeArea",
+            name: "Región de Valparaíso, Chile",
+          },
+        }}
+      />
       <HeroScene>
         <p className="text-sm font-bold tracking-widest text-[#ffe3a8] uppercase">
           {t("kicker")}
@@ -103,9 +125,22 @@ export default async function HomePage({
           </ul>
         </section>
 
-        {routes[0] ? (
-          <RouteCard route={routes[0]} kicker={t("featuredRoute")} />
-        ) : null}
+        <section
+          aria-labelledby="rutas-destacadas"
+          className="flex flex-col gap-4"
+        >
+          <h2 id="rutas-destacadas" className="sr-only">
+            {t("featuredRoute")}
+          </h2>
+          {routes.map((r, i) => (
+            <RouteCard
+              key={r.slug}
+              route={r}
+              index={i}
+              kicker={i === 0 ? t("featuredRoute") : undefined}
+            />
+          ))}
+        </section>
 
         <section aria-labelledby="destacados">
           <div className="flex items-baseline justify-between">

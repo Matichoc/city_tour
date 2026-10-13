@@ -12,7 +12,7 @@ export function TopNav() {
     ["/informacion", "info"],
   ] as const;
   return (
-    <header className="border-border bg-background/90 sticky top-0 z-30 border-b backdrop-blur">
+    <header className="border-border bg-background/90 sticky top-0 z-30 border-b backdrop-blur print:hidden">
       <div className="mx-auto flex w-full max-w-3xl items-center justify-between gap-3 px-4 py-2.5">
         <Link
           href="/"

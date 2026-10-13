@@ -28,3 +28,8 @@ export const CATEGORY_PIN_COLOR: Record<string, string> = {
 export function directionsUrl(latitude: number, longitude: number): string {
   return `https://www.google.com/maps/dir/?api=1&destination=${latitude},${longitude}`;
 }
+
+/** "Cómo llegar" cuando no hay coordenada: búsqueda por nombre y dirección. */
+export function searchUrl(query: string): string {
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
+}

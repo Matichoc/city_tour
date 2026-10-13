@@ -5,6 +5,7 @@ import { resolveLocale } from "@/i18n/utils";
 import {
   illustrationFor,
   isCategorySlug,
+  isLocated,
   listCategories,
   listLocalities,
   listPlaces,
@@ -206,21 +207,25 @@ export default async function ExplorePage({
             }
           >
             <p>
-              {category === "alojamiento" || category === "gastronomia"
+              {category === "alojamiento" ||
+              category === "gastronomia" ||
+              category === "actividades"
                 ? t("emptyComing")
                 : t("emptyHint")}
             </p>
-            <Link
-              href="/explorar"
-              className="text-sea mt-3 inline-block font-bold"
-            >
-              {t("clear")}
-            </Link>
+            <div className="mt-3 flex flex-wrap justify-center gap-3">
+              <Link
+                href="/explorar"
+                className="text-sea inline-flex min-h-11 items-center font-bold"
+              >
+                {t("clear")}
+              </Link>
+            </div>
           </EmptyState>
         ) : view === "map" ? (
           <PlacesMap
             className="h-[28rem]"
-            markers={places.map((p) => ({
+            markers={places.filter(isLocated).map((p) => ({
               slug: p.slug,
               name: p.name,
               latitude: p.latitude,
