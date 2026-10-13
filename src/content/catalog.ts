@@ -49,18 +49,26 @@ export const PAPUDO_CENTER = {
 } as const;
 
 /**
- * Contacto de la Municipalidad. El sitio web lo entregó el usuario; el resto
- * viene del repo de referencia (donde el sitio figuraba como
- * municipalidadpapudo.cl) y falta confirmarlo con la municipalidad.
+ * Contacto de la Municipalidad: solo datos con fuente pública.
+ * - Sitio: registro de la Superintendencia de Salud (CESFAM Papudo, dependiente
+ *   de la municipalidad). Wikipedia cita además municipalidadpapudo.cl.
+ * - Teléfono: Memoria explicativa del Plan Regulador Comunal (MMA, 2022).
+ * Redes sociales y correo se retiraron por no encontrar una fuente que los respalde.
  */
 export const MUNICIPALITY = {
   name: "Municipalidad de Papudo",
   website: "https://www.munipapudo.cl",
-  links: [
-    { kind: "facebook", value: "https://www.facebook.com/munipapudo/" },
-    { kind: "instagram", value: "https://www.instagram.com/munipapudo/" },
-    { kind: "phone", value: "+56332325100" },
-    { kind: "email", value: "contacto@municipalidadpapudo.cl" },
+  address: "Chorrillos 9, Papudo",
+  links: [{ kind: "phone", value: "+56332325100" }],
+  sources: [
+    {
+      url: "https://www.superdesalud.gob.cl/registro/centro-de-salud-familiar-papudo/",
+      label: "Superintendencia de Salud — Centro de Salud Familiar Papudo",
+    },
+    {
+      url: "https://eae.mma.gob.cl/storage/documents/04_Anteproyecto_Memoria_Explicativa_PRC_Papudo.pdf.pdf",
+      label: "MMA — Anteproyecto Plan Regulador Comunal de Papudo",
+    },
   ],
 } as const;
 

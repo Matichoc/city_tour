@@ -33,3 +33,11 @@ de JavaScript, `lang`, títulos y canonical correctos en todas las páginas.
 - Las tres playas comparten ilustración.
 - Activar Web Analytics en Vercel (Analytics → Enable) para ver las métricas.
 - Definir el contacto para inscribir negocios (`NEXT_PUBLIC_BUSINESS_CONTACT`).
+
+## Segunda ronda (2026-10-13)
+
+- Regla nueva: **todo dato publicado debe estar respaldado en la web**, aunque contradiga lo
+  indicado antes. Se verificó con búsquedas propias lo que el agente de investigación solo vio
+  en resúmenes, y eso detectó un error de la investigación (Santuario de Pullally).
+- Se retiraron los llamados a inscribir negocios: es una versión de prueba.
+- Lugares sin coordenada: sin pin ni recorrido, con "Cómo llegar" por búsqueda (prueba e2e).

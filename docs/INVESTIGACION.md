@@ -8,14 +8,24 @@ Generada el 2026-10-13 con búsqueda web (66 consultas). Datos completos en
 > resúmenes de resultados de búsqueda, contrastando varias fuentes. Antes de publicar,
 > hay que abrir cada URL y confirmar. Ninguna fuente dio coordenadas.
 
-## ⚠️ Corrección prioritaria sobre contenido YA publicado
+## Verificación posterior (2026-10-13)
 
-Las fichas **Laguna Pullally** y **Salinas de Pullally** (traídas de `directorio_turistico`)
-dicen que forman parte del "Santuario de la Naturaleza Salinas de Pullally y Dunas de
-Longotoma (declarado en 2020)". Según la investigación, el Consejo de Ministros lo acordó
-(MMA, Acuerdo N°27 del 19-12-2019), pero **el Ministerio habría retirado la solicitud de
-Contraloría**, por lo que no se debería presentar como santuario. Hay que confirmarlo en
-la fuente oficial antes de corregir el texto.
+- **Santuario de Pullally — la investigación inicial se equivocó.** Decía que el Ministerio
+  retiró la solicitud y que no era santuario. La verificación muestra que el decreto se
+  retiró de Contraloría y se **reingresó**, y se publicó en el Diario Oficial el 10-02-2021
+  (DS N° 4 MMA). **Sí es Santuario de la Naturaleza** (Consejo de Monumentos Nacionales).
+  Se corrigió el año en las fichas ("decreto publicado en 2021") y se agregó la fuente oficial.
+- **Contacto municipal:** se conservan el sitio `munipapudo.cl` (registro de la Superintendencia
+  de Salud) y el teléfono +56 33 232 5100 (Plan Regulador, MMA). Se retiraron redes sociales y
+  correo por no tener fuente.
+
+## Publicado en el sitio (como "pendiente de verificación")
+
+- Iglesia Nuestra Señora de las Mercedes, Humedal Urbano Estero Agua Salada, Caleta de pescadores.
+- Locales de muestra: Donde Pablo, Fuente Papudo, Hotel Carande (datos públicos, dos fuentes cada uno).
+- En Información: cómo llegar y mejor época (Sernatur), Combate Naval de Papudo (1865) y Sucupira.
+- Sin coordenadas (ninguna fuente las da): no aparecen en el mapa ni en "Mi recorrido";
+  "Cómo llegar" busca por nombre y dirección.
 
 ## Cómo validar un candidato
 

@@ -19,7 +19,7 @@ import {
   useTrip,
   type TripState,
 } from "@/lib/trip-store";
-import type { Place } from "@/lib/data";
+import type { LocatedPlace } from "@/lib/data";
 import { EmptyState } from "@/components/ui/empty-state";
 import { PlacesMap } from "@/components/map/places-map";
 import { AddRouteToTripButton } from "@/components/trip/add-route-to-trip-button";
@@ -35,7 +35,7 @@ export function TripView({
   routes,
   initial,
 }: {
-  places: Place[];
+  places: LocatedPlace[];
   routes: TripRouteOption[];
   /** Recorrido recibido por enlace compartido. */
   initial: Partial<TripState> | null;
@@ -107,7 +107,7 @@ export function TripView({
 
   const selected = trip.slugs
     .map((s) => bySlug.get(s))
-    .filter((p): p is Place => Boolean(p));
+    .filter((p): p is LocatedPlace => Boolean(p));
 
   const itinerary = useMemo(() => {
     if (selected.length === 0) return null;

@@ -56,17 +56,37 @@ test("un enlace compartido se carga solo si no había recorrido", async ({
   ).toHaveCount(2);
 });
 
-test("los negocios llegan a la página de inscripción desde la portada", async ({
+test("Para negocios no solicita datos: es una versión de prueba", async ({
   page,
 }) => {
-  await page.goto("/es");
-  await page
-    .getByRole("link", { name: /¿Tienes un negocio en Papudo\?/ })
-    .click();
-  await expect(page).toHaveURL(/\/es\/negocios$/);
+  await page.goto("/es/negocios");
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(
     "Para negocios",
   );
+  await expect(
+    page.getByText(/las inscripciones de negocios todavía no están abiertas/),
+  ).toBeVisible();
+  await expect(page.getByRole("link", { name: /Inscribir/ })).toHaveCount(0);
+  await expect(page.locator("form")).toHaveCount(0);
+});
+
+test("un local sin coordenada muestra dirección y 'Cómo llegar' por búsqueda", async ({
+  page,
+}) => {
+  await page.goto("/es/lugares/hotel-carande");
+  await expect(page.getByText("Chorrillos 89, Papudo").first()).toBeVisible();
+  await expect(
+    page
+      .getByText("Comercio local")
+      .or(page.getByText(/Ubicación exacta por confirmar/)),
+  ).toBeVisible();
+  const href = await page
+    .getByRole("link", { name: "Cómo llegar" })
+    .getAttribute("href");
+  expect(href).toContain("google.com/maps/search");
+  await expect(
+    page.getByRole("button", { name: /Agregar a mi recorrido/ }),
+  ).toHaveCount(0);
 });
 
 test("el generador de QR crea un afiche con el origen del local", async ({

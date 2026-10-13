@@ -105,11 +105,7 @@ export default async function HomePage({
                 style={{ "--i": i } as React.CSSProperties}
               >
                 <Link
-                  href={
-                    c.count > 0
-                      ? { pathname: "/explorar", query: { categoria: c.slug } }
-                      : "/negocios"
-                  }
+                  href={{ pathname: "/explorar", query: { categoria: c.slug } }}
                   className="card-lift border-border bg-surface flex min-h-20 items-center gap-3 rounded-2xl border p-3 shadow-sm"
                 >
                   <span className="bg-sea-soft text-sea-deep grid size-11 shrink-0 place-items-center rounded-xl">
@@ -166,21 +162,6 @@ export default async function HomePage({
             ))}
           </ul>
         </section>
-
-        <Link
-          href="/negocios"
-          className="card-lift border-sea bg-sea-soft flex items-center justify-between gap-4 rounded-2xl border-2 p-5"
-        >
-          <span>
-            <span className="font-display text-sea-deep block text-lg font-extrabold">
-              {t("businessTitle")}
-            </span>
-            <span className="text-sm">{t("businessBody")}</span>
-          </span>
-          <span className="bg-coral text-coral-ink shrink-0 rounded-full px-4 py-2 text-sm font-bold">
-            {t("businessCta")}
-          </span>
-        </Link>
 
         <p
           role="note"

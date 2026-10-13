@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import { resolveLocale } from "@/i18n/utils";
-import { getRoute, listRouteSlugs } from "@/lib/data";
+import { getRoute, isLocated, listRouteSlugs } from "@/lib/data";
 import { buildPageMetadata, localizedUrl, truncate } from "@/lib/seo";
 import { JsonLd } from "@/components/seo/json-ld";
 import { formatDuration } from "@/lib/itinerary-format";
@@ -99,14 +99,17 @@ export default async function RoutePage({
         <PlacesMap
           connect
           className="h-72"
-          markers={route.stops.map((s, i) => ({
-            slug: s.place.slug,
-            name: s.place.name,
-            latitude: s.place.latitude,
-            longitude: s.place.longitude,
-            category: s.place.categorySlug,
-            order: i + 1,
-          }))}
+          markers={route.stops
+            .map((s) => s.place)
+            .filter(isLocated)
+            .map((place, i) => ({
+              slug: place.slug,
+              name: place.name,
+              latitude: place.latitude,
+              longitude: place.longitude,
+              category: place.categorySlug,
+              order: i + 1,
+            }))}
         />
 
         <ol className="flex flex-col gap-3">

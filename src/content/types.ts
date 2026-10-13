@@ -18,13 +18,19 @@ export type PlaceContent = {
   slug: string;
   localitySlug: string | null;
   categorySlug: CategorySlug;
-  latitude: number;
-  longitude: number;
+  /** null = sin coordenada verificada (no se muestra en el mapa ni en recorridos). */
+  latitude: number | null;
+  longitude: number | null;
+  /** Dirección publicada por una fuente (sirve para "Cómo llegar" sin coordenada). */
+  address?: string;
+  /** Negocio local (alojamiento, restaurante...). */
+  business?: boolean;
   es: PlaceText;
   /** Inglés opcional: si falta, se muestra el español. */
   en?: PlaceText;
   source?: Source;
   tvSource?: Source;
+  extraSources?: Source[];
 };
 
 export type RouteStopContent = {

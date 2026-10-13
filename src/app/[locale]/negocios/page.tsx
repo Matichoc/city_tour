@@ -1,11 +1,9 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { Metadata } from "next";
-import { Link } from "@/i18n/navigation";
 import { resolveLocale } from "@/i18n/utils";
 import { buildPageMetadata } from "@/lib/seo";
 import { PageHero } from "@/components/ui/page-hero";
 import { IllustratedImage } from "@/components/ui/illustrated-image";
-import { TrackedAnchor } from "@/components/analytics/tracked-link";
 import { illustrationFor } from "@/lib/data";
 
 export async function generateMetadata({
@@ -21,16 +19,6 @@ export async function generateMetadata({
     title: t("title"),
     description: t("subtitle"),
   });
-}
-
-/**
- * Contacto para inscribir negocios: se define con NEXT_PUBLIC_BUSINESS_CONTACT
- * (un "mailto:..." o una URL de formulario). Sin configurar, se deriva a
- * Información (contacto municipal) para no inventar un correo.
- */
-function businessContact(): string | null {
-  const v = process.env.NEXT_PUBLIC_BUSINESS_CONTACT?.trim();
-  return v && (v.startsWith("mailto:") || v.startsWith("https://")) ? v : null;
 }
 
 const BENEFITS = [
@@ -51,7 +39,6 @@ export default async function BusinessPage({
   const locale = resolveLocale((await params).locale);
   setRequestLocale(locale);
   const t = await getTranslations("business");
-  const contact = businessContact();
 
   return (
     <main className="flex flex-col">
@@ -116,31 +103,12 @@ export default async function BusinessPage({
           </ol>
         </section>
 
-        <div className="flex flex-col gap-3 rounded-3xl bg-[linear-gradient(120deg,#07495a,#0b7285_60%,#4a7a37)] p-6 text-white">
-          <p className="font-display text-xl font-extrabold">{t("ctaTitle")}</p>
-          {contact ? (
-            <TrackedAnchor
-              event="business_cta"
-              href={contact}
-              className="bg-coral text-coral-ink inline-flex min-h-12 items-center justify-center self-start rounded-full px-6 font-bold"
-            >
-              {t("cta")}
-            </TrackedAnchor>
-          ) : (
-            <Link
-              href="/informacion"
-              className="bg-coral text-coral-ink inline-flex min-h-12 items-center justify-center self-start rounded-full px-6 font-bold"
-            >
-              {t("ctaFallback")}
-            </Link>
-          )}
-          <Link
-            href="/qr"
-            className="text-sm font-bold text-[#ffe3a8] underline"
-          >
-            {t("qrLink")}
-          </Link>
-        </div>
+        <p
+          role="note"
+          className="bg-earth-soft text-earth rounded-2xl p-4 text-sm"
+        >
+          {t("notOpen")}
+        </p>
 
         <section aria-labelledby="muni" className="bg-sea-soft rounded-2xl p-4">
           <h2

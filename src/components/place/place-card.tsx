@@ -37,6 +37,11 @@ export function PlaceCard({
         </p>
         <div className="mt-3 flex flex-wrap items-center gap-2">
           <StatusBadge verification={place.verification} />
+          {place.business ? (
+            <span className="bg-sea-soft text-sea-deep rounded-full px-2.5 py-1 text-xs font-bold">
+              {t("business")}
+            </span>
+          ) : null}
           {place.fallbackToSpanish ? (
             <span className="text-muted text-xs">{t("onlySpanish")}</span>
           ) : null}

@@ -5,7 +5,7 @@ import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import { resolveLocale } from "@/i18n/utils";
 import { getPlace, listPlaceSlugs } from "@/lib/data";
-import { directionsUrl } from "@/lib/map-config";
+import { directionsUrl, searchUrl } from "@/lib/map-config";
 import { TrackedAnchor } from "@/components/analytics/tracked-link";
 import {
   buildPageMetadata,
@@ -70,13 +70,18 @@ export default async function PlacePage({
             params: { slug: place.slug },
           }),
           image: `${getSiteUrl()}${place.picture.src}`,
-          geo: {
-            "@type": "GeoCoordinates",
-            latitude: place.latitude,
-            longitude: place.longitude,
-          },
+          ...(place.hasLocation
+            ? {
+                geo: {
+                  "@type": "GeoCoordinates",
+                  latitude: place.latitude,
+                  longitude: place.longitude,
+                },
+              }
+            : {}),
           address: {
             "@type": "PostalAddress",
+            ...(place.address ? { streetAddress: place.address } : {}),
             addressLocality: place.localityName ?? "Papudo",
             addressRegion: "Valparaíso",
             addressCountry: "CL",
@@ -124,11 +129,17 @@ export default async function PlacePage({
         </header>
 
         <div className="flex flex-wrap gap-2">
-          <AddToTripButton slug={place.slug} />
+          {place.hasLocation ? <AddToTripButton slug={place.slug} /> : null}
           <TrackedAnchor
             event="navigate_click"
             eventProps={{ slug: place.slug }}
-            href={directionsUrl(place.latitude, place.longitude)}
+            href={
+              place.latitude !== null && place.longitude !== null
+                ? directionsUrl(place.latitude, place.longitude)
+                : searchUrl(
+                    `${place.name}, ${place.address ?? "Papudo"}, Chile`,
+                  )
+            }
             target="_blank"
             rel="noopener noreferrer"
             className="bg-sea inline-flex min-h-11 items-center rounded-full px-5 text-sm font-bold text-white"
@@ -140,27 +151,43 @@ export default async function PlacePage({
 
         <p className="text-base leading-relaxed">{place.description}</p>
 
-        <PlacesMap
-          className="h-60"
-          markers={[
-            {
-              slug: place.slug,
-              name: place.name,
-              latitude: place.latitude,
-              longitude: place.longitude,
-              category: place.categorySlug,
-            },
-          ]}
-        />
-        <p className="text-muted -mt-3 text-xs">{t("approxLocation")}</p>
+        {place.latitude !== null && place.longitude !== null ? (
+          <>
+            <PlacesMap
+              className="h-60"
+              markers={[
+                {
+                  slug: place.slug,
+                  name: place.name,
+                  latitude: place.latitude,
+                  longitude: place.longitude,
+                  category: place.categorySlug,
+                },
+              ]}
+            />
+            <p className="text-muted -mt-3 text-xs">{t("approxLocation")}</p>
+          </>
+        ) : (
+          <p className="bg-sea-soft rounded-xl p-3 text-sm">
+            {t("noLocation")}
+          </p>
+        )}
 
         <dl className="divide-border border-border bg-surface divide-y rounded-2xl border">
-          <div className="flex justify-between gap-4 p-4">
-            <dt className="font-bold">{t("visitTime")}</dt>
-            <dd className="text-muted">
-              ≈ {formatDuration(place.visitMinutes)} · {t("estimated")}
-            </dd>
-          </div>
+          {place.address ? (
+            <div className="flex justify-between gap-4 p-4">
+              <dt className="font-bold">{t("address")}</dt>
+              <dd className="text-muted text-right">{place.address}</dd>
+            </div>
+          ) : null}
+          {place.visitMinutes > 0 ? (
+            <div className="flex justify-between gap-4 p-4">
+              <dt className="font-bold">{t("visitTime")}</dt>
+              <dd className="text-muted">
+                ≈ {formatDuration(place.visitMinutes)} · {t("estimated")}
+              </dd>
+            </div>
+          ) : null}
           <div className="flex justify-between gap-4 p-4">
             <dt className="font-bold">{t("hours")}</dt>
             <dd className="text-muted">{t("hoursPending")}</dd>

@@ -25,8 +25,12 @@ export type Place = {
   categoryName: string;
   localitySlug: string | null;
   localityName: string | null;
-  latitude: number;
-  longitude: number;
+  /** null = sin coordenada verificada. */
+  latitude: number | null;
+  longitude: number | null;
+  hasLocation: boolean;
+  address: string | null;
+  business: boolean;
   visitMinutes: number;
   sources: Source[];
   /** Todo el contenido está sin verificar en terreno. */
@@ -127,8 +131,13 @@ function toPlace(slug: string, locale: Locale): Place | undefined {
     localityName: loc ? pick(locale, loc.es, loc.en) : null,
     latitude: p.latitude,
     longitude: p.longitude,
+    hasLocation: p.latitude !== null && p.longitude !== null,
+    address: p.address ?? null,
+    business: p.business === true,
     visitMinutes: cat.defaultVisitMinutes,
-    sources: [p.source, p.tvSource].filter((s): s is Source => Boolean(s)),
+    sources: [p.source, p.tvSource, ...(p.extraSources ?? [])].filter(
+      (s): s is Source => Boolean(s),
+    ),
     verification: "pending",
     fallbackToSpanish: locale === "en" && !p.en,
     picture: picture(
@@ -216,3 +225,7 @@ export function getRoute(slug: string, locale: Locale): Route | undefined {
 }
 
 export const listRouteSlugs = () => ROUTES.map((r) => r.slug);
+
+/** Lugar con coordenada verificada (se puede ubicar en el mapa y en recorridos). */
+export type LocatedPlace = Place & { latitude: number; longitude: number };
+export const isLocated = (p: Place): p is LocatedPlace => p.hasLocation;
