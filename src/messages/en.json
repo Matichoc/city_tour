@@ -123,7 +123,8 @@
     "sharedLoad": "Load the shared trip",
     "sharedKeep": "Keep mine",
     "startLive": "Start trip",
-    "startLiveNote": "Uses your location to guide you stop by stop. Your location never leaves your phone."
+    "startLiveNote": "Uses your location to guide you stop by stop. Your location never leaves your phone.",
+    "startDemo": "Not in Papudo? Try it with a simulated location"
   },
   "map": {
     "unavailable": "The map is unavailable right now. You can keep using the list.",
@@ -273,7 +274,8 @@
       "sw": "southwest",
       "w": "west",
       "nw": "northwest"
-    }
+    },
+    "demoBanner": "Demo mode: your location is simulated and moves on its own towards the next stop. Turn your phone to try the camera arrow."
   },
   "saved": {
     "save": "Save",

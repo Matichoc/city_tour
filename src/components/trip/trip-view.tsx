@@ -45,6 +45,7 @@ export function TripView({
   const trip = useTrip();
   const [copied, setCopied] = useState(false);
   const [live, setLive] = useState(false);
+  const [demo, setDemo] = useState(false);
   const closeLive = useCallback(() => setLive(false), []);
   const bySlug = useMemo(
     () => new Map(places.map((p) => [p.slug, p])),
@@ -297,6 +298,7 @@ export function TripView({
       <button
         type="button"
         onClick={() => {
+          setDemo(false);
           setLive(true);
           track("live_start", { stops: ordered.length });
         }}
@@ -307,6 +309,17 @@ export function TripView({
       <p className="text-muted -mt-3 text-center text-xs">
         {t("startLiveNote")}
       </p>
+      <button
+        type="button"
+        onClick={() => {
+          setDemo(true);
+          setLive(true);
+          track("live_start", { stops: ordered.length, demo: 1 });
+        }}
+        className="text-sea -mt-2 min-h-11 self-center text-sm font-bold underline"
+      >
+        {t("startDemo")}
+      </button>
 
       <PlacesMap markers={markers} connect className="h-72" />
 
@@ -414,6 +427,7 @@ export function TripView({
 
       {live ? (
         <LiveTrip
+          demo={demo}
           stops={ordered.map(({ place }) => ({
             slug: place.slug,
             name: place.name,

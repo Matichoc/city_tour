@@ -123,7 +123,8 @@
     "sharedLoad": "Cargar el recorrido compartido",
     "sharedKeep": "Mantener el mío",
     "startLive": "Iniciar recorrido",
-    "startLiveNote": "Usa tu ubicación para guiarte parada por parada. Tu ubicación no sale de tu teléfono."
+    "startLiveNote": "Usa tu ubicación para guiarte parada por parada. Tu ubicación no sale de tu teléfono.",
+    "startDemo": "¿No estás en Papudo? Probar con ubicación simulada"
   },
   "map": {
     "unavailable": "El mapa no está disponible en este momento. Puedes seguir usando la lista.",
@@ -273,7 +274,8 @@
       "sw": "suroeste",
       "w": "oeste",
       "nw": "noroeste"
-    }
+    },
+    "demoBanner": "Modo demostración: tu ubicación es simulada y avanza sola hacia la próxima parada. Mueve el teléfono para probar la flecha de la cámara."
   },
   "saved": {
     "save": "Guardar",

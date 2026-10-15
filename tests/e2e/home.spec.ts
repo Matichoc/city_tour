@@ -104,3 +104,23 @@ test("ficha: guardar un lugar y verlo en Tus guardados, sin reseñas inventadas"
   ).toBeVisible();
   await expect(page.getByRole("link", { name: "Playa Chica" })).toBeVisible();
 });
+
+test("recorrido en vivo: el modo demostración simula la caminata sin GPS", async ({
+  page,
+}) => {
+  test.setTimeout(60_000);
+  await page.goto("/es/recorrido?l=playa-chica-papudo,playa-papudo");
+  await page
+    .getByRole("button", { name: /Probar con ubicación simulada/ })
+    .click();
+  const live = page.getByRole("dialog", { name: "Recorrido en vivo" });
+  await expect(live.getByText(/Modo demostración/)).toBeVisible();
+  await expect(live.getByText(/a pie/)).toBeVisible();
+  await expect(
+    live.getByRole("button", { name: /Guíame con la cámara/ }),
+  ).toBeVisible();
+  // La ubicación simulada llega sola a la parada.
+  await expect(
+    live.getByRole("button", { name: "Ir a la siguiente parada" }),
+  ).toBeVisible({ timeout: 45_000 });
+});

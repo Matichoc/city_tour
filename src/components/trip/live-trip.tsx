@@ -7,10 +7,13 @@ import { useLocale, useTranslations } from "next-intl";
 import type { CategorySlug } from "@/content/types";
 import { CATEGORY_PIN_COLOR, getMapStyleUrl } from "@/lib/map-config";
 import {
+  demoStepMeters,
   distanceMeters,
   formatMeters,
   isArrived,
   isShortWalk,
+  moveToward,
+  offsetPoint,
   walkMinutes,
 } from "@/lib/live-nav";
 import { track } from "@/lib/analytics";
@@ -38,9 +41,12 @@ function walkingUrl(from: LivePosition | null, to: LiveStop): string {
  */
 export function LiveTrip({
   stops,
+  demo = false,
   onClose,
 }: {
   stops: LiveStop[];
+  /** Ubicación simulada: sirve para probar sin estar en Papudo. */
+  demo?: boolean;
   onClose: () => void;
 }) {
   const t = useTranslations("live");
@@ -60,8 +66,34 @@ export function LiveTrip({
   const arrived =
     distance !== null && isArrived(distance, position?.accuracy ?? 0);
 
+  // Modo demostración: parte a ~500 m de la primera parada y "camina" hacia la
+  // próxima. Nunca se pide ni se usa el GPS real.
+  const target = next;
+  useEffect(() => {
+    if (!demo) return;
+    const first = stops[0];
+    if (first) {
+      const p = offsetPoint(first, 200, 500);
+      queueMicrotask(() => {
+        setStatus("ok");
+        setPosition((prev) => prev ?? { ...p, accuracy: 8, course: null });
+      });
+    }
+    if (!target) return;
+    const id = window.setInterval(() => {
+      setPosition((prev) => {
+        if (!prev) return prev;
+        const step = demoStepMeters(distanceMeters(prev, target));
+        const moved = moveToward(prev, target, step);
+        return { ...prev, ...moved };
+      });
+    }, 1000);
+    return () => window.clearInterval(id);
+  }, [demo, stops, target]);
+
   // GPS del teléfono.
   useEffect(() => {
+    if (demo) return;
     if (!("geolocation" in navigator)) {
       queueMicrotask(() => setStatus("unavailable"));
       return;
@@ -88,7 +120,7 @@ export function LiveTrip({
       { enableHighAccuracy: true, maximumAge: 5000, timeout: 20000 },
     );
     return () => navigator.geolocation.clearWatch(id);
-  }, []);
+  }, [demo]);
 
   // Pantalla encendida mientras dura el recorrido (si el navegador lo permite).
   useEffect(() => {
@@ -304,6 +336,11 @@ export function LiveTrip({
         aria-live="polite"
         className="border-border bg-surface flex flex-col gap-3 border-t p-4 pb-[max(1rem,env(safe-area-inset-bottom))]"
       >
+        {demo ? (
+          <p className="bg-sea-soft text-sea-deep rounded-xl p-3 text-sm font-bold">
+            {t("demoBanner")}
+          </p>
+        ) : null}
         {status === "denied" || status === "unavailable" ? (
           <p className="bg-earth-soft text-earth rounded-xl p-3 text-sm">
             {status === "denied" ? t("gpsDenied") : t("gpsUnavailable")}

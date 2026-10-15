@@ -82,3 +82,47 @@ export function headingFromOrientation(
   if (e.alpha === null || e.absolute === false) return null;
   return normalizeDegrees(360 - e.alpha + screenAngle);
 }
+
+/** Punto a `meters` de `from` en la dirección `bearing` (grados). */
+export function offsetPoint(
+  from: GeoPoint,
+  bearing: number,
+  meters: number,
+): GeoPoint {
+  const R = 6371000;
+  const toRad = (d: number) => (d * Math.PI) / 180;
+  const lat1 = toRad(from.latitude);
+  const lon1 = toRad(from.longitude);
+  const brg = toRad(bearing);
+  const ang = meters / R;
+  const lat2 = Math.asin(
+    Math.sin(lat1) * Math.cos(ang) +
+      Math.cos(lat1) * Math.sin(ang) * Math.cos(brg),
+  );
+  const lon2 =
+    lon1 +
+    Math.atan2(
+      Math.sin(brg) * Math.sin(ang) * Math.cos(lat1),
+      Math.cos(ang) - Math.sin(lat1) * Math.sin(lat2),
+    );
+  return {
+    latitude: (lat2 * 180) / Math.PI,
+    longitude: (lon2 * 180) / Math.PI,
+  };
+}
+
+/** Avanza desde `from` hacia `to` hasta `meters`; si alcanza, devuelve `to`. */
+export function moveToward(
+  from: GeoPoint,
+  to: GeoPoint,
+  meters: number,
+): GeoPoint {
+  const d = distanceMeters(from, to);
+  if (d <= meters) return { latitude: to.latitude, longitude: to.longitude };
+  return offsetPoint(from, bearingDegrees(from, to), meters);
+}
+
+/** Paso por segundo del modo demostración: un tramo corto dura unos 20 s. */
+export function demoStepMeters(distance: number): number {
+  return Math.max(25, distance / 20);
+}

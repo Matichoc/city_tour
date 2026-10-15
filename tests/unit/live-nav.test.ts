@@ -6,6 +6,9 @@ import {
   headingFromOrientation,
   isArrived,
   isShortWalk,
+  moveToward,
+  offsetPoint,
+  demoStepMeters,
   relativeBearing,
   walkMinutes,
 } from "@/lib/live-nav";
@@ -68,5 +71,21 @@ describe("recorrido en vivo", () => {
     expect(headingFromOrientation({ alpha: 90, absolute: true })).toBe(270);
     expect(headingFromOrientation({ alpha: 90, absolute: false })).toBeNull();
     expect(headingFromOrientation({ alpha: null })).toBeNull();
+  });
+});
+
+describe("modo demostración", () => {
+  it("avanza hacia el destino y lo alcanza sin pasarse", () => {
+    const stop = { latitude: -32.5078, longitude: -71.4476 };
+    const start = offsetPoint(stop, 200, 500);
+    expect(distanceMeters(start, stop)).toBeCloseTo(500, -1);
+    const step = moveToward(start, stop, 100);
+    expect(distanceMeters(step, stop)).toBeCloseTo(400, -1);
+    expect(moveToward(step, stop, 1000)).toEqual(stop);
+  });
+
+  it("acelera los tramos largos para que la demo no se haga eterna", () => {
+    expect(demoStepMeters(300)).toBe(25);
+    expect(demoStepMeters(12000)).toBe(600);
   });
 });
