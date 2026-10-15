@@ -215,7 +215,7 @@ export function WalkCamera({
       </div>
 
       <p className="relative p-4 text-center text-xs text-white/85">
-        {camera === "off" ? `${t("cameraOff")} ` : null}
+        {camera === "off" ? `${t("cameraOff")} ${t("cameraOffHint")} ` : null}
         {t("cameraSafety")}
       </p>
     </div>

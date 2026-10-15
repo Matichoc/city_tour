@@ -275,7 +275,11 @@
       "w": "west",
       "nw": "northwest"
     },
-    "demoBanner": "Demo mode: your location is simulated and moves on its own towards the next stop. Turn your phone to try the camera arrow."
+    "demoBanner": "Demo mode: your location is simulated and moves on its own towards the next stop. Turn your phone to try the camera arrow.",
+    "cameraFar": "See the direction with the camera",
+    "nearestHint": "You're closer to {name} ({distance}). Want to start there?",
+    "nearestGo": "Go to {name}",
+    "cameraOffHint": "If you opened the link from WhatsApp or Instagram, open it in Chrome or Safari and allow camera access."
   },
   "saved": {
     "save": "Save",

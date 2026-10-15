@@ -124,3 +124,26 @@ test("recorrido en vivo: el modo demostración simula la caminata sin GPS", asyn
     live.getByRole("button", { name: "Ir a la siguiente parada" }),
   ).toBeVisible({ timeout: 45_000 });
 });
+
+test("recorrido en vivo: si estás cerca de una parada que no es la primera, la ofrece y activa la cámara", async ({
+  page,
+  context,
+}) => {
+  // Junto a Salinas de Pullally (a ~12 km de Playa Papudo, la primera parada).
+  await context.grantPermissions(["geolocation"]);
+  await context.setGeolocation({ latitude: -32.4165, longitude: -71.4115 });
+  await page.goto("/es/recorrido?l=playa-papudo,papudo-salinas-pullally");
+  await page.getByRole("button", { name: /Iniciar recorrido/ }).click();
+  const live = page.getByRole("dialog", { name: "Recorrido en vivo" });
+  await expect(
+    live.getByText(/Estás más cerca de Salinas de Pullally/),
+  ).toBeVisible();
+  // La cámara también se ofrece para la parada lejana, como dirección.
+  await expect(
+    live.getByRole("button", { name: /Ver la dirección con la cámara/ }),
+  ).toBeVisible();
+  await live.getByRole("button", { name: "Ir a Salinas de Pullally" }).click();
+  await expect(
+    live.getByRole("button", { name: /Guíame con la cámara/ }),
+  ).toBeVisible();
+});
