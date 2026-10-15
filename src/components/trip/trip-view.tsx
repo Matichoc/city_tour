@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { ItineraryEngine } from "@/lib/itinerary-engine";
@@ -23,6 +23,7 @@ import type { LocatedPlace } from "@/lib/data";
 import { EmptyState } from "@/components/ui/empty-state";
 import { PlacesMap } from "@/components/map/places-map";
 import { AddRouteToTripButton } from "@/components/trip/add-route-to-trip-button";
+import { LiveTrip } from "@/components/trip/live-trip";
 
 export type TripRouteOption = {
   slug: string;
@@ -43,6 +44,8 @@ export function TripView({
   const t = useTranslations("trip");
   const trip = useTrip();
   const [copied, setCopied] = useState(false);
+  const [live, setLive] = useState(false);
+  const closeLive = useCallback(() => setLive(false), []);
   const bySlug = useMemo(
     () => new Map(places.map((p) => [p.slug, p])),
     [places],
@@ -291,6 +294,20 @@ export function TripView({
         ))}
       </section>
 
+      <button
+        type="button"
+        onClick={() => {
+          setLive(true);
+          track("live_start", { stops: ordered.length });
+        }}
+        className="bg-coral text-coral-ink flex min-h-14 items-center justify-center gap-2 rounded-full px-6 text-lg font-extrabold shadow-lg transition hover:brightness-105 active:scale-95"
+      >
+        <span aria-hidden="true">▶</span> {t("startLive")}
+      </button>
+      <p className="text-muted -mt-3 text-center text-xs">
+        {t("startLiveNote")}
+      </p>
+
       <PlacesMap markers={markers} connect className="h-72" />
 
       <ol className="flex flex-col gap-3">
@@ -394,6 +411,19 @@ export function TripView({
       <p className="bg-earth-soft text-earth rounded-xl p-3 text-sm">
         {t("estimateNote")}
       </p>
+
+      {live ? (
+        <LiveTrip
+          stops={ordered.map(({ place }) => ({
+            slug: place.slug,
+            name: place.name,
+            latitude: place.latitude,
+            longitude: place.longitude,
+            category: place.categorySlug,
+          }))}
+          onClose={closeLive}
+        />
+      ) : null}
 
       <button
         type="button"

@@ -5,6 +5,7 @@ import { isLocated, listPlaces, listRoutes } from "@/lib/data";
 import { buildPageMetadata } from "@/lib/seo";
 import { PageHero } from "@/components/ui/page-hero";
 import { TripView } from "@/components/trip/trip-view";
+import { SavedList } from "@/components/trip/saved-list";
 import type { TripState } from "@/lib/trip-store";
 
 type SearchParams = { l?: string; h?: string; v?: string };
@@ -36,7 +37,8 @@ export default async function TripPage({
   const sp = await searchParams;
   const t = await getTranslations("trip");
   // Solo lugares con coordenada verificada pueden ordenarse en un recorrido.
-  const places = listPlaces(locale).filter(isLocated);
+  const all = listPlaces(locale);
+  const places = all.filter(isLocated);
   const known = new Set(places.map((p) => p.slug));
 
   // Enlace compartido: ?l=a,b,c&h=10:00&v=1 (solo se aceptan lugares conocidos).
@@ -61,6 +63,15 @@ export default async function TripPage({
       <PageHero title={t("title")} subtitle={t("subtitle")} />
       <div className="mx-auto w-full max-w-3xl">
         <TripView places={places} routes={routes} initial={initial} />
+        <div className="pb-10">
+          <SavedList
+            places={all.map((p) => ({
+              slug: p.slug,
+              name: p.name,
+              located: p.hasLocation,
+            }))}
+          />
+        </div>
       </div>
     </main>
   );

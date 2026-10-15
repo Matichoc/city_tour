@@ -20,6 +20,8 @@ import { StatusBadge } from "@/components/place/status-badge";
 import { ShareButton } from "@/components/place/share-button";
 import { AddToTripButton } from "@/components/trip/add-to-trip-button";
 import { PlacesMap } from "@/components/map/places-map";
+import { SaveButton } from "@/components/place/save-button";
+import { ReviewsPanel } from "@/components/place/reviews-panel";
 
 export function generateStaticParams() {
   return routing.locales.flatMap((locale) =>
@@ -55,6 +57,13 @@ export default async function PlacePage({
   const place = getPlace(slug, locale);
   if (!place) notFound();
   const t = await getTranslations("place");
+  const tr = await getTranslations("reviews");
+  const sections = [
+    ["resumen", t("tabOverview")],
+    ["ubicacion", t("tabLocation")],
+    ["opiniones", t("tabReviews")],
+    ["datos", t("tabDetails")],
+  ] as const;
 
   return (
     <main className="flex flex-col gap-5 pb-10">
@@ -120,6 +129,15 @@ export default async function PlacePage({
           <h1 className="font-display mt-1 text-3xl leading-tight font-extrabold">
             {place.name}
           </h1>
+          <a
+            href="#opiniones"
+            className="text-muted mt-2 inline-flex items-center gap-2 text-sm hover:underline"
+          >
+            <span aria-hidden="true" className="text-sea tracking-tight">
+              ☆☆☆☆☆
+            </span>
+            {tr("count", { count: 0 })}
+          </a>
           <div className="mt-3 flex flex-wrap items-center gap-2">
             <StatusBadge verification={place.verification} />
             {place.fallbackToSpanish ? (
@@ -146,75 +164,109 @@ export default async function PlacePage({
           >
             {t("navigate")}
           </TrackedAnchor>
+          <SaveButton slug={place.slug} />
           <ShareButton title={place.name} />
         </div>
 
-        <p className="text-base leading-relaxed">{place.description}</p>
+        <nav
+          aria-label={t("sections")}
+          className="bg-background/95 sticky top-[3.25rem] z-20 -mx-4 overflow-x-auto px-4 py-2 backdrop-blur"
+        >
+          <ul className="flex gap-2">
+            {sections.map(([id, label]) => (
+              <li key={id}>
+                <a
+                  href={`#${id}`}
+                  className="border-border bg-surface hover:border-sea inline-flex min-h-11 items-center rounded-full border px-4 text-sm font-bold whitespace-nowrap"
+                >
+                  {label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
 
-        {place.latitude !== null && place.longitude !== null ? (
-          <>
-            <PlacesMap
-              className="h-60"
-              markers={[
-                {
-                  slug: place.slug,
-                  name: place.name,
-                  latitude: place.latitude,
-                  longitude: place.longitude,
-                  category: place.categorySlug,
-                },
-              ]}
-            />
-            <p className="text-muted -mt-3 text-xs">{t("approxLocation")}</p>
-          </>
-        ) : (
-          <p className="bg-sea-soft rounded-xl p-3 text-sm">
-            {t("noLocation")}
-          </p>
-        )}
+        <section id="resumen" className="scroll-mt-32">
+          <h2 className="sr-only">{t("tabOverview")}</h2>
+          <p className="text-base leading-relaxed">{place.description}</p>
+        </section>
 
-        <dl className="divide-border border-border bg-surface divide-y rounded-2xl border">
-          {place.address ? (
+        <section id="ubicacion" className="flex scroll-mt-32 flex-col gap-3">
+          <h2 className="font-display text-xl font-extrabold">
+            {t("tabLocation")}
+          </h2>
+          {place.latitude !== null && place.longitude !== null ? (
+            <>
+              <PlacesMap
+                className="h-60"
+                markers={[
+                  {
+                    slug: place.slug,
+                    name: place.name,
+                    latitude: place.latitude,
+                    longitude: place.longitude,
+                    category: place.categorySlug,
+                  },
+                ]}
+              />
+              <p className="text-muted text-xs">{t("approxLocation")}</p>
+            </>
+          ) : (
+            <p className="bg-sea-soft rounded-xl p-3 text-sm">
+              {t("noLocation")}
+            </p>
+          )}
+        </section>
+
+        <ReviewsPanel business={place.business} />
+
+        <section id="datos" className="flex scroll-mt-32 flex-col gap-3">
+          <h2 className="font-display text-xl font-extrabold">
+            {t("tabDetails")}
+          </h2>
+          <dl className="divide-border border-border bg-surface divide-y rounded-2xl border">
+            {place.address ? (
+              <div className="flex justify-between gap-4 p-4">
+                <dt className="font-bold">{t("address")}</dt>
+                <dd className="text-muted text-right">{place.address}</dd>
+              </div>
+            ) : null}
+            {place.visitMinutes > 0 ? (
+              <div className="flex justify-between gap-4 p-4">
+                <dt className="font-bold">{t("visitTime")}</dt>
+                <dd className="text-muted">
+                  ≈ {formatDuration(place.visitMinutes)} · {t("estimated")}
+                </dd>
+              </div>
+            ) : null}
             <div className="flex justify-between gap-4 p-4">
-              <dt className="font-bold">{t("address")}</dt>
-              <dd className="text-muted text-right">{place.address}</dd>
+              <dt className="font-bold">{t("hours")}</dt>
+              <dd className="text-muted">{t("hoursPending")}</dd>
             </div>
-          ) : null}
-          {place.visitMinutes > 0 ? (
             <div className="flex justify-between gap-4 p-4">
-              <dt className="font-bold">{t("visitTime")}</dt>
-              <dd className="text-muted">
-                ≈ {formatDuration(place.visitMinutes)} · {t("estimated")}
-              </dd>
+              <dt className="font-bold">{t("lastVerified")}</dt>
+              <dd className="text-muted">{t("never")}</dd>
             </div>
-          ) : null}
-          <div className="flex justify-between gap-4 p-4">
-            <dt className="font-bold">{t("hours")}</dt>
-            <dd className="text-muted">{t("hoursPending")}</dd>
-          </div>
-          <div className="flex justify-between gap-4 p-4">
-            <dt className="font-bold">{t("lastVerified")}</dt>
-            <dd className="text-muted">{t("never")}</dd>
-          </div>
-          {place.sources.length > 0 ? (
-            <div className="flex justify-between gap-4 p-4">
-              <dt className="font-bold">{t("source")}</dt>
-              <dd className="flex flex-col items-end gap-1 text-right">
-                {place.sources.map((s) => (
-                  <a
-                    key={s.url}
-                    className="text-sea underline"
-                    href={s.url}
-                    rel="noopener noreferrer"
-                    target="_blank"
-                  >
-                    {s.label}
-                  </a>
-                ))}
-              </dd>
-            </div>
-          ) : null}
-        </dl>
+            {place.sources.length > 0 ? (
+              <div className="flex justify-between gap-4 p-4">
+                <dt className="font-bold">{t("source")}</dt>
+                <dd className="flex flex-col items-end gap-1 text-right">
+                  {place.sources.map((s) => (
+                    <a
+                      key={s.url}
+                      className="text-sea underline"
+                      href={s.url}
+                      rel="noopener noreferrer"
+                      target="_blank"
+                    >
+                      {s.label}
+                    </a>
+                  ))}
+                </dd>
+              </div>
+            ) : null}
+          </dl>
+        </section>
       </div>
     </main>
   );

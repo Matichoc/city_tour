@@ -32,8 +32,10 @@ opcional: si falta la traducción de un lugar, se muestra el español y se avisa
 
 Vercel Web Analytics (sin cookies, sin datos personales). Eventos propios en
 `src/lib/analytics.ts`: `add_to_trip`, `add_route`, `navigate_click`, `share`,
-`qr_visit` (con el `origen` del QR) y `business_cta`. Se activa en Vercel →
-Analytics; sin activar, no envía nada.
+`qr_visit` (con el `origen` del QR), `save_place`, `live_start` (recorrido en
+vivo) y `camera_start` (guía con cámara). Nunca se envía la ubicación del
+usuario: el GPS y la cámara se usan solo dentro del teléfono. Se activa en
+Vercel → Analytics; sin activar, no envía nada.
 
 ## QR para negocios
 

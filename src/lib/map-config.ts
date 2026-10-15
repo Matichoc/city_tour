@@ -12,6 +12,20 @@ export function getMapStyleUrl(): string {
   );
 }
 
+/**
+ * Relieve 3D: teselas de elevación abiertas (Terrain Tiles de Mapzen en AWS
+ * Open Data, formato "terrarium", sin API key). Configurable para cambiar de
+ * proveedor sin tocar código.
+ */
+export function getTerrainTilesUrl(): string {
+  return (
+    process.env.NEXT_PUBLIC_TERRAIN_TILES_URL ||
+    "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png"
+  );
+}
+export const TERRAIN_ATTRIBUTION =
+  '<a href="https://registry.opendata.aws/terrain-tiles/" target="_blank" rel="noopener">Terrain Tiles (Mapzen, AWS)</a>';
+
 export const MAP_CENTER = PAPUDO_CENTER;
 export const MAP_DEFAULT_ZOOM = 12;
 export const PLACE_ZOOM = 15;

@@ -2,7 +2,14 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { Metadata } from "next";
 import { Link, getPathname } from "@/i18n/navigation";
 import { resolveLocale } from "@/i18n/utils";
-import { listCategories, listPlaces, listRoutes } from "@/lib/data";
+import {
+  isLocated,
+  listCategories,
+  listLocalities,
+  listPlaces,
+  listRoutes,
+} from "@/lib/data";
+import { CommuneMap3D } from "@/components/map/commune-map-3d";
 import { buildPageMetadata, getSiteUrl, localizedUrl } from "@/lib/seo";
 import { HeroScene } from "@/components/ui/hero-scene";
 import { CategoryIcon } from "@/components/ui/category-icon";
@@ -39,6 +46,16 @@ export default async function HomePage({
   const categories = listCategories(locale);
   const places = listPlaces(locale).slice(0, 4);
   const routes = listRoutes(locale);
+  const mapPlaces = listPlaces(locale)
+    .filter(isLocated)
+    .map((p) => ({
+      slug: p.slug,
+      name: p.name,
+      latitude: p.latitude,
+      longitude: p.longitude,
+      category: p.categorySlug,
+    }));
+  const localities = listLocalities(locale);
 
   return (
     <main className="flex flex-col">
@@ -119,6 +136,54 @@ export default async function HomePage({
                       {t("placesCount", { count: c.count })}
                     </span>
                   </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <section aria-labelledby="mapa-comuna" className="flex flex-col gap-3">
+          <div className="flex items-baseline justify-between gap-3">
+            <h2
+              id="mapa-comuna"
+              className="font-display text-2xl font-extrabold"
+            >
+              {t("mapTitle")}
+            </h2>
+            <Link
+              href={{ pathname: "/explorar", query: { vista: "mapa" } }}
+              className="text-sea shrink-0 text-sm font-bold"
+            >
+              {t("mapOpen")}
+            </Link>
+          </div>
+          <p className="text-muted -mt-2 text-sm">{t("mapSubtitle")}</p>
+          <CommuneMap3D
+            places={mapPlaces}
+            localities={localities.flatMap((l) =>
+              l.latitude !== null && l.longitude !== null
+                ? [
+                    {
+                      slug: l.slug,
+                      name: l.name,
+                      latitude: l.latitude,
+                      longitude: l.longitude,
+                    },
+                  ]
+                : [],
+            )}
+          />
+          <ul className="flex flex-wrap gap-2" aria-label={t("mapVillages")}>
+            {localities.map((l) => (
+              <li key={l.slug}>
+                <Link
+                  href={{
+                    pathname: "/pueblos/[slug]",
+                    params: { slug: l.slug },
+                  }}
+                  className="border-sea text-sea-deep hover:bg-sea-soft inline-flex min-h-11 items-center rounded-full border-2 px-4 text-sm font-bold"
+                >
+                  {l.name}
                 </Link>
               </li>
             ))}
