@@ -275,7 +275,11 @@
       "w": "oeste",
       "nw": "noroeste"
     },
-    "demoBanner": "Modo demostración: tu ubicación es simulada y avanza sola hacia la próxima parada. Mueve el teléfono para probar la flecha de la cámara."
+    "demoBanner": "Modo demostración: tu ubicación es simulada y avanza sola hacia la próxima parada. Mueve el teléfono para probar la flecha de la cámara.",
+    "cameraFar": "Ver la dirección con la cámara",
+    "nearestHint": "Estás más cerca de {name} ({distance}). ¿Quieres empezar por ahí?",
+    "nearestGo": "Ir a {name}",
+    "cameraOffHint": "Si abriste el enlace desde WhatsApp o Instagram, ábrelo en Chrome o Safari y acepta el permiso de cámara."
   },
   "saved": {
     "save": "Guardar",

@@ -66,6 +66,24 @@ export function LiveTrip({
   const arrived =
     distance !== null && isArrived(distance, position?.accuracy ?? 0);
 
+  // Si hay otra parada pendiente mucho más cerca que la próxima (el recorrido
+  // parte por la primera de la lista, no por la más cercana), se ofrece
+  // empezar por ahí.
+  const nearest = (() => {
+    if (!position || !next || arrived) return null;
+    let best: { i: number; meters: number } | null = null;
+    for (let i = index + 1; i < stops.length; i++) {
+      const meters = distanceMeters(position, stops[i]!);
+      if (!best || meters < best.meters) best = { i, meters };
+    }
+    return best &&
+      distance !== null &&
+      isShortWalk(best.meters) &&
+      best.meters < distance
+      ? best
+      : null;
+  })();
+
   // Modo demostración: parte a ~500 m de la primera parada y "camina" hacia la
   // próxima. Nunca se pide ni se usa el GPS real.
   const target = next;
@@ -349,6 +367,24 @@ export function LiveTrip({
           <p className="text-muted text-sm">{t("waitingGps")}</p>
         ) : null}
 
+        {nearest ? (
+          <div className="bg-sea-soft flex flex-col gap-2 rounded-xl p-3">
+            <p className="text-sm font-bold">
+              {t("nearestHint", {
+                name: stops[nearest.i]!.name,
+                distance: formatMeters(nearest.meters, locale),
+              })}
+            </p>
+            <button
+              type="button"
+              onClick={() => setIndex(nearest.i)}
+              className="bg-sea min-h-11 self-start rounded-full px-5 text-sm font-extrabold text-white"
+            >
+              {t("nearestGo", { name: stops[nearest.i]!.name })}
+            </button>
+          </div>
+        ) : null}
+
         {next ? (
           <>
             <div>
@@ -380,16 +416,21 @@ export function LiveTrip({
                 </button>
               ) : (
                 <>
-                  {distance !== null && isShortWalk(distance) ? (
+                  {distance !== null ? (
                     <button
                       type="button"
                       onClick={() => {
                         setCameraOpen(true);
                         track("camera_start", { slug: next.slug });
                       }}
-                      className="bg-coral text-coral-ink min-h-12 rounded-full px-5 font-extrabold shadow-sm"
+                      className={
+                        isShortWalk(distance)
+                          ? "bg-coral text-coral-ink min-h-12 rounded-full px-5 font-extrabold shadow-sm"
+                          : "border-coral text-coral-ink min-h-12 rounded-full border-2 px-5 font-bold"
+                      }
                     >
-                      📷 {t("cameraOpen")}
+                      📷{" "}
+                      {isShortWalk(distance) ? t("cameraOpen") : t("cameraFar")}
                     </button>
                   ) : null}
                   <a
