@@ -32,7 +32,11 @@
     "seeRoute": "See the route",
     "featured": "To get started",
     "seeAll": "See all",
-    "demoNotice": "Test version: places list their source but are still pending on-site verification. Lodging and food are being added with the Municipality and the Chamber of Commerce."
+    "demoNotice": "Test version: places list their source but are still pending on-site verification. Lodging and food are being added with the Municipality and the Chamber of Commerce.",
+    "mapTitle": "The commune in 3D",
+    "mapSubtitle": "Sea, dunes and hills of Papudo, Pullally and Las Salinas. Tap a point to see its page.",
+    "mapOpen": "Full map",
+    "mapVillages": "Villages in the commune"
   },
   "explore": {
     "title": "Explore Papudo",
@@ -69,7 +73,12 @@
     "outdated": "Outdated",
     "noLocation": "Exact location to be confirmed: use \"Get directions\" to search by name and address.",
     "address": "Address",
-    "business": "Local business"
+    "business": "Local business",
+    "sections": "Page sections",
+    "tabOverview": "Overview",
+    "tabLocation": "Location",
+    "tabReviews": "Reviews",
+    "tabDetails": "Details"
   },
   "routes": {
     "title": "Routes",
@@ -112,11 +121,19 @@
     "copied": "Link copied!",
     "sharedTitle": "Someone shared a trip with {count, plural, one {# stop} other {# stops}}. Load it?",
     "sharedLoad": "Load the shared trip",
-    "sharedKeep": "Keep mine"
+    "sharedKeep": "Keep mine",
+    "startLive": "Start trip",
+    "startLiveNote": "Uses your location to guide you stop by stop. Your location never leaves your phone.",
+    "startDemo": "Not in Papudo? Try it with a simulated location"
   },
   "map": {
     "unavailable": "The map is unavailable right now. You can keep using the list.",
-    "viewPlace": "View details"
+    "viewPlace": "View details",
+    "viewVillage": "View village",
+    "communeBadge": "Papudo commune · 3D",
+    "view2d": "View in 2D",
+    "view3d": "View in 3D",
+    "recenter": "Back to the commune"
   },
   "info": {
     "title": "Info",
@@ -219,5 +236,66 @@
     "scan": "Scan with your camera: beaches, routes and trips, no download needed.",
     "from": "Recommended by {name}",
     "print": "Print poster"
+  },
+  "live": {
+    "title": "Live trip",
+    "progress": "{done} of {total} stops",
+    "end": "End",
+    "recenter": "Center on me",
+    "waitingGps": "Finding your location…",
+    "gpsDenied": "We don't have permission to use your location. Enable it in your browser settings to follow the live trip.",
+    "gpsUnavailable": "We couldn't get your location. Check that GPS is on.",
+    "mapUnavailable": "The map isn't available, but the guide below still works.",
+    "nextStop": "Stop {n}",
+    "arrivedKicker": "You're here",
+    "arrived": "You've reached {name}!",
+    "distance": "{distance} away · about {minutes} min walk",
+    "goNext": "Go to the next stop",
+    "finish": "Finish trip",
+    "skip": "Skip stop",
+    "openMaps": "Open in Google Maps",
+    "cameraOpen": "Guide me with the camera",
+    "straightLineNote": "Straight-line distance: the real path may be longer. To follow streets, open Google Maps.",
+    "done": "Trip completed!",
+    "backToTrip": "Back to my trip",
+    "cameraKicker": "Walking guide",
+    "cameraClose": "Close camera",
+    "arrowLabel": "Arrow pointing towards {name}",
+    "noCompass": "No compass: your destination is to the {direction}. Walk a few steps and the arrow will follow your movement.",
+    "enableCompass": "Enable compass",
+    "cameraOff": "No camera access: the guide still works.",
+    "cameraSafety": "Watch the path and take care when crossing. The arrow is approximate (GPS ± 5–15 m).",
+    "cardinal": {
+      "n": "north",
+      "ne": "northeast",
+      "e": "east",
+      "se": "southeast",
+      "s": "south",
+      "sw": "southwest",
+      "w": "west",
+      "nw": "northwest"
+    },
+    "demoBanner": "Demo mode: your location is simulated and moves on its own towards the next stop. Turn your phone to try the camera arrow."
+  },
+  "saved": {
+    "save": "Save",
+    "saved": "Saved",
+    "title": "Your saved places"
+  },
+  "reviews": {
+    "title": "Reviews",
+    "count": "{count, plural, =0 {No reviews yet} one {# review} other {# reviews}}",
+    "noRating": "No rating yet",
+    "distribution": "Rating distribution",
+    "level": {
+      "5": "Excellent",
+      "4": "Very good",
+      "3": "Average",
+      "2": "Poor",
+      "1": "Terrible"
+    },
+    "beFirst": "Be the first to review",
+    "comingSoon": "Soon you'll be able to rate with stars and leave a review by signing in with Google. Reviews are moderated before they're published.",
+    "ownerReply": "The business will be able to reply to reviews from its dashboard."
   }
 }

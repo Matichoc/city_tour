@@ -8,7 +8,14 @@ import { track as vercelTrack } from "@vercel/analytics";
  * proyecto; si no, no hacen nada. Lista cerrada: docs/DECISIONES.md.
  */
 export type AnalyticsEvent =
-  "add_to_trip" | "add_route" | "navigate_click" | "share" | "qr_visit";
+  | "add_to_trip"
+  | "add_route"
+  | "navigate_click"
+  | "share"
+  | "qr_visit"
+  | "save_place"
+  | "live_start"
+  | "camera_start";
 
 export function track(
   name: AnalyticsEvent,

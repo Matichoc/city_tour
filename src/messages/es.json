@@ -32,7 +32,11 @@
     "seeRoute": "Ver la ruta",
     "featured": "Para empezar",
     "seeAll": "Ver todo",
-    "demoNotice": "Versión de prueba: los lugares tienen su fuente, pero aún están pendientes de verificación en terreno. Alojamiento y gastronomía se suman con la Municipalidad y la Cámara de Comercio."
+    "demoNotice": "Versión de prueba: los lugares tienen su fuente, pero aún están pendientes de verificación en terreno. Alojamiento y gastronomía se suman con la Municipalidad y la Cámara de Comercio.",
+    "mapTitle": "La comuna en 3D",
+    "mapSubtitle": "Mar, dunas y cerros de Papudo, Pullally y Las Salinas. Toca un punto para ver su ficha.",
+    "mapOpen": "Mapa completo",
+    "mapVillages": "Pueblos de la comuna"
   },
   "explore": {
     "title": "Explorar Papudo",
@@ -69,7 +73,12 @@
     "outdated": "Desactualizado",
     "noLocation": "Ubicación exacta por confirmar: usa \"Cómo llegar\" para buscarla por nombre y dirección.",
     "address": "Dirección",
-    "business": "Comercio local"
+    "business": "Comercio local",
+    "sections": "Secciones de la ficha",
+    "tabOverview": "Resumen",
+    "tabLocation": "Ubicación",
+    "tabReviews": "Opiniones",
+    "tabDetails": "Datos"
   },
   "routes": {
     "title": "Rutas",
@@ -112,11 +121,19 @@
     "copied": "¡Enlace copiado!",
     "sharedTitle": "Te compartieron un recorrido de {count, plural, one {# parada} other {# paradas}}. ¿Quieres cargarlo?",
     "sharedLoad": "Cargar el recorrido compartido",
-    "sharedKeep": "Mantener el mío"
+    "sharedKeep": "Mantener el mío",
+    "startLive": "Iniciar recorrido",
+    "startLiveNote": "Usa tu ubicación para guiarte parada por parada. Tu ubicación no sale de tu teléfono.",
+    "startDemo": "¿No estás en Papudo? Probar con ubicación simulada"
   },
   "map": {
     "unavailable": "El mapa no está disponible en este momento. Puedes seguir usando la lista.",
-    "viewPlace": "Ver ficha"
+    "viewPlace": "Ver ficha",
+    "viewVillage": "Ver pueblo",
+    "communeBadge": "Comuna de Papudo · 3D",
+    "view2d": "Ver en 2D",
+    "view3d": "Ver en 3D",
+    "recenter": "Volver a la comuna"
   },
   "info": {
     "title": "Información",
@@ -219,5 +236,66 @@
     "scan": "Escanea con la cámara: playas, rutas y recorridos, sin descargar nada.",
     "from": "Te lo recomienda {name}",
     "print": "Imprimir afiche"
+  },
+  "live": {
+    "title": "Recorrido en vivo",
+    "progress": "{done} de {total} paradas",
+    "end": "Terminar",
+    "recenter": "Centrar en mí",
+    "waitingGps": "Buscando tu ubicación…",
+    "gpsDenied": "No tenemos permiso para usar tu ubicación. Actívalo en los ajustes del navegador para seguir el recorrido en vivo.",
+    "gpsUnavailable": "No pudimos obtener tu ubicación. Revisa que el GPS esté encendido.",
+    "mapUnavailable": "El mapa no está disponible, pero la guía de abajo sigue funcionando.",
+    "nextStop": "Parada {n}",
+    "arrivedKicker": "Llegaste",
+    "arrived": "¡Llegaste a {name}!",
+    "distance": "A {distance} · unos {minutes} min a pie",
+    "goNext": "Ir a la siguiente parada",
+    "finish": "Terminar recorrido",
+    "skip": "Saltar parada",
+    "openMaps": "Abrir en Google Maps",
+    "cameraOpen": "Guíame con la cámara",
+    "straightLineNote": "Distancia en línea recta: el camino real puede ser más largo. Para ir por calles, abre Google Maps.",
+    "done": "¡Recorrido completado!",
+    "backToTrip": "Volver a mi recorrido",
+    "cameraKicker": "Guía a pie",
+    "cameraClose": "Cerrar cámara",
+    "arrowLabel": "Flecha que apunta hacia {name}",
+    "noCompass": "Sin brújula: el destino está hacia el {direction}. Camina unos pasos y la flecha se orientará con tu movimiento.",
+    "enableCompass": "Activar brújula",
+    "cameraOff": "Sin acceso a la cámara: la guía sigue funcionando.",
+    "cameraSafety": "Mira el camino y cuídate al cruzar. La flecha es aproximada (GPS ± 5–15 m).",
+    "cardinal": {
+      "n": "norte",
+      "ne": "noreste",
+      "e": "este",
+      "se": "sureste",
+      "s": "sur",
+      "sw": "suroeste",
+      "w": "oeste",
+      "nw": "noroeste"
+    },
+    "demoBanner": "Modo demostración: tu ubicación es simulada y avanza sola hacia la próxima parada. Mueve el teléfono para probar la flecha de la cámara."
+  },
+  "saved": {
+    "save": "Guardar",
+    "saved": "Guardado",
+    "title": "Tus guardados"
+  },
+  "reviews": {
+    "title": "Opiniones",
+    "count": "{count, plural, =0 {Sin opiniones aún} one {# opinión} other {# opiniones}}",
+    "noRating": "Sin calificación todavía",
+    "distribution": "Distribución de calificaciones",
+    "level": {
+      "5": "Excelente",
+      "4": "Muy bueno",
+      "3": "Normal",
+      "2": "Malo",
+      "1": "Pésimo"
+    },
+    "beFirst": "Sé el primero en opinar",
+    "comingSoon": "Muy pronto podrás calificar con estrellas y dejar tu opinión iniciando sesión con Google. Las opiniones se moderan antes de publicarse.",
+    "ownerReply": "El comercio podrá responder las opiniones desde su panel."
   }
 }
