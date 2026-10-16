@@ -286,6 +286,14 @@
     "backToTrip": "Voltar ao meu roteiro",
     "cameraKicker": "Guia a pé",
     "cameraClose": "Fechar câmera",
+    "pointerLabel": "Escolha seu guia",
+    "pointer": {
+      "arrow": "Seta",
+      "finger": "Dedo",
+      "steps": "Pegadas",
+      "gull": "Gaivota",
+      "boat": "Veleiro"
+    },
     "arrowLabel": "Seta apontando para {name}",
     "noCompass": "Sem bússola: o destino fica ao {direction}. Caminhe alguns passos e a seta se orientará com o seu movimento.",
     "enableCompass": "Ativar bússola",

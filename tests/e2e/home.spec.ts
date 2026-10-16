@@ -369,3 +369,28 @@ test("información: presenta a quien desarrolla la guía", async ({ page }) => {
   await page.goto("/es/informacion");
   await expect(page.getByText(/Cristóbal Roco/)).toBeVisible();
 });
+
+test("cámara a pie: se puede elegir la figura que señala y se recuerda", async ({
+  page,
+  context,
+}) => {
+  await context.grantPermissions(["geolocation"]);
+  await context.setGeolocation({ latitude: -32.4165, longitude: -71.4115 });
+  await page.goto("/es/recorrido?l=papudo-salinas-pullally");
+  await page.getByRole("button", { name: /Iniciar recorrido/ }).click();
+  const live = page.getByRole("dialog", { name: "Recorrido en vivo" });
+  await live.getByRole("button", { name: /con la cámara/ }).click();
+  const picker = page.getByRole("radiogroup", { name: "Elige tu guía" });
+  await expect(picker.getByRole("radio")).toHaveCount(5);
+  await expect(picker.getByRole("radio", { name: "Flecha" })).toBeChecked();
+  await picker.getByRole("radio", { name: "Huellas" }).click();
+  await expect(picker.getByRole("radio", { name: "Huellas" })).toBeChecked();
+  await page.reload();
+  await page.getByRole("button", { name: /Iniciar recorrido/ }).click();
+  await live.getByRole("button", { name: /con la cámara/ }).click();
+  await expect(
+    page
+      .getByRole("radiogroup", { name: "Elige tu guía" })
+      .getByRole("radio", { name: "Huellas" }),
+  ).toBeChecked();
+});

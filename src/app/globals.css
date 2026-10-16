@@ -264,3 +264,16 @@ body {
     border-color: var(--sea-bright);
   }
 }
+
+@keyframes step-print {
+  0%,
+  100% {
+    opacity: 0.25;
+  }
+  30% {
+    opacity: 1;
+  }
+}
+.step-print {
+  animation: step-print 1.4s ease-in-out infinite;
+}
