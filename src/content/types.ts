@@ -1,3 +1,5 @@
+import type { IllustrationKey } from "@/content/images";
+
 export type Source = { url: string; label: string };
 
 export type LocalityContent = {
@@ -28,6 +30,10 @@ export type PlaceContent = {
   es: PlaceText;
   /** Inglés opcional: si falta, se muestra el español. */
   en?: PlaceText;
+  /** Portugués opcional: si falta, se muestra el español. */
+  pt?: PlaceText;
+  /** Ficha de EJEMPLO (ficticia): se rotula y no se indexa (demo-content.ts). */
+  demo?: boolean;
   source?: Source;
   tvSource?: Source;
   extraSources?: Source[];
@@ -46,9 +52,16 @@ export type EventContent = {
   day?: number;
   /** Temporada cuando no hay mes. */
   season?: "summer";
+  /** Aparece en el carrusel de destacados. */
+  featured?: boolean;
+  /** Ilustración del banner; si falta, la de su producto. */
+  illustration?: IllustrationKey;
+  /** Evento de EJEMPLO (ficticio): se rotula y no se indexa. */
+  demo?: boolean;
   es: EventText;
   en?: EventText;
-  source: Source;
+  pt?: EventText;
+  source?: Source;
   extraSources?: Source[];
 };
 

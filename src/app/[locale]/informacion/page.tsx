@@ -199,6 +199,22 @@ export default async function InfoPage({
         </section>
 
         <section
+          aria-labelledby="quiosco"
+          className="border-border bg-surface rounded-2xl border p-4"
+        >
+          <h2 id="quiosco" className="font-display text-2xl font-extrabold">
+            {t("kioskTitle")}
+          </h2>
+          <p className="mt-1 text-sm">{t("kioskBody")}</p>
+          <Link
+            href="/quiosco"
+            className="bg-coral text-coral-ink mt-3 inline-flex min-h-12 items-center rounded-full px-6 font-extrabold shadow-sm"
+          >
+            {t("kioskOpen")}
+          </Link>
+        </section>
+
+        <section
           aria-labelledby="datos"
           className="bg-earth-soft text-earth rounded-2xl p-4"
         >

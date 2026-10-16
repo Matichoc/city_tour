@@ -13,7 +13,10 @@ import {
 import { CommuneMap3D } from "@/components/map/commune-map-3d";
 import { buildPageMetadata, getSiteUrl, localizedUrl } from "@/lib/seo";
 import { HeroScene } from "@/components/ui/hero-scene";
-import { CategoryIcon } from "@/components/ui/category-icon";
+import {
+  CategoryCardFace,
+  categoryCardClass,
+} from "@/components/ui/category-card";
 import { PlaceCard } from "@/components/place/place-card";
 import { RouteCard } from "@/components/route/route-card";
 import { QrVisit } from "@/components/analytics/qr-visit";
@@ -82,7 +85,7 @@ export default async function HomePage({
         }}
       />
       <HeroScene>
-        <p className="text-sm font-bold tracking-widest text-[#ffe3a8] uppercase">
+        <p className="font-script text-xl text-[#ffe3a8] drop-shadow">
           {t("kicker")}
         </p>
         <h1 className="shimmer-title font-display mt-2 text-4xl leading-[1.08] font-extrabold sm:text-5xl">
@@ -114,31 +117,27 @@ export default async function HomePage({
 
       <div className="mx-auto flex w-full max-w-3xl flex-col gap-9 px-4 pt-2 pb-10">
         <section aria-labelledby="que-hacer">
-          <h2 id="que-hacer" className="font-display text-2xl font-extrabold">
+          <h2 id="que-hacer" className="font-display text-3xl font-extrabold">
             {t("whatToDo")}
           </h2>
-          <ul className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
+          <p className="text-muted text-sm sm:hidden">{t("whatToDoHint")}</p>
+          <ul className="-mx-4 mt-3 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pt-1 pb-4 sm:mx-0 sm:grid sm:grid-cols-3 sm:overflow-visible sm:px-0">
             {categories.map((c, i) => (
               <li
                 key={c.slug}
-                className="rise-in"
+                className="rise-in w-40 shrink-0 snap-start sm:w-auto"
                 style={{ "--i": i } as React.CSSProperties}
               >
                 <Link
                   href={{ pathname: "/explorar", query: { categoria: c.slug } }}
-                  className="card-lift border-border bg-surface flex min-h-20 items-center gap-3 rounded-2xl border p-3 shadow-sm"
+                  className={categoryCardClass}
                 >
-                  <span className="bg-sea-soft text-sea-deep grid size-11 shrink-0 place-items-center rounded-xl">
-                    <CategoryIcon category={c.slug} className="size-6" />
-                  </span>
-                  <span>
-                    <span className="block text-sm leading-tight font-extrabold">
-                      {c.name}
-                    </span>
-                    <span className="text-muted text-xs">
-                      {t("placesCount", { count: c.count })}
-                    </span>
-                  </span>
+                  <CategoryCardFace
+                    category={c.slug}
+                    name={c.name}
+                    index={i}
+                    countLabel={t("placesCount", { count: c.count })}
+                  />
                 </Link>
               </li>
             ))}
@@ -275,6 +274,12 @@ export default async function HomePage({
         >
           {t("demoNotice")}
         </p>
+        <Link
+          href="/quiosco"
+          className="text-sea self-start text-sm font-bold underline"
+        >
+          {t("kioskLink")}
+        </Link>
       </div>
     </main>
   );

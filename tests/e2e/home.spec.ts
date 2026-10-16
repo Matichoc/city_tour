@@ -8,7 +8,8 @@ test("la raíz dirige a /es y se ve la portada", async ({ page }) => {
 
 test("cambiar a inglés conserva la página", async ({ page }) => {
   await page.goto("/es/explorar");
-  await page.getByRole("button", { name: "en", exact: true }).click();
+  // El idioma se elige en una lista desplegable.
+  await page.getByRole("combobox", { name: "Idioma" }).selectOption("en");
   await expect(page).toHaveURL(/\/en\/explore$/);
 });
 
@@ -148,7 +149,7 @@ test("recorrido en vivo: si estás cerca de una parada que no es la primera, la 
   ).toBeVisible();
 });
 
-test("agenda de eventos: lista con fuente, filtro por producto y aviso de fechas", async ({
+test("agenda de eventos: cartelera, filtro por producto y aviso de fechas", async ({
   page,
 }) => {
   await page.goto("/es/eventos");
@@ -158,16 +159,119 @@ test("agenda de eventos: lista con fuente, filtro por producto y aviso de fechas
   await expect(
     page.getByText(/sin fecha de una edición concreta/),
   ).toBeVisible();
+  const lista = page.getByRole("list", { name: "Lista de eventos" });
   await expect(
-    page.getByRole("heading", { name: /Aniversario del Combate Naval/ }),
+    lista.getByRole("link", { name: /Aniversario del Combate Naval/ }),
   ).toBeVisible();
-  await page.getByRole("link", { name: "Gastronomía" }).click();
+  await page.getByRole("link", { name: "Gastronomía", exact: true }).click();
   await expect(page).toHaveURL(/categoria=gastronomia/);
   await expect(
-    page.getByRole("heading", { name: /Feria Internacional de Integración/ }),
+    lista.getByRole("link", { name: /Feria Internacional de Integración/ }),
+  ).toBeVisible();
+  await expect(lista.getByRole("link", { name: /Combate Naval/ })).toHaveCount(
+    0,
+  );
+});
+
+test("eventos destacados: carrusel con flechas, puntos y pausa, y detalle con valoración", async ({
+  page,
+}) => {
+  await page.goto("/es/eventos");
+  const carrusel = page.getByRole("region", { name: "Eventos destacados" });
+  await expect(carrusel.getByRole("group")).toHaveCount(3);
+  await expect(
+    carrusel.getByRole("button", { name: /Pausar|Reanudar/ }),
+  ).toBeVisible();
+  await carrusel.getByRole("button", { name: "Evento siguiente" }).click();
+  await expect(
+    carrusel.getByRole("button", { name: "Ir al evento 2" }),
+  ).toHaveAttribute("aria-current", "true");
+  await carrusel.getByRole("link", { name: "Ver detalles" }).first().click();
+  await expect(page).toHaveURL(/\/es\/eventos\//);
+  await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+  await expect(page.getByText("Sin valoraciones aún").first()).toBeVisible();
+});
+
+test("ficha de ejemplo: opiniones simuladas y el visitante puede escribir la suya (demo)", async ({
+  page,
+}) => {
+  await page.goto("/es/lugares/demo-cabalgatas-del-valle");
+  await expect(
+    page.getByText(/Ficha de ejemplo: este negocio es ficticio/),
+  ).toBeVisible();
+  await expect(page.getByText("4.7").first()).toBeVisible();
+  // Una ficha de ejemplo no tiene "Cómo llegar" ni se indexa.
+  await expect(page.getByRole("link", { name: "Cómo llegar" })).toHaveCount(0);
+  await expect(page.locator('meta[name="robots"]')).toHaveAttribute(
+    "content",
+    /noindex/,
+  );
+  // El visitante escribe su opinión.
+  await page.getByRole("button", { name: "Publicar mi opinión" }).click();
+  await expect(page.getByText("Elige de 1 a 5 estrellas.")).toBeVisible();
+  await page
+    .getByRole("radio", { name: "5 de 5 estrellas" })
+    .check({ force: true });
+  await page
+    .getByLabel(/^Tu opinión/)
+    .fill("Prueba de demostración: lo pasamos genial.");
+  await page.getByLabel("Tu nombre (opcional)").fill("Cristóbal");
+  await page.getByRole("button", { name: "Publicar mi opinión" }).click();
+  await expect(page.getByRole("status")).toContainText("¡Gracias!");
+  const lista = page.getByRole("list", { name: "Lista de opiniones" });
+  await expect(lista).toContainText(
+    "Prueba de demostración: lo pasamos genial.",
+  );
+  await expect(lista).toContainText("Tu opinión · demo");
+  // Se conserva en este dispositivo y se puede borrar.
+  await page.reload();
+  await expect(lista).toContainText("Prueba de demostración");
+  await page.getByRole("button", { name: "Borrar mi opinión" }).click();
+  await expect(lista).not.toContainText("Prueba de demostración");
+});
+
+test("una ficha real no tiene formulario de opiniones ni opiniones inventadas", async ({
+  page,
+}) => {
+  await page.goto("/es/lugares/restaurante-donde-pablo");
+  await expect(page.getByText("Sé el primero en opinar")).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Publicar mi opinión" }),
+  ).toHaveCount(0);
+  const sitemap = await page.request.get("/sitemap.xml");
+  expect(await sitemap.text()).not.toContain("demo-");
+});
+
+test("portada: tarjetas verticales de «¿Qué quieres hacer?» y selector de idioma desplegable", async ({
+  page,
+}) => {
+  await page.goto("/es");
+  await expect(
+    page.getByRole("heading", { name: /vamos a Papudo/ }),
+  ).toBeVisible();
+  const tarjetas = page
+    .getByRole("region", { name: "¿Qué quieres hacer?" })
+    .or(page.locator("#que-hacer").locator(".."));
+  await expect(tarjetas.getByRole("link", { name: /Balneario/ })).toBeVisible();
+  await expect(tarjetas.getByRole("link", { name: /Deportes/ })).toBeVisible();
+  await expect(page.getByRole("combobox", { name: "Idioma" })).toHaveValue(
+    "es",
+  );
+});
+
+test("quiosco: se puede salir en la web y en la tablet de la oficina no", async ({
+  page,
+}) => {
+  await page.goto("/es/quiosco");
+  await expect(
+    page.getByRole("link", { name: "Salir del quiosco" }),
+  ).toBeVisible();
+  await page.goto("/es/quiosco?oficina=1");
+  await expect(
+    page.getByRole("heading", { name: "¿Qué quieres descubrir?" }),
   ).toBeVisible();
   await expect(
-    page.getByRole("heading", { name: /Combate Naval/ }),
+    page.getByRole("link", { name: "Salir del quiosco" }),
   ).toHaveCount(0);
 });
 
@@ -209,7 +313,7 @@ test("portugués: cambia de idioma, traduce la interfaz y avisa si falta la trad
   page,
 }) => {
   await page.goto("/es/rutas");
-  await page.getByRole("button", { name: "pt", exact: true }).click();
+  await page.getByRole("combobox", { name: "Idioma" }).selectOption("pt");
   await expect(page).toHaveURL(/\/pt\/roteiros$/);
   await expect(
     page.getByRole("heading", { name: "Roteiros", level: 1 }),

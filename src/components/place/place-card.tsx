@@ -4,6 +4,7 @@ import type { Place } from "@/lib/data";
 import { CategoryIcon } from "@/components/ui/category-icon";
 import { IllustratedImage } from "@/components/ui/illustrated-image";
 import { StatusBadge } from "@/components/place/status-badge";
+import { Stars } from "@/components/ui/stars";
 
 export function PlaceCard({
   place,
@@ -35,8 +36,21 @@ export function PlaceCard({
         <p className="text-muted mt-1 line-clamp-2 text-sm">
           {place.shortDescription}
         </p>
+        {place.demo && place.ratingAverage !== null ? (
+          <p className="text-muted mt-2 flex items-center gap-1.5 text-sm">
+            <Stars value={place.ratingAverage} className="size-4" />
+            <b className="text-foreground">{place.ratingAverage.toFixed(1)}</b>
+            <span>({place.ratingCount})</span>
+          </p>
+        ) : null}
         <div className="mt-3 flex flex-wrap items-center gap-2">
-          <StatusBadge verification={place.verification} />
+          {place.demo ? (
+            <span className="bg-sun text-coral-ink rounded-full px-2.5 py-1 text-xs font-extrabold">
+              {t("demoBadge")}
+            </span>
+          ) : (
+            <StatusBadge verification={place.verification} />
+          )}
           {place.business ? (
             <span className="bg-sea-soft text-sea-deep rounded-full px-2.5 py-1 text-xs font-bold">
               {t("business")}

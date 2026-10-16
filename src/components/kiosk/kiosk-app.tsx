@@ -2,9 +2,15 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import type { CategorySlug } from "@/content/types";
 import type { Picture } from "@/lib/data";
-import { CategoryIcon } from "@/components/ui/category-icon";
+import {
+  CategoryCardFace,
+  CATEGORY_BG,
+  FeatureCardFace,
+  categoryCardClass,
+} from "@/components/ui/category-card";
 import { IllustratedImage } from "@/components/ui/illustrated-image";
 import { LocaleSwitcher } from "@/components/ui/locale-switcher";
 
@@ -21,6 +27,7 @@ export type KioskPlace = {
   address: string | null;
   picture: Picture;
   qrSvg: string;
+  demo: boolean;
 };
 
 export type KioskEvent = {
@@ -29,6 +36,10 @@ export type KioskEvent = {
   shortDescription: string;
   when: string;
   categoryName: string;
+  monthShort: string | null;
+  day: number | null;
+  categorySlug: CategorySlug;
+  demo: boolean;
 };
 
 export type KioskRoute = {
@@ -83,6 +94,13 @@ export function KioskApp({
   const scroller = useRef<HTMLDivElement>(null);
   const timer = useRef<number | null>(null);
   const atHome = view.kind === "home";
+  // En la tablet de la oficina se abre con ?oficina=1 y no se muestra "Salir".
+  const [office, setOffice] = useState(false);
+  useEffect(() => {
+    const flag =
+      new URLSearchParams(window.location.search).get("oficina") === "1";
+    queueMicrotask(() => setOffice(flag));
+  }, []);
 
   const go = useCallback((next: View) => {
     setView(next);
@@ -154,69 +172,98 @@ export function KioskApp({
             {t("subtitle")}
           </span>
         </button>
-        <LocaleSwitcher />
+        <div className="flex items-center gap-3">
+          <LocaleSwitcher />
+          {office ? null : (
+            <Link
+              href="/"
+              className="border-border text-sea-deep hover:border-sea inline-flex min-h-11 items-center rounded-full border-2 px-4 text-sm font-extrabold"
+            >
+              {t("exit")}
+            </Link>
+          )}
+        </div>
       </header>
 
       <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-6 px-6 py-8">
         {view.kind === "home" ? (
           <>
-            <h1 className="font-display text-4xl leading-tight font-extrabold">
-              {t("headline")}
-            </h1>
-            <ul className="grid grid-cols-2 gap-4 lg:grid-cols-3">
-              {categories.map((c) => (
-                <li key={c.slug}>
+            <section className="relative isolate overflow-hidden rounded-[2rem] bg-[linear-gradient(135deg,#07495a_0%,#0b7285_55%,#f0a368_130%)] p-8 text-white shadow-lg">
+              <span
+                aria-hidden="true"
+                className="sun-glow absolute -top-10 -right-8 -z-10 size-52 rounded-full bg-[radial-gradient(circle,#fff3c4_0%,#ffb454_40%,rgb(255_122_89_/_0)_72%)]"
+              />
+              <p className="font-script text-3xl text-[#ffe3a8]">
+                {t("kicker")}
+              </p>
+              <h1 className="font-display mt-1 text-5xl leading-[1.05] font-extrabold">
+                {t("headline")}
+              </h1>
+              <p className="mt-3 max-w-xl text-xl text-white/90">{t("lead")}</p>
+            </section>
+
+            <ul className="grid grid-cols-2 gap-5 md:grid-cols-4">
+              {categories.map((c, i) => (
+                <li
+                  key={c.slug}
+                  className="rise-in"
+                  style={{ "--i": i } as React.CSSProperties}
+                >
                   <button
                     type="button"
                     disabled={c.count === 0}
                     onClick={() => go({ kind: "category", slug: c.slug })}
-                    className={`${tile} w-full disabled:opacity-50`}
+                    className={`${categoryCardClass} h-72 disabled:opacity-50`}
                   >
-                    <span className="bg-sea-soft text-sea-deep grid size-14 place-items-center rounded-2xl">
-                      <CategoryIcon category={c.slug} className="size-8" />
-                    </span>
-                    <span>
-                      <span className="font-display block text-2xl font-extrabold">
-                        {c.name}
-                      </span>
-                      <span className="text-muted text-base">
-                        {c.count === 0
+                    <CategoryCardFace
+                      category={c.slug}
+                      name={c.name}
+                      index={i}
+                      countLabel={
+                        c.count === 0
                           ? t("soon")
-                          : t("count", { count: c.count })}
-                      </span>
-                    </span>
+                          : t("count", { count: c.count })
+                      }
+                    />
                   </button>
                 </li>
               ))}
-              <li>
+              <li
+                className="rise-in col-span-2 md:col-span-1"
+                style={{ "--i": 7 } as React.CSSProperties}
+              >
                 <button
                   type="button"
                   onClick={() => go({ kind: "events" })}
-                  className={`${tile} bg-sea-soft w-full`}
+                  className={`${categoryCardClass} h-72`}
                 >
-                  <span className="font-display text-sea-deep text-2xl font-extrabold">
-                    {t("events")}
-                  </span>
-                  <span className="text-muted text-base">
-                    {t("count", { count: events.length })}
-                  </span>
+                  <FeatureCardFace
+                    gradient="from-[#ffd27a] via-[#f59e0b] to-[#9a4a06]"
+                    title={t("events")}
+                    countLabel={t("count", { count: events.length })}
+                    glyph="★"
+                  />
                 </button>
               </li>
-              <li>
+              <li
+                className="rise-in col-span-2 md:col-span-1"
+                style={{ "--i": 8 } as React.CSSProperties}
+              >
                 <button
                   type="button"
                   onClick={() => go({ kind: "routes" })}
-                  className={`${tile} bg-sea-soft w-full`}
+                  className={`${categoryCardClass} h-72`}
                 >
-                  <span className="font-display text-sea-deep text-2xl font-extrabold">
-                    {t("routes")}
-                  </span>
-                  <span className="text-muted text-base">
-                    {t("count", { count: routes.length })}
-                  </span>
+                  <FeatureCardFace
+                    gradient="from-[#7dd3fc] via-[#0284c7] to-[#0c3a63]"
+                    title={t("routes")}
+                    countLabel={t("count", { count: routes.length })}
+                    glyph="➜"
+                  />
                 </button>
               </li>
             </ul>
+
             <section className="border-border bg-surface flex items-center gap-6 rounded-3xl border p-5">
               <div
                 className="w-36 shrink-0"
@@ -224,7 +271,9 @@ export function KioskApp({
                 aria-label={t("qrAlt")}
                 dangerouslySetInnerHTML={{ __html: homeQrSvg }}
               />
-              <p className="text-xl font-bold">{t("takeWithYou")}</p>
+              <p className="font-display text-2xl font-extrabold">
+                {t("takeWithYou")}
+              </p>
             </section>
           </>
         ) : null}
@@ -298,8 +347,10 @@ export function KioskApp({
                 {place.address ? (
                   <p className="text-muted text-lg">{place.address}</p>
                 ) : null}
-                <p className="bg-earth-soft text-earth rounded-xl p-3 text-base">
-                  {t("pending")}
+                <p
+                  className={`rounded-xl p-3 text-base ${place.demo ? "bg-sun/30 text-earth font-bold" : "bg-earth-soft text-earth"}`}
+                >
+                  {place.demo ? t("demoPlace") : t("pending")}
                 </p>
               </div>
               <aside className="border-border bg-surface flex flex-col items-center gap-3 self-start rounded-3xl border p-5 text-center">
@@ -335,16 +386,46 @@ export function KioskApp({
                 {events.map((e) => (
                   <li
                     key={e.slug}
-                    className="border-border bg-surface rounded-2xl border p-4"
+                    className="border-border bg-surface flex overflow-hidden rounded-2xl border"
                   >
-                    <p className="text-field text-sm font-bold tracking-wide uppercase">
-                      {e.categoryName}
-                    </p>
-                    <h2 className="font-display text-2xl font-extrabold">
-                      {e.name}
-                    </h2>
-                    <p className="text-sea-deep text-lg font-bold">{e.when}</p>
-                    <p className="mt-1 text-lg">{e.shortDescription}</p>
+                    <span
+                      aria-hidden="true"
+                      className={`flex w-24 shrink-0 flex-col items-center justify-center bg-gradient-to-b p-2 text-center text-white ${CATEGORY_BG[e.categorySlug]}`}
+                    >
+                      {e.monthShort ? (
+                        <>
+                          {e.day ? (
+                            <>
+                              <span className="text-sm font-extrabold uppercase">
+                                {e.monthShort}
+                              </span>
+                              <span className="font-display text-4xl leading-none font-extrabold">
+                                {e.day}
+                              </span>
+                            </>
+                          ) : (
+                            <span className="font-display text-3xl font-extrabold uppercase">
+                              {e.monthShort}
+                            </span>
+                          )}
+                        </>
+                      ) : (
+                        <span className="text-3xl">☀</span>
+                      )}
+                    </span>
+                    <span className="flex flex-col gap-1 p-4">
+                      <span className="text-field text-sm font-bold tracking-wide uppercase">
+                        {e.categoryName}
+                        {e.demo ? ` · ${t("example")}` : ""}
+                      </span>
+                      <span className="font-display text-2xl font-extrabold">
+                        {e.name}
+                      </span>
+                      <span className="text-sea-deep text-lg font-bold">
+                        {e.when}
+                      </span>
+                      <span className="text-lg">{e.shortDescription}</span>
+                    </span>
                   </li>
                 ))}
               </ul>

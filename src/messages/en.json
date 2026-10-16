@@ -23,9 +23,9 @@
   "home": {
     "metaTitle": "Papudo travel guide",
     "kicker": "Papudo · Valparaíso Region",
-    "title": "Sea, dunes and countryside: discover Papudo your way",
-    "subtitle": "Beaches, wetlands and town corners in a guide made for your phone. No account needed.",
-    "search": "Search beaches, places…",
+    "title": "Salt, sun and countryside: let's go to Papudo!",
+    "subtitle": "Beaches for a dip, dunes to get lost in and corners with small-town flavour. Your pocket guide to enjoying it as a family, no account needed.",
+    "search": "What are you craving? Beach, ice cream, a stroll…",
     "searchGo": "Search",
     "whatToDo": "What do you want to do?",
     "placesCount": "{count, plural, =0 {Soon} one {# place} other {# places}}",
@@ -37,7 +37,9 @@
     "mapTitle": "The commune in 3D",
     "mapSubtitle": "Sea, dunes and hills of Papudo, Pullally and Las Salinas. Tap a point to see its page.",
     "mapOpen": "Full map",
-    "mapVillages": "Villages in the commune"
+    "mapVillages": "Villages in the commune",
+    "whatToDoHint": "Pick a plan and swipe for more",
+    "kioskLink": "See the kiosk mode (for tablets)"
   },
   "explore": {
     "title": "Explore Papudo",
@@ -79,7 +81,11 @@
     "tabOverview": "Overview",
     "tabLocation": "Location",
     "tabReviews": "Reviews",
-    "tabDetails": "Details"
+    "tabDetails": "Details",
+    "demoBadge": "Example",
+    "demoBanner": "Example page: this business is fictional and was created to show how it would look in the guide. It does not exist and cannot be visited.",
+    "demoLocation": "No location: this is an example page.",
+    "demoSource": "Example page created for the demonstration"
   },
   "routes": {
     "title": "Routes",
@@ -161,7 +167,10 @@
     "emergencyNote": "Chile's national numbers, free from any phone.",
     "practicalTitle": "Before you go",
     "historyTitle": "History",
-    "forBusiness": "For business (coming soon)"
+    "forBusiness": "For business (coming soon)",
+    "kioskTitle": "Kiosk mode",
+    "kioskBody": "A screen designed for tablets at the information offices: big buttons, a QR to continue on your phone, and it returns to the start by itself.",
+    "kioskOpen": "See the kiosk mode"
   },
   "village": {
     "back": "Info",
@@ -308,7 +317,26 @@
     },
     "beFirst": "Be the first to review",
     "comingSoon": "Soon you'll be able to rate with stars and leave a review by signing in with Google. Reviews are moderated before they're published.",
-    "ownerReply": "The business will be able to reply to reviews from its dashboard."
+    "ownerReply": "The business will be able to reply to reviews from its dashboard.",
+    "demoNote": "Demo: the example reviews are fictional. Yours is saved only on this device; the real version will have accounts and moderation before publishing.",
+    "outOf5": "out of 5 · {count, plural, one {# review} other {# reviews}}",
+    "writeTitle": "Tell us about your experience at {name}",
+    "ratingLegend": "Your rating",
+    "starOption": "{n} out of 5 stars",
+    "textLabel": "Your review",
+    "textPlaceholder": "What did you like? What would you improve?",
+    "nameLabel": "Your name (optional)",
+    "namePlaceholder": "E.g.: Camila",
+    "errorRating": "Pick from 1 to 5 stars.",
+    "errorText": "Write at least a few words about your experience.",
+    "submit": "Post my review",
+    "thanks": "Thank you! Your review now appears below. In the real version it will be moderated before it is published.",
+    "yourReview": "Your review · demo",
+    "exampleBadge": "Example",
+    "anonymous": "Visitor",
+    "delete": "Delete my review",
+    "ownerReplyLabel": "Reply from the business",
+    "list": "Reviews list"
   },
   "events": {
     "title": "Events calendar",
@@ -328,7 +356,29 @@
     "homeTitle": "Festivals and celebrations",
     "homeSubtitle": "What repeats every year in the commune.",
     "countLabel": "{count, plural, one {# event} other {# events}}",
-    "list": "Events list"
+    "list": "Events list",
+    "featuredTitle": "Featured events",
+    "featured": "Featured",
+    "prev": "Previous event",
+    "next": "Next event",
+    "pause": "Pause the carousel",
+    "play": "Resume the carousel",
+    "slideOf": "Event {n} of {total}",
+    "goToSlide": "Go to event {n}",
+    "viewDetails": "View details",
+    "noRatings": "No ratings yet",
+    "demoBadge": "Example",
+    "demoBanner": "Example event: it is fictional and was created to show how it would look in the calendar.",
+    "when": "When",
+    "where": "Where",
+    "product": "Product",
+    "status": "Status",
+    "about": "About the event",
+    "back": "Calendar",
+    "share": "Share event",
+    "moreEvents": "See more events",
+    "everywhere": "Across the commune",
+    "sourcesTitle": "Sources"
   },
   "kiosk": {
     "subtitle": "Tourist guide of the commune",
@@ -347,6 +397,11 @@
     "eventsNote": "These festivals repeat every year: check the day and programme with the Municipality.",
     "idleTitle": "Are you still there?",
     "idleBody": "We'll go back to the start in {seconds} seconds.",
-    "idleStay": "Stay here"
+    "idleStay": "Stay here",
+    "kicker": "Welcome to Papudo!",
+    "lead": "Pick a plan, scan the code and take the guide with you on your phone.",
+    "exit": "Exit kiosk",
+    "example": "Example",
+    "demoPlace": "Example page: this business is fictional and was created to show how it would look."
   }
 }

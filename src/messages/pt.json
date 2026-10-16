@@ -23,9 +23,9 @@
   "home": {
     "metaTitle": "Guia turístico de Papudo",
     "kicker": "Papudo · Região de Valparaíso",
-    "title": "Mar, dunas e campo: descubra Papudo do seu jeito",
-    "subtitle": "Praias, zonas úmidas e cantinhos da cidade em um guia feito para o celular. Sem criar conta.",
-    "search": "Buscar praias, lugares…",
+    "title": "Sal, sol e campo: vamos para Papudo!",
+    "subtitle": "Praias para um mergulho, dunas para se perder e cantinhos com sabor de vila. Seu guia de bolso para curtir em família, sem criar conta.",
+    "search": "O que você está com vontade? Praia, sorvete, passeio…",
     "searchGo": "Buscar",
     "whatToDo": "O que você quer fazer?",
     "placesCount": "{count, plural, =0 {Em breve} one {# lugar} other {# lugares}}",
@@ -37,7 +37,9 @@
     "mapTitle": "A comuna em 3D",
     "mapSubtitle": "Mar, dunas e morros de Papudo, Pullally e Las Salinas. Toque em um ponto para ver sua ficha.",
     "mapOpen": "Mapa completo",
-    "mapVillages": "Localidades da comuna"
+    "mapVillages": "Localidades da comuna",
+    "whatToDoHint": "Escolha um programa e deslize para ver mais",
+    "kioskLink": "Ver o modo quiosque (para tablets)"
   },
   "explore": {
     "title": "Explorar Papudo",
@@ -79,7 +81,11 @@
     "tabOverview": "Resumo",
     "tabLocation": "Localização",
     "tabReviews": "Avaliações",
-    "tabDetails": "Dados"
+    "tabDetails": "Dados",
+    "demoBadge": "Exemplo",
+    "demoBanner": "Ficha de exemplo: este negócio é fictício e foi criado para mostrar como ficaria no guia. Não existe e não pode ser visitado.",
+    "demoLocation": "Sem localização: é uma ficha de exemplo.",
+    "demoSource": "Ficha de exemplo criada para a demonstração"
   },
   "routes": {
     "title": "Roteiros",
@@ -161,7 +167,10 @@
     "emergencyNote": "Números nacionais do Chile, gratuitos de qualquer telefone.",
     "practicalTitle": "Antes de ir",
     "historyTitle": "História",
-    "forBusiness": "Para negócios (em breve)"
+    "forBusiness": "Para negócios (em breve)",
+    "kioskTitle": "Modo quiosque",
+    "kioskBody": "Tela pensada para tablets nos escritórios de informação: botões grandes, QR para continuar no celular e volta sozinha ao início.",
+    "kioskOpen": "Ver o modo quiosque"
   },
   "village": {
     "back": "Informações",
@@ -308,7 +317,26 @@
     },
     "beFirst": "Seja o primeiro a avaliar",
     "comingSoon": "Em breve você poderá avaliar com estrelas e deixar a sua opinião entrando com o Google. As avaliações são moderadas antes de serem publicadas.",
-    "ownerReply": "O comércio poderá responder às avaliações pelo seu painel."
+    "ownerReply": "O comércio poderá responder às avaliações pelo seu painel.",
+    "demoNote": "Demonstração: as avaliações de exemplo são fictícias. A sua é salva somente neste dispositivo; na versão real haverá contas e moderação antes de publicar.",
+    "outOf5": "de 5 · {count, plural, one {# avaliação} other {# avaliações}}",
+    "writeTitle": "Conte-nos sua experiência em {name}",
+    "ratingLegend": "Sua nota",
+    "starOption": "{n} de 5 estrelas",
+    "textLabel": "Sua avaliação",
+    "textPlaceholder": "O que você gostou? O que melhoraria?",
+    "nameLabel": "Seu nome (opcional)",
+    "namePlaceholder": "Ex.: Camila",
+    "errorRating": "Escolha de 1 a 5 estrelas.",
+    "errorText": "Escreva pelo menos algumas palavras sobre sua experiência.",
+    "submit": "Publicar minha avaliação",
+    "thanks": "Obrigado! Sua avaliação já aparece abaixo. Na versão real passará por moderação antes de ser publicada.",
+    "yourReview": "Sua avaliação · demo",
+    "exampleBadge": "Exemplo",
+    "anonymous": "Visitante",
+    "delete": "Apagar minha avaliação",
+    "ownerReplyLabel": "Resposta do estabelecimento",
+    "list": "Lista de avaliações"
   },
   "events": {
     "title": "Agenda de eventos",
@@ -328,7 +356,29 @@
     "homeTitle": "Festas e celebrações",
     "homeSubtitle": "O que se repete todos os anos na comuna.",
     "countLabel": "{count, plural, one {# evento} other {# eventos}}",
-    "list": "Lista de eventos"
+    "list": "Lista de eventos",
+    "featuredTitle": "Eventos em destaque",
+    "featured": "Destaque",
+    "prev": "Evento anterior",
+    "next": "Próximo evento",
+    "pause": "Pausar o carrossel",
+    "play": "Retomar o carrossel",
+    "slideOf": "Evento {n} de {total}",
+    "goToSlide": "Ir para o evento {n}",
+    "viewDetails": "Ver detalhes",
+    "noRatings": "Ainda sem avaliações",
+    "demoBadge": "Exemplo",
+    "demoBanner": "Evento de exemplo: é fictício e foi criado para mostrar como ficaria na agenda.",
+    "when": "Quando",
+    "where": "Onde",
+    "product": "Produto",
+    "status": "Estado",
+    "about": "Sobre o evento",
+    "back": "Agenda",
+    "share": "Compartilhar evento",
+    "moreEvents": "Ver mais eventos",
+    "everywhere": "Em toda a comuna",
+    "sourcesTitle": "Fontes"
   },
   "kiosk": {
     "subtitle": "Guia turístico da comuna",
@@ -347,6 +397,11 @@
     "eventsNote": "São festas que se repetem todos os anos: confirme o dia e a programação com a Prefeitura.",
     "idleTitle": "Você ainda está aí?",
     "idleBody": "Voltaremos ao início em {seconds} segundos.",
-    "idleStay": "Continuar aqui"
+    "idleStay": "Continuar aqui",
+    "kicker": "Bem-vindo a Papudo!",
+    "lead": "Escolha um programa, escaneie o código e leve o guia no seu celular.",
+    "exit": "Sair do quiosque",
+    "example": "Exemplo",
+    "demoPlace": "Ficha de exemplo: este negócio é fictício e foi criado para mostrar como ficaria."
   }
 }

@@ -23,6 +23,8 @@ export const EVENTS: EventContent[] = [
     categorySlug: "gastronomia",
     localitySlug: "papudo",
     month: 2,
+    featured: true,
+    illustration: "paseo",
     es: {
       name: "Feria Internacional de Integración de Papudo (FIP)",
       short:
@@ -80,6 +82,8 @@ export const EVENTS: EventContent[] = [
     categorySlug: "patrimonio",
     localitySlug: "papudo",
     month: 7,
+    featured: true,
+    illustration: "humedal",
     es: {
       name: "Fiesta de San Pedro",
       short:
@@ -115,6 +119,8 @@ export const EVENTS: EventContent[] = [
     localitySlug: "papudo",
     month: 11,
     day: 26,
+    featured: true,
+    illustration: "plaza",
     es: {
       name: "Aniversario del Combate Naval de Papudo",
       short:

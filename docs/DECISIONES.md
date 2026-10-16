@@ -66,3 +66,23 @@ Fuente: PLADETUR de Papudo 2023–2027, iD (`docs/investigacion/`).
   imprimir. Las visitas por QR se miden con el evento anónimo `qr_visit`.
 - **Fase 2 (con Supabase):** encuesta de satisfacción, reporte para el Comité
   de Turismo y registro de prestadores. No se hacen sin base de datos.
+
+## Contenido de ejemplo (demo) y estilo "con onda"
+
+- **Fichas, eventos y opiniones de ejemplo** (`src/content/demo-content.ts`):
+  son **ficticios** y existen solo para mostrar cómo se vería la guía. Siete
+  fichas (una por producto) y dos eventos, con opiniones simuladas y
+  respuestas del local. Reglas: todo lleva el rótulo «Ejemplo»; no tienen
+  coordenadas, dirección, teléfono ni fuente real; **las opiniones simuladas
+  solo se asocian a fichas ficticias, nunca a comercios reales** (hay un test);
+  no se indexan (`noindex`) ni salen en el sitemap.
+  Se ocultan todas con `NEXT_PUBLIC_SHOW_DEMO=0`: **hacerlo antes de abrir el
+  sitio al público.**
+- **Demostración de opiniones**: en las fichas y eventos de ejemplo el
+  visitante puede escribir una opinión con estrellas. Se guarda solo en su
+  dispositivo (localStorage). La versión real necesita cuentas, moderación y
+  base de datos (Fase 2).
+- **Tipografía**: Baloo 2 (títulos, redondeada y juvenil) y Pacifico (lemas
+  sueltos, estilo letrero de playa), autoalojadas con `@fontsource` (sin
+  llamadas a Google en cada visita).
+- **Idioma**: selector desplegable (`<select>` nativo).

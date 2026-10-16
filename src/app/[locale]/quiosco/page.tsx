@@ -3,6 +3,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { Metadata } from "next";
 import { resolveLocale } from "@/i18n/utils";
 import { listCategories, listEvents, listPlaces, listRoutes } from "@/lib/data";
+import { eventWhen, monthName } from "@/lib/event-format";
 import { localizedUrl } from "@/lib/seo";
 import { KioskApp } from "@/components/kiosk/kiosk-app";
 
@@ -16,11 +17,6 @@ const qr = (url: string) =>
     errorCorrectionLevel: "M",
     color: { dark: "#07495a", light: "#ffffff" },
   });
-
-const monthName = (locale: string, month: number, style: "long" | "short") =>
-  new Intl.DateTimeFormat(locale, { month: style, timeZone: "UTC" }).format(
-    new Date(Date.UTC(2000, month - 1, 1)),
-  );
 
 export default async function KioskPage({
   params,
@@ -42,6 +38,7 @@ export default async function KioskPage({
       localityName: p.localityName,
       address: p.address,
       picture: p.picture,
+      demo: p.demo,
       qrSvg: await qr(
         localizedUrl(locale, {
           pathname: "/lugares/[slug]",
@@ -71,17 +68,11 @@ export default async function KioskPage({
     name: e.name,
     shortDescription: e.shortDescription,
     categoryName: e.categoryName,
-    when:
-      e.month && e.day
-        ? te("onDate", {
-            day: e.day,
-            month: monthName(locale, e.month, "long"),
-          })
-        : e.month
-          ? te("inMonth", { month: monthName(locale, e.month, "long") })
-          : e.season === "summer"
-            ? te("summer")
-            : te("toConfirm"),
+    categorySlug: e.categorySlug,
+    demo: e.demo,
+    monthShort: e.month ? monthName(locale, e.month, "short") : null,
+    day: e.day,
+    when: eventWhen(te, locale, e),
   }));
 
   return (

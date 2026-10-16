@@ -21,6 +21,8 @@ import { ShareButton } from "@/components/place/share-button";
 import { AddToTripButton } from "@/components/trip/add-to-trip-button";
 import { PlacesMap } from "@/components/map/places-map";
 import { QrVisit } from "@/components/analytics/qr-visit";
+import { DEMO_REVIEWS } from "@/content/demo-content";
+import { DemoReviews, RatingSummary } from "@/components/place/demo-reviews";
 import { SaveButton } from "@/components/place/save-button";
 import { ReviewsPanel } from "@/components/place/reviews-panel";
 
@@ -39,12 +41,16 @@ export async function generateMetadata({
   const locale = resolveLocale(raw);
   const place = getPlace(slug, locale);
   if (!place) return {};
-  return buildPageMetadata({
+  const meta = buildPageMetadata({
     locale,
     href: { pathname: "/lugares/[slug]", params: { slug } },
     title: place.name,
     description: truncate(place.shortDescription),
   });
+  // Las fichas de ejemplo (ficticias) no se indexan.
+  return place.demo
+    ? { ...meta, robots: { index: false, follow: false } }
+    : meta;
 }
 
 export default async function PlacePage({
@@ -59,6 +65,15 @@ export default async function PlacePage({
   if (!place) notFound();
   const t = await getTranslations("place");
   const tr = await getTranslations("reviews");
+  const seeded = place.demo
+    ? (DEMO_REVIEWS[place.slug] ?? []).map((r) => ({
+        id: r.id,
+        author: r.author,
+        rating: r.rating,
+        text: r.text[locale],
+        ownerReply: r.ownerReply ? r.ownerReply[locale] : null,
+      }))
+    : [];
   const sections = [
     ["resumen", t("tabOverview")],
     ["ubicacion", t("tabLocation")],
@@ -69,36 +84,40 @@ export default async function PlacePage({
   return (
     <main className="flex flex-col gap-5 pb-10">
       <QrVisit />
-      <JsonLd
-        data={{
-          "@context": "https://schema.org",
-          "@type":
-            place.categorySlug === "balneario" ? "Beach" : "TouristAttraction",
-          name: place.name,
-          description: place.shortDescription,
-          url: localizedUrl(locale, {
-            pathname: "/lugares/[slug]",
-            params: { slug: place.slug },
-          }),
-          image: `${getSiteUrl()}${place.picture.src}`,
-          ...(place.hasLocation
-            ? {
-                geo: {
-                  "@type": "GeoCoordinates",
-                  latitude: place.latitude,
-                  longitude: place.longitude,
-                },
-              }
-            : {}),
-          address: {
-            "@type": "PostalAddress",
-            ...(place.address ? { streetAddress: place.address } : {}),
-            addressLocality: place.localityName ?? "Papudo",
-            addressRegion: "Valparaíso",
-            addressCountry: "CL",
-          },
-        }}
-      />
+      {place.demo ? null : (
+        <JsonLd
+          data={{
+            "@context": "https://schema.org",
+            "@type":
+              place.categorySlug === "balneario"
+                ? "Beach"
+                : "TouristAttraction",
+            name: place.name,
+            description: place.shortDescription,
+            url: localizedUrl(locale, {
+              pathname: "/lugares/[slug]",
+              params: { slug: place.slug },
+            }),
+            image: `${getSiteUrl()}${place.picture.src}`,
+            ...(place.hasLocation
+              ? {
+                  geo: {
+                    "@type": "GeoCoordinates",
+                    latitude: place.latitude,
+                    longitude: place.longitude,
+                  },
+                }
+              : {}),
+            address: {
+              "@type": "PostalAddress",
+              ...(place.address ? { streetAddress: place.address } : {}),
+              addressLocality: place.localityName ?? "Papudo",
+              addressRegion: "Valparaíso",
+              addressCountry: "CL",
+            },
+          }}
+        />
+      )}
       <div className="relative">
         <IllustratedImage picture={place.picture} className="h-56" priority />
         <Link
@@ -110,6 +129,14 @@ export default async function PlacePage({
       </div>
 
       <div className="flex flex-col gap-5 px-4">
+        {place.demo ? (
+          <p
+            role="note"
+            className="bg-sun/30 text-earth rounded-xl p-3 text-sm font-bold"
+          >
+            {t("demoBanner")}
+          </p>
+        ) : null}
         <header>
           <p className="text-field text-xs font-bold tracking-wide uppercase">
             {place.categoryName}
@@ -131,17 +158,30 @@ export default async function PlacePage({
           <h1 className="font-display mt-1 text-3xl leading-tight font-extrabold">
             {place.name}
           </h1>
-          <a
-            href="#opiniones"
-            className="text-muted mt-2 inline-flex items-center gap-2 text-sm hover:underline"
-          >
-            <span aria-hidden="true" className="text-sea tracking-tight">
-              ☆☆☆☆☆
-            </span>
-            {tr("count", { count: 0 })}
-          </a>
+          {place.demo ? (
+            <RatingSummary
+              slug={place.slug}
+              seededRatings={seeded.map((r) => r.rating)}
+            />
+          ) : (
+            <a
+              href="#opiniones"
+              className="text-muted mt-2 inline-flex items-center gap-2 text-sm hover:underline"
+            >
+              <span aria-hidden="true" className="text-sea tracking-tight">
+                ☆☆☆☆☆
+              </span>
+              {tr("count", { count: 0 })}
+            </a>
+          )}
           <div className="mt-3 flex flex-wrap items-center gap-2">
-            <StatusBadge verification={place.verification} />
+            {place.demo ? (
+              <span className="bg-sun text-coral-ink inline-block rounded-full px-2.5 py-1 text-xs font-extrabold">
+                {t("demoBadge")}
+              </span>
+            ) : (
+              <StatusBadge verification={place.verification} />
+            )}
             {place.fallbackToSpanish ? (
               <span className="text-muted text-xs">{t("onlySpanish")}</span>
             ) : null}
@@ -150,22 +190,24 @@ export default async function PlacePage({
 
         <div className="flex flex-wrap gap-2">
           {place.hasLocation ? <AddToTripButton slug={place.slug} /> : null}
-          <TrackedAnchor
-            event="navigate_click"
-            eventProps={{ slug: place.slug }}
-            href={
-              place.latitude !== null && place.longitude !== null
-                ? directionsUrl(place.latitude, place.longitude)
-                : searchUrl(
-                    `${place.name}, ${place.address ?? "Papudo"}, Chile`,
-                  )
-            }
-            target="_blank"
-            rel="noopener noreferrer"
-            className="bg-sea inline-flex min-h-11 items-center rounded-full px-5 text-sm font-bold text-white"
-          >
-            {t("navigate")}
-          </TrackedAnchor>
+          {place.demo ? null : (
+            <TrackedAnchor
+              event="navigate_click"
+              eventProps={{ slug: place.slug }}
+              href={
+                place.latitude !== null && place.longitude !== null
+                  ? directionsUrl(place.latitude, place.longitude)
+                  : searchUrl(
+                      `${place.name}, ${place.address ?? "Papudo"}, Chile`,
+                    )
+              }
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-sea inline-flex min-h-11 items-center rounded-full px-5 text-sm font-bold text-white"
+            >
+              {t("navigate")}
+            </TrackedAnchor>
+          )}
           <SaveButton slug={place.slug} />
           <ShareButton title={place.name} />
         </div>
@@ -215,12 +257,20 @@ export default async function PlacePage({
             </>
           ) : (
             <p className="bg-sea-soft rounded-xl p-3 text-sm">
-              {t("noLocation")}
+              {place.demo ? t("demoLocation") : t("noLocation")}
             </p>
           )}
         </section>
 
-        <ReviewsPanel business={place.business} />
+        {place.demo ? (
+          <DemoReviews
+            slug={place.slug}
+            seeded={seeded}
+            entityName={place.name}
+          />
+        ) : (
+          <ReviewsPanel business={place.business} />
+        )}
 
         <section id="datos" className="flex scroll-mt-32 flex-col gap-3">
           <h2 className="font-display text-xl font-extrabold">
@@ -241,14 +291,23 @@ export default async function PlacePage({
                 </dd>
               </div>
             ) : null}
-            <div className="flex justify-between gap-4 p-4">
-              <dt className="font-bold">{t("hours")}</dt>
-              <dd className="text-muted">{t("hoursPending")}</dd>
-            </div>
-            <div className="flex justify-between gap-4 p-4">
-              <dt className="font-bold">{t("lastVerified")}</dt>
-              <dd className="text-muted">{t("never")}</dd>
-            </div>
+            {place.demo ? (
+              <div className="flex justify-between gap-4 p-4">
+                <dt className="font-bold">{t("source")}</dt>
+                <dd className="text-muted text-right">{t("demoSource")}</dd>
+              </div>
+            ) : (
+              <>
+                <div className="flex justify-between gap-4 p-4">
+                  <dt className="font-bold">{t("hours")}</dt>
+                  <dd className="text-muted">{t("hoursPending")}</dd>
+                </div>
+                <div className="flex justify-between gap-4 p-4">
+                  <dt className="font-bold">{t("lastVerified")}</dt>
+                  <dd className="text-muted">{t("never")}</dd>
+                </div>
+              </>
+            )}
             {place.sources.length > 0 ? (
               <div className="flex justify-between gap-4 p-4">
                 <dt className="font-bold">{t("source")}</dt>

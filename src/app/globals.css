@@ -53,9 +53,12 @@
   --font-sans:
     ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
     "Helvetica Neue", Arial, sans-serif;
+  /* Títulos: Baloo 2, redondeada y de trazo gordo (surfera, juvenil). */
   --font-display:
-    ui-rounded, "Avenir Next", "Trebuchet MS", ui-sans-serif, system-ui,
-    sans-serif;
+    "Baloo 2", ui-rounded, "Avenir Next", "Trebuchet MS", ui-sans-serif,
+    system-ui, sans-serif;
+  /* Acentos sueltos (kickers, lemas): Pacifico, estilo letrero de playa. */
+  --font-script: "Pacifico", "Brush Script MT", cursive;
 }
 
 body {
@@ -120,6 +123,15 @@ body {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+@keyframes bob {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-5px) rotate(4deg);
   }
 }
 @keyframes shimmer-text {
@@ -218,6 +230,10 @@ body {
   }
   .shimmer-title {
     animation: shimmer-text 7s linear infinite;
+  }
+  .bob {
+    animation: bob 3.2s ease-in-out infinite;
+    animation-delay: calc(var(--i, 0) * 180ms);
   }
   .sway {
     transform-origin: 50% 100%;

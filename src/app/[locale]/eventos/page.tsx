@@ -3,11 +3,15 @@ import type { Metadata } from "next";
 import { Link, redirect } from "@/i18n/navigation";
 import { resolveLocale } from "@/i18n/utils";
 import { canonicalCategory, listCategories, listEvents } from "@/lib/data";
+import { eventWhen, monthName } from "@/lib/event-format";
 import { buildPageMetadata } from "@/lib/seo";
-import { CategoryIcon } from "@/components/ui/category-icon";
 import { EmptyState } from "@/components/ui/empty-state";
 import { PageHero } from "@/components/ui/page-hero";
-import { StatusBadge } from "@/components/place/status-badge";
+import { EventTicket } from "@/components/events/event-ticket";
+import {
+  FeaturedCarousel,
+  type FeaturedSlide,
+} from "@/components/events/featured-carousel";
 
 export async function generateMetadata({
   params,
@@ -24,12 +28,6 @@ export async function generateMetadata({
   });
 }
 
-const monthName = (locale: string, month: number, style: "long" | "short") =>
-  new Intl.DateTimeFormat(locale, {
-    month: style,
-    timeZone: "UTC",
-  }).format(new Date(Date.UTC(2000, month - 1, 1)));
-
 export default async function EventsPage({
   params,
   searchParams,
@@ -41,7 +39,6 @@ export default async function EventsPage({
   setRequestLocale(locale);
   const sp = await searchParams;
   const t = await getTranslations("events");
-  const tp = await getTranslations("place");
 
   const category = canonicalCategory(sp.categoria) ?? undefined;
   if (sp.categoria && category && sp.categoria !== category) {
@@ -58,13 +55,32 @@ export default async function EventsPage({
     withEvents.has(c.slug),
   );
 
+  const slides: FeaturedSlide[] = all
+    .filter((e) => e.featured)
+    .map((e) => ({
+      slug: e.slug,
+      name: e.name,
+      shortDescription: e.shortDescription,
+      categoryName: e.categoryName,
+      localityName: e.localityName,
+      whenLabel: eventWhen(t, locale, e),
+      monthShort: e.month ? monthName(locale, e.month, "short") : null,
+      day: e.day,
+      demo: e.demo,
+      ratingAverage: e.ratingAverage,
+      ratingCount: e.ratingCount,
+      picture: e.picture,
+    }));
+
   const chip = (on: boolean) =>
     `flex min-h-11 items-center rounded-full border px-4 text-sm font-bold transition ${on ? "border-sea bg-sea text-white" : "border-border bg-surface hover:border-sea"}`;
 
   return (
     <main className="flex flex-col">
       <PageHero title={t("title")} subtitle={t("subtitle")} />
-      <div className="mx-auto flex w-full max-w-3xl flex-col gap-4 px-4 pb-10">
+      <div className="mx-auto flex w-full max-w-3xl flex-col gap-5 px-4 pb-10">
+        <FeaturedCarousel slides={slides} />
+
         <p
           role="note"
           className="bg-earth-soft text-earth rounded-xl p-3 text-sm"
@@ -107,97 +123,19 @@ export default async function EventsPage({
             </Link>
           </EmptyState>
         ) : (
-          <ul aria-label={t("list")} className="flex flex-col gap-3">
-            {events.map((e, i) => {
-              const when =
-                e.month && e.day
-                  ? t("onDate", {
-                      day: e.day,
-                      month: monthName(locale, e.month, "long"),
-                    })
-                  : e.month
-                    ? t("inMonth", {
-                        month: monthName(locale, e.month, "long"),
-                      })
-                    : e.season === "summer"
-                      ? t("summer")
-                      : t("toConfirm");
-              return (
-                <li
-                  key={e.slug}
-                  id={e.slug}
-                  style={{ "--i": i } as React.CSSProperties}
-                  className="rise-in border-border bg-surface flex gap-4 rounded-2xl border p-4 shadow-sm"
-                >
-                  <div
-                    className="bg-sea-soft text-sea-deep flex size-16 shrink-0 flex-col items-center justify-center rounded-2xl text-center"
-                    aria-hidden="true"
-                  >
-                    {e.month ? (
-                      e.day ? (
-                        <>
-                          <span className="font-display text-xl leading-none font-extrabold">
-                            {e.day}
-                          </span>
-                          <span className="text-xs font-bold uppercase">
-                            {monthName(locale, e.month, "short").replace(
-                              ".",
-                              "",
-                            )}
-                          </span>
-                        </>
-                      ) : (
-                        <span className="font-display text-xl font-extrabold uppercase">
-                          {monthName(locale, e.month, "short").replace(".", "")}
-                        </span>
-                      )
-                    ) : (
-                      <CategoryIcon
-                        category={e.categorySlug}
-                        className="size-7"
-                      />
-                    )}
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <p className="text-field text-xs font-bold tracking-wide uppercase">
-                      {e.categoryName}
-                      {e.localityName ? ` · ${e.localityName}` : ""}
-                    </p>
-                    <h2 className="font-display text-lg leading-snug font-extrabold">
-                      {e.name}
-                    </h2>
-                    <p className="text-sea-deep mt-0.5 text-sm font-bold">
-                      {when}
-                    </p>
-                    <p className="mt-1 text-sm">{e.shortDescription}</p>
-                    {e.fallbackToSpanish ? (
-                      <p className="text-muted mt-1 text-xs">
-                        {tp("onlySpanish")}
-                      </p>
-                    ) : null}
-                    <div className="mt-2 flex flex-wrap items-center gap-2">
-                      <StatusBadge verification={e.verification} />
-                    </div>
-                    <p className="text-muted mt-2 text-xs">
-                      {t("source")}:{" "}
-                      {e.sources.map((s, k) => (
-                        <span key={s.url + k}>
-                          {k > 0 ? " · " : null}
-                          <a
-                            className="text-sea underline"
-                            href={s.url}
-                            rel="noopener noreferrer"
-                            target="_blank"
-                          >
-                            {s.label}
-                          </a>
-                        </span>
-                      ))}
-                    </p>
-                  </div>
-                </li>
-              );
-            })}
+          <ul aria-label={t("list")} className="flex flex-col gap-4">
+            {events.map((e, i) => (
+              <li key={e.slug} id={e.slug}>
+                <EventTicket
+                  event={e}
+                  index={i}
+                  whenLabel={eventWhen(t, locale, e)}
+                  monthShort={
+                    e.month ? monthName(locale, e.month, "short") : null
+                  }
+                />
+              </li>
+            ))}
           </ul>
         )}
       </div>

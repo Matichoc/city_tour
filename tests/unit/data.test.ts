@@ -10,6 +10,9 @@ import {
   canonicalCategory,
   isCategorySlug,
   listEvents,
+  listIndexableEventSlugs,
+  listIndexablePlaceSlugs,
+  seededRating,
   listCategories,
   listPlaces,
   listRoutes,
@@ -19,6 +22,7 @@ import es from "@/messages/es.json";
 import en from "@/messages/en.json";
 import pt from "@/messages/pt.json";
 import { locales } from "@/i18n/routing";
+import { DEMO_PLACES, DEMO_REVIEWS } from "@/content/demo-content";
 
 const keys = (o: object, p = ""): string[] =>
   Object.entries(o).flatMap(([k, v]) =>
@@ -38,14 +42,14 @@ describe("contenido de Papudo", () => {
     }
   });
   it("los lugares agregados desde la web tienen al menos dos fuentes", () => {
-    for (const p of listPlaces("es").filter((x) => !x.hasLocation)) {
+    for (const p of listPlaces("es").filter((x) => !x.hasLocation && !x.demo)) {
       expect(p.sources.length, p.slug).toBeGreaterThanOrEqual(2);
     }
   });
 
   it("los locales de muestra están marcados como comercio local", () => {
     const negocios = listPlaces("es")
-      .filter((p) => p.business)
+      .filter((p) => p.business && !p.demo)
       .map((p) => p.slug);
     expect(negocios.sort()).toEqual([
       "fuente-papudo",
@@ -123,8 +127,14 @@ describe("capa de datos", () => {
   });
   it("cuenta lugares por categoría (deportes aún vacía)", () => {
     const c = listCategories("es");
-    expect(c.find((x) => x.slug === "deportes")!.count).toBe(0);
-    expect(c.find((x) => x.slug === "alojamiento")!.count).toBe(1);
+    // Cada producto tiene al menos una ficha de EJEMPLO para la demostración.
+    for (const cat of c) expect(cat.count, cat.slug).toBeGreaterThan(0);
+    expect(
+      listPlaces("es", { category: "deportes" }).every((p) => p.demo),
+    ).toBe(true);
+    expect(
+      listPlaces("es", { category: "alojamiento" }).filter((p) => !p.demo),
+    ).toHaveLength(1);
     expect(isCategorySlug("balneario")).toBe(true);
     expect(isCategorySlug("nada")).toBe(false);
   });
@@ -260,7 +270,7 @@ describe("ilustraciones", () => {
 
 describe("agenda de eventos (PLADETUR B2.4)", () => {
   it("cada evento tiene fuente, está pendiente y no inventa fechas de un año", () => {
-    for (const e of listEvents("es")) {
+    for (const e of listEvents("es").filter((x) => !x.demo)) {
       expect(e.sources.length, e.slug).toBeGreaterThan(0);
       expect(e.verification).toBe("pending");
       if (e.day !== null) expect(e.month, e.slug).not.toBeNull();
@@ -277,5 +287,47 @@ describe("agenda de eventos (PLADETUR B2.4)", () => {
       ),
     ).toBe(true);
     expect(listEvents("en").every((e) => !e.fallbackToSpanish)).toBe(true);
+  });
+});
+
+describe("contenido de EJEMPLO (ficticio) para la demostración", () => {
+  const demoSlugs = new Set([...DEMO_PLACES.map((p) => p.slug)]);
+  it("toda ficha de ejemplo está rotulada, sin ubicación, dirección ni fuente reales", () => {
+    for (const p of DEMO_PLACES) {
+      expect(p.demo, p.slug).toBe(true);
+      expect(p.latitude, p.slug).toBeNull();
+      expect(p.longitude, p.slug).toBeNull();
+      expect(p.address, p.slug).toBeUndefined();
+      expect(p.source, p.slug).toBeUndefined();
+      expect(p.es.name, p.slug).toContain("(ejemplo)");
+      expect(p.en?.name, p.slug).toMatch(/\(example\)/);
+    }
+    expect(DEMO_PLACES.every((p) => p.slug.startsWith("demo-"))).toBe(true);
+  });
+  it("hay un ejemplo por cada producto de la guía", () => {
+    expect(new Set(DEMO_PLACES.map((p) => p.categorySlug))).toEqual(
+      new Set(listCategories("es").map((c) => c.slug)),
+    );
+  });
+  it("las opiniones simuladas solo existen sobre fichas y eventos ficticios, nunca reales", () => {
+    for (const slug of Object.keys(DEMO_REVIEWS)) {
+      expect(slug.startsWith("demo-"), slug).toBe(true);
+    }
+    expect(seededRating("playa-chica-papudo").count).toBe(0);
+    expect(seededRating("restaurante-donde-pablo").average).toBeNull();
+  });
+  it("las fichas y eventos de ejemplo no se indexan en el sitemap", () => {
+    for (const s of listIndexablePlaceSlugs())
+      expect(demoSlugs.has(s)).toBe(false);
+    for (const s of listIndexableEventSlugs())
+      expect(s.startsWith("demo-")).toBe(false);
+  });
+  it("calcula el promedio de las opiniones simuladas", () => {
+    const r = seededRating("demo-cabalgatas-del-valle");
+    expect(r.count).toBe(3);
+    expect(r.average).toBeCloseTo((5 + 4 + 5) / 3, 5);
+    expect(getPlace("demo-cabalgatas-del-valle", "en")!.fallbackToSpanish).toBe(
+      false,
+    );
   });
 });
