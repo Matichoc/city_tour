@@ -134,14 +134,23 @@ export default async function EventsPage({
                     aria-hidden="true"
                   >
                     {e.month ? (
-                      <>
-                        <span className="font-display text-xl leading-none font-extrabold">
-                          {e.day ?? "·"}
-                        </span>
-                        <span className="text-xs font-bold uppercase">
+                      e.day ? (
+                        <>
+                          <span className="font-display text-xl leading-none font-extrabold">
+                            {e.day}
+                          </span>
+                          <span className="text-xs font-bold uppercase">
+                            {monthName(locale, e.month, "short").replace(
+                              ".",
+                              "",
+                            )}
+                          </span>
+                        </>
+                      ) : (
+                        <span className="font-display text-xl font-extrabold uppercase">
                           {monthName(locale, e.month, "short").replace(".", "")}
                         </span>
-                      </>
+                      )
                     ) : (
                       <CategoryIcon
                         category={e.categorySlug}

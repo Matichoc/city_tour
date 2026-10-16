@@ -176,3 +176,31 @@ test("portada: acceso a la agenda de eventos", async ({ page }) => {
   await page.getByRole("link", { name: /Fiestas y celebraciones/ }).click();
   await expect(page).toHaveURL(/\/es\/eventos$/);
 });
+
+test("quiosco: navega por producto, muestra el QR de la ficha y vuelve solo al inicio", async ({
+  page,
+}) => {
+  await page.clock.install();
+  await page.goto("/es/quiosco");
+  await expect(
+    page.getByRole("heading", { name: "¿Qué quieres descubrir?" }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: /^Balneario/ }).click();
+  await page
+    .getByRole("button", { name: /Playa Chica/ })
+    .first()
+    .click();
+  await expect(
+    page.getByRole("heading", { name: "Playa Chica", level: 1 }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("img", { name: /Código QR para abrir esta página/ }),
+  ).toBeVisible();
+  // Sin tocar la pantalla: avisa y vuelve al inicio.
+  await page.clock.runFor(76_000);
+  await expect(page.getByRole("alertdialog")).toBeVisible();
+  await page.clock.runFor(16_000);
+  await expect(
+    page.getByRole("heading", { name: "¿Qué quieres descubrir?" }),
+  ).toBeVisible();
+});

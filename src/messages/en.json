@@ -322,5 +322,24 @@
     "homeSubtitle": "What repeats every year in the commune.",
     "countLabel": "{count, plural, one {# event} other {# events}}",
     "list": "Events list"
+  },
+  "kiosk": {
+    "subtitle": "Tourist guide of the commune",
+    "headline": "What would you like to discover?",
+    "back": "Back",
+    "events": "Events",
+    "routes": "Routes",
+    "soon": "Soon",
+    "count": "{count, plural, =0 {Soon} one {# option} other {# options}}",
+    "stops": "{count, plural, one {# stop} other {# stops}}",
+    "takeWithYou": "Scan with your phone's camera and take the Papudo guide with you.",
+    "scan": "Scan with your phone's camera to continue on your phone.",
+    "scanRoute": "Scan to take this route with you and plan your trip.",
+    "qrAlt": "QR code to open this page on your phone",
+    "pending": "Information with a source, pending on-site verification.",
+    "eventsNote": "These festivals repeat every year: check the day and programme with the Municipality.",
+    "idleTitle": "Are you still there?",
+    "idleBody": "We'll go back to the start in {seconds} seconds.",
+    "idleStay": "Stay here"
   }
 }

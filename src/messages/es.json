@@ -322,5 +322,24 @@
     "homeSubtitle": "Lo que se repite cada año en la comuna.",
     "countLabel": "{count, plural, one {# evento} other {# eventos}}",
     "list": "Lista de eventos"
+  },
+  "kiosk": {
+    "subtitle": "Guía turística de la comuna",
+    "headline": "¿Qué quieres descubrir?",
+    "back": "Volver",
+    "events": "Eventos",
+    "routes": "Rutas",
+    "soon": "Pronto",
+    "count": "{count, plural, =0 {Pronto} one {# opción} other {# opciones}}",
+    "stops": "{count, plural, one {# parada} other {# paradas}}",
+    "takeWithYou": "Escanea con la cámara de tu celular y llévate la guía de Papudo.",
+    "scan": "Escanea con la cámara de tu celular para seguir en tu teléfono.",
+    "scanRoute": "Escanea para llevarte esta ruta y armar tu recorrido.",
+    "qrAlt": "Código QR para abrir esta página en tu celular",
+    "pending": "Información con fuente, pendiente de verificación en terreno.",
+    "eventsNote": "Son fiestas que se repiten cada año: confirma el día y el programa con la Municipalidad.",
+    "idleTitle": "¿Sigues ahí?",
+    "idleBody": "Volveremos al inicio en {seconds} segundos.",
+    "idleStay": "Seguir aquí"
   }
 }
