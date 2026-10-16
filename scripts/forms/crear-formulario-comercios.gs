@@ -24,6 +24,21 @@ const WHATSAPP_CONTACTO = "+56 9 XXXX XXXX";
 const CORREO_CONTACTO = "correo@ejemplo.cl";
 // ─────────────────────────────────────────────────────────────────────────
 
+// Enlace que abre WhatsApp con el número y un mensaje ya escrito.
+const WHATSAPP_ENLACE =
+  "https://wa.me/" +
+  WHATSAPP_CONTACTO.replace(/\D/g, "") +
+  "?text=" +
+  encodeURIComponent(
+    "Hola, te mando las fotos de mi negocio para «Papudo en tu mano». Mi negocio se llama: ",
+  );
+const FOTOS_POR_WHATSAPP =
+  "Mándalas por WhatsApp al " +
+  WHATSAPP_CONTACTO +
+  " (o toca este enlace: " +
+  WHATSAPP_ENLACE +
+  "). Escribe el nombre de tu negocio en el mensaje.";
+
 function crearFormulario() {
   const form = FormApp.create("Suma tu comercio a «Papudo en tu mano»");
   form
@@ -31,14 +46,16 @@ function crearFormulario() {
       "«Papudo en tu mano» es la guía digital de Papudo, Las Salinas y Pullally. " +
         "Ayuda a que quienes nos visitan encuentren lo que ofrece el comercio local.\n\n" +
         "Esta temporada, tu ficha es GRATIS. Te toma unos 3 minutos. " +
-        "Antes de publicarla, la revisamos contigo.",
+        "Antes de publicarla, la revisamos contigo.\n\n" +
+        "Las fotos se mandan por WhatsApp al " +
+        WHATSAPP_CONTACTO +
+        ".",
     )
     .setProgressBar(true)
     .setConfirmationMessage(
       "¡Gracias! Te escribiremos por WhatsApp para mostrarte tu ficha antes de publicarla. " +
-        "Si aún no nos mandas tus fotos, envíalas al " +
-        WHATSAPP_CONTACTO +
-        ".",
+        "Si aún no nos mandas tus fotos: " +
+        FOTOS_POR_WHATSAPP,
     );
 
   // 1. Tu negocio
@@ -116,14 +133,19 @@ function crearFormulario() {
     .setTitle("Tus fotos")
     .setHelpText(
       "Con 3 a 8 fotos tuyas tu ficha se ve mucho mejor: el frente, el interior, " +
-        "tus platos o habitaciones. Lo más fácil es mandarlas por WhatsApp al " +
-        WHATSAPP_CONTACTO +
+        "tus platos o habitaciones. " +
+        FOTOS_POR_WHATSAPP +
+        " Si prefieres el correo, escríbenos a " +
+        CORREO_CONTACTO +
         ".",
     );
 
   form
     .addMultipleChoiceItem()
     .setTitle("¿Cómo nos mandas tus fotos?")
+    .setHelpText(
+      "WhatsApp: " + WHATSAPP_CONTACTO + " · Correo: " + CORREO_CONTACTO,
+    )
     .setChoiceValues([
       "Por WhatsApp",
       "Por correo",
