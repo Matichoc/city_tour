@@ -41,3 +41,48 @@ Vercel → Analytics; sin activar, no envía nada.
 
 `/es/qr?nombre=...` genera un afiche imprimible cuyo QR abre la guía con
 `?origen=<nombre-normalizado>`, para saber qué local trae visitas (sin datos personales).
+
+## Alineación con el PLADETUR (rama `feat/alineacion-pladetur`)
+
+Fuente: PLADETUR de Papudo 2023–2027, iD (`docs/investigacion/`).
+
+- **Categorías = productos del plan** (p. 136): balneario, recreación,
+  deportes, cultura y patrimonio, gastronomía y ruralidad; alojamiento queda
+  como servicio. Los nombres anteriores (`playas`, `naturaleza`,
+  `actividades`) redirigen, así los enlaces y afiches QR ya compartidos siguen
+  funcionando. La asignación de lugares es una propuesta y hay que validarla
+  con el municipio (humedal urbano y Costanera → recreación; Santuario de
+  Pullally y Salinas → ruralidad).
+- **Agenda de eventos** (B2.4): `/eventos`, con eventos recurrentes y fuente.
+  No se publican fechas de una edición concreta; se revisan cada trimestre.
+- **Modo quiosco** (A1.6): `/quiosco`, para tablet en las oficinas de
+  información. No se indexa, no guarda datos y vuelve al inicio tras ~75 s sin
+  uso.
+- **Portugués** (pp. 150 y 174): tercer idioma. La interfaz está traducida con
+  IA y queda **por revisar por una persona**; el contenido de lugares, rutas y
+  eventos cae a español con aviso, igual que el inglés.
+- **QR para señalética** (A1.3): `/qr?lugar=<slug>` genera un afiche que lleva
+  a la ficha del lugar con `?origen=hito-<slug>`, y cada ruta trae su QR para
+  imprimir. Las visitas por QR se miden con el evento anónimo `qr_visit`.
+- **Fase 2 (con Supabase):** encuesta de satisfacción, reporte para el Comité
+  de Turismo y registro de prestadores. No se hacen sin base de datos.
+
+## Contenido de ejemplo (demo) y estilo "con onda"
+
+- **Fichas, eventos y opiniones de ejemplo** (`src/content/demo-content.ts`):
+  son **ficticios** y existen solo para mostrar cómo se vería la guía. Siete
+  fichas (una por producto) y dos eventos, con opiniones simuladas y
+  respuestas del local. Reglas: todo lleva el rótulo «Ejemplo»; no tienen
+  coordenadas, dirección, teléfono ni fuente real; **las opiniones simuladas
+  solo se asocian a fichas ficticias, nunca a comercios reales** (hay un test);
+  no se indexan (`noindex`) ni salen en el sitemap.
+  Se ocultan todas con `NEXT_PUBLIC_SHOW_DEMO=0`: **hacerlo antes de abrir el
+  sitio al público.**
+- **Demostración de opiniones**: en las fichas y eventos de ejemplo el
+  visitante puede escribir una opinión con estrellas. Se guarda solo en su
+  dispositivo (localStorage). La versión real necesita cuentas, moderación y
+  base de datos (Fase 2).
+- **Tipografía**: Baloo 2 (títulos, redondeada y juvenil) y Pacifico (lemas
+  sueltos, estilo letrero de playa), autoalojadas con `@fontsource` (sin
+  llamadas a Google en cada visita).
+- **Idioma**: selector desplegable (`<select>` nativo).

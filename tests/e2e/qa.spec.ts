@@ -100,12 +100,17 @@ test("el generador de QR crea un afiche con el origen del local", async ({
 for (const path of [
   "/es",
   "/es/explorar",
+  "/es/eventos",
+  "/es/eventos/demo-noche-de-bandas",
+  "/es/lugares/demo-cabalgatas-del-valle",
+  "/es/quiosco",
   "/es/lugares/playa-papudo",
   "/es/rutas/papudo-a-pie",
   "/es/recorrido",
   "/es/informacion",
   "/es/negocios",
   "/en",
+  "/pt",
 ]) {
   test(`accesibilidad (axe, WCAG AA) sin fallas graves: ${path}`, async ({
     page,

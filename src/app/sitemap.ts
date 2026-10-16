@@ -1,5 +1,10 @@
 import type { MetadataRoute } from "next";
-import { listLocalitySlugs, listPlaceSlugs, listRouteSlugs } from "@/lib/data";
+import {
+  listIndexableEventSlugs,
+  listIndexablePlaceSlugs,
+  listLocalitySlugs,
+  listRouteSlugs,
+} from "@/lib/data";
 import { localizedUrl } from "@/lib/seo";
 import { routing } from "@/i18n/routing";
 
@@ -9,6 +14,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     for (const href of [
       "/",
       "/explorar",
+      "/eventos",
       "/rutas",
       "/recorrido",
       "/informacion",
@@ -16,10 +22,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ] as const) {
       entries.push({ url: localizedUrl(locale, href) });
     }
-    for (const slug of listPlaceSlugs()) {
+    for (const slug of listIndexablePlaceSlugs()) {
       entries.push({
         url: localizedUrl(locale, {
           pathname: "/lugares/[slug]",
+          params: { slug },
+        }),
+      });
+    }
+    for (const slug of listIndexableEventSlugs()) {
+      entries.push({
+        url: localizedUrl(locale, {
+          pathname: "/eventos/[slug]",
           params: { slug },
         }),
       });

@@ -7,6 +7,7 @@ export function TopNav() {
   const n = useTranslations("nav");
   const links = [
     ["/explorar", "explore"],
+    ["/eventos", "events"],
     ["/rutas", "routes"],
     ["/recorrido", "trip"],
     ["/informacion", "info"],

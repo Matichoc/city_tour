@@ -5,6 +5,7 @@ import { resolveLocale } from "@/i18n/utils";
 import {
   isLocated,
   listCategories,
+  listEvents,
   listLocalities,
   listPlaces,
   listRoutes,
@@ -12,7 +13,10 @@ import {
 import { CommuneMap3D } from "@/components/map/commune-map-3d";
 import { buildPageMetadata, getSiteUrl, localizedUrl } from "@/lib/seo";
 import { HeroScene } from "@/components/ui/hero-scene";
-import { CategoryIcon } from "@/components/ui/category-icon";
+import {
+  CategoryCardFace,
+  categoryCardClass,
+} from "@/components/ui/category-card";
 import { PlaceCard } from "@/components/place/place-card";
 import { RouteCard } from "@/components/route/route-card";
 import { QrVisit } from "@/components/analytics/qr-visit";
@@ -43,6 +47,7 @@ export default async function HomePage({
   const locale = resolveLocale((await params).locale);
   setRequestLocale(locale);
   const t = await getTranslations("home");
+  const te = await getTranslations("events");
   const categories = listCategories(locale);
   const places = listPlaces(locale).slice(0, 4);
   const routes = listRoutes(locale);
@@ -56,6 +61,7 @@ export default async function HomePage({
       category: p.categorySlug,
     }));
   const localities = listLocalities(locale);
+  const eventCount = listEvents(locale).length;
 
   return (
     <main className="flex flex-col">
@@ -79,7 +85,7 @@ export default async function HomePage({
         }}
       />
       <HeroScene>
-        <p className="text-sm font-bold tracking-widest text-[#ffe3a8] uppercase">
+        <p className="font-script text-xl text-[#ffe3a8] drop-shadow">
           {t("kicker")}
         </p>
         <h1 className="shimmer-title font-display mt-2 text-4xl leading-[1.08] font-extrabold sm:text-5xl">
@@ -111,31 +117,28 @@ export default async function HomePage({
 
       <div className="mx-auto flex w-full max-w-3xl flex-col gap-9 px-4 pt-2 pb-10">
         <section aria-labelledby="que-hacer">
-          <h2 id="que-hacer" className="font-display text-2xl font-extrabold">
+          <h2 id="que-hacer" className="font-display text-3xl font-extrabold">
             {t("whatToDo")}
           </h2>
-          <ul className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
+          <p className="text-muted text-sm sm:hidden">{t("whatToDoHint")}</p>
+          <ul className="-mx-4 mt-3 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pt-1 pb-4 sm:mx-0 sm:grid sm:grid-cols-4 sm:overflow-visible sm:px-0">
             {categories.map((c, i) => (
               <li
                 key={c.slug}
-                className="rise-in"
+                className="rise-in w-40 shrink-0 snap-start sm:w-auto"
                 style={{ "--i": i } as React.CSSProperties}
               >
                 <Link
                   href={{ pathname: "/explorar", query: { categoria: c.slug } }}
-                  className="card-lift border-border bg-surface flex min-h-20 items-center gap-3 rounded-2xl border p-3 shadow-sm"
+                  className={`${categoryCardClass} h-60 sm:h-48`}
                 >
-                  <span className="bg-sea-soft text-sea-deep grid size-11 shrink-0 place-items-center rounded-xl">
-                    <CategoryIcon category={c.slug} className="size-6" />
-                  </span>
-                  <span>
-                    <span className="block text-sm leading-tight font-extrabold">
-                      {c.name}
-                    </span>
-                    <span className="text-muted text-xs">
-                      {t("placesCount", { count: c.count })}
-                    </span>
-                  </span>
+                  <CategoryCardFace
+                    category={c.slug}
+                    name={c.name}
+                    index={i}
+                    compactOnWide
+                    countLabel={t("placesCount", { count: c.count })}
+                  />
                 </Link>
               </li>
             ))}
@@ -207,6 +210,44 @@ export default async function HomePage({
           ))}
         </section>
 
+        <section aria-labelledby="eventos-home">
+          <Link
+            href="/eventos"
+            className="card-lift border-border bg-surface flex items-center gap-4 rounded-2xl border p-4 shadow-sm"
+          >
+            <span
+              aria-hidden="true"
+              className="bg-sea-soft text-sea-deep grid size-14 shrink-0 place-items-center rounded-2xl"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                className="size-7"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M7 3v4m10-4v4M4 9h16M5 5h14a1 1 0 011 1v13a1 1 0 01-1 1H5a1 1 0 01-1-1V6a1 1 0 011-1z" />
+              </svg>
+            </span>
+            <span className="min-w-0 flex-1">
+              <h2
+                id="eventos-home"
+                className="font-display text-xl font-extrabold"
+              >
+                {te("homeTitle")}
+              </h2>
+              <span className="text-muted block text-sm">
+                {te("homeSubtitle")} {te("countLabel", { count: eventCount })}
+              </span>
+            </span>
+            <span className="text-sea shrink-0 text-sm font-bold">
+              {te("viewCalendar")}
+            </span>
+          </Link>
+        </section>
+
         <section aria-labelledby="destacados">
           <div className="flex items-baseline justify-between">
             <h2
@@ -234,6 +275,12 @@ export default async function HomePage({
         >
           {t("demoNotice")}
         </p>
+        <Link
+          href="/quiosco"
+          className="text-sea self-start text-sm font-bold underline"
+        >
+          {t("kioskLink")}
+        </Link>
       </div>
     </main>
   );

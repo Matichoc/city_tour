@@ -1,3 +1,4 @@
+import QRCode from "qrcode";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { Metadata } from "next";
@@ -13,6 +14,8 @@ import { PlacesMap } from "@/components/map/places-map";
 import { AddRouteToTripButton } from "@/components/trip/add-route-to-trip-button";
 import { ShareButton } from "@/components/place/share-button";
 import { CategoryIcon } from "@/components/ui/category-icon";
+import { PrintButton } from "@/components/ui/print-button";
+import { QrVisit } from "@/components/analytics/qr-visit";
 
 export function generateStaticParams() {
   return routing.locales.flatMap((locale) =>
@@ -48,9 +51,23 @@ export default async function RoutePage({
   const route = getRoute(slug, locale);
   if (!route) notFound();
   const t = await getTranslations("routes");
+  const routeUrl = localizedUrl(locale, {
+    pathname: "/rutas/[slug]",
+    params: { slug: route.slug },
+  });
+  const qrSvg = await QRCode.toString(
+    `${routeUrl}?origen=ruta-${route.slug.slice(0, 40)}`,
+    {
+      type: "svg",
+      margin: 1,
+      errorCorrectionLevel: "M",
+      color: { dark: "#07495a", light: "#ffffff" },
+    },
+  );
 
   return (
     <main className="flex flex-col">
+      <QrVisit />
       <JsonLd
         data={{
           "@context": "https://schema.org",
@@ -91,14 +108,14 @@ export default async function RoutePage({
         </p>
       </PageHero>
       <div className="mx-auto flex w-full max-w-3xl flex-col gap-5 px-4 pb-10">
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-2 print:hidden">
           <AddRouteToTripButton slugs={route.stops.map((s) => s.place.slug)} />
           <ShareButton title={route.name} />
         </div>
 
         <PlacesMap
           connect
-          className="h-72"
+          className="h-72 print:hidden"
           markers={route.stops
             .map((s) => s.place)
             .filter(isLocated)
@@ -167,6 +184,27 @@ export default async function RoutePage({
         <p className="bg-earth-soft text-earth rounded-xl p-3 text-sm">
           {t("pendingNote")}
         </p>
+
+        <section
+          aria-labelledby="llevatela"
+          className="border-border bg-surface flex flex-wrap items-center gap-5 rounded-2xl border p-4"
+        >
+          <div
+            className="w-36 shrink-0"
+            role="img"
+            aria-label={t("qrAlt")}
+            dangerouslySetInnerHTML={{ __html: qrSvg }}
+          />
+          <div className="min-w-0 flex-1">
+            <h2 id="llevatela" className="font-display text-xl font-extrabold">
+              {t("takeTitle")}
+            </h2>
+            <p className="text-muted mt-1 text-sm">{t("takeBody")}</p>
+            <div className="mt-3 print:hidden">
+              <PrintButton label={t("print")} />
+            </div>
+          </div>
+        </section>
       </div>
     </main>
   );

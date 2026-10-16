@@ -4,43 +4,72 @@ export type CategoryDef = {
   slug: CategorySlug;
   es: string;
   en: string;
+  pt: string;
   /** Minutos de visita ESTIMADOS por defecto para el motor de recorridos. */
   defaultVisitMinutes: number;
 };
 
 export const CATEGORY_DEFS: CategoryDef[] = [
-  { slug: "playas", es: "Playas", en: "Beaches", defaultVisitMinutes: 90 },
   {
-    slug: "naturaleza",
-    es: "Campo y naturaleza",
-    en: "Countryside & nature",
-    defaultVisitMinutes: 60,
+    slug: "balneario",
+    es: "Balneario",
+    en: "Seaside",
+    pt: "Balneário",
+    defaultVisitMinutes: 90,
+  },
+  {
+    slug: "recreacion",
+    es: "Recreación",
+    en: "Recreation",
+    pt: "Recreação",
+    defaultVisitMinutes: 90,
+  },
+  {
+    slug: "deportes",
+    es: "Deportes",
+    en: "Sports",
+    pt: "Esportes",
+    defaultVisitMinutes: 90,
   },
   {
     slug: "patrimonio",
-    es: "Patrimonio",
-    en: "Heritage",
+    es: "Cultura y patrimonio",
+    en: "Culture & heritage",
+    pt: "Cultura e patrimônio",
     defaultVisitMinutes: 30,
   },
   {
     slug: "gastronomia",
     es: "Gastronomía",
     en: "Food",
+    pt: "Gastronomia",
+    defaultVisitMinutes: 60,
+  },
+  {
+    slug: "ruralidad",
+    es: "Campo y ruralidad",
+    en: "Countryside",
+    pt: "Campo e ruralidade",
     defaultVisitMinutes: 60,
   },
   {
     slug: "alojamiento",
     es: "Alojamiento",
     en: "Stay",
+    pt: "Hospedagem",
     defaultVisitMinutes: 0,
   },
-  {
-    slug: "actividades",
-    es: "Actividades",
-    en: "Activities",
-    defaultVisitMinutes: 90,
-  },
 ];
+
+/**
+ * Categorías anteriores → actuales, para que sigan funcionando los enlaces y
+ * afiches QR que ya se compartieron (`?categoria=playas`).
+ */
+export const LEGACY_CATEGORY: Record<string, CategorySlug> = {
+  playas: "balneario",
+  naturaleza: "ruralidad",
+  actividades: "recreacion",
+};
 
 /** Centro del mapa: coordenada de la localidad de Papudo (directorio_turistico). */
 export const PAPUDO_CENTER = {
@@ -81,5 +110,6 @@ export const SPONSOR = {
   tagline: {
     es: "Chocolate artesanal hecho en La Ligua",
     en: "Artisanal chocolate made in La Ligua",
+    pt: "Chocolate artesanal feito em La Ligua",
   },
 } as const;

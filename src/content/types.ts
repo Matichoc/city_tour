@@ -1,3 +1,5 @@
+import type { IllustrationKey } from "@/content/images";
+
 export type Source = { url: string; label: string };
 
 export type LocalityContent = {
@@ -28,8 +30,38 @@ export type PlaceContent = {
   es: PlaceText;
   /** Inglés opcional: si falta, se muestra el español. */
   en?: PlaceText;
+  /** Portugués opcional: si falta, se muestra el español. */
+  pt?: PlaceText;
+  /** Ficha de EJEMPLO (ficticia): se rotula y no se indexa (demo-content.ts). */
+  demo?: boolean;
   source?: Source;
   tvSource?: Source;
+  extraSources?: Source[];
+};
+
+export type EventText = { name: string; short: string };
+
+/** Evento recurrente (sin fecha de un año concreto: se confirma con el municipio). */
+export type EventContent = {
+  slug: string;
+  categorySlug: CategorySlug;
+  localitySlug: string | null;
+  /** Mes en que se celebra (1–12); null = por confirmar. */
+  month: number | null;
+  /** Día fijo del mes, si lo tiene (p. ej. 26 de noviembre). */
+  day?: number;
+  /** Temporada cuando no hay mes. */
+  season?: "summer";
+  /** Aparece en el carrusel de destacados. */
+  featured?: boolean;
+  /** Ilustración del banner; si falta, la de su producto. */
+  illustration?: IllustrationKey;
+  /** Evento de EJEMPLO (ficticio): se rotula y no se indexa. */
+  demo?: boolean;
+  es: EventText;
+  en?: EventText;
+  pt?: EventText;
+  source?: Source;
   extraSources?: Source[];
 };
 
@@ -49,10 +81,15 @@ export type RouteContent = {
   cover?: { src: string; alt: { es: string; en: string } };
 };
 
+/**
+ * Los seis productos turísticos del PLADETUR de Papudo (iD, 2023, p. 136) más
+ * alojamiento, que es un servicio y no un producto.
+ */
 export type CategorySlug =
-  | "playas"
-  | "naturaleza"
+  | "balneario"
+  | "recreacion"
+  | "deportes"
   | "patrimonio"
   | "gastronomia"
-  | "alojamiento"
-  | "actividades";
+  | "ruralidad"
+  | "alojamiento";
