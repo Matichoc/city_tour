@@ -1,5 +1,30 @@
 # Formulario para comercios — «Suma tu comercio»
 
+## Versión corta (recomendada para partir)
+
+Para que sea simple para todos, hay una versión de unos 3 minutos: lo
+esencial del negocio, las fotos por WhatsApp y una sola autorización. Se crea
+sola en Google Forms con el script
+[`scripts/forms/crear-formulario-comercios.gs`](../scripts/forms/crear-formulario-comercios.gs)
+(las instrucciones están al inicio del archivo).
+
+Para quien no se maneja con formularios, sirve el **llenado asistido**: tú o
+alguien del equipo llama o visita al comercio y completa el formulario con
+ellos, o lo arma a partir de un audio de WhatsApp.
+
+Mensaje de WhatsApp para invitarlos:
+
+> ¡Hola! Soy [nombre], de «Papudo en tu mano», la nueva guía digital de
+> Papudo, Las Salinas y Pullally para que los turistas encuentren el comercio
+> local. Esta temporada la ficha es gratis. ¿Te sumas? Son 3 minutos: [enlace].
+> Si prefieres, mándame un audio con el nombre del negocio, qué ofreces,
+> horarios y dirección, y unas fotos, y yo te armo la ficha.
+
+## Versión completa
+
+La versión completa de abajo sirve para los comercios que quieran una ficha
+más detallada, o para completarla después de la versión corta.
+
 Formulario para armarlo en Google Forms y enviarlo a los comercios del piloto.
 Las preguntas con **\*** son obligatorias. Los textos legales (sección 6) están
 **en borrador y deben pasar por el abogado** antes de enviarlo.
