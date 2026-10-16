@@ -61,6 +61,7 @@
     "emptyHint": "Try another search or remove a filter.",
     "clear": "Clear filters",
     "activeFilters": "Active filters",
+    "groupCount": "{count, plural, one {# place} other {# places}}",
     "removeFilter": "Remove filter: {name}"
   },
   "place": {
@@ -159,6 +160,10 @@
     "kind": {
       "phone": "Call the Municipality"
     },
+    "authorTitle": "Who builds it",
+    "authorBody": "This guide is built by Cristóbal Roco, a specialist in development and artificial-intelligence solutions for businesses.",
+    "authorNote": "Illustrations are made with AI and shown with their label. Data is always checked against sources and the community.",
+    "authorLink": "Meet Matichoc",
     "dataTitle": "About this data",
     "dataBody": "Every place shows its source and verification status. Nothing is treated as confirmed until a person reviews it: opening hours, prices and access may change.",
     "emergencyTitle": "Emergency numbers",

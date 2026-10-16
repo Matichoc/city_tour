@@ -351,3 +351,21 @@ test("celular: la barra inferior incluye Eventos", async ({ page }) => {
   await nav.getByRole("link", { name: "Eventos" }).click();
   await expect(page).toHaveURL(/\/es\/eventos$/);
 });
+
+test("explorar: las categorías vienen cerradas y se abren para ver los lugares", async ({
+  page,
+}) => {
+  await page.goto("/es/explorar");
+  const balneario = page.locator("details", { hasText: "Balneario" }).first();
+  await expect(balneario).not.toHaveAttribute("open", "");
+  await expect(page.getByRole("link", { name: /Playa Chica/ })).toBeHidden();
+  await balneario.locator("summary").click();
+  await expect(
+    page.getByRole("link", { name: /Playa Chica/ }).first(),
+  ).toBeVisible();
+});
+
+test("información: presenta a quien desarrolla la guía", async ({ page }) => {
+  await page.goto("/es/informacion");
+  await expect(page.getByText(/Cristóbal Roco/)).toBeVisible();
+});

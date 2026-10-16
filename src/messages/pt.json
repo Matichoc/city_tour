@@ -61,6 +61,7 @@
     "emptyHint": "Tente outra busca ou remova um filtro.",
     "clear": "Remover filtros",
     "activeFilters": "Filtros ativos",
+    "groupCount": "{count, plural, one {# lugar} other {# lugares}}",
     "removeFilter": "Remover filtro: {name}"
   },
   "place": {
@@ -159,6 +160,10 @@
     "kind": {
       "phone": "Ligar para a Prefeitura"
     },
+    "authorTitle": "Quem desenvolve",
+    "authorBody": "Este guia é desenvolvido por Cristóbal Roco, especialista em desenvolvimento e soluções de inteligência artificial para negócios.",
+    "authorNote": "As ilustrações são feitas com IA e aparecem com a sua etiqueta. Os dados são sempre conferidos com fontes e com a comunidade.",
+    "authorLink": "Conheça a Matichoc",
     "dataTitle": "Sobre estes dados",
     "dataBody": "Cada lugar mostra sua fonte e seu estado de verificação. Nada é dado como confirmado até que uma pessoa o revise: horários, preços e acessos podem mudar.",
     "emergencyTitle": "Números de emergência",

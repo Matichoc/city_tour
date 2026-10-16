@@ -85,6 +85,16 @@ export default async function ExplorePage({
       }).filter(([, v]) => v),
     );
 
+  // Lista agrupada por categoría: cerrada hasta que se elige un filtro.
+  const narrowed = Boolean(category || locality || query);
+  const groups = categories
+    .map((c) => ({
+      slug: c.slug,
+      name: c.name,
+      items: places.filter((p) => p.categorySlug === c.slug),
+    }))
+    .filter((g) => g.items.length > 0);
+
   const all = listPlaces(locale);
   const catItems: FilterItem[] = [
     {
@@ -363,13 +373,46 @@ export default async function ExplorePage({
             }))}
           />
         ) : (
-          <ul className="grid gap-4 sm:grid-cols-2">
-            {places.map((p, i) => (
-              <li key={p.slug}>
-                <PlaceCard place={p} index={i} />
-              </li>
+          <div className="flex flex-col gap-3">
+            {groups.map((g) => (
+              <details
+                key={g.slug}
+                open={narrowed}
+                className="group border-border bg-surface rounded-2xl border shadow-sm"
+              >
+                <summary className="flex min-h-16 cursor-pointer list-none items-center gap-3 px-4 py-3 [&::-webkit-details-marker]:hidden">
+                  <span className="bg-sea-soft text-sea-deep grid size-10 shrink-0 place-items-center rounded-full">
+                    <CategoryIcon category={g.slug} className="size-5" />
+                  </span>
+                  <span className="font-display min-w-0 flex-1 text-lg font-extrabold">
+                    {g.name}
+                  </span>
+                  <span className="text-muted text-sm font-semibold">
+                    {t("groupCount", { count: g.items.length })}
+                  </span>
+                  <svg
+                    viewBox="0 0 24 24"
+                    className="text-sea size-5 shrink-0 transition group-open:rotate-180"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.4"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="m6 9 6 6 6-6" />
+                  </svg>
+                </summary>
+                <ul className="grid gap-4 px-4 pb-4 sm:grid-cols-2">
+                  {g.items.map((p, i) => (
+                    <li key={p.slug}>
+                      <PlaceCard place={p} index={i} />
+                    </li>
+                  ))}
+                </ul>
+              </details>
             ))}
-          </ul>
+          </div>
         )}
       </div>
     </main>
