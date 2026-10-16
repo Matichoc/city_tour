@@ -4,7 +4,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "Papudo en tu mano",
     short_name: "Papudo",
-    description: "Guía turística de Papudo: playas, campo y patrimonio.",
+    description: "Guía turística de Papudo: balneario, campo y patrimonio.",
     start_url: "/es",
     display: "standalone",
     background_color: "#fdf8ee",

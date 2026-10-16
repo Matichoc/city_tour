@@ -49,10 +49,15 @@ export type RouteContent = {
   cover?: { src: string; alt: { es: string; en: string } };
 };
 
+/**
+ * Los seis productos turísticos del PLADETUR de Papudo (iD, 2023, p. 136) más
+ * alojamiento, que es un servicio y no un producto.
+ */
 export type CategorySlug =
-  | "playas"
-  | "naturaleza"
+  | "balneario"
+  | "recreacion"
+  | "deportes"
   | "patrimonio"
   | "gastronomia"
-  | "alojamiento"
-  | "actividades";
+  | "ruralidad"
+  | "alojamiento";

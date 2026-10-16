@@ -2,12 +2,13 @@ import type { CategorySlug } from "@/content/types";
 import { CategoryIcon } from "@/components/ui/category-icon";
 
 const GRADIENT: Record<CategorySlug, string> = {
-  playas: "from-[#8fd8ea] via-[#cdeff2] to-[#f2dfb0]",
-  naturaleza: "from-[#bfe3a8] via-[#8fc27a] to-[#4a7a37]",
+  balneario: "from-[#8fd8ea] via-[#cdeff2] to-[#f2dfb0]",
+  recreacion: "from-[#a6dbe6] via-[#6fc8b8] to-[#4a7a37]",
+  deportes: "from-[#c6d4f5] via-[#9db4ec] to-[#5b4b9a]",
   patrimonio: "from-[#f6dca6] via-[#e7b878] to-[#b4651f]",
   gastronomia: "from-[#ffd29a] via-[#ffa87a] to-[#ff7a59]",
+  ruralidad: "from-[#bfe3a8] via-[#8fc27a] to-[#4a7a37]",
   alojamiento: "from-[#d8f1f4] via-[#a6dbe6] to-[#5bb7c9]",
-  actividades: "from-[#a6dbe6] via-[#6fc8b8] to-[#4a7a37]",
 };
 
 /** Cabecera ilustrada de tarjeta: degradado + motivo de la categoría. */
@@ -18,7 +19,7 @@ export function CategoryScene({
   category: CategorySlug;
   className?: string;
 }) {
-  const hills = category === "naturaleza" || category === "actividades";
+  const hills = category === "ruralidad" || category === "recreacion";
   return (
     <div
       className={`relative overflow-hidden bg-gradient-to-br ${GRADIENT[category]} ${className}`}

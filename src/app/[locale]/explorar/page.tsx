@@ -1,10 +1,10 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { Metadata } from "next";
-import { Link } from "@/i18n/navigation";
+import { Link, redirect } from "@/i18n/navigation";
 import { resolveLocale } from "@/i18n/utils";
 import {
+  canonicalCategory,
   illustrationFor,
-  isCategorySlug,
   isLocated,
   listCategories,
   listLocalities,
@@ -50,7 +50,19 @@ export default async function ExplorePage({
   const sp = await searchParams;
   const t = await getTranslations("explore");
 
-  const category = isCategorySlug(sp.categoria) ? sp.categoria : undefined;
+  const category = canonicalCategory(sp.categoria) ?? undefined;
+  // Enlaces anteriores (?categoria=playas) pasan a la categoría actual.
+  if (sp.categoria && category && sp.categoria !== category) {
+    redirect({
+      href: {
+        pathname: "/explorar",
+        query: Object.fromEntries(
+          Object.entries({ ...sp, categoria: category }).filter(([, v]) => v),
+        ),
+      },
+      locale,
+    });
+  }
   const localities = listLocalities(locale);
   const locality = localities.some((l) => l.slug === sp.pueblo)
     ? sp.pueblo
@@ -207,9 +219,7 @@ export default async function ExplorePage({
             }
           >
             <p>
-              {category === "alojamiento" ||
-              category === "gastronomia" ||
-              category === "actividades"
+              {category && !query && !locality
                 ? t("emptyComing")
                 : t("emptyHint")}
             </p>

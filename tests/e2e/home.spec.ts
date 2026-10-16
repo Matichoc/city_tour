@@ -15,7 +15,7 @@ test("cambiar a inglés conserva la página", async ({ page }) => {
 test("explorar: filtrar por categoría y abrir una ficha con fuente", async ({
   page,
 }) => {
-  await page.goto("/es/explorar?categoria=playas");
+  await page.goto("/es/explorar?categoria=balneario");
   await expect(
     page.getByRole("heading", { name: "Playa Chica" }),
   ).toBeVisible();

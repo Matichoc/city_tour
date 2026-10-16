@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: { default: "Papudo en tu mano", template: "%s · Papudo en tu mano" },
   description:
-    "Guía turística de Papudo: playas, patrimonio, gastronomía y alojamiento.",
+    "Guía turística de Papudo: balneario, patrimonio, gastronomía y alojamiento.",
 };
 
 export const viewport: Viewport = {

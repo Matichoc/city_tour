@@ -53,7 +53,7 @@ export const PLACES: PlaceContent[] = [
   {
     slug: "playa-papudo",
     localitySlug: "papudo",
-    categorySlug: "playas",
+    categorySlug: "balneario",
     latitude: -32.5061,
     longitude: -71.4472,
     es: {
@@ -82,7 +82,7 @@ export const PLACES: PlaceContent[] = [
   {
     slug: "playa-chica-papudo",
     localitySlug: "papudo",
-    categorySlug: "playas",
+    categorySlug: "balneario",
     latitude: -32.5075,
     longitude: -71.4478,
     es: {
@@ -111,7 +111,7 @@ export const PLACES: PlaceContent[] = [
     // entrada, en las coordenadas reales que dio el usuario.
     slug: "papudo-pullally",
     localitySlug: "pullally",
-    categorySlug: "naturaleza",
+    categorySlug: "ruralidad",
     latitude: -32.43467097116685,
     longitude: -71.31775915116937,
     es: {
@@ -146,7 +146,7 @@ export const PLACES: PlaceContent[] = [
     // santuario protegido.
     slug: "papudo-salinas-pullally",
     localitySlug: "las-salinas-papudo",
-    categorySlug: "naturaleza",
+    categorySlug: "ruralidad",
     latitude: -32.41007831226611,
     longitude: -71.41062008860503,
     es: {
@@ -207,7 +207,7 @@ export const PLACES: PlaceContent[] = [
   {
     slug: "papudo-playa-los-lilenes",
     localitySlug: null,
-    categorySlug: "playas",
+    categorySlug: "balneario",
     latitude: -32.49109919617068,
     longitude: -71.4326761566141,
     es: {
@@ -232,7 +232,7 @@ export const PLACES: PlaceContent[] = [
   {
     slug: "papudo-parque",
     localitySlug: "papudo",
-    categorySlug: "naturaleza",
+    categorySlug: "recreacion",
     latitude: -32.50461851619594,
     longitude: -71.44310276706875,
     es: {
@@ -320,7 +320,7 @@ export const PLACES: PlaceContent[] = [
   {
     slug: "humedal-urbano-estero-agua-salada",
     localitySlug: "papudo",
-    categorySlug: "naturaleza",
+    categorySlug: "recreacion",
     latitude: null,
     longitude: null,
     es: {

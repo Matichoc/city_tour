@@ -7,6 +7,7 @@ import {
   getPlace,
   isLocated,
   getRoute,
+  canonicalCategory,
   isCategorySlug,
   listCategories,
   listPlaces,
@@ -105,8 +106,8 @@ describe("capa de datos", () => {
   });
   it("filtra por categoría, pueblo y texto sin importar tildes", () => {
     expect(
-      listPlaces("es", { category: "playas" }).every(
-        (p) => p.categorySlug === "playas",
+      listPlaces("es", { category: "balneario" }).every(
+        (p) => p.categorySlug === "balneario",
       ),
     ).toBe(true);
     expect(listPlaces("es", { locality: "pullally" }).length).toBeGreaterThan(
@@ -117,12 +118,30 @@ describe("capa de datos", () => {
     );
     expect(listPlaces("es", { query: "zzz" })).toHaveLength(0);
   });
-  it("cuenta lugares por categoría (actividades aún vacía)", () => {
+  it("cuenta lugares por categoría (deportes aún vacía)", () => {
     const c = listCategories("es");
-    expect(c.find((x) => x.slug === "actividades")!.count).toBe(0);
+    expect(c.find((x) => x.slug === "deportes")!.count).toBe(0);
     expect(c.find((x) => x.slug === "alojamiento")!.count).toBe(1);
-    expect(isCategorySlug("playas")).toBe(true);
+    expect(isCategorySlug("balneario")).toBe(true);
     expect(isCategorySlug("nada")).toBe(false);
+  });
+  it("las categorías del PLADETUR son los seis productos más alojamiento", () => {
+    expect(listCategories("es").map((c) => c.slug)).toEqual([
+      "balneario",
+      "recreacion",
+      "deportes",
+      "patrimonio",
+      "gastronomia",
+      "ruralidad",
+      "alojamiento",
+    ]);
+  });
+  it("los nombres anteriores de categoría siguen resolviendo", () => {
+    expect(canonicalCategory("playas")).toBe("balneario");
+    expect(canonicalCategory("naturaleza")).toBe("ruralidad");
+    expect(canonicalCategory("actividades")).toBe("recreacion");
+    expect(canonicalCategory("balneario")).toBe("balneario");
+    expect(canonicalCategory("nada")).toBeNull();
   });
   it("una ruta devuelve sus paradas en orden", () => {
     const r = getRoute("ruta-costera-papudo", "es")!;

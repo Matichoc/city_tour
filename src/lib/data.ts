@@ -3,7 +3,7 @@
  * fuente). Al conectar Supabase (Fase 2) se cambia solo este archivo: el resto
  * de la app usa estos tipos.
  */
-import { CATEGORY_DEFS } from "@/content/catalog";
+import { CATEGORY_DEFS, LEGACY_CATEGORY } from "@/content/catalog";
 import {
   CATEGORY_ILLUSTRATION,
   ILLUSTRATIONS,
@@ -189,6 +189,12 @@ export function listCategories(locale: Locale): Category[] {
 
 export const isCategorySlug = (v: string | undefined): v is CategorySlug =>
   CATEGORY_DEFS.some((c) => c.slug === v);
+
+/** Slug actual de una categoría, aceptando los nombres anteriores. */
+export function canonicalCategory(v: string | undefined): CategorySlug | null {
+  if (isCategorySlug(v)) return v;
+  return (v && LEGACY_CATEGORY[v]) || null;
+}
 
 export function listRoutes(locale: Locale): Route[] {
   return ROUTES.map((r) => getRoute(r.slug, locale)!);

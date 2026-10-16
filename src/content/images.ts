@@ -65,12 +65,13 @@ export const ILLUSTRATIONS: Record<IllustrationKey, Illustration> = {
 };
 
 export const CATEGORY_ILLUSTRATION: Record<CategorySlug, IllustrationKey> = {
-  playas: "playa",
-  naturaleza: "humedal",
+  balneario: "playa",
+  recreacion: "paseo",
+  deportes: "playa",
   patrimonio: "plaza",
   gastronomia: "hostales",
+  ruralidad: "humedal",
   alojamiento: "hostales",
-  actividades: "paseo",
 };
 
 /** Lugares con una escena que les calza mejor que la de su categoría. */

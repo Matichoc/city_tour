@@ -31,12 +31,13 @@ export const MAP_DEFAULT_ZOOM = 12;
 export const PLACE_ZOOM = 15;
 
 export const CATEGORY_PIN_COLOR: Record<string, string> = {
-  playas: "#0b7285",
-  naturaleza: "#4a7a37",
+  balneario: "#0b7285",
+  recreacion: "#2f8f7a",
+  deportes: "#5b4b9a",
   patrimonio: "#a85a17",
   gastronomia: "#e0553a",
+  ruralidad: "#4a7a37",
   alojamiento: "#07495a",
-  actividades: "#2f8f7a",
 };
 
 export function directionsUrl(latitude: number, longitude: number): string {

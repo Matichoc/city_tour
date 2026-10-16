@@ -71,7 +71,7 @@ export default async function PlacePage({
         data={{
           "@context": "https://schema.org",
           "@type":
-            place.categorySlug === "playas" ? "Beach" : "TouristAttraction",
+            place.categorySlug === "balneario" ? "Beach" : "TouristAttraction",
           name: place.name,
           description: place.shortDescription,
           url: localizedUrl(locale, {
