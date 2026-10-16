@@ -121,7 +121,7 @@ export default async function HomePage({
             {t("whatToDo")}
           </h2>
           <p className="text-muted text-sm sm:hidden">{t("whatToDoHint")}</p>
-          <ul className="-mx-4 mt-3 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pt-1 pb-4 sm:mx-0 sm:grid sm:grid-cols-3 sm:overflow-visible sm:px-0">
+          <ul className="-mx-4 mt-3 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pt-1 pb-4 sm:mx-0 sm:grid sm:grid-cols-4 sm:overflow-visible sm:px-0">
             {categories.map((c, i) => (
               <li
                 key={c.slug}
@@ -130,12 +130,13 @@ export default async function HomePage({
               >
                 <Link
                   href={{ pathname: "/explorar", query: { categoria: c.slug } }}
-                  className={categoryCardClass}
+                  className={`${categoryCardClass} h-60 sm:h-48`}
                 >
                   <CategoryCardFace
                     category={c.slug}
                     name={c.name}
                     index={i}
+                    compactOnWide
                     countLabel={t("placesCount", { count: c.count })}
                   />
                 </Link>

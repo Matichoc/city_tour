@@ -8,8 +8,9 @@ test("la raíz dirige a /es y se ve la portada", async ({ page }) => {
 
 test("cambiar a inglés conserva la página", async ({ page }) => {
   await page.goto("/es/explorar");
-  // El idioma se elige en una lista desplegable.
-  await page.getByRole("combobox", { name: "Idioma" }).selectOption("en");
+  // El idioma se elige en un menú desplegable.
+  await page.getByRole("button", { name: /^Idioma/ }).click();
+  await page.getByRole("button", { name: /English/ }).click();
   await expect(page).toHaveURL(/\/en\/explore$/);
 });
 
@@ -254,9 +255,9 @@ test("portada: tarjetas verticales de «¿Qué quieres hacer?» y selector de id
     .or(page.locator("#que-hacer").locator(".."));
   await expect(tarjetas.getByRole("link", { name: /Balneario/ })).toBeVisible();
   await expect(tarjetas.getByRole("link", { name: /Deportes/ })).toBeVisible();
-  await expect(page.getByRole("combobox", { name: "Idioma" })).toHaveValue(
-    "es",
-  );
+  await expect(
+    page.getByRole("button", { name: "Idioma: Español" }),
+  ).toBeVisible();
 });
 
 test("quiosco: se puede salir en la web y en la tablet de la oficina no", async ({
@@ -313,7 +314,8 @@ test("portugués: cambia de idioma, traduce la interfaz y avisa si falta la trad
   page,
 }) => {
   await page.goto("/es/rutas");
-  await page.getByRole("combobox", { name: "Idioma" }).selectOption("pt");
+  await page.getByRole("button", { name: /^Idioma/ }).click();
+  await page.getByRole("button", { name: /Português/ }).click();
   await expect(page).toHaveURL(/\/pt\/roteiros$/);
   await expect(
     page.getByRole("heading", { name: "Roteiros", level: 1 }),
@@ -341,4 +343,11 @@ test("QR por hito: el afiche lleva a la ficha del lugar; la ruta trae su QR", as
   await expect(
     page.getByRole("button", { name: "Imprimir ruta" }),
   ).toBeVisible();
+});
+
+test("celular: la barra inferior incluye Eventos", async ({ page }) => {
+  await page.goto("/es");
+  const nav = page.getByRole("navigation", { name: /principal/i }).last();
+  await nav.getByRole("link", { name: "Eventos" }).click();
+  await expect(page).toHaveURL(/\/es\/eventos$/);
 });

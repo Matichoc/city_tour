@@ -12,7 +12,9 @@
     "language": "Language",
     "main": "Main navigation",
     "business": "For business",
-    "events": "Events"
+    "events": "Events",
+    "tripShort": "My trip",
+    "infoShort": "Info"
   },
   "common": {
     "share": "Share",
@@ -46,9 +48,9 @@
     "subtitle": "Beaches, countryside and heritage of the commune.",
     "search": "Search by name or village",
     "searchGo": "Search",
-    "categories": "Categories",
+    "categories": "What",
     "all": "All",
-    "localities": "Villages",
+    "localities": "Where",
     "allLocalities": "Whole commune",
     "results": "{count, plural, =0 {No results} one {# place} other {# places}}",
     "view": "View",
@@ -57,7 +59,9 @@
     "empty": "No places here yet",
     "emptyComing": "We are adding more places in this category with the Municipality and Papudo's Chamber of Commerce.",
     "emptyHint": "Try another search or remove a filter.",
-    "clear": "Clear filters"
+    "clear": "Clear filters",
+    "activeFilters": "Active filters",
+    "removeFilter": "Remove filter: {name}"
   },
   "place": {
     "back": "Explore",

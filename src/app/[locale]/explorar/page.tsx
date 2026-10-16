@@ -15,6 +15,8 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { PageHero } from "@/components/ui/page-hero";
 import { PlaceCard } from "@/components/place/place-card";
 import { PlacesMap } from "@/components/map/places-map";
+import { CategoryIcon } from "@/components/ui/category-icon";
+import { FilterMenu, type FilterItem } from "@/components/ui/filter-menu";
 
 type SearchParams = {
   categoria?: string;
@@ -83,8 +85,73 @@ export default async function ExplorePage({
       }).filter(([, v]) => v),
     );
 
-  const chip = (on: boolean) =>
-    `flex min-h-11 items-center rounded-full border px-4 text-sm font-bold transition ${on ? "border-sea bg-sea text-white" : "border-border bg-surface hover:border-sea"}`;
+  const all = listPlaces(locale);
+  const catItems: FilterItem[] = [
+    {
+      key: "all",
+      label: t("all"),
+      href: { pathname: "/explorar", query: q({ categoria: undefined }) },
+      active: !category,
+      count: all.length,
+    },
+    ...categories.map((c) => ({
+      key: c.slug,
+      label: c.name,
+      href: { pathname: "/explorar" as const, query: q({ categoria: c.slug }) },
+      active: category === c.slug,
+      count: c.count,
+    })),
+  ];
+  const locItems: FilterItem[] = [
+    {
+      key: "all",
+      label: t("allLocalities"),
+      href: { pathname: "/explorar", query: q({ pueblo: undefined }) },
+      active: !locality,
+      count: all.length,
+    },
+    ...localities.map((l) => ({
+      key: l.slug,
+      label: l.name,
+      href: { pathname: "/explorar" as const, query: q({ pueblo: l.slug }) },
+      active: locality === l.slug,
+      count: all.filter((p) => p.localitySlug === l.slug).length,
+    })),
+  ];
+  const categoryLabel = categories.find((c) => c.slug === category)?.name;
+  const localityLabel = localities.find((l) => l.slug === locality)?.name;
+  const removable = [
+    category && categoryLabel
+      ? {
+          key: "categoria",
+          label: categoryLabel,
+          href: {
+            pathname: "/explorar" as const,
+            query: q({ categoria: undefined }),
+          },
+        }
+      : null,
+    locality && localityLabel
+      ? {
+          key: "pueblo",
+          label: localityLabel,
+          href: {
+            pathname: "/explorar" as const,
+            query: q({ pueblo: undefined }),
+          },
+        }
+      : null,
+    query
+      ? {
+          key: "q",
+          label: `“${query}”`,
+          href: { pathname: "/explorar" as const, query: q({ q: undefined }) },
+        }
+      : null,
+  ].filter((x): x is NonNullable<typeof x> => x !== null);
+
+  const segment = (on: boolean) =>
+    `flex min-h-11 items-center gap-1.5 px-4 text-sm font-extrabold transition ${on ? "bg-sea text-white" : "bg-surface text-muted hover:text-foreground"}`;
 
   return (
     <main className="flex flex-col">
@@ -103,14 +170,28 @@ export default async function ExplorePage({
           <label className="sr-only" htmlFor="q">
             {t("search")}
           </label>
-          <input
-            id="q"
-            name="q"
-            type="search"
-            defaultValue={query}
-            placeholder={t("search")}
-            className="border-border bg-surface min-h-12 min-w-0 flex-1 rounded-full border px-5"
-          />
+          <div className="relative min-w-0 flex-1">
+            <svg
+              viewBox="0 0 24 24"
+              className="text-sea pointer-events-none absolute top-1/2 left-4 size-5 -translate-y-1/2"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              aria-hidden="true"
+            >
+              <circle cx="11" cy="11" r="7" />
+              <path d="m20 20-3.5-3.5" />
+            </svg>
+            <input
+              id="q"
+              name="q"
+              type="search"
+              defaultValue={query}
+              placeholder={t("search")}
+              className="border-border bg-surface min-h-12 w-full min-w-0 rounded-full border-2 pr-4 pl-11 shadow-sm"
+            />
+          </div>
           <button
             type="submit"
             className="bg-sea min-h-12 shrink-0 rounded-full px-5 font-bold text-white active:scale-95"
@@ -119,72 +200,59 @@ export default async function ExplorePage({
           </button>
         </form>
 
-        <nav aria-label={t("categories")}>
-          <ul className="flex flex-wrap gap-2">
-            <li>
-              <Link
-                href={{
-                  pathname: "/explorar",
-                  query: q({ categoria: undefined }),
-                }}
-                aria-current={!category ? "true" : undefined}
-                className={chip(!category)}
-              >
-                {t("all")}
-              </Link>
-            </li>
-            {categories.map((c) => (
-              <li key={c.slug}>
-                <Link
-                  href={{
-                    pathname: "/explorar",
-                    query: q({ categoria: c.slug }),
-                  }}
-                  aria-current={category === c.slug ? "true" : undefined}
-                  className={chip(category === c.slug)}
+        <div className="flex flex-col gap-3 sm:flex-row">
+          <FilterMenu
+            label={t("categories")}
+            valueLabel={categoryLabel ?? t("all")}
+            items={catItems}
+            active={Boolean(category)}
+            icon={
+              category ? (
+                <CategoryIcon category={category} className="size-5" />
+              ) : (
+                <svg
+                  viewBox="0 0 24 24"
+                  className="size-5"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 >
-                  {c.name}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
-
-        <nav aria-label={t("localities")}>
-          <ul className="flex flex-wrap gap-2">
-            <li>
-              <Link
-                href={{
-                  pathname: "/explorar",
-                  query: q({ pueblo: undefined }),
-                }}
-                className={chip(!locality)}
+                  <path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z" />
+                </svg>
+              )
+            }
+          />
+          <FilterMenu
+            label={t("localities")}
+            valueLabel={localityLabel ?? t("allLocalities")}
+            items={locItems}
+            active={Boolean(locality)}
+            icon={
+              <svg
+                viewBox="0 0 24 24"
+                className="size-5"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+                strokeLinejoin="round"
               >
-                {t("allLocalities")}
-              </Link>
-            </li>
-            {localities.map((l) => (
-              <li key={l.slug}>
-                <Link
-                  href={{ pathname: "/explorar", query: q({ pueblo: l.slug }) }}
-                  aria-current={locality === l.slug ? "true" : undefined}
-                  className={chip(locality === l.slug)}
-                >
-                  {l.name}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
+                <path d="M12 21s-7-6.2-7-11a7 7 0 1114 0c0 4.8-7 11-7 11zm0-8.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5z" />
+              </svg>
+            }
+          />
+        </div>
 
-        <div className="flex items-center justify-between gap-3">
+        <div className="flex flex-wrap items-center justify-between gap-3">
           <p aria-live="polite" className="text-muted text-sm font-semibold">
             {t("results", { count: places.length })}
           </p>
           <div
             role="group"
             aria-label={t("view")}
-            className="border-border flex overflow-hidden rounded-full border text-sm font-bold"
+            className="border-border flex overflow-hidden rounded-full border-2"
           >
             <Link
               href={{
@@ -192,8 +260,19 @@ export default async function ExplorePage({
                 query: { ...base, vista: undefined },
               }}
               aria-current={view === "list" ? "true" : undefined}
-              className={`min-h-11 px-4 py-2.5 ${view === "list" ? "bg-sea text-white" : "bg-surface text-muted"}`}
+              className={segment(view === "list")}
             >
+              <svg
+                viewBox="0 0 24 24"
+                className="size-4"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+                aria-hidden="true"
+              >
+                <path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01" />
+              </svg>
               {t("list")}
             </Link>
             <Link
@@ -202,12 +281,52 @@ export default async function ExplorePage({
                 query: { ...base, vista: "mapa" },
               }}
               aria-current={view === "map" ? "true" : undefined}
-              className={`min-h-11 px-4 py-2.5 ${view === "map" ? "bg-sea text-white" : "bg-surface text-muted"}`}
+              className={segment(view === "map")}
             >
+              <svg
+                viewBox="0 0 24 24"
+                className="size-4"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M12 21s-7-6.2-7-11a7 7 0 1114 0c0 4.8-7 11-7 11z" />
+                <circle cx="12" cy="10" r="2.5" />
+              </svg>
               {t("map")}
             </Link>
           </div>
         </div>
+
+        {removable.length > 0 ? (
+          <ul aria-label={t("activeFilters")} className="flex flex-wrap gap-2">
+            {removable.map((r) => (
+              <li key={r.key}>
+                <Link
+                  href={r.href}
+                  aria-label={t("removeFilter", { name: r.label })}
+                  className="bg-sea-soft text-sea-deep hover:bg-sea inline-flex min-h-11 items-center gap-2 rounded-full px-4 text-sm font-bold transition hover:text-white"
+                >
+                  {r.label}
+                  <span aria-hidden="true" className="text-base leading-none">
+                    ×
+                  </span>
+                </Link>
+              </li>
+            ))}
+            <li>
+              <Link
+                href="/explorar"
+                className="text-sea inline-flex min-h-11 items-center px-2 text-sm font-bold underline"
+              >
+                {t("clear")}
+              </Link>
+            </li>
+          </ul>
+        ) : null}
 
         {places.length === 0 ? (
           <EmptyState

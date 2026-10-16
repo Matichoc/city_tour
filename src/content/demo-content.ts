@@ -217,7 +217,7 @@ export const DEMO_EVENTS: EventContent[] = [
     month: 1,
     season: "summer",
     demo: true,
-    illustration: "paseo",
+    illustration: "musica",
     es: {
       name: "Noche de bandas en la costanera (ejemplo)",
       short:
@@ -240,7 +240,7 @@ export const DEMO_EVENTS: EventContent[] = [
     localitySlug: "papudo",
     month: 2,
     demo: true,
-    illustration: "hostales",
+    illustration: "mariscos",
     es: {
       name: "Cata de mariscos en la caleta (ejemplo)",
       short:

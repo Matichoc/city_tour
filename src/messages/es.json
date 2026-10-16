@@ -12,7 +12,9 @@
     "language": "Idioma",
     "main": "Navegación principal",
     "business": "Para negocios",
-    "events": "Eventos"
+    "events": "Eventos",
+    "tripShort": "Recorrido",
+    "infoShort": "Info"
   },
   "common": {
     "share": "Compartir",
@@ -46,9 +48,9 @@
     "subtitle": "Playas, campo y patrimonio de la comuna.",
     "search": "Buscar por nombre o pueblo",
     "searchGo": "Buscar",
-    "categories": "Categorías",
+    "categories": "Qué buscas",
     "all": "Todo",
-    "localities": "Pueblos",
+    "localities": "Dónde",
     "allLocalities": "Toda la comuna",
     "results": "{count, plural, =0 {Sin resultados} one {# lugar} other {# lugares}}",
     "view": "Vista",
@@ -57,7 +59,9 @@
     "empty": "Aún no hay lugares aquí",
     "emptyComing": "Estamos sumando más lugares de esta categoría junto a la Municipalidad y la Cámara de Comercio de Papudo.",
     "emptyHint": "Prueba con otra búsqueda o quita un filtro.",
-    "clear": "Quitar filtros"
+    "clear": "Quitar filtros",
+    "activeFilters": "Filtros activos",
+    "removeFilter": "Quitar filtro: {name}"
   },
   "place": {
     "back": "Explorar",

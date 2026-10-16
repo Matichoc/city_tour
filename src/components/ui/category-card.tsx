@@ -14,7 +14,7 @@ export const CATEGORY_BG: Record<CategorySlug, string> = {
 
 /** Clases del contenedor (el <a> o <button> que envuelve la tarjeta). */
 export const categoryCardClass =
-  "group relative block h-60 w-full overflow-hidden rounded-[1.75rem] text-left text-white shadow-md transition duration-300 hover:-translate-y-1.5 hover:-rotate-1 hover:shadow-xl active:scale-[0.97] motion-reduce:transition-none motion-reduce:hover:transform-none sm:h-72";
+  "group relative block w-full overflow-hidden rounded-[1.75rem] text-left text-white shadow-md transition duration-300 hover:-translate-y-1.5 hover:-rotate-1 hover:shadow-xl active:scale-[0.97] motion-reduce:transition-none motion-reduce:hover:transform-none";
 
 /**
  * Tarjeta vertical y colorida de un producto turístico: ícono flotando, olas,
@@ -25,11 +25,14 @@ export function CategoryCardFace({
   name,
   countLabel,
   index = 0,
+  compactOnWide = false,
 }: {
   category: CategorySlug;
   name: string;
   countLabel: string;
   index?: number;
+  /** En pantallas anchas (web) la tarjeta es más pequeña. */
+  compactOnWide?: boolean;
 }) {
   return (
     <span
@@ -78,7 +81,9 @@ export function CategoryCardFace({
       </span>
 
       <span className="relative flex flex-col gap-2">
-        <span className="font-display text-[1.65rem] leading-[1.05] font-extrabold drop-shadow-sm">
+        <span
+          className={`font-display text-[1.65rem] leading-[1.05] font-extrabold drop-shadow-sm ${compactOnWide ? "sm:text-xl" : ""}`}
+        >
           {name}
         </span>
         <span className="inline-flex w-fit items-center gap-1 rounded-full bg-black/25 px-3 py-1 text-sm font-bold backdrop-blur-sm">

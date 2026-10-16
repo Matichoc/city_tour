@@ -107,5 +107,14 @@
 | 9b, 9c | Estados vacíos "recorrido vacío" y "mapa no disponible" | Pendiente | |
 | 10 | Ícono de la app (PWA) | Pendiente (hoy `src/app/icon.svg`) | |
 
+### Escenas SVG generadas por código (octubre 2026)
+
+`scripts/illustrations/generate.py` genera 14 escenas vectoriales originales en
+`public/ilustraciones/*.svg` (`python3 scripts/illustrations/generate.py`): caleta,
+cabalgata, surf, parador, casas, cocinería, mariscos, huerta, cabañas, música, feria,
+buque, procesión y fondas. Son escenas genéricas, no retratos de un lugar real; se
+muestran siempre con "Ilustración IA". Se usan en las fichas y eventos de ejemplo, y
+en la caleta, la Fiesta de San Pedro, el Combate Naval, la FIP y las Fiestas Patrias.
+
 Cada ilustración se muestra con el rótulo discreto "Ilustración IA". Las fotos reales
 de cada lugar, cuando existan, reemplazan a la ilustración de su ficha.
