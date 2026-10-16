@@ -51,36 +51,45 @@ const OUTLINE = {
 
 export function PointerShape({ style }: { style: PointerStyle }) {
   switch (style) {
-    case "finger":
+    case "finger": {
+      // Guante de dibujos animados: primero el contorno, luego el relleno.
+      const parts = (
+        <>
+          <rect x="30" y="4" width="17" height="60" rx="8.5" />
+          <rect x="24" y="46" width="52" height="42" rx="18" />
+          <circle cx="55" cy="52" r="9" />
+          <circle cx="68" cy="58" r="9" />
+          <ellipse
+            cx="22"
+            cy="68"
+            rx="9"
+            ry="13"
+            transform="rotate(-25 22 68)"
+          />
+        </>
+      );
       return (
         <>
-          <rect
-            x="43"
-            y="4"
-            width="14"
-            height="62"
-            rx="7"
-            fill="#f6c19b"
-            {...OUTLINE}
-          />
-          <rect
-            x="24"
-            y="50"
-            width="52"
-            height="42"
-            rx="18"
-            fill="#f6c19b"
-            {...OUTLINE}
-          />
-          <path d="M26 64c-12-6-18 4-10 14l12 10" fill="#f6c19b" {...OUTLINE} />
+          <g
+            fill="#062a33"
+            stroke="#062a33"
+            strokeWidth="9"
+            strokeLinejoin="round"
+          >
+            {parts}
+            <rect x="28" y="86" width="44" height="10" rx="4" />
+          </g>
+          <g fill="#ffffff">{parts}</g>
+          <rect x="30" y="85" width="40" height="9" rx="3" fill="#ff7a59" />
           <path
-            d="M40 64h20M40 74h20"
-            stroke="#c98b60"
+            d="M44 66h26M44 76h26"
+            stroke="#b8c7cb"
             strokeWidth="3"
             strokeLinecap="round"
           />
         </>
       );
+    }
     case "steps":
       return (
         <>
