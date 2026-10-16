@@ -3,14 +3,14 @@
 -- 1) Solo un administrador publica/archiva o cambia la verificación a mano.
 --    La verificación pasa por verify_entity(), que levanta `app.bypass_guard`.
 --    Sin sesión de usuario (migraciones, seed, service_role) no se aplica.
-create or replace function public.guard_editorial_fields()
+create or replace function papudo.guard_editorial_fields()
 returns trigger
 language plpgsql
 as $$
 begin
   if auth.uid() is null
      or coalesce(current_setting('app.bypass_guard', true), '') = 'on'
-     or public.has_role('admin') then
+     or papudo.has_role('admin') then
     return new;
   end if;
 
@@ -32,7 +32,7 @@ end;
 $$;
 
 -- 2) El español es obligatorio: no se publica sin ficha en español.
-create or replace function public.require_spanish_to_publish()
+create or replace function papudo.require_spanish_to_publish()
 returns trigger
 language plpgsql
 as $$
@@ -44,7 +44,7 @@ begin
   if new.publication_status = 'published'
      and (tg_op = 'INSERT' or old.publication_status is distinct from 'published') then
     execute format(
-      'select exists (select 1 from public.%I where %I = $1 and locale = ''es'' and length(trim(name)) > 0)',
+      'select exists (select 1 from papudo.%I where %I = $1 and locale = ''es'' and length(trim(name)) > 0)',
       v_tr_table, v_fk) into v_ok using new.id;
     if not v_ok then
       raise exception 'no se puede publicar sin traducción en español' using errcode = '23514';
@@ -56,13 +56,13 @@ $$;
 
 -- 3) Si cambia el texto en español, las traducciones inglesas pasan a
 --    "requiere revisión" automáticamente.
-create or replace function public.flag_translations_for_review()
+create or replace function papudo.flag_translations_for_review()
 returns trigger
 language plpgsql
 as $$
 begin
   execute format(
-    'update public.%I set translation_status = ''needs_review''
+    'update papudo.%I set translation_status = ''needs_review''
        where %I = $1 and locale = ''en'' and translation_status is distinct from ''needs_review''',
     tg_table_name, tg_argv[0])
     using (to_jsonb(new) ->> tg_argv[0])::uuid;
@@ -83,39 +83,39 @@ begin
     ) as t(parent, tr, fk)
   loop
     execute format(
-      'create trigger %1$s_guard before insert or update on public.%1$s
-         for each row execute function public.guard_editorial_fields()', r.parent);
+      'create trigger %1$s_guard before insert or update on papudo.%1$s
+         for each row execute function papudo.guard_editorial_fields()', r.parent);
     execute format(
-      'create trigger %1$s_need_es before insert or update on public.%1$s
-         for each row execute function public.require_spanish_to_publish(%2$L, %3$L)',
+      'create trigger %1$s_need_es before insert or update on papudo.%1$s
+         for each row execute function papudo.require_spanish_to_publish(%2$L, %3$L)',
       r.parent, r.tr, r.fk);
     execute format(
-      'create trigger %1$s_flag after update on public.%1$s
+      'create trigger %1$s_flag after update on papudo.%1$s
          for each row
          when (new.locale = ''es'' and
                (to_jsonb(old) - ''updated_at'') is distinct from (to_jsonb(new) - ''updated_at''))
-         execute function public.flag_translations_for_review(%2$L)', r.tr, r.fk);
+         execute function papudo.flag_translations_for_review(%2$L)', r.tr, r.fk);
     execute format(
-      'create trigger %1$s_touch before update on public.%1$s
-         for each row execute function public.touch_updated_at()', r.tr);
+      'create trigger %1$s_touch before update on papudo.%1$s
+         for each row execute function papudo.touch_updated_at()', r.tr);
   end loop;
 end;
 $$;
 
 -- Triggers de updated_at para las traducciones restantes.
-create trigger route_stop_translations_touch before update on public.route_stop_translations
-  for each row execute function public.touch_updated_at();
-create trigger locality_translations_touch before update on public.locality_translations
-  for each row execute function public.touch_updated_at();
-create trigger category_translations_touch before update on public.category_translations
-  for each row execute function public.touch_updated_at();
-create trigger tag_translations_touch before update on public.tag_translations
-  for each row execute function public.touch_updated_at();
-create trigger municipality_translations_touch before update on public.municipality_translations
-  for each row execute function public.touch_updated_at();
+create trigger route_stop_translations_touch before update on papudo.route_stop_translations
+  for each row execute function papudo.touch_updated_at();
+create trigger locality_translations_touch before update on papudo.locality_translations
+  for each row execute function papudo.touch_updated_at();
+create trigger category_translations_touch before update on papudo.category_translations
+  for each row execute function papudo.touch_updated_at();
+create trigger tag_translations_touch before update on papudo.tag_translations
+  for each row execute function papudo.touch_updated_at();
+create trigger municipality_translations_touch before update on papudo.municipality_translations
+  for each row execute function papudo.touch_updated_at();
 
 -- 4) Bitácora de cambios editoriales.
-create table public.audit_log (
+create table papudo.audit_log (
   id bigint generated always as identity primary key,
   table_name text not null,
   row_key text not null,
@@ -124,13 +124,13 @@ create table public.audit_log (
   diff jsonb,
   created_at timestamptz not null default now()
 );
-create index audit_log_row_idx on public.audit_log (table_name, row_key, created_at desc);
+create index audit_log_row_idx on papudo.audit_log (table_name, row_key, created_at desc);
 
-create or replace function public.audit_row()
+create or replace function papudo.audit_row()
 returns trigger
 language plpgsql
 security definer
-set search_path = public
+set search_path = papudo
 as $$
 declare
   j_new jsonb := case when tg_op = 'DELETE' then null else to_jsonb(new) end;
@@ -150,7 +150,7 @@ begin
     v_diff := j;
   end if;
 
-  insert into public.audit_log (table_name, row_key, action, changed_by, diff)
+  insert into papudo.audit_log (table_name, row_key, action, changed_by, diff)
   values (
     tg_table_name,
     coalesce(j ->> 'id', concat_ws(':',
@@ -175,8 +175,8 @@ begin
   ]
   loop
     execute format(
-      'create trigger %1$s_audit after insert or update or delete on public.%1$s
-         for each row execute function public.audit_row()', t);
+      'create trigger %1$s_audit after insert or update or delete on papudo.%1$s
+         for each row execute function papudo.audit_row()', t);
   end loop;
 end;
 $$;

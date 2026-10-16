@@ -1,19 +1,19 @@
 -- Tipos enumerados y funciones genéricas de trigger.
 
-create type public.locale as enum ('es', 'en');
-create type public.publication_status as enum ('draft', 'published', 'archived');
-create type public.verification_status as enum ('pending', 'verified', 'outdated');
+create type papudo.locale as enum ('es', 'en');
+create type papudo.publication_status as enum ('draft', 'published', 'archived');
+create type papudo.verification_status as enum ('pending', 'verified', 'outdated');
 -- Estado de una traducción NO española. El español es la fuente y no tiene estado.
-create type public.translation_status as enum ('draft', 'needs_review', 'reviewed');
-create type public.org_type as enum (
+create type papudo.translation_status as enum ('draft', 'needs_review', 'reviewed');
+create type papudo.org_type as enum (
   'municipality', 'chamber', 'business', 'operator', 'association', 'public_service'
 );
-create type public.app_role as enum ('admin', 'editor', 'verifier', 'org_manager');
-create type public.difficulty_level as enum ('low', 'medium', 'high');
-create type public.transport_mode as enum ('walk', 'bike', 'car', 'mixed');
-create type public.setting_kind as enum ('indoor', 'outdoor', 'both');
+create type papudo.app_role as enum ('admin', 'editor', 'verifier', 'org_manager');
+create type papudo.difficulty_level as enum ('low', 'medium', 'high');
+create type papudo.transport_mode as enum ('walk', 'bike', 'car', 'mixed');
+create type papudo.setting_kind as enum ('indoor', 'outdoor', 'both');
 
-create or replace function public.touch_updated_at()
+create or replace function papudo.touch_updated_at()
 returns trigger
 language plpgsql
 as $$
@@ -24,7 +24,7 @@ end;
 $$;
 
 -- Guarda cuándo cambió por última vez el estado de publicación.
-create or replace function public.touch_status_changed_at()
+create or replace function papudo.touch_status_changed_at()
 returns trigger
 language plpgsql
 as $$

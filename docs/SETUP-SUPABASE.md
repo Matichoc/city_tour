@@ -31,11 +31,42 @@ Crear tu primer administrador (local):
 1. En Studio → Authentication → Add user (correo + contraseña).
 2. En Studio → SQL editor:
    ```sql
-   insert into public.profiles (user_id, role, full_name)
+   insert into papudo.profiles (user_id, role, full_name)
    values ('<uuid del usuario>', 'admin', 'Tu nombre');
    ```
 
-## B. Alojado (para Vercel)
+## Esquema `papudo`
+
+Todas las tablas viven en el esquema `papudo`, no en `public`. Así un mismo
+proyecto de Supabase puede alojar otro sitio (por ejemplo, el del directorio de
+Petorca, que usa `public`) sin que se mezclen las tablas. Las cuentas de usuario
+(`auth.users`) sí son compartidas, pero los permisos de Papudo viven en
+`papudo.profiles`: una cuenta del otro sitio entra a Papudo como visitante.
+
+## B. Alojado en un proyecto compartido (para Vercel)
+
+1. **Aplicar las migraciones** (no usar `supabase db push`, ver el script):
+   ```bash
+   SUPABASE_DB_URL='postgresql://…' bash scripts/db/aplicar-migraciones.sh
+   ```
+   La cadena está en Supabase → botón **Connect** → *Session pooler*. Si no
+   recuerdas la contraseña, se cambia en Project Settings → Database (no afecta
+   a los sitios, que usan las claves de la API).
+2. **Exponer el esquema:** Project Settings → API → Data API → *Exposed schemas*
+   → agregar `papudo` y guardar.
+3. **Direcciones de retorno del inicio de sesión:** Authentication → URL
+   Configuration → *Redirect URLs* → agregar `http://localhost:3000/**` y
+   `https://citytour-*-matichoc.vercel.app/**`. No cambiar el *Site URL*.
+4. **Correo de acceso:** Authentication → Email Templates → *Magic Link*: es
+   compartido entre los sitios; que el texto sea neutro.
+5. **Primer administrador:** entrar una vez al sitio con tu correo y luego, en
+   el SQL editor:
+   ```sql
+   insert into papudo.profiles (user_id, role, full_name)
+   select id, 'admin', 'Tu nombre' from auth.users where email = 'tu@correo.cl';
+   ```
+
+## C. Alojado en un proyecto propio (para Vercel)
 
 Vercel no puede conectarse a una base que corre en tu computador. Para un sitio
 desplegado con datos reales se necesita un proyecto Supabase en la nube:

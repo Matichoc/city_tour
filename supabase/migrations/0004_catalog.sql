@@ -1,8 +1,8 @@
 -- Catálogo: categorías (con subcategorías) y etiquetas.
 
-create table public.categories (
+create table papudo.categories (
   id uuid primary key default gen_random_uuid(),
-  parent_id uuid references public.categories (id) on delete restrict,
+  parent_id uuid references papudo.categories (id) on delete restrict,
   slug text not null unique,
   icon text,
   color text,
@@ -11,32 +11,32 @@ create table public.categories (
   updated_at timestamptz not null default now()
 );
 
-create table public.category_translations (
-  category_id uuid not null references public.categories (id) on delete cascade,
-  locale public.locale not null,
+create table papudo.category_translations (
+  category_id uuid not null references papudo.categories (id) on delete cascade,
+  locale papudo.locale not null,
   name text not null,
   description text,
-  translation_status public.translation_status,
+  translation_status papudo.translation_status,
   updated_at timestamptz not null default now(),
   primary key (category_id, locale),
   check ((locale = 'es') = (translation_status is null))
 );
 
-create table public.tags (
+create table papudo.tags (
   id uuid primary key default gen_random_uuid(),
   slug text not null unique,
   created_at timestamptz not null default now()
 );
 
-create table public.tag_translations (
-  tag_id uuid not null references public.tags (id) on delete cascade,
-  locale public.locale not null,
+create table papudo.tag_translations (
+  tag_id uuid not null references papudo.tags (id) on delete cascade,
+  locale papudo.locale not null,
   name text not null,
-  translation_status public.translation_status,
+  translation_status papudo.translation_status,
   updated_at timestamptz not null default now(),
   primary key (tag_id, locale),
   check ((locale = 'es') = (translation_status is null))
 );
 
-create trigger categories_touch before update on public.categories
-  for each row execute function public.touch_updated_at();
+create trigger categories_touch before update on papudo.categories
+  for each row execute function papudo.touch_updated_at();

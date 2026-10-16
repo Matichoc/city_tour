@@ -1,7 +1,7 @@
 -- Núcleo geográfico. Un repo = una comuna, por eso `municipality` tiene una
 -- sola fila (la clave booleana lo garantiza).
 
-create table public.municipality (
+create table papudo.municipality (
   id boolean primary key default true check (id),
   name text not null,
   slug text not null unique,
@@ -17,17 +17,17 @@ create table public.municipality (
   updated_at timestamptz not null default now()
 );
 
-create table public.municipality_translations (
-  locale public.locale not null,
+create table papudo.municipality_translations (
+  locale papudo.locale not null,
   description text,
-  translation_status public.translation_status,
+  translation_status papudo.translation_status,
   updated_at timestamptz not null default now(),
   primary key (locale),
   check ((locale = 'es') = (translation_status is null))
 );
 
 -- Localidades de la comuna. Coordenadas opcionales: no se inventan.
-create table public.localities (
+create table papudo.localities (
   id uuid primary key default gen_random_uuid(),
   slug text not null unique,
   latitude numeric(9, 6) check (latitude between -90 and 90),
@@ -38,18 +38,18 @@ create table public.localities (
   check ((latitude is null) = (longitude is null))
 );
 
-create table public.locality_translations (
-  locality_id uuid not null references public.localities (id) on delete cascade,
-  locale public.locale not null,
+create table papudo.locality_translations (
+  locality_id uuid not null references papudo.localities (id) on delete cascade,
+  locale papudo.locale not null,
   name text not null,
   summary text,
-  translation_status public.translation_status,
+  translation_status papudo.translation_status,
   updated_at timestamptz not null default now(),
   primary key (locality_id, locale),
   check ((locale = 'es') = (translation_status is null))
 );
 
-create trigger municipality_touch before update on public.municipality
-  for each row execute function public.touch_updated_at();
-create trigger localities_touch before update on public.localities
-  for each row execute function public.touch_updated_at();
+create trigger municipality_touch before update on papudo.municipality
+  for each row execute function papudo.touch_updated_at();
+create trigger localities_touch before update on papudo.localities
+  for each row execute function papudo.touch_updated_at();

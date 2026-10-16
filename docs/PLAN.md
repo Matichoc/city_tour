@@ -213,7 +213,7 @@ estos, no listas de UUID.
 11. `0011_audit` — `audit_log` + trigger genérico en tablas editoriales.
 12. `0012_visitors` — `itineraries`, `itinerary_stops`, `analytics_events`, funciones de resumen.
 13. `0013_rls` — habilitar RLS y políticas de 5.6 (con pruebas pgTAP).
-14. `0014_storage` — buckets `place-images` (público, 5 MB, jpeg/png/webp) y `audio` (futuro).
+14. `0014_storage` — buckets `papudo-place-images` (público, 5 MB, jpeg/png/webp) y `audio` (futuro).
 15. `0015_reports` — vistas de reporte municipal.
 
 Después de cada migración: `supabase db reset` local → tests SQL de RLS →

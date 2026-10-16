@@ -61,7 +61,7 @@ No se guarda la ubicación precisa del visitante.
 
 ## Storage
 
-Bucket `place-images`: público para leer, 5 MB máx., `jpeg/png/webp`; solo `admin`/`editor` suben o borran.
+Bucket `papudo-place-images`: público para leer, 5 MB máx., `jpeg/png/webp`; solo `admin`/`editor` suben o borran.
 
 ## Pruebas
 
