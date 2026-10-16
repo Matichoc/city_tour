@@ -2,8 +2,9 @@ import QRCode from "qrcode";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { Metadata } from "next";
 import { getPathname } from "@/i18n/navigation";
+import { getPlace, listPlaces } from "@/lib/data";
 import { resolveLocale } from "@/i18n/utils";
-import { getSiteUrl } from "@/lib/seo";
+import { getSiteUrl, localizedUrl } from "@/lib/seo";
 import { PrintButton } from "@/components/ui/print-button";
 import { toOrigin } from "@/lib/qr";
 
@@ -14,7 +15,7 @@ export default async function QrPage({
   searchParams,
 }: {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<{ origen?: string; nombre?: string }>;
+  searchParams: Promise<{ origen?: string; nombre?: string; lugar?: string }>;
 }) {
   const locale = resolveLocale((await params).locale);
   setRequestLocale(locale);
@@ -22,7 +23,12 @@ export default async function QrPage({
   const t = await getTranslations("qr");
   const name = (sp.nombre ?? "").trim().slice(0, 60);
   const origin = toOrigin(sp.origen || name);
-  const url = `${getSiteUrl()}${getPathname({ locale, href: "/" })}${origin ? `?origen=${origin}` : ""}`;
+  // QR para señalética (PLADETUR A1.3): lleva directo a la ficha del lugar.
+  const place = sp.lugar ? getPlace(sp.lugar, locale) : undefined;
+  const places = listPlaces(locale);
+  const url = place
+    ? `${localizedUrl(locale, { pathname: "/lugares/[slug]", params: { slug: place.slug } })}?origen=hito-${place.slug.slice(0, 40)}${origin ? `-${origin}` : ""}`
+    : `${getSiteUrl()}${getPathname({ locale, href: "/" })}${origin ? `?origen=${origin}` : ""}`;
   const svg = await QRCode.toString(url, {
     type: "svg",
     margin: 1,
@@ -36,6 +42,22 @@ export default async function QrPage({
         <label htmlFor="nombre" className="font-bold">
           {t("nameLabel")}
         </label>
+        <label htmlFor="lugar" className="font-bold">
+          {t("placeLabel")}
+        </label>
+        <select
+          id="lugar"
+          name="lugar"
+          defaultValue={place?.slug ?? ""}
+          className="border-border bg-background min-h-12 rounded-full border px-4"
+        >
+          <option value="">{t("placeNone")}</option>
+          {places.map((p) => (
+            <option key={p.slug} value={p.slug}>
+              {p.name}
+            </option>
+          ))}
+        </select>
         <div className="flex gap-2">
           <input
             id="nombre"
@@ -62,7 +84,7 @@ export default async function QrPage({
           Papudo en tu mano
         </p>
         <h1 className="font-display text-sea-deep text-3xl leading-tight font-extrabold">
-          {t("headline")}
+          {place ? t("forPlace", { name: place.name }) : t("headline")}
         </h1>
         <div
           className="w-64"

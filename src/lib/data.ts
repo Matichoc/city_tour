@@ -86,8 +86,8 @@ function picture(key: IllustrationKey, locale: Locale): Picture {
 export const illustrationFor = (key: IllustrationKey, locale: Locale) =>
   picture(key, locale);
 
-const pick = <T>(locale: Locale, es: T, en?: T): T =>
-  locale === "en" && en ? en : es;
+const pick = <T>(locale: Locale, es: T, en?: T, pt?: T): T =>
+  locale === "en" && en ? en : locale === "pt" && pt ? pt : es;
 
 export function listLocalities(locale: Locale): Locality[] {
   return LOCALITIES.map((l) => ({
@@ -127,7 +127,7 @@ function toPlace(slug: string, locale: Locale): Place | undefined {
     shortDescription: text.short,
     description: text.description,
     categorySlug: p.categorySlug,
-    categoryName: pick(locale, cat.es, cat.en),
+    categoryName: pick(locale, cat.es, cat.en, cat.pt),
     localitySlug: loc?.slug ?? null,
     localityName: loc ? pick(locale, loc.es, loc.en) : null,
     latitude: p.latitude,
@@ -140,7 +140,7 @@ function toPlace(slug: string, locale: Locale): Place | undefined {
       (s): s is Source => Boolean(s),
     ),
     verification: "pending",
-    fallbackToSpanish: locale === "en" && !p.en,
+    fallbackToSpanish: locale !== "es" && !(locale === "en" && p.en),
     picture: picture(
       PLACE_ILLUSTRATION[p.slug] ?? CATEGORY_ILLUSTRATION[p.categorySlug],
       locale,
@@ -210,7 +210,7 @@ export function listEvents(
       name: text.name,
       shortDescription: text.short,
       categorySlug: e.categorySlug,
-      categoryName: pick(locale, cat.es, cat.en),
+      categoryName: pick(locale, cat.es, cat.en, cat.pt),
       localitySlug: loc?.slug ?? null,
       localityName: loc ? pick(locale, loc.es, loc.en) : null,
       month: e.month,
@@ -218,7 +218,7 @@ export function listEvents(
       season: e.season ?? null,
       sources: [e.source, ...(e.extraSources ?? [])],
       verification: "pending",
-      fallbackToSpanish: locale === "en" && !e.en,
+      fallbackToSpanish: locale !== "es" && !(locale === "en" && e.en),
     };
   })
     .filter((e) => !filters.category || e.categorySlug === filters.category)
@@ -232,7 +232,7 @@ export const listPlaceSlugs = () => PLACES.map((p) => p.slug);
 export function listCategories(locale: Locale): Category[] {
   return CATEGORY_DEFS.map((c) => ({
     slug: c.slug,
-    name: pick(locale, c.es, c.en),
+    name: pick(locale, c.es, c.en, c.pt),
     count: PLACES.filter((p) => p.categorySlug === c.slug).length,
   }));
 }

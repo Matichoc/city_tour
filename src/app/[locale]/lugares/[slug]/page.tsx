@@ -20,6 +20,7 @@ import { StatusBadge } from "@/components/place/status-badge";
 import { ShareButton } from "@/components/place/share-button";
 import { AddToTripButton } from "@/components/trip/add-to-trip-button";
 import { PlacesMap } from "@/components/map/places-map";
+import { QrVisit } from "@/components/analytics/qr-visit";
 import { SaveButton } from "@/components/place/save-button";
 import { ReviewsPanel } from "@/components/place/reviews-panel";
 
@@ -67,6 +68,7 @@ export default async function PlacePage({
 
   return (
     <main className="flex flex-col gap-5 pb-10">
+      <QrVisit />
       <JsonLd
         data={{
           "@context": "https://schema.org",

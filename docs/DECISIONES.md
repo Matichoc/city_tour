@@ -41,3 +41,28 @@ Vercel → Analytics; sin activar, no envía nada.
 
 `/es/qr?nombre=...` genera un afiche imprimible cuyo QR abre la guía con
 `?origen=<nombre-normalizado>`, para saber qué local trae visitas (sin datos personales).
+
+## Alineación con el PLADETUR (rama `feat/alineacion-pladetur`)
+
+Fuente: PLADETUR de Papudo 2023–2027, iD (`docs/investigacion/`).
+
+- **Categorías = productos del plan** (p. 136): balneario, recreación,
+  deportes, cultura y patrimonio, gastronomía y ruralidad; alojamiento queda
+  como servicio. Los nombres anteriores (`playas`, `naturaleza`,
+  `actividades`) redirigen, así los enlaces y afiches QR ya compartidos siguen
+  funcionando. La asignación de lugares es una propuesta y hay que validarla
+  con el municipio (humedal urbano y Costanera → recreación; Santuario de
+  Pullally y Salinas → ruralidad).
+- **Agenda de eventos** (B2.4): `/eventos`, con eventos recurrentes y fuente.
+  No se publican fechas de una edición concreta; se revisan cada trimestre.
+- **Modo quiosco** (A1.6): `/quiosco`, para tablet en las oficinas de
+  información. No se indexa, no guarda datos y vuelve al inicio tras ~75 s sin
+  uso.
+- **Portugués** (pp. 150 y 174): tercer idioma. La interfaz está traducida con
+  IA y queda **por revisar por una persona**; el contenido de lugares, rutas y
+  eventos cae a español con aviso, igual que el inglés.
+- **QR para señalética** (A1.3): `/qr?lugar=<slug>` genera un afiche que lleva
+  a la ficha del lugar con `?origen=hito-<slug>`, y cada ruta trae su QR para
+  imprimir. Las visitas por QR se miden con el evento anónimo `qr_visit`.
+- **Fase 2 (con Supabase):** encuesta de satisfacción, reporte para el Comité
+  de Turismo y registro de prestadores. No se hacen sin base de datos.

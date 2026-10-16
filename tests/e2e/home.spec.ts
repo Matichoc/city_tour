@@ -204,3 +204,37 @@ test("quiosco: navega por producto, muestra el QR de la ficha y vuelve solo al i
     page.getByRole("heading", { name: "¿Qué quieres descubrir?" }),
   ).toBeVisible();
 });
+
+test("portugués: cambia de idioma, traduce la interfaz y avisa si falta la traducción del contenido", async ({
+  page,
+}) => {
+  await page.goto("/es/rutas");
+  await page.getByRole("button", { name: "pt", exact: true }).click();
+  await expect(page).toHaveURL(/\/pt\/roteiros$/);
+  await expect(
+    page.getByRole("heading", { name: "Roteiros", level: 1 }),
+  ).toBeVisible();
+  await page.goto("/pt/lugares/playa-chica-papudo");
+  await expect(page.locator("html")).toHaveAttribute("lang", "pt");
+  await expect(page.getByText("Somente em espanhol").first()).toBeVisible();
+  await expect(page.getByRole("button", { name: "Salvar" })).toBeVisible();
+});
+
+test("QR por hito: el afiche lleva a la ficha del lugar; la ruta trae su QR", async ({
+  page,
+}) => {
+  await page.goto("/es/qr?lugar=playa-chica-papudo");
+  await expect(
+    page.getByRole("heading", { name: "Conoce Playa Chica" }),
+  ).toBeVisible();
+  await expect(
+    page.getByText(/\/es\/lugares\/playa-chica-papudo\?origen=hito-/),
+  ).toBeVisible();
+  await page.goto("/es/rutas/papudo-a-pie");
+  await expect(
+    page.getByRole("img", { name: "Código QR de esta ruta" }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Imprimir ruta" }),
+  ).toBeVisible();
+});

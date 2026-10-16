@@ -86,7 +86,11 @@
     "subtitle": "Ready-made itineraries for your day.",
     "stops": "{count, plural, one {# stop} other {# stops}}",
     "source": "Source",
-    "pendingNote": "The places on this route are pending verification; check opening hours and access before you go."
+    "pendingNote": "The places on this route are pending verification; check opening hours and access before you go.",
+    "qrAlt": "QR code for this route",
+    "takeTitle": "Take this route with you",
+    "takeBody": "Scan with your camera to open the route on your phone, or print it.",
+    "print": "Print route"
   },
   "trip": {
     "title": "My trip",
@@ -236,7 +240,10 @@
     "qrAlt": "QR code to the Papudo en tu mano guide",
     "scan": "Scan with your camera: beaches, routes and trips, no download needed.",
     "from": "Recommended by {name}",
-    "print": "Print poster"
+    "print": "Print poster",
+    "placeLabel": "Place or landmark (optional)",
+    "placeNone": "No place: goes to the home page",
+    "forPlace": "Discover {name}"
   },
   "live": {
     "title": "Live trip",

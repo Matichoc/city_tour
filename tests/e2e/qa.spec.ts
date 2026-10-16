@@ -108,6 +108,7 @@ for (const path of [
   "/es/informacion",
   "/es/negocios",
   "/en",
+  "/pt",
 ]) {
   test(`accesibilidad (axe, WCAG AA) sin fallas graves: ${path}`, async ({
     page,

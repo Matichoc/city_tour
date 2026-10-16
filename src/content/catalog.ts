@@ -110,5 +110,6 @@ export const SPONSOR = {
   tagline: {
     es: "Chocolate artesanal hecho en La Ligua",
     en: "Artisanal chocolate made in La Ligua",
+    pt: "Chocolate artesanal feito em La Ligua",
   },
 } as const;

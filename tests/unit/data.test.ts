@@ -17,6 +17,8 @@ import {
 import { addMinutesToClock, formatDuration } from "@/lib/itinerary-format";
 import es from "@/messages/es.json";
 import en from "@/messages/en.json";
+import pt from "@/messages/pt.json";
+import { locales } from "@/i18n/routing";
 
 const keys = (o: object, p = ""): string[] =>
   Object.entries(o).flatMap(([k, v]) =>
@@ -167,6 +169,19 @@ describe("formato de recorridos", () => {
 describe("traducciones", () => {
   it("es.json y en.json tienen las mismas claves", () => {
     expect(keys(en).sort()).toEqual(keys(es).sort());
+  });
+  it("pt.json tiene las mismas claves que es.json", () => {
+    expect(keys(pt).sort()).toEqual(keys(es).sort());
+  });
+  it("hay tres idiomas: español, inglés y portugués", () => {
+    expect([...locales]).toEqual(["es", "en", "pt"]);
+  });
+  it("en portugués los nombres de categoría salen en portugués y el contenido cae a español", () => {
+    expect(listCategories("pt").map((c) => c.name)).toContain("Balneário");
+    const p = getPlace("playa-papudo", "pt")!;
+    expect(p.fallbackToSpanish).toBe(true);
+    expect(p.name).toBe(getPlace("playa-papudo", "es")!.name);
+    expect(getPlace("playa-papudo", "en")!.fallbackToSpanish).toBe(false);
   });
 });
 

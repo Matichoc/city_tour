@@ -86,7 +86,11 @@
     "subtitle": "Recorridos listos para armar tu día.",
     "stops": "{count, plural, one {# parada} other {# paradas}}",
     "source": "Fuente",
-    "pendingNote": "Los lugares de esta ruta están pendientes de verificación; revisa horarios y acceso antes de salir."
+    "pendingNote": "Los lugares de esta ruta están pendientes de verificación; revisa horarios y acceso antes de salir.",
+    "qrAlt": "Código QR de esta ruta",
+    "takeTitle": "Llévate esta ruta",
+    "takeBody": "Escanea con la cámara para abrir la ruta en tu celular, o imprímela.",
+    "print": "Imprimir ruta"
   },
   "trip": {
     "title": "Mi recorrido",
@@ -236,7 +240,10 @@
     "qrAlt": "Código QR a la guía Papudo en tu mano",
     "scan": "Escanea con la cámara: playas, rutas y recorridos, sin descargar nada.",
     "from": "Te lo recomienda {name}",
-    "print": "Imprimir afiche"
+    "print": "Imprimir afiche",
+    "placeLabel": "Lugar o hito (opcional)",
+    "placeNone": "Sin lugar: lleva a la portada",
+    "forPlace": "Conoce {name}"
   },
   "live": {
     "title": "Recorrido en vivo",
