@@ -11,7 +11,8 @@
     "info": "Info",
     "language": "Language",
     "main": "Main navigation",
-    "business": "For business"
+    "business": "For business",
+    "events": "Events"
   },
   "common": {
     "share": "Share",
@@ -301,5 +302,25 @@
     "beFirst": "Be the first to review",
     "comingSoon": "Soon you'll be able to rate with stars and leave a review by signing in with Google. Reviews are moderated before they're published.",
     "ownerReply": "The business will be able to reply to reviews from its dashboard."
+  },
+  "events": {
+    "title": "Events calendar",
+    "subtitle": "Festivals and celebrations that repeat every year in Papudo, Pullally and Las Salinas.",
+    "categories": "Product",
+    "all": "All",
+    "everyYear": "Every year",
+    "inMonth": "Every year in {month}",
+    "onDate": "Every year on {month} {day}",
+    "summer": "In summer",
+    "toConfirm": "Date to be confirmed",
+    "confirmNote": "These are festivals that repeat every year, with no date for a specific edition. Check the day and programme with the Municipality before you go. The calendar is reviewed every quarter.",
+    "empty": "There are no events with a source for this product yet.",
+    "clear": "See all",
+    "source": "Source",
+    "viewCalendar": "See the calendar",
+    "homeTitle": "Festivals and celebrations",
+    "homeSubtitle": "What repeats every year in the commune.",
+    "countLabel": "{count, plural, one {# event} other {# events}}",
+    "list": "Events list"
   }
 }

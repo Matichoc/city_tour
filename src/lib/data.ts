@@ -12,6 +12,7 @@ import {
   type IllustrationKey,
 } from "@/content/images";
 import { LOCALITIES, PLACES } from "@/content/papudo-places";
+import { EVENTS } from "@/content/papudo-events";
 import { ROUTES } from "@/content/papudo-routes";
 import type { CategorySlug, Source } from "@/content/types";
 import type { Locale } from "@/i18n/routing";
@@ -177,6 +178,55 @@ export function listPlaces(
 }
 
 export const getPlace = (slug: string, locale: Locale) => toPlace(slug, locale);
+
+export type EventItem = {
+  slug: string;
+  name: string;
+  shortDescription: string;
+  categorySlug: CategorySlug;
+  categoryName: string;
+  localitySlug: string | null;
+  localityName: string | null;
+  /** Mes (1–12) o null si falta confirmar. */
+  month: number | null;
+  day: number | null;
+  season: "summer" | null;
+  sources: Source[];
+  verification: "pending" | "verified" | "outdated";
+  fallbackToSpanish: boolean;
+};
+
+/** Agenda anual: ordenada por mes; los eventos sin mes van al final. */
+export function listEvents(
+  locale: Locale,
+  filters: { category?: string } = {},
+): EventItem[] {
+  return EVENTS.map((e): EventItem => {
+    const cat = CATEGORY_DEFS.find((c) => c.slug === e.categorySlug)!;
+    const loc = LOCALITIES.find((l) => l.slug === e.localitySlug);
+    const text = pick(locale, e.es, e.en);
+    return {
+      slug: e.slug,
+      name: text.name,
+      shortDescription: text.short,
+      categorySlug: e.categorySlug,
+      categoryName: pick(locale, cat.es, cat.en),
+      localitySlug: loc?.slug ?? null,
+      localityName: loc ? pick(locale, loc.es, loc.en) : null,
+      month: e.month,
+      day: e.day ?? null,
+      season: e.season ?? null,
+      sources: [e.source, ...(e.extraSources ?? [])],
+      verification: "pending",
+      fallbackToSpanish: locale === "en" && !e.en,
+    };
+  })
+    .filter((e) => !filters.category || e.categorySlug === filters.category)
+    .sort(
+      (a, b) =>
+        (a.month ?? 99) - (b.month ?? 99) || (a.day ?? 0) - (b.day ?? 0),
+    );
+}
 export const listPlaceSlugs = () => PLACES.map((p) => p.slug);
 
 export function listCategories(locale: Locale): Category[] {

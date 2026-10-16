@@ -11,7 +11,8 @@
     "info": "Información",
     "language": "Idioma",
     "main": "Navegación principal",
-    "business": "Para negocios"
+    "business": "Para negocios",
+    "events": "Eventos"
   },
   "common": {
     "share": "Compartir",
@@ -301,5 +302,25 @@
     "beFirst": "Sé el primero en opinar",
     "comingSoon": "Muy pronto podrás calificar con estrellas y dejar tu opinión iniciando sesión con Google. Las opiniones se moderan antes de publicarse.",
     "ownerReply": "El comercio podrá responder las opiniones desde su panel."
+  },
+  "events": {
+    "title": "Agenda de eventos",
+    "subtitle": "Fiestas y celebraciones que se repiten cada año en Papudo, Pullally y Las Salinas.",
+    "categories": "Producto",
+    "all": "Todos",
+    "everyYear": "Cada año",
+    "inMonth": "Cada año en {month}",
+    "onDate": "Cada año el {day} de {month}",
+    "summer": "En verano",
+    "toConfirm": "Fecha por confirmar",
+    "confirmNote": "Son fiestas que se repiten cada año, sin fecha de una edición concreta. Confirma el día y el programa con la Municipalidad antes de ir. La agenda se revisa cada trimestre.",
+    "empty": "Aún no hay eventos con fuente en este producto.",
+    "clear": "Ver todos",
+    "source": "Fuente",
+    "viewCalendar": "Ver la agenda",
+    "homeTitle": "Fiestas y celebraciones",
+    "homeSubtitle": "Lo que se repite cada año en la comuna.",
+    "countLabel": "{count, plural, one {# evento} other {# eventos}}",
+    "list": "Lista de eventos"
   }
 }

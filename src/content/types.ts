@@ -33,6 +33,25 @@ export type PlaceContent = {
   extraSources?: Source[];
 };
 
+export type EventText = { name: string; short: string };
+
+/** Evento recurrente (sin fecha de un año concreto: se confirma con el municipio). */
+export type EventContent = {
+  slug: string;
+  categorySlug: CategorySlug;
+  localitySlug: string | null;
+  /** Mes en que se celebra (1–12); null = por confirmar. */
+  month: number | null;
+  /** Día fijo del mes, si lo tiene (p. ej. 26 de noviembre). */
+  day?: number;
+  /** Temporada cuando no hay mes. */
+  season?: "summer";
+  es: EventText;
+  en?: EventText;
+  source: Source;
+  extraSources?: Source[];
+};
+
 export type RouteStopContent = {
   slug: string;
   notes?: { es: string; en?: string };

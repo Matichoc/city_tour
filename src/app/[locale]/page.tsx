@@ -5,6 +5,7 @@ import { resolveLocale } from "@/i18n/utils";
 import {
   isLocated,
   listCategories,
+  listEvents,
   listLocalities,
   listPlaces,
   listRoutes,
@@ -43,6 +44,7 @@ export default async function HomePage({
   const locale = resolveLocale((await params).locale);
   setRequestLocale(locale);
   const t = await getTranslations("home");
+  const te = await getTranslations("events");
   const categories = listCategories(locale);
   const places = listPlaces(locale).slice(0, 4);
   const routes = listRoutes(locale);
@@ -56,6 +58,7 @@ export default async function HomePage({
       category: p.categorySlug,
     }));
   const localities = listLocalities(locale);
+  const eventCount = listEvents(locale).length;
 
   return (
     <main className="flex flex-col">
@@ -205,6 +208,44 @@ export default async function HomePage({
               kicker={i === 0 ? t("featuredRoute") : undefined}
             />
           ))}
+        </section>
+
+        <section aria-labelledby="eventos-home">
+          <Link
+            href="/eventos"
+            className="card-lift border-border bg-surface flex items-center gap-4 rounded-2xl border p-4 shadow-sm"
+          >
+            <span
+              aria-hidden="true"
+              className="bg-sea-soft text-sea-deep grid size-14 shrink-0 place-items-center rounded-2xl"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                className="size-7"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M7 3v4m10-4v4M4 9h16M5 5h14a1 1 0 011 1v13a1 1 0 01-1 1H5a1 1 0 01-1-1V6a1 1 0 011-1z" />
+              </svg>
+            </span>
+            <span className="min-w-0 flex-1">
+              <h2
+                id="eventos-home"
+                className="font-display text-xl font-extrabold"
+              >
+                {te("homeTitle")}
+              </h2>
+              <span className="text-muted block text-sm">
+                {te("homeSubtitle")} {te("countLabel", { count: eventCount })}
+              </span>
+            </span>
+            <span className="text-sea shrink-0 text-sm font-bold">
+              {te("viewCalendar")}
+            </span>
+          </Link>
         </section>
 
         <section aria-labelledby="destacados">

@@ -147,3 +147,32 @@ test("recorrido en vivo: si estás cerca de una parada que no es la primera, la 
     live.getByRole("button", { name: /Guíame con la cámara/ }),
   ).toBeVisible();
 });
+
+test("agenda de eventos: lista con fuente, filtro por producto y aviso de fechas", async ({
+  page,
+}) => {
+  await page.goto("/es/eventos");
+  await expect(
+    page.getByRole("heading", { name: "Agenda de eventos", level: 1 }),
+  ).toBeVisible();
+  await expect(
+    page.getByText(/sin fecha de una edición concreta/),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: /Aniversario del Combate Naval/ }),
+  ).toBeVisible();
+  await page.getByRole("link", { name: "Gastronomía" }).click();
+  await expect(page).toHaveURL(/categoria=gastronomia/);
+  await expect(
+    page.getByRole("heading", { name: /Feria Internacional de Integración/ }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: /Combate Naval/ }),
+  ).toHaveCount(0);
+});
+
+test("portada: acceso a la agenda de eventos", async ({ page }) => {
+  await page.goto("/es");
+  await page.getByRole("link", { name: /Fiestas y celebraciones/ }).click();
+  await expect(page).toHaveURL(/\/es\/eventos$/);
+});

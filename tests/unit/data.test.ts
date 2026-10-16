@@ -9,6 +9,7 @@ import {
   getRoute,
   canonicalCategory,
   isCategorySlug,
+  listEvents,
   listCategories,
   listPlaces,
   listRoutes,
@@ -239,5 +240,27 @@ describe("ilustraciones", () => {
     expect(getPlace("playa-papudo", "en")!.picture.alt).not.toBe(
       getPlace("playa-papudo", "es")!.picture.alt,
     );
+  });
+});
+
+describe("agenda de eventos (PLADETUR B2.4)", () => {
+  it("cada evento tiene fuente, está pendiente y no inventa fechas de un año", () => {
+    for (const e of listEvents("es")) {
+      expect(e.sources.length, e.slug).toBeGreaterThan(0);
+      expect(e.verification).toBe("pending");
+      if (e.day !== null) expect(e.month, e.slug).not.toBeNull();
+    }
+  });
+  it("se ordena por mes y deja los sin mes al final", () => {
+    const months = listEvents("es").map((e) => e.month ?? 99);
+    expect(months).toEqual([...months].sort((a, b) => a - b));
+  });
+  it("filtra por producto y cae al español si falta el inglés", () => {
+    expect(
+      listEvents("es", { category: "patrimonio" }).every(
+        (e) => e.categorySlug === "patrimonio",
+      ),
+    ).toBe(true);
+    expect(listEvents("en").every((e) => !e.fallbackToSpanish)).toBe(true);
   });
 });

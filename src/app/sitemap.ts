@@ -9,6 +9,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     for (const href of [
       "/",
       "/explorar",
+      "/eventos",
       "/rutas",
       "/recorrido",
       "/informacion",

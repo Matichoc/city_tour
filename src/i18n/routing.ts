@@ -15,6 +15,7 @@ export const routing = defineRouting({
   pathnames: {
     "/": "/",
     "/explorar": { es: "/explorar", en: "/explore" },
+    "/eventos": { es: "/eventos", en: "/events" },
     "/rutas": { es: "/rutas", en: "/routes" },
     "/rutas/[slug]": { es: "/rutas/[slug]", en: "/routes/[slug]" },
     "/lugares/[slug]": { es: "/lugares/[slug]", en: "/places/[slug]" },
