@@ -3,6 +3,11 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import {
+  PointerPicker,
+  PointerShape,
+  usePointerStyle,
+} from "@/components/trip/pointer-styles";
+import {
   bearingDegrees,
   distanceMeters,
   formatMeters,
@@ -44,6 +49,7 @@ export function WalkCamera({
   const locale = useLocale();
   const videoRef = useRef<HTMLVideoElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
+  const [pointer, setPointer] = usePointerStyle();
   const [camera, setCamera] = useState<"starting" | "on" | "off">("starting");
   const [compass, setCompass] = useState<number | null>(null);
   const [needsCompassPermission, setNeedsCompassPermission] = useState(
@@ -183,13 +189,7 @@ export function WalkCamera({
             role="img"
             aria-label={t("arrowLabel", { name: target.name })}
           >
-            <path
-              d="M50 6 L86 82 L50 66 L14 82 Z"
-              fill="#ff7a59"
-              stroke="#ffffff"
-              strokeWidth="5"
-              strokeLinejoin="round"
-            />
+            <PointerShape style={pointer} />
           </svg>
         ) : (
           <p className="max-w-xs rounded-2xl bg-black/45 p-4 text-base font-bold">
@@ -212,6 +212,21 @@ export function WalkCamera({
             {t("enableCompass")}
           </button>
         ) : null}
+      </div>
+
+      <div className="relative flex justify-center px-4">
+        <PointerPicker
+          value={pointer}
+          onChange={setPointer}
+          label={t("pointerLabel")}
+          names={{
+            arrow: t("pointer.arrow"),
+            finger: t("pointer.finger"),
+            steps: t("pointer.steps"),
+            gull: t("pointer.gull"),
+            boat: t("pointer.boat"),
+          }}
+        />
       </div>
 
       <p className="relative p-4 text-center text-xs text-white/85">

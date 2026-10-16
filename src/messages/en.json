@@ -286,6 +286,14 @@
     "backToTrip": "Back to my trip",
     "cameraKicker": "Walking guide",
     "cameraClose": "Close camera",
+    "pointerLabel": "Choose your guide",
+    "pointer": {
+      "arrow": "Arrow",
+      "finger": "Finger",
+      "steps": "Footsteps",
+      "gull": "Seagull",
+      "boat": "Sailboat"
+    },
     "arrowLabel": "Arrow pointing towards {name}",
     "noCompass": "No compass: your destination is to the {direction}. Walk a few steps and the arrow will follow your movement.",
     "enableCompass": "Enable compass",

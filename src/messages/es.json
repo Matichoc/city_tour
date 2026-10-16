@@ -286,6 +286,14 @@
     "backToTrip": "Volver a mi recorrido",
     "cameraKicker": "Guía a pie",
     "cameraClose": "Cerrar cámara",
+    "pointerLabel": "Elige tu guía",
+    "pointer": {
+      "arrow": "Flecha",
+      "finger": "Dedo",
+      "steps": "Huellas",
+      "gull": "Gaviota",
+      "boat": "Velero"
+    },
     "arrowLabel": "Flecha que apunta hacia {name}",
     "noCompass": "Sin brújula: el destino está hacia el {direction}. Camina unos pasos y la flecha se orientará con tu movimiento.",
     "enableCompass": "Activar brújula",
