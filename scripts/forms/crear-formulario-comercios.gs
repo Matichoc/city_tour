@@ -24,14 +24,8 @@ const WHATSAPP_CONTACTO = "+56 9 XXXX XXXX";
 const CORREO_CONTACTO = "correo@ejemplo.cl";
 // ─────────────────────────────────────────────────────────────────────────
 
-// Enlace que abre WhatsApp con el número y un mensaje ya escrito.
-const WHATSAPP_ENLACE =
-  "https://wa.me/" +
-  WHATSAPP_CONTACTO.replace(/\D/g, "") +
-  "?text=" +
-  encodeURIComponent(
-    "Hola, te mando las fotos de mi negocio para «Papudo en tu mano». Mi negocio se llama: ",
-  );
+// Enlace que abre un chat de WhatsApp con ese número.
+const WHATSAPP_ENLACE = "https://wa.me/" + WHATSAPP_CONTACTO.replace(/\D/g, "");
 const FOTOS_POR_WHATSAPP =
   "Mándalas por WhatsApp al " +
   WHATSAPP_CONTACTO +
