@@ -41,3 +41,12 @@ export const formatDate = (iso: string | null) =>
         timeStyle: "short",
       }).format(new Date(iso))
     : null;
+
+/** Solo la fecha, sin hora (vencimientos). */
+export const formatDay = (iso: string | null) =>
+  iso
+    ? new Intl.DateTimeFormat("es-CL", {
+        timeZone: "America/Santiago",
+        dateStyle: "medium",
+      }).format(new Date(iso))
+    : null;

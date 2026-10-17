@@ -29,7 +29,7 @@ export default async function AdminLayout({
             {t("title")}
           </Link>
           {session && (
-            <nav className="flex items-center gap-4 text-sm font-semibold">
+            <nav className="flex flex-wrap items-center gap-4 text-sm font-semibold">
               <Link href="/admin" className="text-sea-deep">
                 {t("nav.entities")}
               </Link>
@@ -39,6 +39,14 @@ export default async function AdminLayout({
               <Link href="/admin/comercios" className="text-sea-deep">
                 {t("nav.business")}
               </Link>
+              <a
+                href="/es"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sea-deep"
+              >
+                {t("openSite")} ↗
+              </a>
             </nav>
           )}
           {session && (

@@ -9,7 +9,7 @@ import {
   listEntities,
   listNoticesAdmin,
 } from "@/lib/admin/api";
-import { formatDate } from "@/components/admin/badges";
+import { formatDate, formatDay } from "@/components/admin/badges";
 import {
   addNotice,
   changeNotice,
@@ -131,12 +131,12 @@ export default async function BusinessAdmin({
                     {p.infoUpdatedAt && (
                       <span className="text-muted text-xs">
                         {t("updates.last", {
-                          date: formatDate(p.infoUpdatedAt) ?? "",
+                          date: formatDay(p.infoUpdatedAt) ?? "",
                         })}{" "}
                         ·{" "}
                         {t("updates.due", {
                           date:
-                            formatDate(
+                            formatDay(
                               infoDueDate(p.infoUpdatedAt).toISOString(),
                             ) ?? "",
                         })}

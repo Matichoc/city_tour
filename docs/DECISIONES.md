@@ -137,6 +137,13 @@ Fuente: PLADETUR de Papudo 2023–2027, iD (`docs/investigacion/`).
 - El sitio público muestra el estado de verificación que viene de la base.
 - `/admin` va sin prefijo de idioma (solo español) y queda detrás de la misma
   puerta de enlaces que el resto del sitio.
+- Pestaña **Localidades** (pueblos y sectores, con cuántos lugares tiene cada
+  uno, si tiene ubicación y su fuente), enlace «Ver en el sitio» en cada fila
+  publicada y «Abrir el sitio» en la cabecera.
+- **Vista previa**: la ficha publicada se ve dentro del panel en formato
+  teléfono (un `iframe` del mismo sitio, que pasa por la misma puerta de
+  enlaces). Los borradores no tienen vista previa porque el sitio público no
+  los muestra.
 - Pendiente (Fase 2): editar fichas, crear borradores, fotos, usuarios y roles.
 
 ## Comentarios de visitantes (reales)

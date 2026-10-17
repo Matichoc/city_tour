@@ -467,14 +467,19 @@
     "tabs": {
       "lugar": "Places",
       "evento": "Events",
-      "ruta": "Routes"
+      "ruta": "Routes",
+      "localidad": "Localities"
     },
     "summary": "{total} in total · {verified} verified · {pending} pending · {outdated} outdated",
     "columns": {
       "name": "Name",
       "publication": "Publication",
       "verification": "Verification",
-      "lastVerified": "Last verified"
+      "lastVerified": "Last verified",
+      "site": "On the site",
+      "places": "Places",
+      "location": "Location",
+      "source": "Source"
     },
     "publication": {
       "draft": "Draft",
@@ -588,6 +593,18 @@
         "pendingCount": "{count, plural, one {# business needs} other {# businesses need}} to confirm their details (every 6 months).",
         "review": "Review"
       }
+    },
+    "viewOnSite": "View on site",
+    "openSite": "Open the site",
+    "yes": "Yes",
+    "pending": "To be confirmed",
+    "none": "—",
+    "localitiesHelp": "Towns and areas of the commune. Shown on the site with their places.",
+    "preview": {
+      "title": "Preview on the site",
+      "help": "This is how visitors see it (phone version). Changes may take a few minutes to appear.",
+      "open": "Open in a tab",
+      "notPublished": "Not published: the site does not show it yet."
     }
   },
   "notices": {

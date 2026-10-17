@@ -467,14 +467,19 @@
     "tabs": {
       "lugar": "Lugares",
       "evento": "Eventos",
-      "ruta": "Roteiros"
+      "ruta": "Roteiros",
+      "localidad": "Localidades"
     },
     "summary": "{total} no total · {verified} verificados · {pending} pendentes · {outdated} desatualizados",
     "columns": {
       "name": "Nome",
       "publication": "Publicação",
       "verification": "Verificação",
-      "lastVerified": "Última verificação"
+      "lastVerified": "Última verificação",
+      "site": "No site",
+      "places": "Lugares",
+      "location": "Localização",
+      "source": "Fonte"
     },
     "publication": {
       "draft": "Rascunho",
@@ -588,6 +593,18 @@
         "pendingCount": "{count, plural, one {# comércio precisa} other {# comércios precisam}} confirmar seus dados (a cada 6 meses).",
         "review": "Revisar"
       }
+    },
+    "viewOnSite": "Ver no site",
+    "openSite": "Abrir o site",
+    "yes": "Sim",
+    "pending": "A confirmar",
+    "none": "—",
+    "localitiesHelp": "Povoados e setores da comuna. Aparecem no site com seus lugares.",
+    "preview": {
+      "title": "Prévia no site",
+      "help": "É assim que os visitantes a veem (versão de celular). As mudanças podem levar alguns minutos para aparecer.",
+      "open": "Abrir em uma aba",
+      "notPublished": "Não publicada: o site ainda não a mostra."
     }
   },
   "notices": {

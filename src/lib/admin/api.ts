@@ -20,6 +20,20 @@ const TABLES: Record<
   ruta: { table: "routes", translations: "route_translations", rpc: "route" },
 };
 
+/** Dirección de la ficha en el sitio público (en español). */
+export function publicPath(
+  kind: EntityKind | "localidad",
+  slug: string,
+): string {
+  const base = {
+    lugar: "/es/lugares",
+    evento: "/es/eventos",
+    ruta: "/es/rutas",
+    localidad: "/es/pueblos",
+  }[kind];
+  return `${base}/${encodeURIComponent(slug)}`;
+}
+
 export const isEntityKind = (v: string): v is EntityKind =>
   (ENTITIES as readonly string[]).includes(v);
 
@@ -175,6 +189,46 @@ export async function getEntity(
     sources: r.sources.map(({ title, url }) => ({ title, url })),
     logs: r.verification_logs,
   };
+}
+
+export type LocalitySummary = {
+  id: string;
+  slug: string;
+  name: string;
+  hasLocation: boolean;
+  placeCount: number;
+  source: { url: string; label: string } | null;
+};
+
+export async function listLocalities(
+  token: string,
+): Promise<LocalitySummary[]> {
+  const rows = await rest<
+    {
+      id: string;
+      slug: string;
+      latitude: number | null;
+      source_url: string | null;
+      source_label: string | null;
+      translations: { locale: string; name: string }[];
+      places: { count: number }[];
+    }[]
+  >(
+    token,
+    "localities?select=id,slug,latitude,source_url,source_label," +
+      "translations:locality_translations(locale,name),places(count)" +
+      "&order=sort_order,slug",
+  );
+  return rows.map((r) => ({
+    id: r.id,
+    slug: r.slug,
+    name: nameEs(r.translations, r.slug),
+    hasLocation: r.latitude !== null,
+    placeCount: r.places[0]?.count ?? 0,
+    source: r.source_url
+      ? { url: r.source_url, label: r.source_label ?? r.source_url }
+      : null,
+  }));
 }
 
 /** Cambia el estado de verificación con verify_entity() (deja registro). */
