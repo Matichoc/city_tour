@@ -518,7 +518,8 @@
       "site": "En el sitio",
       "places": "Lugares",
       "location": "Ubicación",
-      "source": "Fuente"
+      "source": "Fuente",
+      "edit": "Editar"
     },
     "publication": {
       "draft": "Borrador",

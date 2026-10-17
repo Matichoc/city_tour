@@ -518,7 +518,8 @@
       "site": "On the site",
       "places": "Places",
       "location": "Location",
-      "source": "Source"
+      "source": "Source",
+      "edit": "Edit"
     },
     "publication": {
       "draft": "Draft",

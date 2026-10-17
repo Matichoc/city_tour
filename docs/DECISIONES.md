@@ -280,6 +280,9 @@ Fuente: PLADETUR de Papudo 2023–2027, iD (`docs/investigacion/`).
   video: orden (↑ ↓), «hacer portada», editar texto alternativo y crédito, y
   quitar. Si cambia el texto en español se borran sus traducciones viejas (la
   ficha muestra el español hasta que alguien las revise).
+- **Accesos:** además del menú «Comercios», la lista de Fichas → Lugares tiene
+  los botones «Nuevo comercio» e «Importar planilla» y, en cada fila, «Editar
+  ficha, fotos y videos» (solo admin y editor; no en los ejemplos ficticios).
 - **Horarios por temporada editables** (meses, días, hora, festivos): antes solo
   se podían cargar desde el repo. Con horarios por temporada la ficha no
   muestra el texto libre «Días y horarios».

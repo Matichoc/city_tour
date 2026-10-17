@@ -16,11 +16,11 @@ correr `pnpm bitacora` y subir el cambio en el mismo PR.
 
 ## En preparación: v0.20 — Fuente «validada por el representante», videos y edición completa por local
 
-La ficha muestra «Validada por el representante del local» en vez de hablar del formulario; cada local se edita completo desde el panel (datos, horarios por temporada, logo, carta, fotos, promociones y videos, con orden, texto y crédito); videos de hasta 50 MB subidos directo a Storage.
+La ficha muestra «Validada por el representante del local» en vez de hablar del formulario; cada local se edita completo desde el panel (datos, horarios por temporada, logo, carta, fotos, promociones y videos, con orden, texto y crédito); videos de hasta 50 MB subidos directo a Storage. Accesos a «Nuevo comercio», «Importar planilla» y «Editar ficha, fotos y videos» también desde Fichas → Lugares.
 
 - **Migraciones por correr en Supabase:** 0024
 - **Estado:** en revisión, [PR #23](https://github.com/Matichoc/city_tour/pull/23) (aún no está en `develop`).
-- **Última actualización de esta bitácora:** 2026-10-17 02:44
+- **Última actualización de esta bitácora:** 2026-10-17 02:53
 
 ## Avance por día
 
@@ -29,7 +29,7 @@ trabajadas: hay pausas y trabajo sin registrar).
 
 | Día | Ventana de actividad | Registros | Versiones entregadas |
 | --- | --- | ---: | --- |
-| Sábado, 17 de octubre de 2026 | 00:01 – 02:43 | 13 | v0.16, v0.17, v0.18, v0.19 |
+| Sábado, 17 de octubre de 2026 | 00:01 – 02:44 | 14 | v0.16, v0.17, v0.18, v0.19 |
 | Viernes, 16 de octubre de 2026 | 00:04 – 23:51 | 15 | v0.9, v0.10, v0.11, v0.12, v0.13, v0.14, v0.15 |
 | Jueves, 15 de octubre de 2026 | 00:05 – 23:52 | 10 | v0.7, v0.8 |
 | Miércoles, 14 de octubre de 2026 | 23:50 – 23:50 | 1 | — |

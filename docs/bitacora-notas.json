@@ -78,7 +78,7 @@
   },
   "actual": {
     "titulo": "Fuente «validada por el representante», videos y edición completa por local",
-    "resumen": "La ficha muestra «Validada por el representante del local» en vez de hablar del formulario; cada local se edita completo desde el panel (datos, horarios por temporada, logo, carta, fotos, promociones y videos, con orden, texto y crédito); videos de hasta 50 MB subidos directo a Storage.",
+    "resumen": "La ficha muestra «Validada por el representante del local» en vez de hablar del formulario; cada local se edita completo desde el panel (datos, horarios por temporada, logo, carta, fotos, promociones y videos, con orden, texto y crédito); videos de hasta 50 MB subidos directo a Storage. Accesos a «Nuevo comercio», «Importar planilla» y «Editar ficha, fotos y videos» también desde Fichas → Lugares.",
     "migraciones": "0024",
     "pr": "23"
   },
