@@ -47,3 +47,7 @@ next-env.d.ts
 
 
 # Archivos temporales del CLI de Supabase (project-ref, versiones)
+
+# Respaldos con datos personales (PRIV-01): nunca al repositorio
+/respaldos/
+*.priv01.csv

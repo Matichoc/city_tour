@@ -40,7 +40,7 @@ import {
   updatePlaceAction,
   uploadPlaceImage,
 } from "@/app/admin/places-actions";
-import { applyPlan } from "@/lib/admin/places";
+import { applyPlan, loadImportContext } from "@/lib/admin/places";
 import { parseCsv } from "@/lib/import/csv";
 import {
   planImport,
@@ -1054,5 +1054,121 @@ describe("edición completa de un local", () => {
     expect(find("PATCH", `places?id=eq.${ID}`)[0]!.body).toMatchObject({
       owner_validated: true,
     });
+  });
+});
+
+// ── PRIV-01: el contacto no se guarda en el snapshot público ─────────────
+describe("snapshot de importación y datos personales", () => {
+  const rec = () =>
+    toRecord(readTable(parseCsv(csv(row()))).rows[0]!, LOCS).record!;
+  const noContact = (body: unknown) => {
+    const snap = (body as { import_snapshot: object }).import_snapshot;
+    expect(Object.keys(snap)).not.toContain("contactName");
+    expect(Object.keys(snap)).not.toContain("contactEmail");
+    expect(JSON.stringify(body)).not.toContain("ana@ejemplo.cl");
+  };
+
+  it("un comercio nuevo no escribe el contacto en places.import_snapshot", async () => {
+    const items = plan(csv(row()));
+    stub();
+    await applyPlan({ token: "t", userId: "u", role: "editor" }, items, {
+      publish: false,
+      categories: {},
+    });
+    noContact(find("POST", "/rest/v1/places")[0]!.body);
+    // Queda aparte, solo para el personal.
+    const priv = find("POST", "place_import_private");
+    expect(priv).toHaveLength(1);
+    expect(priv[0]!.body).toMatchObject({
+      place_id: NEW_ID,
+      contact: { contactName: "Ana", contactEmail: "ana@ejemplo.cl" },
+    });
+  });
+
+  it("al actualizar, guarda primero el contacto privado y deja el snapshot público sin él", async () => {
+    const r = rec();
+    const items = plan(
+      csv(row({ 13: "otra@ejemplo.cl", 0: "20/10/2026 9:00:00" })),
+      [
+        {
+          id: ID,
+          slug: "casa-del-mar",
+          name: "Casa del Mar",
+          importKey: r.key,
+          snapshot: snapshotOf(r),
+          contactSnapshot: {
+            contactName: "Ana",
+            contactEmail: "ana@ejemplo.cl",
+          },
+          infoUpdatedAt: "2026-10-17T03:53:04.000Z",
+        },
+      ],
+    );
+    expect(items[0]!.changed).toEqual(["contactEmail"]);
+    stub();
+    await applyPlan({ token: "t", userId: "u", role: "editor" }, items, {
+      publish: false,
+      categories: {},
+    });
+    const patch = find("PATCH", `places?id=eq.${ID}`)[0]!;
+    noContact(patch.body);
+    expect(JSON.stringify(patch.body)).not.toContain("otra@ejemplo.cl");
+    const priv = find("POST", "place_import_private")[0]!;
+    expect(priv.body).toMatchObject({
+      place_id: ID,
+      contact: { contactEmail: "otra@ejemplo.cl" },
+    });
+    expect(calls.indexOf(priv)).toBeLessThan(calls.indexOf(patch));
+  });
+
+  it("al vincular una ficha existente también guarda el contacto aparte", async () => {
+    const items = plan(csv(row()), [
+      {
+        id: ID,
+        slug: "casa-del-mar",
+        name: "Casa del Mar",
+        importKey: null,
+        snapshot: null,
+        infoUpdatedAt: "2026-10-17T03:53:04.000Z",
+      },
+    ]);
+    stub();
+    await applyPlan({ token: "t", userId: "u", role: "editor" }, items, {
+      publish: false,
+      categories: {},
+    });
+    noContact(find("PATCH", `places?id=eq.${ID}`)[0]!.body);
+    expect(find("POST", "place_import_private")[0]!.body).toMatchObject({
+      place_id: ID,
+    });
+  });
+
+  it("la importación lee el contacto privado junto a cada ficha", async () => {
+    stub((url) =>
+      url.includes("/places?select=id,slug,import_key")
+        ? Response.json([
+            {
+              id: ID,
+              slug: "casa-del-mar",
+              import_key: "casa-del-mar",
+              import_snapshot: { name: "Casa del Mar" },
+              info_updated_at: null,
+              translations: [{ locale: "es", name: "Casa del Mar" }],
+              place_import_private: {
+                contact: { contactName: "Ana", contactEmail: "ana@ejemplo.cl" },
+              },
+            },
+          ])
+        : null,
+    );
+    const { existing } = await loadImportContext("t");
+    expect(existing[0]!.contactSnapshot).toEqual({
+      contactName: "Ana",
+      contactEmail: "ana@ejemplo.cl",
+    });
+    expect(
+      calls.find((c) => c.url.includes("/places?select=id,slug,import_key"))!
+        .url,
+    ).toContain("place_import_private(contact)");
   });
 });

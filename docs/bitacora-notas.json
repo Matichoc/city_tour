@@ -106,5 +106,11 @@
     "titulo": "Seguridad: el público no lee el snapshot de importación",
     "resumen": "Contención de PRIV-01: el rol anónimo ya no puede leer places.import_snapshot (que guardaba nombre y correo de quien inscribió el comercio). El sitio público no cambia. Incluye prueba de base de datos y script para revertir.",
     "migraciones": "0025"
+  },
+  "actual": {
+    "pr": 29,
+    "titulo": "Seguridad: el contacto de la importación va en una tabla privada",
+    "resumen": "Solución de PRIV-01: el nombre y el correo de quien inscribió el comercio ya no se guardan en places.import_snapshot sino en place_import_private (solo personal). La importación compara con la tabla privada y sigue leyendo filas antiguas. Incluye scripts de respaldo, verificación, limpieza y restauración (a mano, con autorización), probados sobre una base desechable.",
+    "migraciones": "0026"
   }
 }
