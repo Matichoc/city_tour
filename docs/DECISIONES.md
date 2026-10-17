@@ -105,3 +105,14 @@ Fuente: PLADETUR de Papudo 2023–2027, iD (`docs/investigacion/`).
   desactualizado.
 - La base de desarrollo va solo en Preview/Development de Vercel; Production
   tendrá su propio proyecto Supabase.
+
+## Enlaces temporales para las vistas previas
+
+- Para mostrar `develop` a personas puntuales sin dejarlo abierto, las vistas
+  previas se cierran con `SHARE_LINK_SECRET` (solo en Preview) y se abren con
+  enlaces firmados que vencen solos (4 h por defecto, máx. 72 h). Guía:
+  [`COMPARTIR-VISTA-PREVIA.md`](COMPARTIR-VISTA-PREVIA.md).
+- Se hizo en el proxy y no con los *Shareable Links* de Vercel porque esos no
+  vencen solos. La clave para crear enlaces se pide con la ventana de usuario y
+  contraseña del navegador (HTTP Basic) para que no quede en la URL ni en los
+  registros.

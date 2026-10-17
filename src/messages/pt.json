@@ -420,5 +420,12 @@
     "exit": "Sair do quiosque",
     "example": "Exemplo",
     "demoPlace": "Ficha de exemplo: este negócio é fictício e foi criado para mostrar como ficaria."
+  },
+  "share": {
+    "expiredTitle": "Este link expirou",
+    "expiredBody": "A prévia do Papudo en tu mano foi compartilhada por tempo limitado. Peça um novo link a quem o enviou.",
+    "linkTitle": "Link para compartilhar",
+    "linkBody": "Quem abri-lo poderá ver a prévia até {expires} (horário do Chile). Depois disso, o link deixa de funcionar.",
+    "askPassword": "Digite a chave para criar links"
   }
 }
