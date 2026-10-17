@@ -394,3 +394,18 @@ test("cámara a pie: se puede elegir la figura que señala y se recuerda", async
       .getByRole("radio", { name: "Huellas" }),
   ).toBeChecked();
 });
+
+test("marca: Papudo en tu Mano es una sub-app de Turismo en tu Mano", async ({
+  page,
+}) => {
+  await page.goto("/es/informacion");
+  await expect(
+    page.getByRole("heading", { name: "Una sub-app de Turismo en tu Mano" }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("img", { name: "Logo de Turismo en tu Mano" }).first(),
+  ).toBeAttached();
+  await expect(
+    page.getByText("Papudo en tu Mano es una sub-app de Turismo en tu Mano"),
+  ).toBeVisible();
+});

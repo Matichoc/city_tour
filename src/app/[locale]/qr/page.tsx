@@ -82,7 +82,7 @@ export default async function QrPage({
         className="border-sea mx-auto flex w-full max-w-md flex-col items-center gap-4 rounded-3xl border-4 bg-white p-6 text-center"
       >
         <p className="text-sea text-sm font-bold tracking-widest uppercase">
-          Papudo en tu mano
+          Papudo en tu Mano
         </p>
         <h1 className="font-display text-sea-deep text-3xl leading-tight font-extrabold">
           {place ? t("forPlace", { name: place.name }) : t("headline")}

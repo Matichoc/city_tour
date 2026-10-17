@@ -1,6 +1,6 @@
 {
   "brand": {
-    "name": "Papudo en tu mano",
+    "name": "Papudo en tu Mano",
     "tagline": "Papudo's beaches, countryside and heritage, in your pocket."
   },
   "nav": {
@@ -19,6 +19,9 @@
   "common": {
     "share": "Share",
     "copied": "Link copied!",
+    "subApp": "Papudo en tu Mano is a sub-app of Turismo en tu Mano",
+    "logoParent": "Turismo en tu Mano logo",
+    "logoPapudo": "Papudo en tu Mano logo",
     "poweredBy": "Powered by",
     "aiIllustration": "AI illustration"
   },
@@ -197,6 +200,8 @@
     "kind": {
       "phone": "Call the Municipality"
     },
+    "platformTitle": "A sub-app of Turismo en tu Mano",
+    "platformBody": "Turismo en tu Mano is the platform of tourist guides and local-business management for communes and destinations. Papudo en tu Mano is its sub-app for Papudo, Las Salinas and Pullally.",
     "authorTitle": "Who builds it",
     "authorBody": "This guide is built by Cristóbal Roco, a specialist in development and artificial-intelligence solutions for businesses.",
     "authorNote": "Illustrations are made with AI and shown with their label. Data is always checked against sources and the community.",
@@ -238,7 +243,7 @@
     "title": "For business",
     "subtitle": "Add your lodging, restaurant or activity to Papudo's travel guide.",
     "pitchTitle": "Visitors are already looking for where to stay, eat and what to do",
-    "pitchBody": "Papudo en tu mano brings together the commune's beaches, routes and trips. Your business can show up right when someone plans their day.",
+    "pitchBody": "Papudo en tu Mano brings together the commune's beaches, routes and trips. Your business can show up right when someone plans their day.",
     "benefitsTitle": "What you get",
     "benefit": {
       "free": {
@@ -292,7 +297,7 @@
     "generate": "Generate",
     "help": "The QR opens the guide and tells us which shop the visit came from, with no personal data.",
     "headline": "Discover Papudo from your phone",
-    "qrAlt": "QR code to the Papudo en tu mano guide",
+    "qrAlt": "QR code to the Papudo en tu Mano guide",
     "scan": "Scan with your camera: beaches, routes and trips, no download needed.",
     "from": "Recommended by {name}",
     "print": "Print poster",
@@ -482,7 +487,7 @@
   },
   "share": {
     "expiredTitle": "This link has expired",
-    "expiredBody": "The Papudo en tu mano preview was shared for a limited time. Ask the person who sent it for a new link.",
+    "expiredBody": "The Papudo en tu Mano preview was shared for a limited time. Ask the person who sent it for a new link.",
     "linkTitle": "Link to share",
     "linkBody": "Anyone who opens it can see the preview until {expires} (Chile time). After that, the link stops working.",
     "askPassword": "Enter the key to create links",
@@ -641,7 +646,7 @@
         "message": "Message for the business",
         "whatsapp": "Send via WhatsApp",
         "copyHint": "Copy the message and send it through the channel you use with the business.",
-        "template": "Hi, this is the «Papudo en tu mano» guide team. So visitors find accurate information about {name}, could you confirm or update your hours, contact details, prices and services? This is how your page looks today: {url} Thank you!",
+        "template": "Hi, this is the «Papudo en tu Mano» guide team. So visitors find accurate information about {name}, could you confirm or update your hours, contact details, prices and services? This is how your page looks today: {url} Thank you!",
         "pendingCount": "{count, plural, one {# business needs} other {# businesses need}} to confirm their details (every 6 months).",
         "review": "Review"
       }

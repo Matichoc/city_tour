@@ -94,12 +94,15 @@
     "titulo": "Galería de la ficha con flechas",
     "resumen": "La galería de fotos del local muestra una imagen a la vez con flechas a los lados, contador y deslizado con el dedo, sin la barra de desplazamiento."
   },
+  "26": {
+    "titulo": "Marca: Papudo en tu Mano, sub-app de Turismo en tu Mano",
+    "resumen": "Dos logos con fondo transparente: la «P» de Papudo en tu Mano en la barra superior, el quiosco y los íconos de la app, y Turismo en tu Mano como marca madre en el pie y en Información. Textos en tres idiomas y «Mano» en mayúscula solo en el nombre de la marca."
+  },
   "27": {
     "titulo": "Seguridad: Next.js 16.3.8",
     "resumen": "Actualiza Next.js y eslint-config-next de 16.3.5 a 16.3.8 para cerrar los 7 avisos de seguridad de Next (hallazgo DEP-01 de la auditoría). Sin cambios de funcionalidad."
   },
-  "actual": {
-    "pr": 28,
+  "28": {
     "titulo": "Seguridad: el público no lee el snapshot de importación",
     "resumen": "Contención de PRIV-01: el rol anónimo ya no puede leer places.import_snapshot (que guardaba nombre y correo de quien inscribió el comercio). El sitio público no cambia. Incluye prueba de base de datos y script para revertir.",
     "migraciones": "0025"

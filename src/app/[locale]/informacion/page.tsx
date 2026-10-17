@@ -31,6 +31,7 @@ export default async function InfoPage({
   const locale = resolveLocale((await params).locale);
   setRequestLocale(locale);
   const t = await getTranslations("info");
+  const tc = await getTranslations("common");
   const data = await getData();
   const localities = data.listLocalities(locale).filter((l) => l.summary);
 
@@ -224,6 +225,25 @@ export default async function InfoPage({
           </h2>
           <p className="mt-2 text-sm">{t("dataBody")}</p>
         </section>
+        <section
+          aria-labelledby="plataforma"
+          className="border-border bg-surface flex flex-col items-center gap-3 rounded-2xl border p-5 text-center"
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/brand/turismo-en-tu-mano.webp"
+            alt={tc("logoParent")}
+            width={200}
+            height={212}
+            loading="lazy"
+            className="h-40 w-auto"
+          />
+          <h2 id="plataforma" className="font-display text-xl font-extrabold">
+            {t("platformTitle")}
+          </h2>
+          <p className="text-sm">{t("platformBody")}</p>
+        </section>
+
         <section
           aria-labelledby="autor"
           className="border-border bg-surface rounded-2xl border p-4"
