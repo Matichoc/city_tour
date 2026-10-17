@@ -49,6 +49,8 @@ export type PlaceRow = {
   verification_status: Verification;
   cta_kind: CtaKind | null;
   cta_value: string | null;
+  last_verified_at?: string | null;
+  info_updated_at?: string | null;
   category: SlugRef;
   locality: SlugRef;
   translations: Tr<{
@@ -114,6 +116,7 @@ export const QUERIES: Record<keyof ContentRows, string> = {
     "translations:locality_translations(locale,name,summary)&order=sort_order,slug",
   places:
     "places?select=slug,latitude,longitude,address,is_demo,is_business,verification_status,cta_kind,cta_value," +
+    "last_verified_at,info_updated_at," +
     "category:categories(slug),locality:localities(slug)," +
     `translations:place_translations(locale,name,short_description,full_description),${SOURCES}` +
     "&publication_status=eq.published&order=sort_order,slug&sources.order=sort_order",
@@ -178,6 +181,8 @@ function toPlace(r: PlaceRow): PlaceContent | null {
     ...(r.cta_kind && r.cta_value
       ? { cta: { kind: r.cta_kind, value: r.cta_value } }
       : {}),
+    ...(r.last_verified_at ? { lastVerifiedAt: r.last_verified_at } : {}),
+    ...(r.info_updated_at ? { infoUpdatedAt: r.info_updated_at } : {}),
     ...(source ? { source } : {}),
     ...(extraSources.length ? { extraSources } : {}),
   };

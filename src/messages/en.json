@@ -98,7 +98,11 @@
       "menu": "See the menu",
       "booking": "Book",
       "instagram": "See on Instagram"
-    }
+    },
+    "infoUpdated": "Business details",
+    "infoUpdatedOn": "Confirmed on {date}",
+    "infoNever": "To be confirmed with the business",
+    "infoStale": "More than 6 months have passed since the business confirmed its details: check hours and prices before you go."
   },
   "routes": {
     "title": "Routes",
@@ -564,6 +568,25 @@
         "show": "Show the invitation",
         "form": "Business form link",
         "adminOnly": "Only administration can change this setting."
+      },
+      "updates": {
+        "title": "Information updates (every 6 months)",
+        "help": "Each business must confirm or update its details at least every 6 months. When it does, mark it here: the public page shows the date and warns visitors if it is old.",
+        "state": {
+          "never": "No date",
+          "ok": "Up to date",
+          "soon": "Due soon",
+          "overdue": "Overdue"
+        },
+        "last": "Last: {date}",
+        "due": "due {date}",
+        "mark": "Mark as updated today",
+        "message": "Message for the business",
+        "whatsapp": "Send via WhatsApp",
+        "copyHint": "Copy the message and send it through the channel you use with the business.",
+        "template": "Hi, this is the «Papudo en tu mano» guide team. So visitors find accurate information about {name}, could you confirm or update your hours, contact details, prices and services? This is how your page looks today: {url} Thank you!",
+        "pendingCount": "{count, plural, one {# business needs} other {# businesses need}} to confirm their details (every 6 months).",
+        "review": "Review"
       }
     }
   },

@@ -172,3 +172,19 @@ Fuente: PLADETUR de Papudo 2023–2027, iD (`docs/investigacion/`).
   él (explorador, fichas de negocios y `/negocios`).
 - Los cambios se ven al instante (`updateTag` de `content`, `notices`,
   `settings`).
+
+## Datos de comercios al día (cada 6 meses)
+
+- `places.info_updated_at` (migración 0019): última vez que el comercio
+  confirmó o actualizó sus datos. La registra el personal (admin, editor) con
+  «Marcar actualizada hoy» en `/admin/comercios#actualizacion`; `content.sql`
+  no la toca.
+- Vence a los 6 meses y se avisa 30 días antes (`src/lib/freshness.ts`). El
+  panel ordena primero los sin fecha y los vencidos, muestra un aviso en
+  `/admin` con cuántos faltan y trae el mensaje listo para el comercio (con
+  botón de WhatsApp si el local tiene ese botón de acción).
+- La ficha pública muestra la fecha de la última verificación y, en los
+  comercios, la de confirmación de datos; si pasaron más de 6 meses, avisa al
+  visitante que revise horarios y precios antes de ir.
+- Mientras el sitio esté cerrado, el enlace a la ficha que va en el mensaje
+  solo abre con un enlace de acceso.

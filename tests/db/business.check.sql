@@ -24,6 +24,8 @@ insert into public.notices (title, starts_at, ends_at)
   values ('Aviso vencido', now() - interval '10 days', now() - interval '1 day');
 insert into public.notices (title, ends_at, active)
   values ('Aviso desactivado', now() + interval '7 days', false);
+select tests.eq('editor registra la actualización de datos del comercio',
+  tests.rowcount($$update public.places set info_updated_at = now() where slug = 'playa-papudo'$$), 1);
 select tests.eq('editor no cambia la configuración (0 filas)',
   tests.rowcount($$update public.site_settings set business_invite = false$$), 0);
 select tests.logout();
@@ -35,6 +37,10 @@ select tests.eq('anon ve solo avisos vigentes y activos',
   (select string_agg(title, ',') from public.notices), 'Aviso vigente');
 select tests.raises('anon no crea avisos',
   $$insert into public.notices (title, ends_at) values ('spam', now() + interval '1 day')$$, '42501');
+select tests.eq('anon ve la fecha de actualización',
+  (select info_updated_at is not null from public.places where slug = 'playa-papudo'), true);
+select tests.eq('anon no cambia la fecha (0 filas)',
+  tests.rowcount($$update public.places set info_updated_at = null where slug = 'playa-papudo'$$), 0);
 select tests.eq('anon lee la configuración',
   (select business_invite from public.site_settings), true);
 select tests.logout();
@@ -48,5 +54,8 @@ select tests.logout();
 
 select tests.raises('el aviso no puede terminar antes de empezar',
   $$insert into public.notices (title, starts_at, ends_at) values ('x x', now(), now() - interval '1 hour')$$, '23514');
+
+select tests.raises('la fecha de actualización no puede ser futura',
+  $$update public.places set info_updated_at = now() + interval '1 month' where slug = 'playa-papudo'$$, '23514');
 
 rollback;

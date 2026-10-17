@@ -13,9 +13,13 @@ import { formatDate } from "@/components/admin/badges";
 import {
   addNotice,
   changeNotice,
+  markUpdated,
   saveCta,
   saveSettings,
 } from "@/app/admin/actions";
+import { ctaHref } from "@/lib/data";
+import { byUrgency, freshness, infoDueDate } from "@/lib/freshness";
+import { localizedUrl } from "@/lib/seo";
 
 const field =
   "border-border bg-surface mt-1 w-full rounded-xl border px-3 py-2 text-base";
@@ -23,6 +27,13 @@ const section = "border-border bg-surface rounded-2xl border p-4";
 const primary = "bg-sea-deep rounded-full px-5 py-2 font-bold text-white";
 const small =
   "border-border rounded-full border px-3 py-1 text-sm font-semibold";
+
+const STATE_CLASS = {
+  never: "bg-coral/10 text-coral-ink",
+  overdue: "bg-coral/10 text-coral-ink",
+  soon: "bg-sun/30 text-earth",
+  ok: "bg-field-soft text-field-deep",
+} as const;
 
 /** Fecha mínima del formulario de avisos: mañana, en hora de Chile. */
 const tomorrow = () =>
@@ -59,6 +70,9 @@ export default async function BusinessAdmin({
     return <p className="text-coral-ink">{ta("loadError")}</p>;
   }
   const editable = canModerate(session);
+  const updates = data.places
+    .map((p) => ({ ...p, state: freshness(p.infoUpdatedAt) }))
+    .sort((a, b) => byUrgency(a.state, b.state));
 
   return (
     <div className="flex flex-col gap-6">
@@ -83,6 +97,94 @@ export default async function BusinessAdmin({
           {t("error")}
         </p>
       )}
+
+      <section id="actualizacion" className={section}>
+        <h2 className="font-display text-lg font-extrabold">
+          {t("updates.title")}
+        </h2>
+        <p className="text-muted mt-1 text-sm">{t("updates.help")}</p>
+        {updates.length === 0 ? (
+          <p className="text-muted mt-3 text-sm">{t("cta.none")}</p>
+        ) : (
+          <ul className="divide-border mt-3 divide-y">
+            {updates.map((p) => {
+              const message = t("updates.template", {
+                name: p.name,
+                url: localizedUrl("es", {
+                  pathname: "/lugares/[slug]",
+                  params: { slug: p.slug },
+                }),
+              });
+              const wa =
+                p.ctaKind === "whatsapp" && p.ctaValue
+                  ? ctaHref({ kind: "whatsapp", value: p.ctaValue })
+                  : null;
+              return (
+                <li key={p.id} className="py-3">
+                  <div className="flex flex-wrap items-center gap-2 text-sm">
+                    <b>{p.name}</b>
+                    <span
+                      className={`rounded-full px-2 py-0.5 text-xs font-bold ${STATE_CLASS[p.state]}`}
+                    >
+                      {t(`updates.state.${p.state}`)}
+                    </span>
+                    {p.infoUpdatedAt && (
+                      <span className="text-muted text-xs">
+                        {t("updates.last", {
+                          date: formatDate(p.infoUpdatedAt) ?? "",
+                        })}{" "}
+                        ·{" "}
+                        {t("updates.due", {
+                          date:
+                            formatDate(
+                              infoDueDate(p.infoUpdatedAt).toISOString(),
+                            ) ?? "",
+                        })}
+                      </span>
+                    )}
+                  </div>
+                  {p.state !== "ok" && (
+                    <details className="mt-2">
+                      <summary className="cursor-pointer text-sm font-semibold">
+                        {t("updates.message")}
+                      </summary>
+                      <textarea
+                        readOnly
+                        rows={4}
+                        defaultValue={message}
+                        aria-label={t("updates.message")}
+                        className={field}
+                      />
+                      {wa ? (
+                        <a
+                          href={`${wa}?text=${encodeURIComponent(message)}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={`${small} mt-2 inline-block`}
+                        >
+                          {t("updates.whatsapp")}
+                        </a>
+                      ) : (
+                        <p className="text-muted mt-1 text-xs">
+                          {t("updates.copyHint")}
+                        </p>
+                      )}
+                    </details>
+                  )}
+                  {editable && (
+                    <form action={markUpdated} className="mt-2">
+                      <input type="hidden" name="id" value={p.id} />
+                      <button type="submit" className={small}>
+                        {t("updates.mark")}
+                      </button>
+                    </form>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+        )}
+      </section>
 
       <section id="botones" className={section}>
         <h2 className="font-display text-lg font-extrabold">

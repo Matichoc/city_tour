@@ -98,7 +98,11 @@
       "menu": "Ver o cardápio",
       "booking": "Reservar",
       "instagram": "Ver no Instagram"
-    }
+    },
+    "infoUpdated": "Dados do comércio",
+    "infoUpdatedOn": "Confirmados em {date}",
+    "infoNever": "A confirmar com o comércio",
+    "infoStale": "Passaram mais de 6 meses desde que o comércio confirmou seus dados: confira horários e preços antes de ir."
   },
   "routes": {
     "title": "Roteiros",
@@ -564,6 +568,25 @@
         "show": "Mostrar o convite",
         "form": "Link do formulário para negócios",
         "adminOnly": "Só a administração pode mudar esta configuração."
+      },
+      "updates": {
+        "title": "Atualização de dados (a cada 6 meses)",
+        "help": "Cada comércio deve confirmar ou atualizar seus dados pelo menos a cada 6 meses. Quando o fizer, marque aqui: a página pública mostra a data e avisa os visitantes se estiver antiga.",
+        "state": {
+          "never": "Sem data",
+          "ok": "Em dia",
+          "soon": "Vence em breve",
+          "overdue": "Vencida"
+        },
+        "last": "Última: {date}",
+        "due": "vence {date}",
+        "mark": "Marcar como atualizada hoje",
+        "message": "Mensagem para o comércio",
+        "whatsapp": "Enviar por WhatsApp",
+        "copyHint": "Copie a mensagem e envie pelo canal que você usa com o comércio.",
+        "template": "Olá, somos a equipe do guia «Papudo en tu mano». Para que os visitantes encontrem informações corretas sobre {name}, você pode confirmar ou atualizar horários, contato, preços e serviços? Assim está sua página hoje: {url} Obrigado!",
+        "pendingCount": "{count, plural, one {# comércio precisa} other {# comércios precisam}} confirmar seus dados (a cada 6 meses).",
+        "review": "Revisar"
       }
     }
   },

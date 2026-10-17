@@ -309,16 +309,22 @@ export type BusinessPlace = {
   name: string;
   ctaKind: CtaKindAdmin | null;
   ctaValue: string | null;
+  /** Última vez que el comercio confirmó sus datos (ISO). */
+  infoUpdatedAt: string | null;
 };
 
 export async function listBusinessPlaces(
   token: string,
 ): Promise<BusinessPlace[]> {
   const rows = await rest<
-    (Row & { cta_kind: CtaKindAdmin | null; cta_value: string | null })[]
+    (Row & {
+      cta_kind: CtaKindAdmin | null;
+      cta_value: string | null;
+      info_updated_at: string | null;
+    })[]
   >(
     token,
-    "places?select=id,slug,cta_kind,cta_value,translations:place_translations(locale,name)" +
+    "places?select=id,slug,cta_kind,cta_value,info_updated_at,translations:place_translations(locale,name)" +
       "&is_business=eq.true&is_demo=eq.false&order=sort_order,slug",
   );
   return rows.map((r) => ({
@@ -327,7 +333,16 @@ export async function listBusinessPlaces(
     name: nameEs(r.translations, r.slug),
     ctaKind: r.cta_kind,
     ctaValue: r.cta_value,
+    infoUpdatedAt: r.info_updated_at,
   }));
+}
+
+/** Registra que el comercio confirmó o actualizó sus datos hoy. */
+export async function markInfoUpdated(token: string, id: string) {
+  await rest<null>(token, `places?id=eq.${encodeURIComponent(id)}`, {
+    method: "PATCH",
+    body: JSON.stringify({ info_updated_at: new Date().toISOString() }),
+  });
 }
 
 export async function updatePlaceCta(

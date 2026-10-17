@@ -73,6 +73,10 @@ export type Place = {
   ratingCount: number;
   /** Botón de acción del comercio, listo para enlazar. */
   cta: { kind: CtaKind; href: string } | null;
+  /** Última verificación en terreno (ISO), si la hubo. */
+  lastVerifiedAt: string | null;
+  /** Última vez que el comercio confirmó sus datos (ISO), si la hubo. */
+  infoUpdatedAt: string | null;
 };
 
 /** Enlace del botón de acción: WhatsApp y teléfono se arman desde el número. */
@@ -254,6 +258,8 @@ export function createData(content: SiteContent, showDemo = SHOW_DEMO) {
         const href = p.cta ? ctaHref(p.cta) : null;
         return p.cta && href ? { kind: p.cta.kind, href } : null;
       })(),
+      lastVerifiedAt: p.lastVerifiedAt ?? null,
+      infoUpdatedAt: p.infoUpdatedAt ?? null,
     };
   }
 

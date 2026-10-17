@@ -5,6 +5,7 @@ import {
   ENTITIES,
   getSession,
   isEntityKind,
+  listBusinessPlaces,
   listEntities,
   type EntityKind,
   type EntitySummary,
@@ -14,6 +15,7 @@ import {
   PublicationBadge,
   VerificationBadge,
 } from "@/components/admin/badges";
+import { freshness } from "@/lib/freshness";
 
 export default async function AdminHome({
   searchParams,
@@ -27,8 +29,17 @@ export default async function AdminHome({
   const kind: EntityKind = tipo && isEntityKind(tipo) ? tipo : "lugar";
 
   let rows: EntitySummary[];
+  let staleBusinesses = 0;
   try {
-    rows = await listEntities(session.token, kind);
+    const [entities, businesses] = await Promise.all([
+      listEntities(session.token, kind),
+      // El aviso es secundario: si falla, la lista de fichas igual se muestra.
+      listBusinessPlaces(session.token).catch(() => []),
+    ]);
+    rows = entities;
+    staleBusinesses = businesses.filter(
+      (b) => freshness(b.infoUpdatedAt) !== "ok",
+    ).length;
   } catch (error) {
     console.error("[admin] no se pudo listar", error);
     return <p className="text-coral-ink">{t("loadError")}</p>;
@@ -38,6 +49,20 @@ export default async function AdminHome({
 
   return (
     <>
+      {staleBusinesses > 0 && (
+        <p
+          role="status"
+          className="bg-sun/30 text-earth mb-4 flex flex-wrap items-center gap-2 rounded-xl p-3 text-sm"
+        >
+          {t("business.updates.pendingCount", { count: staleBusinesses })}
+          <Link
+            href="/admin/comercios#actualizacion"
+            className="font-bold underline"
+          >
+            {t("business.updates.review")}
+          </Link>
+        </p>
+      )}
       <nav className="flex gap-2" aria-label={t("title")}>
         {ENTITIES.map((k) => (
           <Link

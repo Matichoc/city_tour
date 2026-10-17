@@ -31,6 +31,7 @@ import { NoticeList } from "@/components/business/notice-list";
 import { BusinessInvite } from "@/components/business/business-invite";
 import { listReviews, reviewStats } from "@/lib/reviews";
 import { listNotices } from "@/lib/business";
+import { freshness } from "@/lib/freshness";
 
 export async function generateStaticParams() {
   const data = await getData();
@@ -90,6 +91,13 @@ export default async function PlacePage({
         ownerReply: r.ownerReply ? r.ownerReply[locale] : null,
       }))
     : [];
+  const day = (iso: string) =>
+    new Intl.DateTimeFormat(locale, {
+      timeZone: "America/Santiago",
+      dateStyle: "long",
+    }).format(new Date(iso));
+  const infoState =
+    place.business && !place.demo ? freshness(place.infoUpdatedAt) : null;
   const sections = [
     ["resumen", t("tabOverview")],
     ["ubicacion", t("tabLocation")],
@@ -335,8 +343,22 @@ export default async function PlacePage({
                 </div>
                 <div className="flex justify-between gap-4 p-4">
                   <dt className="font-bold">{t("lastVerified")}</dt>
-                  <dd className="text-muted">{t("never")}</dd>
+                  <dd className="text-muted">
+                    {place.lastVerifiedAt
+                      ? day(place.lastVerifiedAt)
+                      : t("never")}
+                  </dd>
                 </div>
+                {infoState ? (
+                  <div className="flex justify-between gap-4 p-4">
+                    <dt className="font-bold">{t("infoUpdated")}</dt>
+                    <dd className="text-muted text-right">
+                      {place.infoUpdatedAt
+                        ? t("infoUpdatedOn", { date: day(place.infoUpdatedAt) })
+                        : t("infoNever")}
+                    </dd>
+                  </div>
+                ) : null}
               </>
             )}
             {place.sources.length > 0 ? (
@@ -358,6 +380,14 @@ export default async function PlacePage({
               </div>
             ) : null}
           </dl>
+          {infoState === "overdue" ? (
+            <p
+              role="note"
+              className="bg-sun/30 text-earth rounded-xl p-3 text-sm"
+            >
+              {t("infoStale")}
+            </p>
+          ) : null}
         </section>
       </div>
     </main>

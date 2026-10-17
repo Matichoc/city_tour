@@ -45,6 +45,10 @@ export type PlaceContent = {
   verification?: Verification;
   /** Botón de acción del comercio (de la base). */
   cta?: PlaceCta;
+  /** Última verificación en terreno (de la base, ISO). */
+  lastVerifiedAt?: string;
+  /** Última vez que el comercio confirmó sus datos (de la base, ISO). */
+  infoUpdatedAt?: string;
   source?: Source;
   tvSource?: Source;
   extraSources?: Source[];

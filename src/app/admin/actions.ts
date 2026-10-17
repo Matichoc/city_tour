@@ -15,6 +15,7 @@ import {
   setNoticeActive,
   setReviewStatus,
   updatePlaceCta,
+  markInfoUpdated,
   updateSettings,
   type CtaKindAdmin,
   isEntityKind,
@@ -193,6 +194,18 @@ export async function saveCta(formData: FormData) {
       ),
     "content",
     "botones",
+  );
+}
+
+export async function markUpdated(formData: FormData) {
+  const session = await getSession();
+  if (!session) redirect("/admin/ingresar");
+  const id = text(formData.get("id"));
+  await businessWrite(
+    canModerate(session) && UUID.test(id),
+    () => markInfoUpdated(session.token, id),
+    "content",
+    "actualizacion",
   );
 }
 

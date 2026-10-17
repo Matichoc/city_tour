@@ -30,6 +30,7 @@ import { listNotices } from "@/lib/business";
 import {
   addNotice,
   changeNotice,
+  markUpdated,
   saveCta,
   saveSettings,
 } from "@/app/admin/actions";
@@ -112,6 +113,8 @@ describe("ctaHref", () => {
           verification_status: "pending",
           cta_kind: "booking",
           cta_value: "https://reservas.cl",
+          last_verified_at: "2026-09-01T00:00:00Z",
+          info_updated_at: "2026-08-01T00:00:00Z",
           category: { slug: "gastronomia" },
           locality: null,
           translations: [
@@ -130,6 +133,8 @@ describe("ctaHref", () => {
       kind: "booking",
       value: "https://reservas.cl",
     });
+    expect(content.places[0]!.lastVerifiedAt).toBe("2026-09-01T00:00:00Z");
+    expect(content.places[0]!.infoUpdatedAt).toBe("2026-08-01T00:00:00Z");
   });
 });
 
@@ -151,6 +156,32 @@ describe("acciones de comercios", () => {
       cta_value: "+56 9 1234 5678",
     });
     expect(updateTag).toHaveBeenCalledWith("content");
+  });
+
+  it("markUpdated registra la fecha de hoy", async () => {
+    login();
+    stubFetch(role("editor"));
+    expect(await run(markUpdated(form({ id: ID })))).toBe(
+      "/admin/comercios?guardado=1#actualizacion",
+    );
+    const patch = calls.find((c) => c.init.method === "PATCH")!;
+    expect(patch.url).toContain(`places?id=eq.${ID}`);
+    const sent = JSON.parse(patch.init.body as string).info_updated_at;
+    expect(Math.abs(Date.parse(sent) - Date.now())).toBeLessThan(60_000);
+    expect(updateTag).toHaveBeenCalledWith("content");
+  });
+
+  it("markUpdated no deja al verificador ni acepta un id inválido", async () => {
+    login();
+    stubFetch(role("verifier"));
+    expect(await run(markUpdated(form({ id: ID })))).toBe(
+      "/admin/comercios?error=1#actualizacion",
+    );
+    stubFetch(role("admin"));
+    expect(await run(markUpdated(form({ id: "x" })))).toBe(
+      "/admin/comercios?error=1#actualizacion",
+    );
+    expect(calls.some((c) => c.init.method === "PATCH")).toBe(false);
   });
 
   it("saveCta sin tipo quita el botón", async () => {
