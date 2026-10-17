@@ -175,34 +175,71 @@ export const PLACES: PlaceContent[] = [
       },
     ],
   },
-  // Aportado por el usuario: Plus Code HHMQ+F7, Papudo (decodificado a
-  // -32.41631, -71.41181) y enlace de Google Maps (2026-10-13). Sin otras
-  // fuentes web: horarios, carta y contacto quedan pendientes de verificación.
+  // Ubicación: Plus Code HHMQ+F7, Papudo (decodificado a -32.41631, -71.41181;
+  // aportado por el usuario el 2026-10-13). Dirección, frase, horarios,
+  // WhatsApp, Instagram y enlace de Maps: los entregó el local en el
+  // formulario «Suma tu comercio» (17-10-2026). Pendiente de verificar en terreno.
   {
     slug: "roots-salinas",
     localitySlug: "las-salinas-papudo",
     categorySlug: "gastronomia",
     latitude: -32.4163125,
     longitude: -71.4118125,
+    address: "Estacionamiento de la playa Salinas de Pullally, Las Salinas",
     business: true,
     es: {
       name: "Roots Salinas",
       short:
-        "Local de comida en el sector Las Salinas de Pullally, comuna de Papudo. Información pendiente de verificación.",
+        "Comida junto al estacionamiento de la playa Salinas de Pullally. Su especialidad: el «churrasco salinero».",
       description:
-        "Local de comida en el sector Las Salinas de Pullally, en la comuna de Papudo. Su ubicación proviene de Google Maps (Plus Code HHMQ+F7); horarios, carta y contacto están pendientes de verificación.",
+        "Local de comida en Las Salinas, junto al estacionamiento de la playa Salinas de Pullally. Su dueño lo resume en una frase: «churrasco salinero». En enero y febrero abre todos los días; de marzo a diciembre, los fines de semana y festivos.",
     },
     en: {
       name: "Roots Salinas",
       short:
-        "Food spot in the Las Salinas de Pullally area, commune of Papudo. Information pending verification.",
+        "Food next to the Salinas de Pullally beach parking lot. Its specialty: the «churrasco salinero» steak sandwich.",
       description:
-        "Food spot in the Las Salinas de Pullally area, in the commune of Papudo. Its location comes from Google Maps (Plus Code HHMQ+F7); opening hours, menu and contact details are pending verification.",
+        "A food spot in Las Salinas, next to the Salinas de Pullally beach parking lot. Its owner sums it up in one phrase: «churrasco salinero» (a local steak sandwich). Open every day in January and February; from March to December, on weekends and public holidays.",
     },
+    pt: {
+      name: "Roots Salinas",
+      short:
+        "Comida ao lado do estacionamento da praia Salinas de Pullally. Sua especialidade: o «churrasco salinero».",
+      description:
+        "Local de comida em Las Salinas, ao lado do estacionamento da praia Salinas de Pullally. O dono o resume em uma frase: «churrasco salinero» (sanduíche de carne local). Abre todos os dias em janeiro e fevereiro; de março a dezembro, nos fins de semana e feriados.",
+    },
+    instagram: "https://www.instagram.com/roots.salinas/",
+    mapsUrl: "https://maps.app.goo.gl/ephntUVKSy3yhpAN7",
+    hours: [
+      {
+        fromMonth: 1,
+        toMonth: 2,
+        days: [0, 1, 2, 3, 4, 5, 6],
+        opens: "09:00",
+        closes: "22:00",
+      },
+      {
+        fromMonth: 3,
+        toMonth: 12,
+        days: [0, 6],
+        holidays: true,
+        opens: "10:00",
+        closes: "19:00",
+      },
+    ],
+    cta: { kind: "whatsapp", value: "+56 9 7270 2991" },
+    infoUpdatedAt: "2026-10-17T03:53:04Z",
     source: {
-      url: "https://maps.app.goo.gl/JN5FnoUCrZ6MjZXK8",
-      label: "Google Maps — Roots Salinas (HHMQ+F7, Papudo)",
+      url: "https://www.instagram.com/roots.salinas/",
+      label:
+        "Datos entregados por el local (formulario «Suma tu comercio», 17-10-2026)",
     },
+    extraSources: [
+      {
+        url: "https://maps.app.goo.gl/JN5FnoUCrZ6MjZXK8",
+        label: "Google Maps — Roots Salinas (HHMQ+F7, Papudo)",
+      },
+    ],
   },
   {
     slug: "papudo-playa-los-lilenes",

@@ -102,7 +102,14 @@
     "infoUpdated": "Dados do comércio",
     "infoUpdatedOn": "Confirmados em {date}",
     "infoNever": "A confirmar com o comércio",
-    "infoStale": "Passaram mais de 6 meses desde que o comércio confirmou seus dados: confira horários e preços antes de ir."
+    "infoStale": "Passaram mais de 6 meses desde que o comércio confirmou seus dados: confira horários e preços antes de ir.",
+    "hoursEveryDay": "Todos os dias",
+    "hoursHolidays": "feriados",
+    "hoursAnd": "e",
+    "hoursMonths": "{from} a {to}",
+    "hoursAllYear": "O ano todo",
+    "hoursSource": "Informado pelo local",
+    "instagram": "Instagram"
   },
   "routes": {
     "title": "Roteiros",

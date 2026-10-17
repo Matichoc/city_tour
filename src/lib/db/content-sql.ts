@@ -35,7 +35,7 @@ export function contentToSql(content: SiteContent): string {
   add(`
 -- GENERADO desde src/content con \`pnpm db:content\`. No editar a mano.
 -- Carga en Supabase el contenido que hoy muestra el sitio. Requiere las
--- migraciones hasta 0016 y supabase/seed.sql. Se puede ejecutar varias veces.
+-- migraciones hasta 0021 y supabase/seed.sql. Se puede ejecutar varias veces.
 -- Mientras no exista el panel municipal, el repo manda: volver a ejecutarlo
 -- sobrescribe los textos de estas fichas.
 begin;
@@ -78,17 +78,18 @@ join public.localities l on l.slug = v.slug;
   const placeSlugs = slugList(places.map((p) => p.slug));
   add(`
 -- Lugares (se crean en borrador y se publican al final, con su ficha en español)
-insert into public.places (slug, sort_order, category_id, locality_id, latitude, longitude, address, is_demo, is_business)
-select v.slug, v.sort_order, c.id, l.id, v.lat::numeric, v.lng::numeric, v.address, v.is_demo, v.is_business
+insert into public.places (slug, sort_order, category_id, locality_id, latitude, longitude, address, is_demo, is_business, instagram, maps_url)
+select v.slug, v.sort_order, c.id, l.id, v.lat::numeric, v.lng::numeric, v.address, v.is_demo, v.is_business, v.instagram, v.maps_url
 from (values
-${rows(places.map((p, i) => [p.slug, i + 1, p.categorySlug, p.localitySlug, p.latitude, p.longitude, p.address, p.demo === true, p.business === true]))}
-) as v(slug, sort_order, category, locality, lat, lng, address, is_demo, is_business)
+${rows(places.map((p, i) => [p.slug, i + 1, p.categorySlug, p.localitySlug, p.latitude, p.longitude, p.address, p.demo === true, p.business === true, p.instagram, p.mapsUrl]))}
+) as v(slug, sort_order, category, locality, lat, lng, address, is_demo, is_business, instagram, maps_url)
 join public.categories c on c.slug = v.category
 left join public.localities l on l.slug = v.locality
 on conflict (slug) do update set
   sort_order = excluded.sort_order, category_id = excluded.category_id, locality_id = excluded.locality_id,
   latitude = excluded.latitude, longitude = excluded.longitude, address = excluded.address,
-  is_demo = excluded.is_demo, is_business = excluded.is_business;
+  is_demo = excluded.is_demo, is_business = excluded.is_business,
+  instagram = excluded.instagram, maps_url = excluded.maps_url;
 
 delete from public.place_translations
   where place_id in (select id from public.places where slug in (${placeSlugs}));
@@ -125,6 +126,49 @@ ${rows(
 )}
 ) as v(slug, sort_order, title, url)
 join public.places p on p.slug = v.slug;
+`);
+
+  // Horarios por temporada (una fila por día) y datos que entregó el comercio.
+  // El botón de acción y la fecha de actualización se cargan solo si están
+  // vacíos: después se editan en el panel y el repo no los pisa.
+  const hourRows = places.flatMap((p) =>
+    (p.hours ?? []).flatMap((h) =>
+      h.days.map((d) => [
+        p.slug,
+        d,
+        h.opens,
+        h.closes,
+        h.fromMonth,
+        h.toMonth,
+        h.holidays === true,
+      ]),
+    ),
+  );
+  const owned = places.filter((p) => p.cta || p.infoUpdatedAt);
+  add(`
+delete from public.place_hours
+  where place_id in (select id from public.places where slug in (${placeSlugs}));
+${
+  hourRows.length === 0
+    ? ""
+    : `insert into public.place_hours (place_id, day_of_week, opens_at, closes_at, from_month, to_month, holidays)
+select p.id, v.day::smallint, v.opens::time, v.closes::time, v.from_month::smallint, v.to_month::smallint, v.holidays
+from (values
+${rows(hourRows)}
+) as v(slug, day, opens, closes, from_month, to_month, holidays)
+join public.places p on p.slug = v.slug;`
+}
+${
+  owned.length === 0
+    ? ""
+    : `update public.places p set
+  cta_kind = coalesce(p.cta_kind, v.cta_kind), cta_value = coalesce(p.cta_value, v.cta_value),
+  info_updated_at = coalesce(p.info_updated_at, v.info_updated_at::timestamptz)
+from (values
+${rows(owned.map((p) => [p.slug, p.cta?.kind, p.cta?.value, p.infoUpdatedAt]))}
+) as v(slug, cta_kind, cta_value, info_updated_at)
+where p.slug = v.slug and (p.cta_kind is null or p.info_updated_at is null);`
+}
 `);
 
   // ── Eventos ────────────────────────────────────────────────────────────

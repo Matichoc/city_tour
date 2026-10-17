@@ -23,6 +23,21 @@ export type LocalityContent = {
 
 export type PlaceText = { name: string; short: string; description: string };
 
+/**
+ * Horario de una temporada que se repite cada año. Los meses van de 1 a 12
+ * (pueden dar la vuelta: 12 → 2); los días, 0 = domingo … 6 = sábado.
+ */
+export type PlaceHours = {
+  fromMonth: number;
+  toMonth: number;
+  days: number[];
+  /** También abre los festivos con este horario. */
+  holidays?: boolean;
+  /** "HH:MM", hora de Chile. */
+  opens: string;
+  closes: string;
+};
+
 export type PlaceContent = {
   slug: string;
   localitySlug: string | null;
@@ -47,8 +62,14 @@ export type PlaceContent = {
   cta?: PlaceCta;
   /** Última verificación en terreno (de la base, ISO). */
   lastVerifiedAt?: string;
-  /** Última vez que el comercio confirmó sus datos (de la base, ISO). */
+  /** Última vez que el comercio confirmó sus datos (ISO). */
   infoUpdatedAt?: string;
+  /** Instagram del local (enlace completo). */
+  instagram?: string;
+  /** Enlace de Google Maps que compartió el local. */
+  mapsUrl?: string;
+  /** Horarios por temporada, como los informó el local. */
+  hours?: PlaceHours[];
   source?: Source;
   tvSource?: Source;
   extraSources?: Source[];

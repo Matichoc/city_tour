@@ -217,3 +217,27 @@ Fuente: PLADETUR de Papudo 2023–2027, iD (`docs/investigacion/`).
   minutos; `finish_review_media()` deja en revisión solo lo que llegó.
 - Más adelante, con tráfico: un servicio en el servidor (Sightengine, Google
   Vision o AWS Rekognition) podría aprobar solo lo que pase su revisión.
+
+## Datos de los comercios que se suman (migración 0021)
+
+- El formulario «Suma tu comercio» (Google Forms → planilla) es la fuente de
+  los comercios adheridos. Se cargan en `src/content` con su fuente («Datos
+  entregados por el local», con fecha) y quedan `pending` hasta verificarlos
+  en terreno. El nombre y el correo de quien responde **no** se publican ni se
+  guardan en el repo.
+- Horarios por temporada que se repiten cada año (`place_hours.from_month`,
+  `to_month`, `holidays`; día 0 = domingo). La ficha los muestra como
+  «Enero a febrero · Todos los días · 09:00–22:00» y aclara «Informado por el
+  local». Sin horarios, sigue «Por confirmar».
+- Instagram y enlace de Google Maps del local (`places.maps_url`): «Cómo
+  llegar» usa la coordenada si existe; si no, el enlace de Maps; si no, una
+  búsqueda por nombre y dirección.
+- El botón de WhatsApp y la fecha de confirmación entran por `content.sql`
+  solo si están vacíos; después mandan los cambios del panel.
+- Primer comercio: Roots Salinas (17-10-2026).
+
+## Paleta desde el logo municipal
+
+Los tokens de color del sitio pasaron a los colores del logo en versión
+pálida (detalle y contrastes en [`MARCA-REFERENCIA.md`](MARCA-REFERENCIA.md)).
+El logo no se usa.

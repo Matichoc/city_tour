@@ -19,6 +19,7 @@ import type {
   CtaKind,
   EventContent,
   PlaceCta,
+  PlaceHours,
   Source,
 } from "@/content/types";
 import type { Locale } from "@/i18n/routing";
@@ -77,6 +78,9 @@ export type Place = {
   lastVerifiedAt: string | null;
   /** Última vez que el comercio confirmó sus datos (ISO), si la hubo. */
   infoUpdatedAt: string | null;
+  instagram: string | null;
+  mapsUrl: string | null;
+  hours: PlaceHours[];
 };
 
 /** Enlace del botón de acción: WhatsApp y teléfono se arman desde el número. */
@@ -260,6 +264,9 @@ export function createData(content: SiteContent, showDemo = SHOW_DEMO) {
       })(),
       lastVerifiedAt: p.lastVerifiedAt ?? null,
       infoUpdatedAt: p.infoUpdatedAt ?? null,
+      instagram: p.instagram ?? null,
+      mapsUrl: p.mapsUrl ?? null,
+      hours: p.hours ?? [],
     };
   }
 

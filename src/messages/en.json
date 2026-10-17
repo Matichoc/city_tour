@@ -102,7 +102,14 @@
     "infoUpdated": "Business details",
     "infoUpdatedOn": "Confirmed on {date}",
     "infoNever": "To be confirmed with the business",
-    "infoStale": "More than 6 months have passed since the business confirmed its details: check hours and prices before you go."
+    "infoStale": "More than 6 months have passed since the business confirmed its details: check hours and prices before you go.",
+    "hoursEveryDay": "Every day",
+    "hoursHolidays": "public holidays",
+    "hoursAnd": "and",
+    "hoursMonths": "{from} to {to}",
+    "hoursAllYear": "All year",
+    "hoursSource": "Provided by the business",
+    "instagram": "Instagram"
   },
   "routes": {
     "title": "Routes",

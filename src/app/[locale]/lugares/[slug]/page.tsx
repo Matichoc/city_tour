@@ -32,6 +32,7 @@ import { BusinessInvite } from "@/components/business/business-invite";
 import { listReviews, reviewStats } from "@/lib/reviews";
 import { listNotices } from "@/lib/business";
 import { freshness } from "@/lib/freshness";
+import { formatHours } from "@/lib/hours";
 
 export async function generateStaticParams() {
   const data = await getData();
@@ -96,6 +97,13 @@ export default async function PlacePage({
       timeZone: "America/Santiago",
       dateStyle: "long",
     }).format(new Date(iso));
+  const hoursWords = {
+    everyDay: t("hoursEveryDay"),
+    holidays: t("hoursHolidays"),
+    and: t("hoursAnd"),
+    allYear: t("hoursAllYear"),
+    monthRange: (from: string, to: string) => t("hoursMonths", { from, to }),
+  };
   const infoState =
     place.business && !place.demo ? freshness(place.infoUpdatedAt) : null;
   const sections = [
@@ -229,9 +237,11 @@ export default async function PlacePage({
               href={
                 place.latitude !== null && place.longitude !== null
                   ? directionsUrl(place.latitude, place.longitude)
-                  : searchUrl(
-                      `${place.name}, ${place.address ?? "Papudo"}, Chile`,
-                    )
+                  : place.mapsUrl
+                    ? place.mapsUrl
+                    : searchUrl(
+                        `${place.name}, ${place.address ?? "Papudo"}, Chile`,
+                      )
               }
               target="_blank"
               rel="noopener noreferrer"
@@ -339,8 +349,39 @@ export default async function PlacePage({
               <>
                 <div className="flex justify-between gap-4 p-4">
                   <dt className="font-bold">{t("hours")}</dt>
-                  <dd className="text-muted">{t("hoursPending")}</dd>
+                  {place.hours.length > 0 ? (
+                    <dd className="text-muted flex flex-col items-end gap-2 text-right">
+                      {place.hours.map((h) => {
+                        const f = formatHours(h, locale, hoursWords);
+                        return (
+                          <span key={`${h.fromMonth}-${h.opens}`}>
+                            <b className="text-foreground">{f.season}</b>
+                            <br />
+                            {f.days} · {f.time}
+                          </span>
+                        );
+                      })}
+                      <span className="text-xs">{t("hoursSource")}</span>
+                    </dd>
+                  ) : (
+                    <dd className="text-muted">{t("hoursPending")}</dd>
+                  )}
                 </div>
+                {place.instagram ? (
+                  <div className="flex justify-between gap-4 p-4">
+                    <dt className="font-bold">{t("instagram")}</dt>
+                    <dd>
+                      <a
+                        href={place.instagram}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sea underline"
+                      >
+                        @{place.instagram.replace(/\/+$/, "").split("/").at(-1)}
+                      </a>
+                    </dd>
+                  </div>
+                ) : null}
                 <div className="flex justify-between gap-4 p-4">
                   <dt className="font-bold">{t("lastVerified")}</dt>
                   <dd className="text-muted">

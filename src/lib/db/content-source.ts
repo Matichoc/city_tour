@@ -7,6 +7,7 @@
 import { STATIC_CONTENT, type SiteContent } from "@/content";
 import { CATEGORY_DEFS } from "@/content/catalog";
 import { ILLUSTRATIONS, type IllustrationKey } from "@/content/images";
+import { groupHours } from "@/lib/hours";
 import type {
   CategorySlug,
   EventContent,
@@ -51,6 +52,9 @@ export type PlaceRow = {
   cta_value: string | null;
   last_verified_at?: string | null;
   info_updated_at?: string | null;
+  instagram?: string | null;
+  maps_url?: string | null;
+  hours?: HoursRow[];
   category: SlugRef;
   locality: SlugRef;
   translations: Tr<{
@@ -60,6 +64,8 @@ export type PlaceRow = {
   }>;
   sources: SourceRow[];
 };
+
+type HoursRow = Parameters<typeof groupHours>[0][number];
 
 export type EventRow = {
   slug: string;
@@ -116,7 +122,8 @@ export const QUERIES: Record<keyof ContentRows, string> = {
     "translations:locality_translations(locale,name,summary)&order=sort_order,slug",
   places:
     "places?select=slug,latitude,longitude,address,is_demo,is_business,verification_status,cta_kind,cta_value," +
-    "last_verified_at,info_updated_at," +
+    "last_verified_at,info_updated_at,instagram,maps_url," +
+    "hours:place_hours(day_of_week,opens_at,closes_at,closed,from_month,to_month,holidays)," +
     "category:categories(slug),locality:localities(slug)," +
     `translations:place_translations(locale,name,short_description,full_description),${SOURCES}` +
     "&publication_status=eq.published&order=sort_order,slug&sources.order=sort_order",
@@ -183,6 +190,9 @@ function toPlace(r: PlaceRow): PlaceContent | null {
       : {}),
     ...(r.last_verified_at ? { lastVerifiedAt: r.last_verified_at } : {}),
     ...(r.info_updated_at ? { infoUpdatedAt: r.info_updated_at } : {}),
+    ...(r.instagram ? { instagram: r.instagram } : {}),
+    ...(r.maps_url ? { mapsUrl: r.maps_url } : {}),
+    ...(r.hours?.length ? { hours: groupHours(r.hours) } : {}),
     ...(source ? { source } : {}),
     ...(extraSources.length ? { extraSources } : {}),
   };
