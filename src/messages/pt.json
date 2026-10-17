@@ -125,7 +125,9 @@
     "sernaturExpired": "vencido em {date}",
     "sernaturNote": "Serviço turístico registrado no SERNATUR (Serviço Nacional de Turismo do Chile), segundo informa o local.",
     "website": "Site",
-    "ownerValidated": "Validada pelo representante do local"
+    "ownerValidated": "Validada pelo representante do local",
+    "galleryPrev": "Foto anterior",
+    "galleryNext": "Próxima foto"
   },
   "routes": {
     "title": "Roteiros",

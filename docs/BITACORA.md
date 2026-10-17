@@ -14,12 +14,12 @@ indicadas en cada versión.
 `docs/bitacora-notas.json` (clave `actual`, y el número de PR cuando exista),
 correr `pnpm bitacora` y subir el cambio en el mismo PR.
 
-## En preparación: v0.21 — Plan de idiomas originarios (mapudungun y rapa nui)
+## En preparación: v0.22 — Galería de la ficha con flechas
 
-Plan y planilla de 99 textos para que una persona hablante traduzca; sin código ni traducciones automáticas.
+La galería de fotos del local muestra una imagen a la vez con flechas a los lados, contador y deslizado con el dedo, sin la barra de desplazamiento.
 
 - **Estado:** en desarrollo (aún no está en `develop`).
-- **Última actualización de esta bitácora:** 2026-10-17 03:02
+- **Última actualización de esta bitácora:** 2026-10-17 03:09
 
 ## Avance por día
 
@@ -28,7 +28,7 @@ trabajadas: hay pausas y trabajo sin registrar).
 
 | Día | Ventana de actividad | Registros | Versiones entregadas |
 | --- | --- | ---: | --- |
-| Sábado, 17 de octubre de 2026 | 00:01 – 02:53 | 15 | v0.16, v0.17, v0.18, v0.19, v0.20 |
+| Sábado, 17 de octubre de 2026 | 00:01 – 03:02 | 16 | v0.16, v0.17, v0.18, v0.19, v0.20, v0.21 |
 | Viernes, 16 de octubre de 2026 | 00:04 – 23:51 | 15 | v0.9, v0.10, v0.11, v0.12, v0.13, v0.14, v0.15 |
 | Jueves, 15 de octubre de 2026 | 00:05 – 23:52 | 10 | v0.7, v0.8 |
 | Miércoles, 14 de octubre de 2026 | 23:50 – 23:50 | 1 | — |
@@ -36,6 +36,15 @@ trabajadas: hay pausas y trabajo sin registrar).
 | Lunes, 12 de octubre de 2026 | 15:43 – 17:53 | 10 | v0.1, v0.2, v0.3, v0.4 |
 
 ## Versiones
+
+### v0.21 — Plan de idiomas originarios (mapudungun y rapa nui)
+Sábado, 17 de octubre de 2026, 03:05 · [PR #24](https://github.com/Matichoc/city_tour/pull/24)
+
+Plan y planilla de 99 textos para que una persona hablante traduzca; sin código ni traducciones automáticas.
+
+Registros:
+
+- 10-17 03:02 — Plan de idiomas originarios (mapudungun y rapa nui) y planilla de textos a traducir (`eb06918`)
 
 ### v0.20 — Fuente «validada por el representante», videos y edición completa por local
 Sábado, 17 de octubre de 2026, 02:58 · [PR #23](https://github.com/Matichoc/city_tour/pull/23)

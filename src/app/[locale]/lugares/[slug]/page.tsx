@@ -23,6 +23,7 @@ import { PlacesMap } from "@/components/map/places-map";
 import { QrVisit } from "@/components/analytics/qr-visit";
 import { DEMO_REVIEWS } from "@/content/demo-content";
 import { DemoReviews, RatingSummary } from "@/components/place/demo-reviews";
+import { Gallery } from "@/components/place/gallery";
 import { SaveButton } from "@/components/place/save-button";
 import { ReviewsPanel } from "@/components/place/reviews-panel";
 import { Stars } from "@/components/ui/stars";
@@ -322,50 +323,24 @@ export default async function PlacePage({
             <h2 className="font-display text-xl font-extrabold">
               {t("tabGallery")}
             </h2>
-            <ul className="-mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-2">
-              {place.gallery.map((g) => (
-                <li
-                  key={g.src}
-                  className="w-[85%] max-w-md shrink-0 snap-start sm:w-[60%]"
-                >
-                  <figure className="border-border bg-surface overflow-hidden rounded-2xl border">
-                    {g.kind === "video" ? (
-                      <video
-                        src={g.src}
-                        width={g.width}
-                        height={g.height}
-                        aria-label={g.alt}
-                        controls
-                        playsInline
-                        preload="metadata"
-                        className="h-auto w-full bg-black"
-                      />
-                    ) : (
-                      <a href={g.src} target="_blank" rel="noopener">
-                        {/* eslint-disable-next-line @next/next/no-img-element -- archivo local, se abre en tamaño completo */}
-                        <img
-                          src={g.src}
-                          width={g.width}
-                          height={g.height}
-                          alt={g.alt}
-                          loading="lazy"
-                          decoding="async"
-                          className="h-auto w-full bg-white"
-                        />
-                      </a>
-                    )}
-                    <figcaption className="text-muted flex justify-between gap-2 px-3 py-2 text-xs">
-                      <b className="text-foreground">
-                        {t(`galleryKind.${g.kind}`)}
-                      </b>
-                      {g.credit ? (
-                        <span>{t("imageCredit", { credit: g.credit })}</span>
-                      ) : null}
-                    </figcaption>
-                  </figure>
-                </li>
-              ))}
-            </ul>
+            <Gallery
+              items={place.gallery.map((g) => ({
+                src: g.src,
+                alt: g.alt,
+                kind: g.kind,
+                width: g.width,
+                height: g.height,
+                kindLabel: t(`galleryKind.${g.kind}`),
+                credit: g.credit
+                  ? t("imageCredit", { credit: g.credit })
+                  : null,
+              }))}
+              labels={{
+                prev: t("galleryPrev"),
+                next: t("galleryNext"),
+                region: t("tabGallery"),
+              }}
+            />
             <p className="text-muted text-xs">{t("galleryNote")}</p>
           </section>
         ) : null}

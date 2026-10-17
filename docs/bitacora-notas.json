@@ -86,8 +86,12 @@
     "resumen": "La ficha muestra «Validada por el representante del local» en vez de hablar del formulario; cada local se edita completo desde el panel (datos, horarios por temporada, logo, carta, fotos, promociones y videos, con orden, texto y crédito); videos de hasta 50 MB subidos directo a Storage. Accesos a «Nuevo comercio», «Importar planilla» y «Editar ficha, fotos y videos» también desde Fichas → Lugares.",
     "migraciones": "0024"
   },
-  "actual": {
+  "24": {
     "titulo": "Plan de idiomas originarios (mapudungun y rapa nui)",
     "resumen": "Plan y planilla de 99 textos para que una persona hablante traduzca; sin código ni traducciones automáticas."
+  },
+  "actual": {
+    "titulo": "Galería de la ficha con flechas",
+    "resumen": "La galería de fotos del local muestra una imagen a la vez con flechas a los lados, contador y deslizado con el dedo, sin la barra de desplazamiento."
   }
 }

@@ -125,7 +125,9 @@
     "sernaturExpired": "expired on {date}",
     "sernaturNote": "Tourism service registered with SERNATUR (Chile’s National Tourism Service), as reported by the business.",
     "website": "Website",
-    "ownerValidated": "Validated by the business representative"
+    "ownerValidated": "Validated by the business representative",
+    "galleryPrev": "Previous photo",
+    "galleryNext": "Next photo"
   },
   "routes": {
     "title": "Routes",
