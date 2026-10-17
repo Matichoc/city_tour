@@ -1,5 +1,6 @@
 -- Datos iniciales. SOLO catálogo y municipio: nada de lugares ni negocios.
--- Los lugares reales se cargan desde CSV con fuente y fecha (docs/PLAN.md Fase 3).
+-- El contenido del sitio (lugares, eventos, rutas, localidades) está en
+-- supabase/content.sql, generado desde src/content (pnpm db:content).
 -- Se puede ejecutar varias veces.
 
 insert into public.municipality (name, slug, map_center_lat, map_center_lng, map_default_zoom)
@@ -13,51 +14,35 @@ insert into public.municipality_translations (locale, description, translation_s
   ('en', 'Tourist guide to the commune of Papudo.', 'draft')
 on conflict (locale) do nothing;
 
--- Categorías (raíz)
-with c(slug, icon, sort_order, es, en) as (values
-  ('playas', 'beach', 1, 'Playas', 'Beaches'),
-  ('patrimonio', 'landmark', 2, 'Patrimonio', 'Heritage'),
-  ('gastronomia', 'utensils', 3, 'Gastronomía', 'Food'),
-  ('alojamiento', 'bed', 4, 'Alojamiento', 'Stay'),
-  ('naturaleza', 'leaf', 5, 'Naturaleza', 'Nature'),
-  ('actividades', 'activity', 6, 'Actividades', 'Activities'),
-  ('comercio-local', 'store', 7, 'Comercio local', 'Local shops'),
-  ('miradores', 'eye', 8, 'Miradores', 'Viewpoints'),
-  ('ferias-mercados', 'shopping-basket', 9, 'Ferias y mercados', 'Fairs and markets'),
-  ('servicios', 'info', 10, 'Servicios útiles', 'Useful services')
+-- Categorías = productos turísticos del PLADETUR de Papudo (iD, 2023, p. 136)
+-- más alojamiento, que es un servicio. Deben coincidir con
+-- src/content/catalog.ts (lo comprueba tests/unit/content-sql.test.ts).
+-- Minutos de visita ESTIMADOS para el motor de recorridos.
+with c(slug, sort_order, minutes, es, en, pt) as (values
+  ('balneario', 1, 90, 'Balneario', 'Seaside', 'Balneário'),
+  ('recreacion', 2, 90, 'Recreación', 'Recreation', 'Recreação'),
+  ('deportes', 3, 90, 'Deportes', 'Sports', 'Esportes'),
+  ('patrimonio', 4, 30, 'Cultura y patrimonio', 'Culture & heritage', 'Cultura e patrimônio'),
+  ('gastronomia', 5, 60, 'Gastronomía', 'Food', 'Gastronomia'),
+  ('ruralidad', 6, 60, 'Campo y ruralidad', 'Countryside', 'Campo e ruralidade'),
+  ('alojamiento', 7, 0, 'Alojamiento', 'Stay', 'Hospedagem')
 ), ins as (
-  insert into public.categories (slug, icon, sort_order)
-  select slug, icon, sort_order from c
-  on conflict (slug) do nothing
+  insert into public.categories (slug, sort_order, default_visit_minutes)
+  select slug, sort_order, minutes from c
+  on conflict (slug) do update
+    set sort_order = excluded.sort_order,
+        default_visit_minutes = excluded.default_visit_minutes,
+        parent_id = null
   returning id, slug
 )
 insert into public.category_translations (category_id, locale, name, translation_status)
-select cat.id, l.locale, case l.locale when 'es' then c.es else c.en end,
+select cat.id, l.locale,
+       case l.locale when 'es' then c.es when 'en' then c.en else c.pt end,
        case l.locale when 'es' then null else 'draft'::public.translation_status end
 from c
 join public.categories cat on cat.slug = c.slug
-cross join (values ('es'::public.locale), ('en'::public.locale)) as l(locale)
-on conflict (category_id, locale) do nothing;
-
--- Subcategorías de alojamiento (tipos genéricos, no establecimientos)
-with s(slug, sort_order, es, en) as (values
-  ('hoteles', 1, 'Hoteles', 'Hotels'),
-  ('cabanas', 2, 'Cabañas', 'Cabins'),
-  ('hostales', 3, 'Hostales', 'Hostels'),
-  ('camping', 4, 'Camping', 'Camping')
-), ins as (
-  insert into public.categories (slug, parent_id, sort_order)
-  select s.slug, (select id from public.categories where slug = 'alojamiento'), s.sort_order from s
-  on conflict (slug) do nothing
-  returning id
-)
-insert into public.category_translations (category_id, locale, name, translation_status)
-select cat.id, l.locale, case l.locale when 'es' then s.es else s.en end,
-       case l.locale when 'es' then null else 'draft'::public.translation_status end
-from s
-join public.categories cat on cat.slug = s.slug
-cross join (values ('es'::public.locale), ('en'::public.locale)) as l(locale)
-on conflict (category_id, locale) do nothing;
+cross join (values ('es'::public.locale), ('en'::public.locale), ('pt'::public.locale)) as l(locale)
+on conflict (category_id, locale) do update set name = excluded.name;
 
 -- Etiquetas / características
 with t(slug, es, en) as (values

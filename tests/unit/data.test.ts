@@ -2,20 +2,13 @@ import { describe, expect, it } from "vitest";
 import { LOCALITIES, PLACES } from "@/content/papudo-places";
 import { ROUTES } from "@/content/papudo-routes";
 import { MUNICIPALITY, SPONSOR } from "@/content/catalog";
+import { STATIC_CONTENT } from "@/content";
 import {
-  getLocality,
-  getPlace,
-  isLocated,
-  getRoute,
   canonicalCategory,
+  createData,
   isCategorySlug,
-  listEvents,
-  listIndexableEventSlugs,
-  listIndexablePlaceSlugs,
+  isLocated,
   seededRating,
-  listCategories,
-  listPlaces,
-  listRoutes,
 } from "@/lib/data";
 import { addMinutesToClock, formatDuration } from "@/lib/itinerary-format";
 import es from "@/messages/es.json";
@@ -23,6 +16,19 @@ import en from "@/messages/en.json";
 import pt from "@/messages/pt.json";
 import { locales } from "@/i18n/routing";
 import { DEMO_PLACES, DEMO_REVIEWS } from "@/content/demo-content";
+
+// El contenido del repo: el mismo que muestra el sitio sin base de datos.
+const {
+  getLocality,
+  getPlace,
+  getRoute,
+  listCategories,
+  listEvents,
+  listIndexableEventSlugs,
+  listIndexablePlaceSlugs,
+  listPlaces,
+  listRoutes,
+} = createData(STATIC_CONTENT, true);
 
 const keys = (o: object, p = ""): string[] =>
   Object.entries(o).flatMap(([k, v]) =>

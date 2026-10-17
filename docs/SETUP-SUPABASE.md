@@ -1,5 +1,12 @@
 # Base de datos: puesta en marcha
 
+**Cómo usa la base el sitio.** Con `NEXT_PUBLIC_SUPABASE_URL` y
+`NEXT_PUBLIC_SUPABASE_ANON_KEY` definidas, el sitio lee lugares, eventos,
+rutas y localidades de Supabase (solo lo publicado) y refresca cada 5 minutos.
+Sin esas variables, o si la base falla o no tiene lugares publicados, usa el
+contenido del repo (`src/content`). Así producción sigue funcionando igual
+mientras no tenga base propia. Código: `src/lib/db/content-source.ts`.
+
 Hay dos caminos. El **local** no cuesta nada y sirve para desarrollar.
 El **alojado** hace falta para que el sitio desplegado en Vercel lea datos reales.
 
@@ -14,6 +21,8 @@ supabase init                 # crea supabase/config.toml; NO toca las migracion
 
 # 3) Levantar Postgres + Auth + Storage + Studio en tu máquina
 supabase start                # aplica supabase/migrations/* y supabase/seed.sql
+psql postgresql://postgres:postgres@127.0.0.1:54322/postgres -f supabase/content.sql
+                              # carga el contenido del sitio (DB URL de `supabase status`)
 
 # 4) Ver URL y claves LOCALES
 supabase status               # copia API URL y anon key a .env.local
@@ -44,16 +53,64 @@ desplegado con datos reales se necesita un proyecto Supabase en la nube:
 supabase login
 supabase link --project-ref <ref>
 supabase db push              # aplica las migraciones
-# el seed del catálogo: pegar supabase/seed.sql en el SQL editor
 ```
 
-Variables en Vercel (Settings → Environment Variables):
-`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `NEXT_PUBLIC_SITE_URL`.
-**Nunca** pongas `SUPABASE_SERVICE_ROLE_KEY` en variables `NEXT_PUBLIC_*`.
+Sin CLI, todo se hace en el **SQL Editor** de Supabase, pegando los archivos en
+este orden (cada paso en una ejecución aparte):
 
-Mientras no haya proyecto alojado, Vercel despliega sin problema la versión actual
-(datos de demostración, sin base de datos).
+1. Las migraciones que falten de `supabase/migrations/`, en orden.
+2. `supabase/seed.sql` (catálogo y municipio).
+3. `supabase/content.sql` (lugares, eventos, rutas y localidades del sitio).
+
+`seed.sql` y `content.sql` se pueden volver a ejecutar sin duplicar nada.
+`0016` agrega el idioma `pt`, que Postgres no deja usar en la misma
+transacción en que se crea: por eso va en una ejecución aparte de los pasos 2 y 3.
+
+**`NEXT_PUBLIC_SUPABASE_URL` es la URL del proyecto, sin `/rest/v1/`:**
+`https://<ref>.supabase.co`. La página *Integrations → Data API* de Supabase
+muestra la dirección con `/rest/v1/` al final; ese final se quita. (El código
+lo tolera, pero otras herramientas no.) Se encuentra en
+*Project Settings → Data API* y la clave en *Project Settings → API Keys*
+(`anon public` o `sb_publishable_…`).
+
+Variables en Vercel (Settings → Environment Variables), tipo **Config** (no son
+secretas: igual llegan al navegador):
+
+| Variable | Production | Preview / Development |
+| --- | --- | --- |
+| `NEXT_PUBLIC_SUPABASE_URL` | proyecto de producción (cuando exista) | proyecto de desarrollo |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | ídem | ídem |
+| `NEXT_PUBLIC_SITE_URL` | dominio público | opcional |
+
+**Nunca** pongas `SUPABASE_SERVICE_ROLE_KEY` ni una clave `sb_secret_…` en
+Vercel ni en variables `NEXT_PUBLIC_*`.
+
+Mientras producción no tenga sus variables, Vercel despliega sin problema la
+versión actual con el contenido del repo.
+
+## C. Proyecto de desarrollo actual (`city_tour`)
+
+Ese proyecto traía el esquema de una app anterior, con tablas de igual nombre
+que las nuevas (`places`, `routes`, `tags`...). El 2026-10-16 se archivó
+completo en el esquema `legacy` con
+`supabase/manual/archivar-esquema-anterior.sql` (no borra nada; la lista de lo
+movido está en `legacy._archivo`) y luego se aplicaron 0001–0015 y el seed.
+Lo archivado ya no se expone por la API; se consulta desde el SQL Editor.
+
+## Cambiar el contenido
+
+Hasta que exista el panel municipal (Fase 2), el contenido se edita en
+`src/content` y se lleva a la base así:
+
+```bash
+pnpm db:content     # regenera supabase/content.sql desde src/content
+```
+
+y se ejecuta `supabase/content.sql` en el SQL Editor. `pnpm test` falla si
+`content.sql` quedó desactualizado.
 
 ## Probar las migraciones sin Supabase
 
 `pnpm test:db` (requiere un Postgres local o `DATABASE_URL` de una base desechable).
+Aplica las migraciones, el seed y `content.sql` (dos veces cada uno) y corre las
+pruebas de permisos y de contenido.

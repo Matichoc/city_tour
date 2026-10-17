@@ -27,4 +27,8 @@ for f in tests/db/*.test.sql; do [[ -e "$f" ]] || continue
   echo "→ $f"
   "${PSQL[@]}" -o /dev/null -f "$f"
 done
+echo "→ contenido del sitio (dos veces: debe ser idempotente)"
+"${PSQL[@]}" -f supabase/content.sql
+"${PSQL[@]}" -f supabase/content.sql
+"${PSQL[@]}" -o /dev/null -f tests/db/content.check.sql
 echo "✔ Base de datos: migraciones y pruebas OK"

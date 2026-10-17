@@ -1,7 +1,7 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { Metadata } from "next";
 import { resolveLocale } from "@/i18n/utils";
-import { listRoutes } from "@/lib/data";
+import { getData } from "@/lib/data";
 import { buildPageMetadata } from "@/lib/seo";
 import { PageHero } from "@/components/ui/page-hero";
 import { RouteCard } from "@/components/route/route-card";
@@ -29,7 +29,8 @@ export default async function RoutesPage({
   const locale = resolveLocale((await params).locale);
   setRequestLocale(locale);
   const t = await getTranslations("routes");
-  const routes = listRoutes(locale);
+  const data = await getData();
+  const routes = data.listRoutes(locale);
 
   return (
     <main className="flex flex-col">

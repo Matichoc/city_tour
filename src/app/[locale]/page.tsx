@@ -2,14 +2,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { Metadata } from "next";
 import { Link, getPathname } from "@/i18n/navigation";
 import { resolveLocale } from "@/i18n/utils";
-import {
-  isLocated,
-  listCategories,
-  listEvents,
-  listLocalities,
-  listPlaces,
-  listRoutes,
-} from "@/lib/data";
+import { getData, isLocated } from "@/lib/data";
 import { CommuneMap3D } from "@/components/map/commune-map-3d";
 import { buildPageMetadata, getSiteUrl, localizedUrl } from "@/lib/seo";
 import { HeroScene } from "@/components/ui/hero-scene";
@@ -48,10 +41,12 @@ export default async function HomePage({
   setRequestLocale(locale);
   const t = await getTranslations("home");
   const te = await getTranslations("events");
-  const categories = listCategories(locale);
-  const places = listPlaces(locale).slice(0, 4);
-  const routes = listRoutes(locale);
-  const mapPlaces = listPlaces(locale)
+  const data = await getData();
+  const categories = data.listCategories(locale);
+  const places = data.listPlaces(locale).slice(0, 4);
+  const routes = data.listRoutes(locale);
+  const mapPlaces = data
+    .listPlaces(locale)
     .filter(isLocated)
     .map((p) => ({
       slug: p.slug,
@@ -60,8 +55,8 @@ export default async function HomePage({
       longitude: p.longitude,
       category: p.categorySlug,
     }));
-  const localities = listLocalities(locale);
-  const eventCount = listEvents(locale).length;
+  const localities = data.listLocalities(locale);
+  const eventCount = data.listEvents(locale).length;
 
   return (
     <main className="flex flex-col">

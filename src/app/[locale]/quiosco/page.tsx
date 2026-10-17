@@ -2,7 +2,7 @@ import QRCode from "qrcode";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { Metadata } from "next";
 import { resolveLocale } from "@/i18n/utils";
-import { listCategories, listEvents, listPlaces, listRoutes } from "@/lib/data";
+import { getData } from "@/lib/data";
 import { eventWhen, monthName } from "@/lib/event-format";
 import { localizedUrl } from "@/lib/seo";
 import { KioskApp } from "@/components/kiosk/kiosk-app";
@@ -27,8 +27,9 @@ export default async function KioskPage({
   setRequestLocale(locale);
   const te = await getTranslations("events");
 
+  const data = await getData();
   const places = await Promise.all(
-    listPlaces(locale).map(async (p) => ({
+    data.listPlaces(locale).map(async (p) => ({
       slug: p.slug,
       name: p.name,
       shortDescription: p.shortDescription,
@@ -49,7 +50,7 @@ export default async function KioskPage({
   );
 
   const routes = await Promise.all(
-    listRoutes(locale).map(async (r) => ({
+    data.listRoutes(locale).map(async (r) => ({
       slug: r.slug,
       name: r.name,
       description: r.description,
@@ -63,7 +64,7 @@ export default async function KioskPage({
     })),
   );
 
-  const events = listEvents(locale).map((e) => ({
+  const events = data.listEvents(locale).map((e) => ({
     slug: e.slug,
     name: e.name,
     shortDescription: e.shortDescription,
@@ -78,7 +79,7 @@ export default async function KioskPage({
   return (
     <main>
       <KioskApp
-        categories={listCategories(locale)}
+        categories={data.listCategories(locale)}
         places={places}
         events={events}
         routes={routes}

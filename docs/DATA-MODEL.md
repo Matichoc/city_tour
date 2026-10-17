@@ -11,7 +11,7 @@ sola fila en `municipality`.
 
 - **Sin PostGIS.** Una sola comuna: `latitude`/`longitude` simples con `check` de rango; las distancias las calcula el motor de itinerarios.
 - **Nada se inventa.** Los booleanos (`parking`, `bathrooms`, `child_friendly`...) son `nullable`: `null` = no se sabe. Las coordenadas son opcionales.
-- **Español obligatorio, inglés opcional.** Traducciones en tablas `*_translations` con PK `(entidad, locale)`. La fila `es` no lleva `translation_status`; la `en` sí (`draft` / `needs_review` / `reviewed`). Falta de fila en inglés = "solo español".
+- **Español obligatorio; inglés y portugués opcionales.** Traducciones en tablas `*_translations` con PK `(entidad, locale)`. La fila `es` no lleva `translation_status`; `en` y `pt` sí (`draft` / `needs_review` / `reviewed`). Falta de fila = "solo español".
 - **Publicación y verificación son ejes separados.** `publication_status` (`draft`/`published`/`archived`) y `verification_status` (`pending`/`verified`/`outdated`).
 - **FKs reales** en `sources`, `verification_logs` y `verification_tasks` (una columna por tipo de entidad + `check` de que exactamente una venga con valor), en vez de un `entity_id` suelto.
 
@@ -20,12 +20,12 @@ sola fila en `municipality`.
 | Grupo         | Tablas |
 | ------------- | ------ |
 | Geografía     | `municipality` (1 fila), `municipality_translations`, `localities`, `locality_translations` |
-| Catálogo      | `categories` (con `parent_id`), `category_translations`, `tags`, `tag_translations` |
+| Catálogo      | `categories` (productos del PLADETUR + alojamiento, con `default_visit_minutes`), `category_translations`, `tags`, `tag_translations` |
 | Identidad     | `profiles` (rol del personal), `organization_members` (Fase 7, vacía) |
 | Organizaciones| `organizations`, `organization_translations`, `chamber_memberships` (socios de la Cámara) |
 | Lugares       | `places`, `place_translations`, `place_hours`, `place_images`, `place_tags`, `lodging_details`, `dining_details` |
 | Rutas         | `routes`, `route_translations`, `route_stops` (posición única, diferida), `route_stop_translations` |
-| Eventos       | `events`, `event_translations` |
+| Eventos       | `events` (recurrentes: `recurrence_month`/`recurrence_day`/`season`; `starts_at` solo para ediciones con fecha confirmada), `event_translations` |
 | Verificación  | `sources`, `verification_logs`, `verification_tasks` |
 | Auditoría     | `audit_log` |
 | Visitantes    | `itineraries`, `itinerary_stops`, `analytics_events` |
@@ -48,9 +48,22 @@ Un usuario sin perfil, o con perfil `active = false`, solo ve lo publicado.
 - Solo un `admin` publica o archiva; un editor no puede (`guard_editorial_fields`).
 - La verificación se cambia **solo** con `verify_entity(entidad, id, estado, notas, evidencia)`: exige `admin` o `verifier`, fija `last_verified_at` y escribe `verification_logs`.
 - No se publica sin traducción en español (`require_spanish_to_publish`).
-- Si cambia el texto en español, las traducciones inglesas pasan a `needs_review` (`flag_translations_for_review`).
+- Si cambia el texto en español, las traducciones (`en`, `pt`) pasan a `needs_review` (`flag_translations_for_review`).
 - Toda modificación editorial queda en `audit_log` con el diff (solo lectura para el personal).
 - Servicio/seed (sin sesión de usuario) no está sujeto a los guardas.
+
+## Contenido del sitio (0016)
+
+`0016_site_content.sql` alinea el esquema con lo que ya publicaba el sitio:
+
+- `places.is_demo` / `events.is_demo`: fichas de EJEMPLO (ficticias). La app las rotula, no las indexa y las oculta con `NEXT_PUBLIC_SHOW_DEMO=0`.
+- `places.is_business`, `places.sort_order`, `events.sort_order`, `routes.sort_order`: negocio local y orden editorial.
+- `events.category_id`, `events.locality_id`, `events.featured`, `events.illustration` (clave de `src/content/images.ts`).
+- `localities.source_url` / `source_label`; `sources.sort_order` (la primera es la principal); `route_translations.cover_alt`.
+
+Las ilustraciones de lugares y localidades siguen en el repo (`src/content/images.ts`, por slug).
+`supabase/content.sql` se genera desde `src/content` (`pnpm db:content`) y carga
+todo publicado y `pending`.
 
 ## Visitantes
 
@@ -65,10 +78,12 @@ Bucket `place-images`: público para leer, 5 MB máx., `jpeg/png/webp`; solo `ad
 
 ## Pruebas
 
-`pnpm test:db` aplica las 15 migraciones y el seed (dos veces, para comprobar
+`pnpm test:db` aplica las migraciones y el seed (dos veces, para comprobar
 que es repetible) sobre un Postgres desechable y corre `tests/db/rls.test.sql`
 (permisos por rol, reglas editoriales, auditoría, itinerarios por token,
-analítica). `tests/db/supabase_shim.sql` simula `auth`/`storage` y los roles de
+analítica). Después carga `supabase/content.sql` dos veces y corre
+`tests/db/content.check.sql` (todo `pending`, español presente, demo marcado,
+visible para anónimos). `tests/db/supabase_shim.sql` simula `auth`/`storage` y los roles de
 Supabase; **no** se usa en Supabase real.
 
 ## Cambios respecto del plan original
@@ -76,3 +91,4 @@ Supabase; **no** se usa en Supabase real.
 - Sin PostGIS (ver arriba).
 - Se omitió `translated_from_version`: el estado `needs_review` automático cubre ese caso.
 - `place_images` guarda `storage_path` (no URL completa).
+- Categorías: las 10 del plan original se reemplazaron por los productos del PLADETUR (0016 borra las que no usa ningún lugar).
