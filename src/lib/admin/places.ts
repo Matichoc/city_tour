@@ -5,7 +5,8 @@
  */
 import { rest, type Session } from "@/lib/admin/api";
 import { CATEGORY_DEFS } from "@/content/catalog";
-import type { CategorySlug, CtaKind } from "@/content/types";
+import type { CategorySlug, CtaKind, PlaceHours } from "@/content/types";
+import { groupHours } from "@/lib/hours";
 import {
   DATA_FIELDS,
   planImport,
@@ -19,9 +20,6 @@ import {
 } from "@/lib/import/places-sheet";
 
 const enc = encodeURIComponent;
-const SOURCE_TITLE =
-  "Datos entregados por el local (formulario «Suma tu comercio»)";
-
 export type PlaceInput = {
   name: string;
   categorySlug: CategorySlug;
@@ -39,6 +37,8 @@ export type PlaceInput = {
   sernaturValidUntil: string | null;
   contactName: string | null;
   contactEmail: string | null;
+  /** El representante del local confirmó los datos de la ficha. */
+  ownerValidated: boolean;
 };
 
 export type LocalityOption = { id: string; slug: string; names: string[] };
@@ -190,6 +190,7 @@ export async function createPlace(
       : null,
     is_business: true,
     managed_in_panel: true,
+    owner_validated: input.ownerValidated,
     publication_status: "draft",
     ...(opts.import
       ? {
@@ -210,16 +211,6 @@ export async function createPlace(
     name: input.contactName,
     email: input.contactEmail,
   });
-  await post(
-    token,
-    "sources",
-    {
-      place_id: row.id,
-      title: SOURCE_TITLE,
-      accessed_at: new Date().toISOString().slice(0, 10),
-    },
-    "return=minimal",
-  );
   const published = opts.publish && session.role === "admin";
   if (published)
     await patch(token, `places?id=eq.${enc(row.id)}`, {
@@ -234,12 +225,14 @@ export type PlaceForEdit = PlaceInput & {
   publication: "draft" | "published" | "archived";
   infoUpdatedAt: string | null;
   images: PlaceImageRow[];
+  /** Horarios por temporada (los de la ficha pública). */
+  hours: PlaceHours[];
 };
 
 export type PlaceImageRow = {
   id: string;
   path: string;
-  kind: "photo" | "menu" | "promo" | "logo";
+  kind: "photo" | "menu" | "promo" | "logo" | "video";
   alt: string;
   credit: string | null;
   position: number;
@@ -264,6 +257,8 @@ export async function getPlaceForEdit(
       sernatur_number: string | null;
       sernatur_valid_until: string | null;
       info_updated_at: string | null;
+      owner_validated: boolean;
+      hours: Parameters<typeof groupHours>[0];
       category: { slug: CategorySlug } | null;
       locality: { slug: string } | null;
       translations: {
@@ -285,7 +280,9 @@ export async function getPlaceForEdit(
   >(
     token,
     "places?select=id,slug,publication_status,address,hours_text,cta_kind,cta_value,instagram,website,maps_url," +
-      "sernatur_number,sernatur_valid_until,info_updated_at,category:categories(slug),locality:localities(slug)," +
+      "sernatur_number,sernatur_valid_until,info_updated_at,owner_validated," +
+      "hours:place_hours(day_of_week,opens_at,closes_at,closed,from_month,to_month,holidays)," +
+      "category:categories(slug),locality:localities(slug)," +
       "translations:place_translations(locale,name,short_description,full_description)," +
       "contacts:place_contacts(name,email),images:place_images(id,storage_path,kind,alt_text,credit,position)" +
       `&id=eq.${enc(id)}&limit=1`,
@@ -313,6 +310,8 @@ export async function getPlaceForEdit(
     sernaturValidUntil: r.sernatur_valid_until,
     contactName: r.contacts[0]?.name ?? null,
     contactEmail: r.contacts[0]?.email ?? null,
+    ownerValidated: r.owner_validated,
+    hours: groupHours(r.hours),
     images: r.images
       .map((i) => ({
         id: i.id,
@@ -353,6 +352,7 @@ export async function updatePlace(
       ? input.sernaturValidUntil
       : null,
     managed_in_panel: true,
+    owner_validated: input.ownerValidated,
   });
   await saveSpanishText(token, id, {
     name: input.name,
@@ -382,9 +382,14 @@ export const touchInfo = (token: string, id: string) =>
 
 // ── Imágenes ──────────────────────────────────────────────────────────────
 export const PLACE_BUCKET = "place-images";
+export const VIDEO_BUCKET = "place-videos";
+
+/** Dirección pública de un archivo de un bucket público. */
+export const publicObjectUrl = (base: string, bucket: string, path: string) =>
+  `${base}/storage/v1/object/public/${bucket}/${path}`;
 
 export const publicImageUrl = (base: string, path: string) =>
-  `${base}/storage/v1/object/public/${PLACE_BUCKET}/${path}`;
+  publicObjectUrl(base, PLACE_BUCKET, path);
 
 export async function addImageRow(
   token: string,
@@ -460,6 +465,114 @@ export async function makeFirstImage(
   });
 }
 
+/** Cambia el texto alternativo y el crédito de una imagen o video. */
+export async function updateImageText(
+  token: string,
+  placeId: string,
+  id: string,
+  text: { alt: string; credit: string | null },
+) {
+  const [row] = await rest<{ alt_text: string }[]>(
+    token,
+    `place_images?select=alt_text&id=eq.${enc(id)}&place_id=eq.${enc(placeId)}`,
+  );
+  if (!row) throw new Error("Imagen no encontrada");
+  await patch(token, `places?id=eq.${enc(placeId)}`, {
+    managed_in_panel: true,
+  });
+  await patch(token, `place_images?id=eq.${enc(id)}`, {
+    alt_text: text.alt,
+    credit: text.credit,
+    // Si cambió el texto en español, las traducciones viejas ya no calzan: se
+    // muestra el español hasta que alguien las revise.
+    ...(row.alt_text !== text.alt
+      ? { alt_text_en: null, alt_text_pt: null }
+      : {}),
+  });
+}
+
+/** Sube o baja una imagen un lugar en el orden de la ficha. */
+export async function moveImage(
+  token: string,
+  placeId: string,
+  id: string,
+  direction: "up" | "down",
+) {
+  const rows = await rest<{ id: string; position: number }[]>(
+    token,
+    `place_images?select=id,position&place_id=eq.${enc(placeId)}&order=position.asc`,
+  );
+  const at = rows.findIndex((r) => r.id === id);
+  const to = direction === "up" ? at - 1 : at + 1;
+  if (at < 0 || to < 0 || to >= rows.length) return;
+  const order = rows.map((r) => r.id);
+  [order[at], order[to]] = [order[to]!, order[at]!];
+  await patch(token, `places?id=eq.${enc(placeId)}`, {
+    managed_in_panel: true,
+  });
+  // Posiciones 0..n-1 en el orden nuevo (solo se escriben las que cambian).
+  await Promise.all(
+    order.map((rowId, position) =>
+      rows.find((r) => r.id === rowId)!.position === position
+        ? null
+        : patch(token, `place_images?id=eq.${enc(rowId)}`, { position }),
+    ),
+  );
+}
+
+// ── Horarios por temporada ────────────────────────────────────────────────
+export const TIME = /^([01]\d|2[0-3]):[0-5]\d$/;
+
+export function validSeason(h: PlaceHours): boolean {
+  const month = (m: number) => Number.isInteger(m) && m >= 1 && m <= 12;
+  return (
+    month(h.fromMonth) &&
+    month(h.toMonth) &&
+    h.days.length > 0 &&
+    h.days.every((d) => Number.isInteger(d) && d >= 0 && d <= 6) &&
+    TIME.test(h.opens) &&
+    TIME.test(h.closes)
+  );
+}
+
+/**
+ * Reemplaza los horarios de la ficha. Primero se agregan los nuevos y recién
+ * después se quitan los anteriores, así un error a medio camino no deja la
+ * ficha sin horarios.
+ */
+export async function replaceHours(
+  token: string,
+  placeId: string,
+  seasons: PlaceHours[],
+) {
+  if (!seasons.every(validSeason)) throw new Error("Horario no válido");
+  const old = await rest<{ id: string }[]>(
+    token,
+    `place_hours?select=id&place_id=eq.${enc(placeId)}`,
+  );
+  const rows = seasons.flatMap((h) =>
+    [...new Set(h.days)].map((day) => ({
+      place_id: placeId,
+      day_of_week: day,
+      opens_at: h.opens,
+      closes_at: h.closes,
+      from_month: h.fromMonth,
+      to_month: h.toMonth,
+      holidays: h.holidays === true,
+    })),
+  );
+  await patch(token, `places?id=eq.${enc(placeId)}`, {
+    managed_in_panel: true,
+  });
+  if (rows.length > 0) await post(token, "place_hours", rows, "return=minimal");
+  if (old.length > 0)
+    await rest<null>(
+      token,
+      `place_hours?id=in.(${old.map((o) => enc(o.id)).join(",")})`,
+      { method: "DELETE" },
+    );
+}
+
 // ── Importación ───────────────────────────────────────────────────────────
 export async function loadImportContext(token: string) {
   const [places, localities] = await Promise.all([
@@ -521,6 +634,8 @@ const recordToInput = (r: Record_, category: CategorySlug): PlaceInput => ({
   sernaturValidUntil: null,
   contactName: r.contactName,
   contactEmail: r.contactEmail,
+  // El formulario exige la autorización del dueño o encargado.
+  ownerValidated: true,
 });
 
 /**
@@ -580,6 +695,7 @@ export async function applyPlan(
           body.import_snapshot = snapshotOf(r);
           body.imported_at = new Date().toISOString();
           body.managed_in_panel = true;
+          body.owner_validated = true;
           const ch = new Set<DataField>(it.changed);
           if (ch.has("categorySlug") && r.categorySlug)
             body.category_id = await idBySlug(

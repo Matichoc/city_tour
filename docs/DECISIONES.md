@@ -221,9 +221,9 @@ Fuente: PLADETUR de Papudo 2023–2027, iD (`docs/investigacion/`).
 ## Datos de los comercios que se suman (migración 0021)
 
 - El formulario «Suma tu comercio» (Google Forms → planilla) es la fuente de
-  los comercios adheridos. Se cargan en `src/content` con su fuente («Datos
-  entregados por el local», con fecha) y quedan `pending` hasta verificarlos
-  en terreno. El nombre y el correo de quien responde **no** se publican ni se
+  los comercios adheridos. Se cargan con la marca «Validada por el
+  representante del local» (ver más abajo) y su fecha de confirmación, y quedan
+  `pending` hasta verificarlos en terreno. El nombre y el correo de quien responde **no** se publican ni se
   guardan en el repo.
 - Horarios por temporada que se repiten cada año (`place_hours.from_month`,
   `to_month`, `holidays`; día 0 = domingo). La ficha los muestra como
@@ -263,6 +263,39 @@ Fuente: PLADETUR de Papudo 2023–2027, iD (`docs/investigacion/`).
   borrador salvo que un administrador marque publicar.
 - **Bitácora** (`docs/BITACORA.md`, `pnpm bitacora`): versiones, días y horas
   de avance, generada desde git y de `docs/bitacora-notas.json`.
+
+## «Validada por el representante del local» y edición completa por local (migración 0024)
+
+- **La fuente de un comercio que respondió el formulario se muestra simple:**
+  «Validada por el representante del local» (en la ficha, enlazada a su
+  Instagram si lo tiene), sin hablar del formulario. Es la casilla
+  `places.owner_validated`; se marca sola al importar de la planilla (el
+  formulario exige la autorización del dueño o encargado) y a mano en la ficha
+  del panel, solo si de verdad confirmó los datos. Las fuentes con enlace
+  (por ejemplo, Google Maps para la ubicación) se siguen mostrando debajo. Ya no
+  se guarda una «fuente» sin enlace por cada comercio importado.
+- **Cada local se edita completo desde `/admin/comercios/<id>`** (botón «Editar
+  ficha, fotos y videos» en la lista de comercios): datos, horarios por
+  temporada, y logo, carta, fotos, promociones y videos. Sobre cada imagen o
+  video: orden (↑ ↓), «hacer portada», editar texto alternativo y crédito, y
+  quitar. Si cambia el texto en español se borran sus traducciones viejas (la
+  ficha muestra el español hasta que alguien las revise).
+- **Horarios por temporada editables** (meses, días, hora, festivos): antes solo
+  se podían cargar desde el repo. Con horarios por temporada la ficha no
+  muestra el texto libre «Días y horarios».
+- **Videos de comercios:** MP4, WebM o MOV de hasta 50 MB (el máximo del plan
+  gratuito de Supabase) en el bucket público `place-videos`. Un video pesa más
+  de lo que Vercel acepta por pedido (4,5 MB), así que el servidor solo
+  autoriza la subida (enlace firmado con el permiso del personal) y el navegador
+  la hace directo a Storage; después se registra en la ficha comprobando que el
+  archivo exista. Sin recompresión: si el video pesa más, se comprime antes.
+  Se ven en «Fotos y carta» de la ficha. Quitarlo borra también el archivo. Al
+  ser videos del propio local subidos por el personal no pasan por el filtro de
+  contenido de los comentarios.
+- **Un botón con `formAction` en un componente de cliente no envía su propio
+  nombre y valor:** los datos extra van como argumento de la acción
+  (`action.bind(null, valor)`) o en campos ocultos. Lo detectó la prueba en
+  navegador, no las unitarias.
 
 ## Paleta desde el logo municipal
 

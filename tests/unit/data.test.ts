@@ -279,6 +279,15 @@ describe("ilustraciones", () => {
     // Sin imágenes reales: ilustración con IA (kind sin valor).
     expect(getPlace("playa-papudo", "es")!.picture.kind).toBeUndefined();
   });
+  it("Roots Salinas figura validada por su representante, sin la fuente del formulario", () => {
+    const roots = getPlace("roots-salinas", "es")!;
+    expect(roots.ownerValidated).toBe(true);
+    expect(roots.sources.map((s) => s.label)).toEqual([
+      "Google Maps — Roots Salinas (HHMQ+F7, Papudo)",
+    ]);
+    expect(JSON.stringify(roots).toLowerCase()).not.toContain("formulario");
+    expect(getPlace("playa-papudo", "es")!.ownerValidated).toBe(false);
+  });
   it("una foto del lugar gana al logo", () => {
     const base = STATIC_CONTENT.places.find((p) => p.slug === "roots-salinas")!;
     const photo = {

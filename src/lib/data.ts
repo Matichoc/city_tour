@@ -96,6 +96,8 @@ export type Place = {
     credit: string;
   }[];
   sernatur: { number: string; validUntil: string } | null;
+  /** El representante del local confirmó los datos de la ficha. */
+  ownerValidated: boolean;
 };
 
 /** Enlace del botón de acción: WhatsApp y teléfono se arman desde el número. */
@@ -321,6 +323,7 @@ export function createData(content: SiteContent, showDemo = SHOW_DEMO) {
       logo: p.logo ?? null,
       gallery: (p.gallery ?? []).map((g) => ({ ...g, alt: g.alt[locale] })),
       sernatur: p.sernatur ?? null,
+      ownerValidated: p.ownerValidated === true,
     };
   }
 

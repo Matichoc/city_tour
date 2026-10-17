@@ -25,7 +25,8 @@ vi.mock("next/cache", () => ({
   revalidateTag: vi.fn(),
 }));
 
-import { ctaHref } from "@/lib/data";
+import { createData, ctaHref } from "@/lib/data";
+import { STATIC_CONTENT } from "@/content";
 import { listNotices } from "@/lib/business";
 import {
   addNotice,
@@ -34,7 +35,7 @@ import {
   saveCta,
   saveSettings,
 } from "@/app/admin/actions";
-import { rowsToContent } from "@/lib/db/content-source";
+import { rowsToContent, type PlaceRow } from "@/lib/db/content-source";
 
 type Call = { url: string; init: RequestInit };
 let calls: Call[];
@@ -135,6 +136,98 @@ describe("ctaHref", () => {
     });
     expect(content.places[0]!.lastVerifiedAt).toBe("2026-09-01T00:00:00Z");
     expect(content.places[0]!.infoUpdatedAt).toBe("2026-08-01T00:00:00Z");
+  });
+});
+
+describe("videos y validación del representante desde la base", () => {
+  const row = (
+    images: NonNullable<PlaceRow["images"]>,
+    ownerValidated: boolean,
+  ) => ({
+    localities: [],
+    events: [],
+    routes: [],
+    places: [
+      {
+        slug: "local",
+        latitude: null,
+        longitude: null,
+        address: null,
+        is_demo: false,
+        is_business: true,
+        verification_status: "pending" as const,
+        cta_kind: null,
+        cta_value: null,
+        owner_validated: ownerValidated,
+        images,
+        category: { slug: "gastronomia" },
+        locality: null,
+        translations: [
+          {
+            locale: "es",
+            name: "Local",
+            short_description: "",
+            full_description: "",
+          },
+        ],
+        sources: [],
+      },
+    ],
+  });
+  const img = (
+    kind: "photo" | "menu" | "promo" | "logo" | "video",
+    path: string,
+    position: number,
+  ) => ({
+    storage_path: path,
+    kind,
+    width: 1280,
+    height: 720,
+    alt_text: `Texto ${kind}`,
+    alt_text_en: null,
+    alt_text_pt: null,
+    credit: null,
+    position,
+  });
+
+  it("el video queda en la galería, en su orden, con el texto en español de respaldo", () => {
+    const place = rowsToContent(
+      row(
+        [
+          img(
+            "video",
+            "https://x.supabase.co/storage/v1/object/public/place-videos/a/v.mp4",
+            2,
+          ),
+          img(
+            "photo",
+            "https://x.supabase.co/storage/v1/object/public/place-images/a/f.webp",
+            1,
+          ),
+          img("logo", "/lugares/local/logo.webp", 0),
+        ],
+        true,
+      ),
+    ).places[0]!;
+    expect(place.ownerValidated).toBe(true);
+    expect(place.gallery!.map((g) => g.kind)).toEqual(["photo", "video"]);
+    expect(place.gallery![1]!.alt).toEqual({
+      es: "Texto video",
+      en: "Texto video",
+      pt: "Texto video",
+    });
+    expect(place.logo!.src).toBe("/lugares/local/logo.webp");
+    // La foto de Storage es la portada de la ficha (no el logo ni el video).
+    const data = createData({ ...STATIC_CONTENT, places: [place] }, true);
+    expect(data.getPlace("local", "es")!.picture).toMatchObject({
+      kind: "photo",
+    });
+  });
+
+  it("sin la marca del representante, la ficha no figura validada", () => {
+    expect(
+      rowsToContent(row([], false)).places[0]!.ownerValidated,
+    ).toBeUndefined();
   });
 });
 

@@ -7,7 +7,7 @@ import sharp from "sharp";
 import { canModerate, getSession, type Session } from "@/lib/admin/api";
 import { supabaseConfig } from "@/lib/db/content-source";
 import { CATEGORY_DEFS } from "@/content/catalog";
-import type { CategorySlug, CtaKind } from "@/content/types";
+import type { CategorySlug, CtaKind, PlaceHours } from "@/content/types";
 import { ctaHref } from "@/lib/data";
 import {
   addImageRow,
@@ -15,16 +15,24 @@ import {
   createPlace,
   getPlaceForEdit,
   makeFirstImage,
+  moveImage,
   PLACE_BUCKET,
   planFromTable,
   publicImageUrl,
+  publicObjectUrl,
   removeImageRow,
+  replaceHours,
   saveImportSheetUrl,
   setPublication,
+  TIME,
+  updateImageText,
   updatePlace,
+  validSeason,
+  VIDEO_BUCKET,
   type ImportResult,
   type PlaceInput,
 } from "@/lib/admin/places";
+import { removeObjects, signedUploadUrl } from "@/lib/storage";
 import { parseCsv, sheetCsvUrl } from "@/lib/import/csv";
 import { parseLink, readTable, type PlanItem } from "@/lib/import/places-sheet";
 
@@ -119,6 +127,7 @@ function parsePlaceForm(f: FormData): PlaceInput | FormError {
     sernaturValidUntil: orNull(sernaturDate),
     contactName: orNull(text(f.get("contacto_nombre"))),
     contactEmail: orNull(email),
+    ownerValidated: text(f.get("validada")) === "on",
   };
 }
 
@@ -280,19 +289,16 @@ export async function removePlaceImageAction(formData: FormData) {
   try {
     const path = await removeImageRow(session.token, place, id);
     const cfg = supabaseConfig();
-    const prefix = cfg ? publicImageUrl(cfg.url, "") : null;
-    if (cfg && prefix && path.startsWith(prefix)) {
-      // Borra también el archivo del bucket.
-      await fetch(`${cfg.url}/storage/v1/object/${PLACE_BUCKET}`, {
-        method: "DELETE",
-        headers: {
-          apikey: cfg.key,
-          authorization: `Bearer ${session.token}`,
-          "content-type": "application/json",
-        },
-        body: JSON.stringify({ prefixes: [path.slice(prefix.length)] }),
-        cache: "no-store",
-      });
+    // Si estaba en uno de nuestros buckets, se borra también el archivo.
+    for (const bucket of [PLACE_BUCKET, VIDEO_BUCKET]) {
+      const prefix = cfg ? publicObjectUrl(cfg.url, bucket, "") : null;
+      if (cfg && prefix && path.startsWith(prefix))
+        await removeObjects(
+          cfg,
+          session.token,
+          [path.slice(prefix.length)],
+          bucket,
+        );
     }
   } catch (error) {
     console.error("[admin] no se pudo quitar la imagen", error);
@@ -317,6 +323,211 @@ export async function makeCoverAction(formData: FormData) {
   }
   updateTag("content");
   redirect(`${back}?guardado=1#fotos`);
+}
+
+export async function updateImageAction(formData: FormData) {
+  const session = await staff();
+  const place = text(formData.get("lugar"));
+  const id = text(formData.get("id"));
+  const alt = text(formData.get("alt"));
+  const credit = text(formData.get("credito"));
+  const back = `/admin/comercios/${place}`;
+  if (
+    !UUID.test(place) ||
+    !UUID.test(id) ||
+    !canModerate(session) ||
+    alt.length < 3 ||
+    alt.length > 300 ||
+    credit.length > 120
+  )
+    redirect(`${back}?error=imageText#fotos`);
+  try {
+    await updateImageText(session.token, place, id, {
+      alt,
+      credit: orNull(credit),
+    });
+  } catch (error) {
+    console.error("[admin] no se pudo guardar el texto de la imagen", error);
+    redirect(`${back}?error=save#fotos`);
+  }
+  updateTag("content");
+  redirect(`${back}?guardado=1#fotos`);
+}
+
+/**
+ * La dirección va como primer argumento (`moveImageAction.bind(null, "up")`):
+ * el nombre y valor de un botón con `formAction` no viajan en el formulario.
+ */
+export async function moveImageAction(dir: "up" | "down", formData: FormData) {
+  const session = await staff();
+  const place = text(formData.get("lugar"));
+  const id = text(formData.get("id"));
+  const back = `/admin/comercios/${place}`;
+  if (
+    !UUID.test(place) ||
+    !UUID.test(id) ||
+    !canModerate(session) ||
+    (dir !== "up" && dir !== "down")
+  )
+    redirect(`${back}?error=save#fotos`);
+  try {
+    await moveImage(session.token, place, id, dir);
+  } catch (error) {
+    console.error("[admin] no se pudo cambiar el orden", error);
+    redirect(`${back}?error=save#fotos`);
+  }
+  updateTag("content");
+  redirect(`${back}?guardado=1#fotos`);
+}
+
+// ── Horarios por temporada ────────────────────────────────────────────────
+/** Lee las filas `h<i>_…` del formulario de horarios. */
+function parseSeasons(f: FormData): PlaceHours[] | null {
+  const n = Math.min(Number(f.get("n")) || 0, 20);
+  const seasons: PlaceHours[] = [];
+  for (let i = 0; i < n; i++) {
+    const get = (k: string) => text(f.get(`h${i}_${k}`));
+    if (get("quitar") === "on") continue;
+    const days = [0, 1, 2, 3, 4, 5, 6].filter((d) => get(`d${d}`) === "on");
+    const holidays = get("fest") === "on";
+    const blank =
+      !get("de") &&
+      !get("a") &&
+      !get("abre") &&
+      !get("cierra") &&
+      !days.length &&
+      !holidays;
+    if (blank) continue;
+    const season: PlaceHours = {
+      fromMonth: Number(get("de")),
+      toMonth: Number(get("a")),
+      days,
+      ...(holidays ? { holidays: true } : {}),
+      opens: get("abre"),
+      closes: get("cierra"),
+    };
+    if (
+      !TIME.test(season.opens) ||
+      !TIME.test(season.closes) ||
+      !validSeason(season)
+    )
+      return null;
+    seasons.push(season);
+  }
+  return seasons;
+}
+
+export async function saveHoursAction(formData: FormData) {
+  const session = await staff();
+  const id = text(formData.get("id"));
+  const back = `/admin/comercios/${id}`;
+  const seasons = parseSeasons(formData);
+  if (!UUID.test(id) || !canModerate(session) || !seasons)
+    redirect(`${back}?error=hours#horarios`);
+  try {
+    await replaceHours(session.token, id, seasons);
+  } catch (error) {
+    console.error("[admin] no se pudieron guardar los horarios", error);
+    redirect(`${back}?error=save#horarios`);
+  }
+  updateTag("content");
+  redirect(`${back}?guardado=1#horarios`);
+}
+
+// ── Videos ────────────────────────────────────────────────────────────────
+// Un video pesa mucho más que lo que Vercel acepta por pedido (4,5 MB): el
+// servidor solo autoriza la subida y el navegador la hace directo a Storage.
+const VIDEO_MIME: Record<string, string> = {
+  "video/mp4": "mp4",
+  "video/webm": "webm",
+  "video/quicktime": "mov",
+};
+const MAX_VIDEO = 50 * 1024 * 1024;
+
+export type VideoPrepared =
+  | { ok: true; uploadUrl: string; path: string }
+  | { ok: false; error: "type" | "size" | "kind" | "save" | "denied" };
+
+export async function prepareVideoUpload(
+  formData: FormData,
+): Promise<VideoPrepared> {
+  const session = await getSession();
+  if (!session || !canModerate(session)) return { ok: false, error: "denied" };
+  const id = text(formData.get("id"));
+  const mime = text(formData.get("mime"));
+  const size = Number(formData.get("size"));
+  if (!UUID.test(id)) return { ok: false, error: "kind" };
+  if (!(mime in VIDEO_MIME)) return { ok: false, error: "type" };
+  if (!Number.isFinite(size) || size < 1 || size > MAX_VIDEO)
+    return { ok: false, error: "size" };
+  const cfg = supabaseConfig();
+  if (!cfg) return { ok: false, error: "save" };
+  try {
+    const place = await getPlaceForEdit(session.token, id);
+    if (!place) return { ok: false, error: "denied" };
+    const path = `${id}/${randomUUID()}.${VIDEO_MIME[mime]}`;
+    const uploadUrl = await signedUploadUrl(cfg, path, {
+      bucket: VIDEO_BUCKET,
+      token: session.token,
+    });
+    return { ok: true, uploadUrl, path };
+  } catch (error) {
+    console.error("[admin] no se pudo autorizar la subida del video", error);
+    return { ok: false, error: "save" };
+  }
+}
+
+export type VideoRegistered =
+  { ok: true } | { ok: false; error: "kind" | "save" | "denied" };
+
+/** Registra en la ficha un video que el navegador ya subió. */
+export async function registerVideo(
+  formData: FormData,
+): Promise<VideoRegistered> {
+  const session = await getSession();
+  if (!session || !canModerate(session)) return { ok: false, error: "denied" };
+  const id = text(formData.get("id"));
+  const path = text(formData.get("path"));
+  const width = Number(formData.get("ancho"));
+  const height = Number(formData.get("alto"));
+  const alt = text(formData.get("alt"));
+  const credit = text(formData.get("credito"));
+  const cfg = supabaseConfig();
+  if (
+    !cfg ||
+    !UUID.test(id) ||
+    !new RegExp(`^${id}/[0-9a-f-]{36}\\.(mp4|webm|mov)$`).test(path) ||
+    !Number.isInteger(width) ||
+    !Number.isInteger(height) ||
+    width < 1 ||
+    height < 1 ||
+    width > 8000 ||
+    height > 8000 ||
+    credit.length > 120 ||
+    alt.length > 300
+  )
+    return { ok: false, error: "kind" };
+  const url = publicObjectUrl(cfg.url, VIDEO_BUCKET, path);
+  try {
+    const place = await getPlaceForEdit(session.token, id);
+    if (!place) return { ok: false, error: "denied" };
+    // El archivo tiene que existir de verdad en nuestro bucket.
+    const head = await fetch(url, { method: "HEAD", cache: "no-store" });
+    if (!head.ok) return { ok: false, error: "save" };
+    await addImageRow(session.token, id, {
+      url,
+      kind: "video",
+      width,
+      height,
+      alt: alt || `Video de ${place.name}`,
+      credit: orNull(credit),
+    });
+  } catch (error) {
+    console.error("[admin] no se pudo registrar el video", error);
+    return { ok: false, error: "save" };
+  }
+  updateTag("content");
+  return { ok: true };
 }
 
 // ── Importar desde la planilla ────────────────────────────────────────────

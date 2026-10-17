@@ -35,6 +35,7 @@ echo "→ contenido del sitio (dos veces: debe ser idempotente)"
 "${PSQL[@]}" -o /dev/null -f tests/db/business.check.sql
 "${PSQL[@]}" -o /dev/null -f tests/db/media.check.sql
 "${PSQL[@]}" -o /dev/null -f tests/db/panel.check.sql
+"${PSQL[@]}" -o /dev/null -f tests/db/videos.check.sql
 echo "→ una ficha editada en el panel no la pisa content.sql"
 "${PSQL[@]}" -c "update public.places set managed_in_panel = true, address = 'Dirección editada' where slug = 'playa-papudo';
   update public.place_translations set short_description = 'EDITADA EN EL PANEL'

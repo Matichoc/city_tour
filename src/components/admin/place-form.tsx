@@ -212,6 +212,20 @@ export async function PlaceForm({
         </div>
       </fieldset>
 
+      <div className="sm:col-span-2">
+        <label className="flex items-center gap-2 text-sm font-semibold">
+          <input
+            type="checkbox"
+            name="validada"
+            defaultChecked={place?.ownerValidated ?? false}
+            className="size-5"
+          />
+          {t("form.ownerValidated")}
+        </label>
+        <p className="text-muted mt-1 text-xs">
+          {t("form.ownerValidatedHelp")}
+        </p>
+      </div>
       {!place && (
         <div className="sm:col-span-2">
           <label className="flex items-center gap-2 text-sm font-semibold">

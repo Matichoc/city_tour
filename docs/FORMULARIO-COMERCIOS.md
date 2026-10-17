@@ -132,6 +132,9 @@ Estos datos son para coordinar contigo y **no se publican**.
 - **Preguntas nuevas:** si se agrega una pregunta al formulario, el panel avisa
   «Preguntas nuevas que todavía no se importan». Para guardarla hay que agregar
   su columna en `src/lib/import/places-sheet.ts` y en la base.
+- **Fuente que ve el público:** quien respondió el formulario autorizó
+  publicar, así que la ficha dice simplemente «Validada por el representante
+  del local» (se marca sola al importar). No se menciona el formulario.
 - **Datos personales:** el nombre y el correo de quien responde van a
   `place_contacts` (solo lo ve el personal), nunca a la ficha pública.
 - **Qué entra de cada pregunta:** nombre → ficha; «¿Qué ofreces?» → categoría
