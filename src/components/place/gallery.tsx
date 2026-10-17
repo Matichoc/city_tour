@@ -14,14 +14,15 @@ export type GalleryItem = {
   credit: string | null;
 };
 
-type Labels = { prev: string; next: string; count: string; region: string };
+type Labels = { prev: string; next: string; region: string };
 
 const arrow =
-  "border-border bg-surface/90 text-foreground absolute top-1/2 z-10 grid size-10 -translate-y-1/2 place-items-center rounded-full border text-xl shadow-sm backdrop-blur transition hover:bg-surface disabled:pointer-events-none disabled:opacity-0";
+  "border-border bg-surface/90 text-foreground absolute top-[40%] z-10 grid size-10 -translate-y-1/2 place-items-center rounded-full border text-xl shadow-sm backdrop-blur transition hover:bg-surface disabled:pointer-events-none disabled:opacity-0";
 
 /**
- * Una foto a la vez, con flechas a los lados. En el celular también se
- * desliza con el dedo; la barra de desplazamiento no se muestra.
+ * Fila de fotos con flechas a los lados (sin barra de desplazamiento). Se ve
+ * una foto completa y un pedazo de la siguiente; en el celular también se
+ * desliza con el dedo.
  */
 export function Gallery({
   items,
@@ -31,47 +32,43 @@ export function Gallery({
   labels: Labels;
 }) {
   const track = useRef<HTMLUListElement>(null);
-  const [at, setAt] = useState(0);
-  const last = items.length - 1;
+  const [edge, setEdge] = useState({ start: true, end: false });
 
-  function go(to: number) {
+  function measure() {
     const el = track.current;
     if (!el) return;
-    el.scrollTo({
-      left: Math.max(0, Math.min(last, to)) * el.clientWidth,
-      behavior: "smooth",
+    setEdge({
+      start: el.scrollLeft < 4,
+      end: el.scrollLeft + el.clientWidth >= el.scrollWidth - 4,
     });
   }
 
-  function onScroll() {
+  function go(dir: 1 | -1) {
     const el = track.current;
-    if (!el || !el.clientWidth) return;
-    setAt(Math.round(el.scrollLeft / el.clientWidth));
+    const first = el?.firstElementChild as HTMLElement | null;
+    if (!el || !first) return;
+    const gap = parseFloat(getComputedStyle(el).columnGap) || 0;
+    el.scrollBy({ left: dir * (first.offsetWidth + gap), behavior: "smooth" });
   }
-
-  const current = items[at] ?? items[0]!;
 
   return (
     <div
       role="group"
       aria-roledescription="carousel"
       aria-label={labels.region}
-      className="flex flex-col gap-2"
+      className="relative"
     >
-      <div className="border-border bg-surface relative overflow-hidden rounded-2xl border">
-        <ul
-          ref={track}
-          onScroll={onScroll}
-          className="flex snap-x snap-mandatory [scrollbar-width:none] overflow-x-auto [&::-webkit-scrollbar]:hidden"
-        >
-          {items.map((g, i) => (
-            <li
-              key={g.src}
-              aria-label={labels.count
-                .replace("{current}", String(i + 1))
-                .replace("{total}", String(items.length))}
-              className="bg-sea-soft/40 grid aspect-[4/3] w-full shrink-0 snap-center place-items-center"
-            >
+      <ul
+        ref={track}
+        onScroll={measure}
+        className="flex snap-x snap-mandatory [scrollbar-width:none] gap-3 overflow-x-auto [&::-webkit-scrollbar]:hidden"
+      >
+        {items.map((g, i) => (
+          <li
+            key={g.src}
+            className="w-[85%] max-w-md shrink-0 snap-start sm:w-[60%]"
+          >
+            <figure className="border-border bg-surface overflow-hidden rounded-2xl border">
               {g.kind === "video" ? (
                 <video
                   src={g.src}
@@ -81,15 +78,10 @@ export function Gallery({
                   controls
                   playsInline
                   preload="metadata"
-                  className="size-full bg-black object-contain"
+                  className="h-auto w-full bg-black"
                 />
               ) : (
-                <a
-                  href={g.src}
-                  target="_blank"
-                  rel="noopener"
-                  className="size-full"
-                >
+                <a href={g.src} target="_blank" rel="noopener">
                   {/* eslint-disable-next-line @next/next/no-img-element -- archivo local, se abre en tamaño completo */}
                   <img
                     src={g.src}
@@ -98,48 +90,36 @@ export function Gallery({
                     alt={g.alt}
                     loading={i === 0 ? "eager" : "lazy"}
                     decoding="async"
-                    className="size-full object-contain"
+                    className="h-auto w-full bg-white"
                   />
                 </a>
               )}
-            </li>
-          ))}
-        </ul>
-        {items.length > 1 && (
-          <>
-            <button
-              type="button"
-              onClick={() => go(at - 1)}
-              disabled={at === 0}
-              aria-label={labels.prev}
-              className={`${arrow} left-2`}
-            >
-              <span aria-hidden>‹</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => go(at + 1)}
-              disabled={at === last}
-              aria-label={labels.next}
-              className={`${arrow} right-2`}
-            >
-              <span aria-hidden>›</span>
-            </button>
-            <p
-              aria-live="polite"
-              className="absolute right-2 bottom-2 rounded-full bg-black/55 px-2 py-0.5 text-xs font-semibold text-white"
-            >
-              {labels.count
-                .replace("{current}", String(at + 1))
-                .replace("{total}", String(items.length))}
-            </p>
-          </>
-        )}
-      </div>
-      <p className="text-muted flex justify-between gap-2 px-1 text-xs">
-        <b className="text-foreground">{current.kindLabel}</b>
-        {current.credit ? <span>{current.credit}</span> : null}
-      </p>
+              <figcaption className="text-muted flex justify-between gap-2 px-3 py-2 text-xs">
+                <b className="text-foreground">{g.kindLabel}</b>
+                {g.credit ? <span>{g.credit}</span> : null}
+              </figcaption>
+            </figure>
+          </li>
+        ))}
+      </ul>
+      <button
+        type="button"
+        onClick={() => go(-1)}
+        disabled={edge.start}
+        aria-label={labels.prev}
+        className={`${arrow} left-2`}
+      >
+        <span aria-hidden>‹</span>
+      </button>
+      <button
+        type="button"
+        onClick={() => go(1)}
+        disabled={edge.end}
+        aria-label={labels.next}
+        className={`${arrow} right-2`}
+      >
+        <span aria-hidden>›</span>
+      </button>
     </div>
   );
 }

@@ -127,8 +127,7 @@
     "website": "Website",
     "ownerValidated": "Validated by the business representative",
     "galleryPrev": "Previous photo",
-    "galleryNext": "Next photo",
-    "galleryCount": "{current} of {total}"
+    "galleryNext": "Next photo"
   },
   "routes": {
     "title": "Routes",

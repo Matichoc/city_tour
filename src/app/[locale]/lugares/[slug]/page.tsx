@@ -338,10 +338,6 @@ export default async function PlacePage({
               labels={{
                 prev: t("galleryPrev"),
                 next: t("galleryNext"),
-                count: t("galleryCount", {
-                  current: "{current}",
-                  total: "{total}",
-                }),
                 region: t("tabGallery"),
               }}
             />
