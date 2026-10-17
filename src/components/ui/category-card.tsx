@@ -3,13 +3,16 @@ import { CategoryIcon } from "@/components/ui/category-icon";
 
 /** Degradados vivos por producto: claro arriba, profundo abajo (donde va el texto). */
 export const CATEGORY_BG: Record<CategorySlug, string> = {
-  balneario: "from-[#2fd0e3] via-[#0f9cb5] to-[#07495a]",
-  recreacion: "from-[#5fdcb4] via-[#2a9d7f] to-[#145c4d]",
-  deportes: "from-[#9b8cf0] via-[#6a58c9] to-[#372b78]",
-  patrimonio: "from-[#ffc36b] via-[#d9822b] to-[#8a4a0e]",
-  gastronomia: "from-[#ff9a70] via-[#e2543a] to-[#a22f18]",
-  ruralidad: "from-[#9ed66e] via-[#5a9a3f] to-[#2a4f2d]",
-  alojamiento: "from-[#6fcbe0] via-[#2f8fb0] to-[#0a4457]",
+  // Colores del logo municipal, en versión pálida (docs/MARCA-REFERENCIA.md):
+  // amarillo (mar y sol), magenta (árboles), rojo (patrimonio), turquesa
+  // (campo) y sus mezclas para el resto.
+  balneario: "from-[#f8e08a] via-[#e3bd50] to-[#8a6a14]",
+  recreacion: "from-[#f4b3d4] via-[#d9709f] to-[#8a2f5e]",
+  deportes: "from-[#a9c8ee] via-[#5f8fd0] to-[#2b4a86]",
+  patrimonio: "from-[#f2aaa6] via-[#d96b67] to-[#8f2f2d]",
+  gastronomia: "from-[#f7c79a] via-[#e3925a] to-[#93501f]",
+  ruralidad: "from-[#9fe0de] via-[#4fb3b1] to-[#1d6463]",
+  alojamiento: "from-[#cdb6ef] via-[#9a7bd6] to-[#4f3a86]",
 };
 
 /** Clases del contenedor (el <a> o <button> que envuelve la tarjeta). */

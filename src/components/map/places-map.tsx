@@ -126,7 +126,7 @@ export function PlacesMap({
               id="trip-line-core"
               type="line"
               paint={{
-                "line-color": "#ff7a59",
+                "line-color": "#e98bbd",
                 "line-width": 3.5,
                 "line-dasharray": [1.5, 1.5],
               }}

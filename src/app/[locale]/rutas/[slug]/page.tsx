@@ -64,7 +64,7 @@ export default async function RoutePage({
       type: "svg",
       margin: 1,
       errorCorrectionLevel: "M",
-      color: { dark: "#07495a", light: "#ffffff" },
+      color: { dark: "#155656", light: "#ffffff" },
     },
   );
 
@@ -103,7 +103,7 @@ export default async function RoutePage({
         subtitle={route.description}
         image={route.cover ?? undefined}
       >
-        <p className="mt-3 text-sm font-bold text-[#ffe3a8]">
+        <p className="mt-3 text-sm font-bold text-[#fbeab0]">
           {t("stops", { count: route.stops.length })}
           {route.durationMinutes
             ? ` · ${formatDuration(route.durationMinutes)}`

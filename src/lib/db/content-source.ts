@@ -7,6 +7,7 @@
 import { STATIC_CONTENT, type SiteContent } from "@/content";
 import { CATEGORY_DEFS } from "@/content/catalog";
 import { ILLUSTRATIONS, type IllustrationKey } from "@/content/images";
+import { groupHours } from "@/lib/hours";
 import type {
   CategorySlug,
   EventContent,
@@ -51,6 +52,22 @@ export type PlaceRow = {
   cta_value: string | null;
   last_verified_at?: string | null;
   info_updated_at?: string | null;
+  instagram?: string | null;
+  maps_url?: string | null;
+  hours?: HoursRow[];
+  sernatur_number?: string | null;
+  sernatur_valid_until?: string | null;
+  images?: {
+    storage_path: string;
+    kind: "photo" | "menu" | "promo" | "logo";
+    width: number | null;
+    height: number | null;
+    alt_text: string;
+    alt_text_en: string | null;
+    alt_text_pt: string | null;
+    credit: string | null;
+    position: number;
+  }[];
   category: SlugRef;
   locality: SlugRef;
   translations: Tr<{
@@ -60,6 +77,8 @@ export type PlaceRow = {
   }>;
   sources: SourceRow[];
 };
+
+type HoursRow = Parameters<typeof groupHours>[0][number];
 
 export type EventRow = {
   slug: string;
@@ -116,7 +135,10 @@ export const QUERIES: Record<keyof ContentRows, string> = {
     "translations:locality_translations(locale,name,summary)&order=sort_order,slug",
   places:
     "places?select=slug,latitude,longitude,address,is_demo,is_business,verification_status,cta_kind,cta_value," +
-    "last_verified_at,info_updated_at," +
+    "last_verified_at,info_updated_at,instagram,maps_url," +
+    "hours:place_hours(day_of_week,opens_at,closes_at,closed,from_month,to_month,holidays)," +
+    "sernatur_number,sernatur_valid_until," +
+    "images:place_images(storage_path,kind,width,height,alt_text,alt_text_en,alt_text_pt,credit,position)," +
     "category:categories(slug),locality:localities(slug)," +
     `translations:place_translations(locale,name,short_description,full_description),${SOURCES}` +
     "&publication_status=eq.published&order=sort_order,slug&sources.order=sort_order",
@@ -147,6 +169,44 @@ const categoryOf = (ref: SlugRef): CategorySlug | null =>
 
 const isIllustration = (k: string | null): k is IllustrationKey =>
   k !== null && k in ILLUSTRATIONS;
+
+/** Imágenes de la base → logo y galería (solo rutas públicas del sitio). */
+function toImages(rows: NonNullable<PlaceRow["images"]>) {
+  const usable = [...rows]
+    .filter((i) => i.storage_path.startsWith("/") && i.width && i.height)
+    .sort((a, b) => a.position - b.position);
+  const logo = usable.find((i) => i.kind === "logo");
+  const gallery = usable.flatMap((i) =>
+    i.kind === "logo"
+      ? []
+      : [
+          {
+            src: i.storage_path,
+            width: i.width!,
+            height: i.height!,
+            kind: i.kind,
+            alt: {
+              es: i.alt_text,
+              en: i.alt_text_en ?? i.alt_text,
+              pt: i.alt_text_pt ?? i.alt_text,
+            },
+            credit: i.credit ?? "",
+          },
+        ],
+  );
+  return {
+    ...(logo
+      ? {
+          logo: {
+            src: logo.storage_path,
+            width: logo.width!,
+            height: logo.height!,
+          },
+        }
+      : {}),
+    ...(gallery.length ? { gallery } : {}),
+  };
+}
 
 function toPlace(r: PlaceRow): PlaceContent | null {
   const categorySlug = categoryOf(r.category);
@@ -183,6 +243,18 @@ function toPlace(r: PlaceRow): PlaceContent | null {
       : {}),
     ...(r.last_verified_at ? { lastVerifiedAt: r.last_verified_at } : {}),
     ...(r.info_updated_at ? { infoUpdatedAt: r.info_updated_at } : {}),
+    ...(r.instagram ? { instagram: r.instagram } : {}),
+    ...(r.maps_url ? { mapsUrl: r.maps_url } : {}),
+    ...(r.hours?.length ? { hours: groupHours(r.hours) } : {}),
+    ...toImages(r.images ?? []),
+    ...(r.sernatur_number && r.sernatur_valid_until
+      ? {
+          sernatur: {
+            number: r.sernatur_number,
+            validUntil: r.sernatur_valid_until,
+          },
+        }
+      : {}),
     ...(source ? { source } : {}),
     ...(extraSources.length ? { extraSources } : {}),
   };

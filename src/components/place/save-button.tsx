@@ -30,8 +30,8 @@ export function SaveButton({
         viewBox="0 0 24 24"
         aria-hidden="true"
         className="size-5"
-        fill={saved ? "#e0553a" : "none"}
-        stroke={saved ? "#e0553a" : "currentColor"}
+        fill={saved ? "#c94a48" : "none"}
+        stroke={saved ? "#c94a48" : "currentColor"}
         strokeWidth="2"
       >
         <path d="M12 20.5s-7.5-4.6-9.3-9.2C1.4 7.9 3.6 4.5 7 4.5c2 0 3.4 1.1 5 3 1.6-1.9 3-3 5-3 3.4 0 5.6 3.4 4.3 6.8-1.8 4.6-9.3 9.2-9.3 9.2Z" />

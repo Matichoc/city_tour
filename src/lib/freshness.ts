@@ -33,3 +33,11 @@ const ORDER: Record<Freshness, number> = {
 
 /** Primero lo que hay que pedir: sin fecha, vencidos, por vencer, al día. */
 export const byUrgency = (a: Freshness, b: Freshness) => ORDER[a] - ORDER[b];
+
+/** ¿Ya pasó el día (AAAA-MM-DD, hora de Chile)? Para vigencias como SERNATUR. */
+export function isPastDay(day: string, now: Date = new Date()): boolean {
+  const today = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/Santiago",
+  }).format(now);
+  return day < today;
+}

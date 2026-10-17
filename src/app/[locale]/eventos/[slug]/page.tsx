@@ -96,7 +96,7 @@ export default async function EventPage({
         {monthShort ? (
           <span
             aria-hidden="true"
-            className="absolute top-3 right-3 flex w-16 flex-col items-center rounded-2xl bg-white py-2 text-center text-[#07495a] shadow-lg"
+            className="absolute top-3 right-3 flex w-16 flex-col items-center rounded-2xl bg-white py-2 text-center text-[#155656] shadow-lg"
           >
             {event.day ? (
               <>
@@ -115,7 +115,7 @@ export default async function EventPage({
           </span>
         ) : null}
         <div className="absolute inset-x-0 bottom-0 flex flex-col gap-2 p-5">
-          <p className="text-sm font-bold text-[#ffe3a8]">
+          <p className="text-sm font-bold text-[#fbeab0]">
             {event.categoryName}
             {event.localityName ? ` · ${event.localityName}` : ""}
           </p>

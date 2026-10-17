@@ -33,4 +33,5 @@ echo "→ contenido del sitio (dos veces: debe ser idempotente)"
 "${PSQL[@]}" -o /dev/null -f tests/db/content.check.sql
 "${PSQL[@]}" -o /dev/null -f tests/db/reviews.check.sql
 "${PSQL[@]}" -o /dev/null -f tests/db/business.check.sql
+"${PSQL[@]}" -o /dev/null -f tests/db/media.check.sql
 echo "✔ Base de datos: migraciones y pruebas OK"

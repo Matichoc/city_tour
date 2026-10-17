@@ -175,34 +175,113 @@ export const PLACES: PlaceContent[] = [
       },
     ],
   },
-  // Aportado por el usuario: Plus Code HHMQ+F7, Papudo (decodificado a
-  // -32.41631, -71.41181) y enlace de Google Maps (2026-10-13). Sin otras
-  // fuentes web: horarios, carta y contacto quedan pendientes de verificación.
+  // Ubicación: Plus Code HHMQ+F7, Papudo (decodificado a -32.41631, -71.41181;
+  // aportado por el usuario el 2026-10-13). Dirección, frase, horarios,
+  // WhatsApp, Instagram y enlace de Maps: los entregó el local en el
+  // formulario «Suma tu comercio» (17-10-2026). Pendiente de verificar en terreno.
   {
     slug: "roots-salinas",
     localitySlug: "las-salinas-papudo",
     categorySlug: "gastronomia",
     latitude: -32.4163125,
     longitude: -71.4118125,
+    address: "Estacionamiento de la playa Salinas de Pullally, Las Salinas",
     business: true,
     es: {
       name: "Roots Salinas",
       short:
-        "Local de comida en el sector Las Salinas de Pullally, comuna de Papudo. Información pendiente de verificación.",
+        "Churrascos, hamburguesas, completos y más junto al estacionamiento de la playa Salinas de Pullally. Su especialidad: el «churrasco salinero», de merluza o reineta.",
       description:
-        "Local de comida en el sector Las Salinas de Pullally, en la comuna de Papudo. Su ubicación proviene de Google Maps (Plus Code HHMQ+F7); horarios, carta y contacto están pendientes de verificación.",
+        "Local de comida en Las Salinas, junto al estacionamiento de la playa Salinas de Pullally. Su carta tiene churrascos y hamburguesas, completos, pizzas y fajitas, empanadas, chorrillanas y salchipapas, además de helados y churros. La especialidad de la casa es el «churrasco salinero», de merluza o reineta. Tiene delivery y retiro en el local. En enero y febrero abre todos los días; de marzo a diciembre, los fines de semana y festivos.",
     },
     en: {
       name: "Roots Salinas",
       short:
-        "Food spot in the Las Salinas de Pullally area, commune of Papudo. Information pending verification.",
+        "Sandwiches, burgers, hot dogs and more next to the Salinas de Pullally beach parking lot. Its specialty: the «churrasco salinero», a hake or reineta fish sandwich.",
       description:
-        "Food spot in the Las Salinas de Pullally area, in the commune of Papudo. Its location comes from Google Maps (Plus Code HHMQ+F7); opening hours, menu and contact details are pending verification.",
+        "A food spot in Las Salinas, next to the Salinas de Pullally beach parking lot. The menu has churrascos (steak sandwiches) and burgers, Chilean hot dogs, pizzas and fajitas, empanadas, chorrillana and salchipapas, plus ice cream and churros. The house specialty is the «churrasco salinero», made with hake or reineta fish. Delivery and pick-up available. Open every day in January and February; from March to December, on weekends and public holidays.",
     },
+    pt: {
+      name: "Roots Salinas",
+      short:
+        "Sanduíches, hambúrgueres, cachorros-quentes e mais ao lado do estacionamento da praia Salinas de Pullally. Sua especialidade: o «churrasco salinero», de merluza ou reineta.",
+      description:
+        "Local de comida em Las Salinas, ao lado do estacionamento da praia Salinas de Pullally. O cardápio tem churrascos (sanduíches de carne) e hambúrgueres, cachorros-quentes chilenos, pizzas e fajitas, empanadas, chorrillana e salchipapas, além de sorvetes e churros. A especialidade da casa é o «churrasco salinero», de merluza ou reineta. Tem delivery e retirada no local. Abre todos os dias em janeiro e fevereiro; de março a dezembro, nos fins de semana e feriados.",
+    },
+    instagram: "https://www.instagram.com/roots.salinas/",
+    mapsUrl: "https://maps.app.goo.gl/ephntUVKSy3yhpAN7",
+    hours: [
+      {
+        fromMonth: 1,
+        toMonth: 2,
+        days: [0, 1, 2, 3, 4, 5, 6],
+        opens: "09:00",
+        closes: "22:00",
+      },
+      {
+        fromMonth: 3,
+        toMonth: 12,
+        days: [0, 6],
+        holidays: true,
+        opens: "10:00",
+        closes: "19:00",
+      },
+    ],
+    cta: { kind: "whatsapp", value: "+56 9 7270 2991" },
+    infoUpdatedAt: "2026-10-17T03:53:04Z",
+    // Logo, carta y promociones: los envió el local (17-10-2026), autorizados
+    // en el formulario. Los precios son los de la carta y pueden cambiar.
+    logo: { src: "/lugares/roots-salinas/logo.webp", width: 320, height: 320 },
+    gallery: [
+      {
+        src: "/lugares/roots-salinas/carta.webp",
+        width: 1536,
+        height: 1024,
+        kind: "menu",
+        alt: {
+          es: "Carta de Roots Salinas con precios: churrascos y hamburguesas, bebestibles, helados y churros, completos, pizzas y fajitas, choclo y empanadas, cono de papas, chorrillanas y salchipapas.",
+          en: "Roots Salinas menu with prices: churrascos and burgers, drinks, ice cream and churros, hot dogs, pizzas and fajitas, corn cups and empanadas, fries cones, chorrillana and salchipapas.",
+          pt: "Cardápio do Roots Salinas com preços: churrascos e hambúrgueres, bebidas, sorvetes e churros, cachorros-quentes, pizzas e fajitas, milho e empanadas, cone de batatas, chorrillana e salchipapas.",
+        },
+        credit: "Roots Salinas",
+      },
+      {
+        src: "/lugares/roots-salinas/promo-combos.webp",
+        width: 1600,
+        height: 900,
+        kind: "promo",
+        alt: {
+          es: "Promoción de Roots Salinas: combo clásico de hamburguesa, papas fritas y bebida, y papas fritas con salsa cheddar.",
+          en: "Roots Salinas promotion: classic combo of burger, fries and a drink, and fries with cheddar sauce.",
+          pt: "Promoção do Roots Salinas: combo clássico de hambúrguer, batata frita e bebida, e batata frita com molho cheddar.",
+        },
+        credit: "Roots Salinas",
+      },
+      {
+        src: "/lugares/roots-salinas/promo-conoce-roots.webp",
+        width: 1600,
+        height: 900,
+        kind: "promo",
+        alt: {
+          es: "Publicidad de Roots: hamburguesas premium, colaciones y papas fritas, con delivery o retiro en el local.",
+          en: "Roots advertisement: premium burgers, set meals and fries, with delivery or pick-up.",
+          pt: "Publicidade do Roots: hambúrgueres premium, refeições e batatas fritas, com delivery ou retirada no local.",
+        },
+        credit: "Roots Salinas",
+      },
+    ],
+    sernatur: { number: "93605", validUntil: "2027-01-31" },
     source: {
-      url: "https://maps.app.goo.gl/JN5FnoUCrZ6MjZXK8",
-      label: "Google Maps — Roots Salinas (HHMQ+F7, Papudo)",
+      url: "https://www.instagram.com/roots.salinas/",
+      label:
+        "Datos entregados por el local (formulario «Suma tu comercio», 17-10-2026)",
     },
+    extraSources: [
+      {
+        url: "https://maps.app.goo.gl/JN5FnoUCrZ6MjZXK8",
+        label: "Google Maps — Roots Salinas (HHMQ+F7, Papudo)",
+      },
+    ],
   },
   {
     slug: "papudo-playa-los-lilenes",

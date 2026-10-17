@@ -90,6 +90,37 @@ export async function ReviewsPanel({
                     </span>
                   </div>
                   <p className="mt-1 text-sm whitespace-pre-line">{r.text}</p>
+                  {r.media.length > 0 ? (
+                    <ul className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
+                      {r.media.map((m) => (
+                        <li
+                          key={m.url}
+                          className="bg-sea-soft aspect-square overflow-hidden rounded-xl"
+                        >
+                          {m.kind === "video" ? (
+                            <video
+                              src={m.url}
+                              controls
+                              playsInline
+                              preload="metadata"
+                              aria-label={t("videoLabel", { author: r.author })}
+                              className="size-full object-cover"
+                            />
+                          ) : (
+                            <a href={m.url} target="_blank" rel="noopener">
+                              {/* eslint-disable-next-line @next/next/no-img-element -- enlace firmado de Storage: cambia con cada firma, no se optimiza */}
+                              <img
+                                src={m.url}
+                                alt={t("photoAlt", { author: r.author })}
+                                loading="lazy"
+                                className="size-full object-cover"
+                              />
+                            </a>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : null}
                 </li>
               ))}
             </ul>

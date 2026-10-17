@@ -105,7 +105,7 @@ export function FeaturedCarousel({ slides }: { slides: FeaturedSlide[] }) {
                 </span>
                 {s.monthShort ? (
                   <span
-                    className="flex w-16 flex-col items-center rounded-2xl bg-white py-2 text-center text-[#07495a] shadow-lg"
+                    className="flex w-16 flex-col items-center rounded-2xl bg-white py-2 text-center text-[#155656] shadow-lg"
                     aria-hidden="true"
                   >
                     {s.day ? (
@@ -127,7 +127,7 @@ export function FeaturedCarousel({ slides }: { slides: FeaturedSlide[] }) {
               </div>
 
               <div className="flex flex-col gap-2 pb-5">
-                <p className="text-sm font-bold text-[#ffe3a8]">
+                <p className="text-sm font-bold text-[#fbeab0]">
                   {s.categoryName}
                   {s.localityName ? ` · ${s.localityName}` : ""}
                   {s.demo ? ` · ${t("demoBadge")}` : ""}

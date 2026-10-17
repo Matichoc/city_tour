@@ -103,7 +103,10 @@ describe("submitReview", () => {
 
   it("publica con submit_review, sin enviar la IP, y refresca el sitio", async () => {
     stubFetch(() => Response.json("id"));
-    expect(await submitReview(idle, form(valid))).toEqual({ status: "ok" });
+    expect(await submitReview(idle, form(valid))).toEqual({
+      status: "ok",
+      reviewId: "id",
+    });
     const body = JSON.parse(calls[0]!.init.body as string);
     expect(calls[0]!.url).toBe(
       "https://demo.supabase.co/rest/v1/rpc/submit_review",
@@ -144,7 +147,9 @@ describe("moderateReview", () => {
   const role = (r: string) => (url: string) =>
     url.includes("current_app_role")
       ? Response.json(r)
-      : new Response(null, { status: 204 });
+      : url.includes("review_media?select=")
+        ? Response.json([{ path: "id/foto.jpg" }])
+        : new Response(null, { status: 204 });
   const run = (d: Record<string, string>) =>
     moderateReview(form(d)).then(
       () => null,
@@ -174,7 +179,15 @@ describe("moderateReview", () => {
     expect(await run({ id: ID, accion: "borrar", filtro: "ocultos" })).toBe(
       "/admin/comentarios?filtro=ocultos&guardado=1",
     );
-    expect(calls.some((c) => c.init.method === "DELETE")).toBe(true);
+    // Primero el archivo en Storage, después el comentario.
+    const deletes = calls.filter((c) => c.init.method === "DELETE");
+    expect(deletes.map((c) => c.url)).toEqual([
+      "https://demo.supabase.co/storage/v1/object/review-media",
+      `https://demo.supabase.co/rest/v1/reviews?id=eq.${ID}`,
+    ]);
+    expect(JSON.parse(deletes[0]!.init.body as string)).toEqual({
+      prefixes: ["id/foto.jpg"],
+    });
   });
 });
 

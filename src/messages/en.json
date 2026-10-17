@@ -102,7 +102,27 @@
     "infoUpdated": "Business details",
     "infoUpdatedOn": "Confirmed on {date}",
     "infoNever": "To be confirmed with the business",
-    "infoStale": "More than 6 months have passed since the business confirmed its details: check hours and prices before you go."
+    "infoStale": "More than 6 months have passed since the business confirmed its details: check hours and prices before you go.",
+    "hoursEveryDay": "Every day",
+    "hoursHolidays": "public holidays",
+    "hoursAnd": "and",
+    "hoursMonths": "{from} to {to}",
+    "hoursAllYear": "All year",
+    "hoursSource": "Provided by the business",
+    "instagram": "Instagram",
+    "logoAlt": "{name} logo",
+    "tabGallery": "Photos & menu",
+    "galleryKind": {
+      "photo": "Photo",
+      "menu": "Menu",
+      "promo": "Business ad"
+    },
+    "galleryNote": "Images provided by the business. Menu prices may change.",
+    "imageCredit": "Image: {credit}",
+    "sernatur": "SERNATUR registration No. {number}",
+    "sernaturUntil": "valid until {date}",
+    "sernaturExpired": "expired on {date}",
+    "sernaturNote": "Tourism service registered with SERNATUR (Chile’s National Tourism Service), as reported by the business."
   },
   "routes": {
     "title": "Routes",
@@ -371,7 +391,23 @@
     "errorProfanity": "Your review contains offensive words. Please rewrite it.",
     "errorRate": "You sent several reviews in a row. Please try again later.",
     "errorGeneric": "Your review could not be published. Please try again in a moment.",
-    "sending": "Publishing…"
+    "sending": "Publishing…",
+    "mediaLabel": "Photos or video (optional)",
+    "mediaHelp": "Up to 4 files (one video, max. 1 minute), 25 MB each. They are reviewed before being shown.",
+    "checking": "Checking…",
+    "blocked": "“{name}” can’t be published: it seems to contain inappropriate content.",
+    "unreadable": "We couldn’t check “{name}”. Try a JPG, PNG or MP4 video.",
+    "tooLong": "“{name}” is longer than 1 minute.",
+    "tooBig": "“{name}” is larger than 25 MB.",
+    "tooMany": "You can upload up to 4 files and only one video.",
+    "badType": "“{name}” is not a JPG, PNG or WebP photo or an MP4, WebM or MOV video.",
+    "remove": "Remove {name}",
+    "uploading": "Uploading files…",
+    "mediaPending": "Your photos and videos will be shown once the team reviews them.",
+    "mediaFailed": "Your review was published, but we couldn’t upload the files. Please try again later.",
+    "errorMedia": "One of the files can’t be published.",
+    "photoAlt": "Photo by {author}",
+    "videoLabel": "Video by {author}"
   },
   "events": {
     "title": "Events calendar",
@@ -520,7 +556,8 @@
       "filter": {
         "todos": "All",
         "visibles": "Visible",
-        "ocultos": "Hidden"
+        "ocultos": "Hidden",
+        "archivos": "Media to review"
       },
       "on": "On",
       "hiddenBadge": "Hidden",
@@ -529,7 +566,16 @@
       "delete": "Delete",
       "saved": "Done. The change is already visible on the public site.",
       "error": "Could not apply. Check your role or try again.",
-      "empty": "No reviews in this view."
+      "empty": "No reviews in this view.",
+      "media": {
+        "pending": "To review",
+        "approved": "Approved",
+        "rejected": "Rejected",
+        "uploading": "Uploading",
+        "attention": "Check carefully",
+        "approve": "Approve",
+        "reject": "Reject"
+      }
     },
     "business": {
       "title": "Businesses",

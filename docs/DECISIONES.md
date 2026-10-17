@@ -195,3 +195,66 @@ Fuente: PLADETUR de Papudo 2023–2027, iD (`docs/investigacion/`).
   visitante que revise horarios y precios antes de ir.
 - Mientras el sitio esté cerrado, el enlace a la ficha que va en el mensaje
   solo abre con un enlace de acceso.
+
+## Fotos y videos en los comentarios (migración 0020)
+
+- Hasta 4 archivos por comentario (un solo video, de máx. 1 minuto), 25 MB
+  cada uno; JPG, PNG, WebP, MP4, WebM o MOV.
+- **Detector gratuito en el navegador**: NSFW.js (modelo MobileNetV2), sin
+  cuenta ni costo y sin enviar nada a terceros. Se carga solo al elegir un
+  archivo; en los videos revisa 8 cuadros y usa el peor. Bloquea el desnudo
+  explícito (`Porn`/`Hentai`); «Sexy» no bloquea (trajes de baño en una guía
+  de playas), pero marca el archivo como «Revisar con cuidado».
+  Reglas en `src/lib/media-policy.ts`.
+- Como el detector del navegador se puede saltar, **nada se publica solo**:
+  los archivos van a un bucket privado (`review-media`) y quedan «por
+  revisar» hasta que el personal los aprueba en `/admin/comentarios`
+  (filtro «Fotos por revisar»). Rechazar o borrar el comentario borra el
+  archivo. El sitio los muestra con enlaces firmados que solo se pueden crear
+  para lo aprobado de comentarios visibles.
+- Los visitantes solo suben a rutas que registró `attach_review_media()`
+  (mismo remitente que el comentario, dentro de 15 minutos) y antes de 30
+  minutos; `finish_review_media()` deja en revisión solo lo que llegó.
+- Más adelante, con tráfico: un servicio en el servidor (Sightengine, Google
+  Vision o AWS Rekognition) podría aprobar solo lo que pase su revisión.
+
+## Datos de los comercios que se suman (migración 0021)
+
+- El formulario «Suma tu comercio» (Google Forms → planilla) es la fuente de
+  los comercios adheridos. Se cargan en `src/content` con su fuente («Datos
+  entregados por el local», con fecha) y quedan `pending` hasta verificarlos
+  en terreno. El nombre y el correo de quien responde **no** se publican ni se
+  guardan en el repo.
+- Horarios por temporada que se repiten cada año (`place_hours.from_month`,
+  `to_month`, `holidays`; día 0 = domingo). La ficha los muestra como
+  «Enero a febrero · Todos los días · 09:00–22:00» y aclara «Informado por el
+  local». Sin horarios, sigue «Por confirmar».
+- Instagram y enlace de Google Maps del local (`places.maps_url`): «Cómo
+  llegar» usa la coordenada si existe; si no, el enlace de Maps; si no, una
+  búsqueda por nombre y dirección.
+- El botón de WhatsApp y la fecha de confirmación entran por `content.sql`
+  solo si están vacíos; después mandan los cambios del panel.
+- Primer comercio: Roots Salinas (17-10-2026).
+
+## Paleta desde el logo municipal
+
+Los tokens de color del sitio pasaron a los colores del logo en versión
+pálida (detalle y contrastes en [`MARCA-REFERENCIA.md`](MARCA-REFERENCIA.md)).
+El logo no se usa.
+
+## Imágenes de los comercios (migración 0022)
+
+- Logo, carta, fotos y promociones que entrega el local (autorizadas en el
+  formulario) van, por ahora, en `public/lugares/<slug>/` como WebP
+  re-codificado (sin metadatos: las fotos de celular traen la ubicación GPS).
+  `content.sql` las registra en `place_images` con tipo, tamaño, texto
+  alternativo en es/en/pt y crédito; solo reemplaza las rutas del repo
+  («/...»), así las que se suban después desde el panel no se pisan.
+- La ficha muestra el logo junto al nombre y una sección «Fotos y carta». Las
+  promociones se rotulan «Publicidad del local» y los precios de la carta se
+  advierten como sujetos a cambio. La ilustración de portada se mantiene hasta
+  tener fotos del lugar.
+- Registro SERNATUR: número y vigencia que informa el local, como texto (no se
+  reproduce el sello oficial); avisa si venció. Se confirma al verificar.
+- No se copian fotos de Google Maps: pertenecen a quien las subió. Solo se
+  usan las que el local entregue.
