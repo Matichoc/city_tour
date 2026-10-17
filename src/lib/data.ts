@@ -217,7 +217,7 @@ export function createData(content: SiteContent, showDemo = SHOW_DEMO) {
       sources: [p.source, p.tvSource, ...(p.extraSources ?? [])].filter(
         (s): s is Source => Boolean(s),
       ),
-      verification: "pending",
+      verification: p.verification ?? "pending",
       fallbackToSpanish:
         (locale === "en" && !p.en) || (locale === "pt" && !p.pt),
       picture: picture(
@@ -266,7 +266,7 @@ export function createData(content: SiteContent, showDemo = SHOW_DEMO) {
       sources: [e.source, ...(e.extraSources ?? [])].filter((s): s is Source =>
         Boolean(s),
       ),
-      verification: "pending",
+      verification: e.verification ?? "pending",
       fallbackToSpanish:
         (locale === "en" && !e.en) || (locale === "pt" && !e.pt),
       featured: e.featured === true,

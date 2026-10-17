@@ -2,6 +2,8 @@ import type { IllustrationKey } from "@/content/images";
 
 export type Source = { url: string; label: string };
 
+export type Verification = "pending" | "verified" | "outdated";
+
 export type LocalityContent = {
   slug: string;
   es: string;
@@ -34,6 +36,8 @@ export type PlaceContent = {
   pt?: PlaceText;
   /** Ficha de EJEMPLO (ficticia): se rotula y no se indexa (demo-content.ts). */
   demo?: boolean;
+  /** Estado de verificación en terreno (de la base); sin dato, `pending`. */
+  verification?: Verification;
   source?: Source;
   tvSource?: Source;
   extraSources?: Source[];
@@ -58,6 +62,8 @@ export type EventContent = {
   illustration?: IllustrationKey;
   /** Evento de EJEMPLO (ficticio): se rotula y no se indexa. */
   demo?: boolean;
+  /** Estado de verificación en terreno (de la base); sin dato, `pending`. */
+  verification?: Verification;
   es: EventText;
   en?: EventText;
   pt?: EventText;

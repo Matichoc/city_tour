@@ -13,10 +13,11 @@ comuna de Papudo. Un repo = una comuna (otra comuna = otro repo). Plan en
 
 ## Ramas
 
-`main` (producción) ← `develop` (pruebas/staging) ← ramas de trabajo
-(`feat/...`, `claude/...`). Los PR van siempre a `develop`; `main` solo se toca
-cuando el usuario lo decide. `demo` es una copia de `develop` para compartir
-por horas; también se actualiza solo cuando el usuario lo pide. Ver
+`main` ← `develop` ← ramas de trabajo (`feat/...`, `claude/...`). Los PR van
+siempre a `develop`; `main` solo se toca cuando el usuario lo decide. Hasta que
+haya financiamiento, `develop` es la rama de producción en Vercel (cerrada,
+solo equipo) y `main` está en espera. `demo` es una copia de `develop` para
+compartir por horas; se actualiza solo cuando el usuario lo pide. Ver
 `docs/COMPARTIR-VISTA-PREVIA.md`.
 
 ## Reglas duras

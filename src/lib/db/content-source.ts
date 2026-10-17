@@ -14,6 +14,7 @@ import type {
   PlaceContent,
   RouteContent,
   Source,
+  Verification,
 } from "@/content/types";
 
 /** Segundos que una página puede mostrar datos de la base sin volver a pedirlos. */
@@ -44,6 +45,7 @@ export type PlaceRow = {
   address: string | null;
   is_demo: boolean;
   is_business: boolean;
+  verification_status: Verification;
   category: SlugRef;
   locality: SlugRef;
   translations: Tr<{
@@ -61,6 +63,7 @@ export type EventRow = {
   season: string | null;
   featured: boolean;
   is_demo: boolean;
+  verification_status: Verification;
   illustration: string | null;
   category: SlugRef;
   locality: SlugRef;
@@ -107,12 +110,12 @@ export const QUERIES: Record<keyof ContentRows, string> = {
     "localities?select=slug,latitude,longitude,source_url,source_label," +
     "translations:locality_translations(locale,name,summary)&order=sort_order,slug",
   places:
-    "places?select=slug,latitude,longitude,address,is_demo,is_business," +
+    "places?select=slug,latitude,longitude,address,is_demo,is_business,verification_status," +
     "category:categories(slug),locality:localities(slug)," +
     `translations:place_translations(locale,name,short_description,full_description),${SOURCES}` +
     "&publication_status=eq.published&order=sort_order,slug&sources.order=sort_order",
   events:
-    "events?select=slug,recurrence_month,recurrence_day,season,featured,is_demo,illustration," +
+    "events?select=slug,recurrence_month,recurrence_day,season,featured,is_demo,verification_status,illustration," +
     "category:categories(slug),locality:localities(slug)," +
     `translations:event_translations(locale,name,description),${SOURCES}` +
     "&publication_status=eq.published&order=sort_order,slug&sources.order=sort_order",
@@ -166,6 +169,9 @@ function toPlace(r: PlaceRow): PlaceContent | null {
     ...(text("en") ? { en: text("en") } : {}),
     ...(text("pt") ? { pt: text("pt") } : {}),
     ...(r.is_demo ? { demo: true } : {}),
+    ...(r.verification_status && r.verification_status !== "pending"
+      ? { verification: r.verification_status }
+      : {}),
     ...(source ? { source } : {}),
     ...(extraSources.length ? { extraSources } : {}),
   };
@@ -190,6 +196,9 @@ function toEvent(r: EventRow): EventContent | null {
     ...(r.featured ? { featured: true } : {}),
     ...(isIllustration(r.illustration) ? { illustration: r.illustration } : {}),
     ...(r.is_demo ? { demo: true } : {}),
+    ...(r.verification_status && r.verification_status !== "pending"
+      ? { verification: r.verification_status }
+      : {}),
     es,
     ...(text("en") ? { en: text("en") } : {}),
     ...(text("pt") ? { pt: text("pt") } : {}),

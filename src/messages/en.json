@@ -428,5 +428,63 @@
     "linkBody": "Anyone who opens it can see the preview until {expires} (Chile time). After that, the link stops working.",
     "askPassword": "Enter the key to create links",
     "teamLinkBody": "Permanent team link: it does not expire. Share it only with the team; if it leaks, change the key and create a new one (that also cuts the timed links)."
+  },
+  "admin": {
+    "title": "Municipal panel",
+    "signIn": {
+      "title": "Sign in to the panel",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Sign in",
+      "error": "Wrong email or password, or your account has no access to the panel.",
+      "notConfigured": "The panel needs the database to be configured."
+    },
+    "signOut": "Sign out",
+    "role": {
+      "admin": "Administration",
+      "editor": "Editing",
+      "verifier": "Verification",
+      "org_manager": "Business"
+    },
+    "tabs": {
+      "lugar": "Places",
+      "evento": "Events",
+      "ruta": "Routes"
+    },
+    "summary": "{total} in total · {verified} verified · {pending} pending · {outdated} outdated",
+    "columns": {
+      "name": "Name",
+      "publication": "Publication",
+      "verification": "Verification",
+      "lastVerified": "Last verified"
+    },
+    "publication": {
+      "draft": "Draft",
+      "published": "Published",
+      "archived": "Archived"
+    },
+    "verification": {
+      "pending": "Pending",
+      "verified": "Verified",
+      "outdated": "Outdated"
+    },
+    "demo": "Example",
+    "never": "Never",
+    "back": "Back to the panel",
+    "sources": "Sources",
+    "noSources": "No sources recorded.",
+    "history": "Verification history",
+    "noHistory": "Not verified yet.",
+    "form": {
+      "title": "Change verification status",
+      "status": "New status",
+      "notes": "Note (what was checked and how)",
+      "evidence": "Evidence link (photo, document…)",
+      "submit": "Save",
+      "saved": "Saved. The public site updates in a few minutes.",
+      "error": "Could not save. Check your role or try again.",
+      "readOnly": "Your role can view but not verify."
+    },
+    "loadError": "Could not read the database. Try again in a moment."
   }
 }
