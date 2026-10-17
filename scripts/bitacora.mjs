@@ -69,7 +69,9 @@ const releases = merges.map((m, i) => {
   const pr = m.subject.match(/#(\d+)/)[1];
   const full = git("rev-parse", m.hash);
   const commits = log(`${full}^1..${full}^2`);
-  return { version: `v0.${i + 1}`, pr, merged: m.at, commits, note: notes[pr] };
+  const note =
+    notes[pr] ?? (notes.actual?.pr === pr ? notes.actual : undefined);
+  return { version: `v0.${i + 1}`, pr, merged: m.at, commits, note };
 });
 
 // Todos los commits (sin fusiones) para el cuadro por día.
@@ -111,14 +113,20 @@ correr \`pnpm bitacora\` y subir el cambio en el mismo PR.
 `);
 
 // En curso
-const cur = notes.actual;
+// «Actual» deja de estar «en preparación» cuando su PR ya se fusionó.
+const cur =
+  notes.actual && !releases.some((r) => r.pr === notes.actual.pr)
+    ? notes.actual
+    : null;
 const next = `v0.${releases.length + 1}`;
 if (cur) {
   out.push(`## En preparación: ${next} — ${cur.titulo}\n`);
   out.push(`${cur.resumen}\n`);
   if (cur.migraciones)
     out.push(`- **Migraciones por correr en Supabase:** ${cur.migraciones}`);
-  out.push(`- **Estado:** en desarrollo (aún no está en \`develop\`).`);
+  out.push(
+    `- **Estado:** ${cur.pr ? `en revisión, [PR #${cur.pr}](https://github.com/Matichoc/city_tour/pull/${cur.pr})` : "en desarrollo"} (aún no está en \`develop\`).`,
+  );
   out.push(
     `- **Última actualización de esta bitácora:** ${short(new Date())}\n`,
   );

@@ -1,5 +1,5 @@
 {
-  "_ayuda": "Notas a mano de cada entrega, por número de PR. `pnpm bitacora` las junta con el historial de git (días, horas y commits) y escribe docs/BITACORA.md. La entrega en curso va en «actual»; al abrir su PR se renombra con el número.",
+  "_ayuda": "Notas a mano de cada entrega, por número de PR. `pnpm bitacora` las junta con el historial de git (días, horas y commits) y escribe docs/BITACORA.md. La entrega en curso va en «actual» con el número de su PR en «pr»; al fusionarse, la bitácora la une sola con su versión.",
   "1": {
     "titulo": "Plan de trabajo y flujo de ramas",
     "resumen": "Plan del proyecto, financiamiento y herramientas, y el flujo de ramas."
@@ -77,6 +77,7 @@
     "resumen": "Si el local tiene foto o logo, esa es la portada; la ilustración con IA queda solo para los lugares sin imágenes."
   },
   "actual": {
+    "pr": "22",
     "titulo": "Panel de comercios: crear, fotos e importar planilla",
     "resumen": "Crear y editar comercios y subir su logo, carta y fotos desde el panel; importar la planilla del formulario (Google Sheets o CSV) cargando solo lo nuevo o lo que cambió; contacto interno privado; las fichas editadas en el panel ya no las pisa content.sql; bitácora de avances.",
     "migraciones": "0023"
