@@ -90,8 +90,14 @@
     "titulo": "Plan de idiomas originarios (mapudungun y rapa nui)",
     "resumen": "Plan y planilla de 99 textos para que una persona hablante traduzca; sin código ni traducciones automáticas."
   },
-  "actual": {
+  "25": {
     "titulo": "Galería de la ficha con flechas",
     "resumen": "La galería de fotos del local muestra una imagen a la vez con flechas a los lados, contador y deslizado con el dedo, sin la barra de desplazamiento."
+  },
+  "actual": {
+    "pr": 28,
+    "titulo": "Seguridad: el público no lee el snapshot de importación",
+    "resumen": "Contención de PRIV-01: el rol anónimo ya no puede leer places.import_snapshot (que guardaba nombre y correo de quien inscribió el comercio). El sitio público no cambia. Incluye prueba de base de datos y script para revertir.",
+    "migraciones": "0025"
   }
 }
