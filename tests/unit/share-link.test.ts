@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { NextRequest, NextResponse } from "next/server";
 import {
   ACCESS_COOKIE,
+  parseDuration,
   parseHours,
   signAccess,
   verifyAccess,
@@ -61,7 +62,12 @@ describe("signAccess / verifyAccess", () => {
     expect(parseHours("abc")).toBe(4);
     expect(parseHours("0.2")).toBe(1);
     expect(parseHours("8")).toBe(8);
-    expect(parseHours("1000")).toBe(72);
+    expect(parseHours("1000")).toBe(720);
+    expect(parseDuration(new URLSearchParams("dias=30"))).toBe(720);
+    expect(parseDuration(new URLSearchParams("dias=90"))).toBe(720);
+    expect(parseDuration(new URLSearchParams("horas=6&dias=30"))).toBe(6);
+    expect(parseDuration(new URLSearchParams("dias=abc"))).toBe(4);
+    expect(parseDuration(new URLSearchParams(""))).toBe(4);
   });
 });
 

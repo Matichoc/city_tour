@@ -1,11 +1,11 @@
 import { createHash, timingSafeEqual } from "node:crypto";
 import type { NextRequest } from "next/server";
-import { ACCESS_PARAM, parseHours, signAccess } from "@/lib/share-link";
+import { ACCESS_PARAM, parseDuration, signAccess } from "@/lib/share-link";
 import { escapeHtml } from "@/lib/html";
 import es from "@/messages/es.json";
 
 /**
- * Crea un enlace temporal: `/api/enlace?horas=4`. El navegador pide usuario y
+ * Crea un enlace temporal: `/api/enlace?horas=4` o `/api/enlace?dias=30`. El navegador pide usuario y
  * contraseña; la contraseña es `SHARE_LINK_SECRET` (el usuario da igual). Así
  * la clave no queda en la URL ni en los registros.
  */
@@ -34,7 +34,7 @@ export async function GET(request: NextRequest) {
     });
   }
 
-  const hours = parseHours(request.nextUrl.searchParams.get("horas"));
+  const hours = parseDuration(request.nextUrl.searchParams);
   const expiresAt = Date.now() + hours * 3_600_000;
   const url = new URL("/es", request.nextUrl.origin);
   url.searchParams.set(ACCESS_PARAM, await signAccess(secret, expiresAt));

@@ -11,7 +11,7 @@ export const ACCESS_PARAM = "acceso";
 export const ACCESS_COOKIE = "acceso_vista_previa";
 /** Duración por defecto y máxima de un enlace, en horas. */
 export const DEFAULT_HOURS = 4;
-export const MAX_HOURS = 72;
+export const MAX_HOURS = 30 * 24;
 
 const encoder = new TextEncoder();
 
@@ -75,6 +75,17 @@ export async function verifyAccess(
     encoder.encode(exp),
   );
   return ok ? expiresAt : null;
+}
+
+/**
+ * Duración pedida en horas (`horas`) o días (`dias`), acotada a
+ * 1–MAX_HOURS. Sin ninguna de las dos, DEFAULT_HOURS.
+ */
+export function parseDuration(params: URLSearchParams): number {
+  const days = params.get("dias");
+  return parseHours(
+    params.get("horas") ?? (days === null ? null : String(Number(days) * 24)),
+  );
 }
 
 /** Horas pedidas, acotadas a 1–MAX_HOURS (por defecto DEFAULT_HOURS). */
