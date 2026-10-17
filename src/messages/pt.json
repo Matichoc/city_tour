@@ -353,7 +353,13 @@
     "anonymous": "Visitante",
     "delete": "Apagar minha avaliação",
     "ownerReplyLabel": "Resposta do estabelecimento",
-    "list": "Lista de avaliações"
+    "list": "Lista de avaliações",
+    "realNote": "As avaliações são publicadas ao serem enviadas. As ofensivas ou fora de contexto são removidas.",
+    "published": "Obrigado! Sua avaliação já foi publicada.",
+    "errorProfanity": "Sua avaliação tem palavras ofensivas. Reescreva, por favor.",
+    "errorRate": "Você enviou várias avaliações seguidas. Tente de novo mais tarde.",
+    "errorGeneric": "Não foi possível publicar sua avaliação. Tente de novo em instantes.",
+    "sending": "Publicando…"
   },
   "events": {
     "title": "Agenda de eventos",
@@ -485,6 +491,27 @@
       "error": "Não foi possível salvar. Confira seu papel ou tente de novo.",
       "readOnly": "Seu papel pode ver, mas não verificar."
     },
-    "loadError": "Não foi possível ler o banco de dados. Tente de novo em instantes."
+    "loadError": "Não foi possível ler o banco de dados. Tente de novo em instantes.",
+    "nav": {
+      "entities": "Fichas",
+      "reviews": "Comentários"
+    },
+    "reviews": {
+      "title": "Comentários de visitantes",
+      "intro": "São publicados ao serem enviados. Oculte os inadequados; apagar é definitivo (só administração).",
+      "filter": {
+        "todos": "Todos",
+        "visibles": "Visíveis",
+        "ocultos": "Ocultos"
+      },
+      "on": "Em",
+      "hiddenBadge": "Oculto",
+      "hide": "Ocultar",
+      "show": "Mostrar de novo",
+      "delete": "Apagar",
+      "saved": "Pronto. A mudança já aparece no site público.",
+      "error": "Não foi possível aplicar. Confira seu papel ou tente de novo.",
+      "empty": "Não há comentários nesta visão."
+    }
   }
 }

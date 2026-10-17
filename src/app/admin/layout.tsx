@@ -21,13 +21,23 @@ export default async function AdminLayout({
   return (
     <div className="bg-background min-h-dvh">
       <header className="border-border bg-surface border-b">
-        <div className="mx-auto flex w-full max-w-5xl items-center justify-between gap-3 px-4 py-3">
+        <div className="mx-auto flex w-full max-w-5xl flex-wrap items-center justify-between gap-3 px-4 py-3">
           <Link
             href="/admin"
             className="font-display text-sea-deep text-lg font-extrabold"
           >
             {t("title")}
           </Link>
+          {session && (
+            <nav className="flex items-center gap-4 text-sm font-semibold">
+              <Link href="/admin" className="text-sea-deep">
+                {t("nav.entities")}
+              </Link>
+              <Link href="/admin/comentarios" className="text-sea-deep">
+                {t("nav.reviews")}
+              </Link>
+            </nav>
+          )}
           {session && (
             <form action={signOut} className="flex items-center gap-3">
               <span className="text-muted text-sm">

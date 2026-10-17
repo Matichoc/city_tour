@@ -272,7 +272,12 @@ export default async function PlacePage({
             entityName={place.name}
           />
         ) : (
-          <ReviewsPanel business={place.business} />
+          <ReviewsPanel
+            business={place.business}
+            entity="place"
+            slug={place.slug}
+            entityName={place.name}
+          />
         )}
 
         <section id="datos" className="flex scroll-mt-32 flex-col gap-3">

@@ -197,3 +197,97 @@ export async function verifyEntity(
     }),
   });
 }
+
+// ── Comentarios ───────────────────────────────────────────────────────────
+export type ReviewFilter = "todos" | "visibles" | "ocultos";
+export const REVIEW_FILTERS: ReviewFilter[] = ["todos", "visibles", "ocultos"];
+
+export type AdminReview = {
+  id: string;
+  author: string;
+  rating: number;
+  text: string;
+  status: "visible" | "hidden";
+  createdAt: string;
+  /** Ficha comentada: tipo para el sitio público, slug y nombre en español. */
+  target: { kind: "lugar" | "evento"; slug: string; name: string } | null;
+};
+
+type ReviewRow = {
+  id: string;
+  author_name: string;
+  rating: number;
+  body: string;
+  status: AdminReview["status"];
+  created_at: string;
+  place: { slug: string; translations: Row["translations"] } | null;
+  event: { slug: string; translations: Row["translations"] } | null;
+};
+
+const nameEs = (tr: Row["translations"], slug: string) =>
+  tr.find((t) => t.locale === "es")?.name ?? slug;
+
+export async function listReviewsAdmin(
+  token: string,
+  filter: ReviewFilter,
+): Promise<AdminReview[]> {
+  const status =
+    filter === "visibles"
+      ? "&status=eq.visible"
+      : filter === "ocultos"
+        ? "&status=eq.hidden"
+        : "";
+  const rows = await rest<ReviewRow[]>(
+    token,
+    "reviews?select=id,author_name,rating,body,status,created_at," +
+      "place:places(slug,translations:place_translations(locale,name))," +
+      "event:events(slug,translations:event_translations(locale,name))" +
+      `${status}&order=created_at.desc&limit=200`,
+  );
+  return rows.map((r) => ({
+    id: r.id,
+    author: r.author_name,
+    rating: r.rating,
+    text: r.body,
+    status: r.status,
+    createdAt: r.created_at,
+    target: r.place
+      ? {
+          kind: "lugar",
+          slug: r.place.slug,
+          name: nameEs(r.place.translations, r.place.slug),
+        }
+      : r.event
+        ? {
+            kind: "evento",
+            slug: r.event.slug,
+            name: nameEs(r.event.translations, r.event.slug),
+          }
+        : null,
+  }));
+}
+
+export const canModerate = (s: Session) =>
+  s.role === "admin" || s.role === "editor";
+export const canDeleteReviews = (s: Session) => s.role === "admin";
+
+export async function setReviewStatus(
+  session: Session,
+  id: string,
+  status: AdminReview["status"],
+) {
+  await rest<null>(session.token, `reviews?id=eq.${encodeURIComponent(id)}`, {
+    method: "PATCH",
+    body: JSON.stringify({
+      status,
+      moderated_by: session.userId,
+      moderated_at: new Date().toISOString(),
+    }),
+  });
+}
+
+export async function deleteReview(session: Session, id: string) {
+  await rest<null>(session.token, `reviews?id=eq.${encodeURIComponent(id)}`, {
+    method: "DELETE",
+  });
+}

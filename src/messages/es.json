@@ -353,7 +353,13 @@
     "anonymous": "Visitante",
     "delete": "Borrar mi opinión",
     "ownerReplyLabel": "Respuesta del local",
-    "list": "Lista de opiniones"
+    "list": "Lista de opiniones",
+    "realNote": "Las opiniones se publican al enviarlas. Se eliminan las ofensivas o que no correspondan al lugar.",
+    "published": "¡Gracias! Tu opinión ya está publicada.",
+    "errorProfanity": "Tu opinión tiene palabras ofensivas. Reescríbela, por favor.",
+    "errorRate": "Enviaste varias opiniones seguidas. Intenta de nuevo más tarde.",
+    "errorGeneric": "No se pudo publicar tu opinión. Intenta de nuevo en un momento.",
+    "sending": "Publicando…"
   },
   "events": {
     "title": "Agenda de eventos",
@@ -485,6 +491,27 @@
       "error": "No se pudo guardar. Revisa tu rol o intenta de nuevo.",
       "readOnly": "Tu rol puede ver, pero no verificar."
     },
-    "loadError": "No se pudo leer la base de datos. Intenta de nuevo en un momento."
+    "loadError": "No se pudo leer la base de datos. Intenta de nuevo en un momento.",
+    "nav": {
+      "entities": "Fichas",
+      "reviews": "Comentarios"
+    },
+    "reviews": {
+      "title": "Comentarios de visitantes",
+      "intro": "Se publican al enviarse. Oculta los inapropiados; borrar es definitivo (solo administración).",
+      "filter": {
+        "todos": "Todos",
+        "visibles": "Visibles",
+        "ocultos": "Ocultos"
+      },
+      "on": "En",
+      "hiddenBadge": "Oculto",
+      "hide": "Ocultar",
+      "show": "Volver a mostrar",
+      "delete": "Borrar",
+      "saved": "Listo. El cambio ya se ve en el sitio público.",
+      "error": "No se pudo aplicar. Revisa tu rol o intenta de nuevo.",
+      "empty": "No hay comentarios en esta vista."
+    }
   }
 }

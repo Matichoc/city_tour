@@ -137,3 +137,20 @@ Fuente: PLADETUR de Papudo 2023–2027, iD (`docs/investigacion/`).
 - `/admin` va sin prefijo de idioma (solo español) y queda detrás de la misma
   puerta de enlaces que el resto del sitio.
 - Pendiente (Fase 2): editar fichas, crear borradores, fotos, usuarios y roles.
+
+## Comentarios de visitantes (reales)
+
+- Se publican al enviarlos (sin cuenta), con nombre opcional, 1–5 estrellas y
+  hasta 500 caracteres. Solo en fichas y eventos reales publicados; las de
+  ejemplo siguen con la demostración local.
+- Freno automático: filtro de groserías (`src/lib/profanity.ts`), campo
+  trampa para robots y límite en la base (3 por hora y 10 por día por
+  remitente; 30 por hora por ficha). El remitente se identifica con un hash
+  con sal de IP y navegador (`REVIEWS_SALT`, o la clave de enlaces): nunca se
+  guarda la IP y la huella no es legible por la API.
+- La única entrada es `submit_review()`; la tabla no admite inserciones
+  directas. En `/admin/comentarios` el personal oculta o vuelve a mostrar
+  (admin y editor) y borra (solo admin); todo queda en `audit_log`. Los
+  cambios se ven al instante en el sitio (`updateTag("reviews")`).
+- Pendiente: respuesta del comercio a una opinión (cuando existan cuentas de
+  negocio).

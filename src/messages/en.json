@@ -353,7 +353,13 @@
     "anonymous": "Visitor",
     "delete": "Delete my review",
     "ownerReplyLabel": "Reply from the business",
-    "list": "Reviews list"
+    "list": "Reviews list",
+    "realNote": "Reviews are published when sent. Offensive or off-topic ones are removed.",
+    "published": "Thank you! Your review is now published.",
+    "errorProfanity": "Your review contains offensive words. Please rewrite it.",
+    "errorRate": "You sent several reviews in a row. Please try again later.",
+    "errorGeneric": "Your review could not be published. Please try again in a moment.",
+    "sending": "Publishing…"
   },
   "events": {
     "title": "Events calendar",
@@ -485,6 +491,27 @@
       "error": "Could not save. Check your role or try again.",
       "readOnly": "Your role can view but not verify."
     },
-    "loadError": "Could not read the database. Try again in a moment."
+    "loadError": "Could not read the database. Try again in a moment.",
+    "nav": {
+      "entities": "Listings",
+      "reviews": "Reviews"
+    },
+    "reviews": {
+      "title": "Visitor reviews",
+      "intro": "They are published when sent. Hide inappropriate ones; deleting is permanent (administration only).",
+      "filter": {
+        "todos": "All",
+        "visibles": "Visible",
+        "ocultos": "Hidden"
+      },
+      "on": "On",
+      "hiddenBadge": "Hidden",
+      "hide": "Hide",
+      "show": "Show again",
+      "delete": "Delete",
+      "saved": "Done. The change is already visible on the public site.",
+      "error": "Could not apply. Check your role or try again.",
+      "empty": "No reviews in this view."
+    }
   }
 }

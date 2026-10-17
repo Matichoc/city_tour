@@ -1,17 +1,22 @@
 "use server";
 
-import { revalidateTag } from "next/cache";
+import { revalidateTag, updateTag } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import {
+  canDeleteReviews,
+  canModerate,
   canVerify,
+  deleteReview,
   getSession,
+  setReviewStatus,
   isEntityKind,
   sessionFor,
   verifyEntity,
   VERIFICATION_STATES,
   type Verification,
 } from "@/lib/admin/api";
+import { REVIEWS_TAG } from "@/lib/reviews";
 import {
   ACCESS_COOKIE,
   REFRESH_COOKIE,
@@ -95,4 +100,39 @@ export async function verify(formData: FormData) {
   // El sitio público vuelve a leer la base en la próxima visita.
   revalidateTag("content", "max");
   redirect(`${back}?guardado=1`);
+}
+
+/** Ocultar, volver a mostrar o borrar un comentario de visitante. */
+export async function moderateReview(formData: FormData) {
+  const id = text(formData.get("id"));
+  const action = text(formData.get("accion"));
+  const back = `/admin/comentarios?filtro=${encodeURIComponent(text(formData.get("filtro")) || "todos")}`;
+  const session = await getSession();
+  if (!session) redirect("/admin/ingresar");
+  if (
+    !/^[0-9a-f-]{36}$/.test(id) ||
+    !["ocultar", "mostrar", "borrar"].includes(action) ||
+    !canModerate(session) ||
+    (action === "borrar" && !canDeleteReviews(session))
+  ) {
+    redirect(`${back}&error=1`);
+  }
+
+  let ok = true;
+  try {
+    if (action === "borrar") await deleteReview(session, id);
+    else
+      await setReviewStatus(
+        session,
+        id,
+        action === "ocultar" ? "hidden" : "visible",
+      );
+  } catch (error) {
+    console.error("[admin] moderación falló", error);
+    ok = false;
+  }
+  if (!ok) redirect(`${back}&error=1`);
+  // Se retira del sitio público de inmediato.
+  updateTag(REVIEWS_TAG);
+  redirect(`${back}&guardado=1`);
 }
