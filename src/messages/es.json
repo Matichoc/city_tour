@@ -90,7 +90,19 @@
     "demoBadge": "Ejemplo",
     "demoBanner": "Ficha de ejemplo: este negocio es ficticio y se creó para mostrar cómo se vería en la guía. No existe ni se puede visitar.",
     "demoLocation": "Sin ubicación: es una ficha de ejemplo.",
-    "demoSource": "Ficha de ejemplo creada para la demostración"
+    "demoSource": "Ficha de ejemplo creada para la demostración",
+    "cta": {
+      "whatsapp": "Escribir por WhatsApp",
+      "phone": "Llamar",
+      "website": "Ir al sitio web",
+      "menu": "Ver la carta",
+      "booking": "Reservar",
+      "instagram": "Ver en Instagram"
+    },
+    "infoUpdated": "Datos del comercio",
+    "infoUpdatedOn": "Confirmados el {date}",
+    "infoNever": "Por confirmar con el comercio",
+    "infoStale": "Pasaron más de 6 meses desde que el comercio confirmó sus datos: revisa horarios y precios antes de ir."
   },
   "routes": {
     "title": "Rutas",
@@ -353,7 +365,13 @@
     "anonymous": "Visitante",
     "delete": "Borrar mi opinión",
     "ownerReplyLabel": "Respuesta del local",
-    "list": "Lista de opiniones"
+    "list": "Lista de opiniones",
+    "realNote": "Las opiniones se publican al enviarlas. Se eliminan las ofensivas o que no correspondan al lugar.",
+    "published": "¡Gracias! Tu opinión ya está publicada.",
+    "errorProfanity": "Tu opinión tiene palabras ofensivas. Reescríbela, por favor.",
+    "errorRate": "Enviaste varias opiniones seguidas. Intenta de nuevo más tarde.",
+    "errorGeneric": "No se pudo publicar tu opinión. Intenta de nuevo en un momento.",
+    "sending": "Publicando…"
   },
   "events": {
     "title": "Agenda de eventos",
@@ -449,14 +467,19 @@
     "tabs": {
       "lugar": "Lugares",
       "evento": "Eventos",
-      "ruta": "Rutas"
+      "ruta": "Rutas",
+      "localidad": "Localidades"
     },
     "summary": "{total} en total · {verified} verificados · {pending} pendientes · {outdated} desactualizados",
     "columns": {
       "name": "Nombre",
       "publication": "Publicación",
       "verification": "Verificación",
-      "lastVerified": "Última verificación"
+      "lastVerified": "Última verificación",
+      "site": "En el sitio",
+      "places": "Lugares",
+      "location": "Ubicación",
+      "source": "Fuente"
     },
     "publication": {
       "draft": "Borrador",
@@ -485,6 +508,114 @@
       "error": "No se pudo guardar. Revisa tu rol o intenta de nuevo.",
       "readOnly": "Tu rol puede ver, pero no verificar."
     },
-    "loadError": "No se pudo leer la base de datos. Intenta de nuevo en un momento."
+    "loadError": "No se pudo leer la base de datos. Intenta de nuevo en un momento.",
+    "nav": {
+      "entities": "Fichas",
+      "reviews": "Comentarios",
+      "business": "Comercios"
+    },
+    "reviews": {
+      "title": "Comentarios de visitantes",
+      "intro": "Se publican al enviarse. Oculta los inapropiados; borrar es definitivo (solo administración).",
+      "filter": {
+        "todos": "Todos",
+        "visibles": "Visibles",
+        "ocultos": "Ocultos"
+      },
+      "on": "En",
+      "hiddenBadge": "Oculto",
+      "hide": "Ocultar",
+      "show": "Volver a mostrar",
+      "delete": "Borrar",
+      "saved": "Listo. El cambio ya se ve en el sitio público.",
+      "error": "No se pudo aplicar. Revisa tu rol o intenta de nuevo.",
+      "empty": "No hay comentarios en esta vista."
+    },
+    "business": {
+      "title": "Comercios",
+      "intro": "Botón de acción de cada local, avisos destacados con fecha de término e invitación a sumarse a la guía.",
+      "saved": "Guardado. El sitio público ya muestra el cambio.",
+      "error": "No se pudo guardar. Revisa los datos (enlaces con https://, número con código de país) o tu rol.",
+      "save": "Guardar",
+      "cta": {
+        "title": "Botón de acción en la ficha",
+        "help": "Un botón destacado en la ficha del local. WhatsApp y teléfono: el número con código de país (+56 9 …). Web, carta, reservas e Instagram: el enlace completo.",
+        "none": "No hay comercios en la guía todavía.",
+        "kind": "Tipo de botón",
+        "noButton": "Sin botón",
+        "value": "Número o enlace",
+        "placeholder": "+56 9 1234 5678 o https://…"
+      },
+      "notices": {
+        "title": "Avisos destacados",
+        "help": "Promociones o anuncios con fecha de término. Los de un local salen en su ficha; los generales, en la portada. Vencen solos.",
+        "place": "Dónde se muestra",
+        "general": "General (portada)",
+        "until": "Hasta (inclusive)",
+        "titleField": "Título",
+        "text": "Texto (opcional, hasta 280 caracteres)",
+        "link": "Enlace (opcional)",
+        "add": "Publicar aviso",
+        "none": "No hay avisos.",
+        "state": {
+          "active": "Activo",
+          "paused": "Pausado",
+          "expired": "Vencido"
+        },
+        "ends": "vence {date}",
+        "pause": "Pausar",
+        "activate": "Activar",
+        "delete": "Borrar"
+      },
+      "invite": {
+        "title": "Invitación a comercios",
+        "help": "Recuadro «¿Tienes un comercio en Papudo?» en el explorador y en las fichas de negocios. Con el enlace del formulario, el botón lleva directo a él; sin enlace, lleva a la página Para negocios.",
+        "show": "Mostrar la invitación",
+        "form": "Enlace del formulario para comercios",
+        "adminOnly": "Solo administración puede cambiar esta configuración."
+      },
+      "updates": {
+        "title": "Actualización de datos (cada 6 meses)",
+        "help": "Cada comercio debe confirmar o actualizar sus datos al menos cada 6 meses. Cuando lo haga, márcalo aquí: la ficha pública muestra la fecha y avisa a los visitantes si quedó vieja.",
+        "state": {
+          "never": "Sin fecha",
+          "ok": "Al día",
+          "soon": "Por vencer",
+          "overdue": "Vencida"
+        },
+        "last": "Última: {date}",
+        "due": "vence {date}",
+        "mark": "Marcar actualizada hoy",
+        "message": "Mensaje para el comercio",
+        "whatsapp": "Enviar por WhatsApp",
+        "copyHint": "Copia el mensaje y envíalo por el canal que uses con el local.",
+        "template": "Hola, te escribimos del equipo de la guía «Papudo en tu mano». Para que los visitantes encuentren información correcta de {name}, ¿nos confirmas o actualizas horarios, contacto, precios y servicios? Así se ve hoy tu ficha: {url} ¡Gracias!",
+        "pendingCount": "{count, plural, one {# comercio necesita} other {# comercios necesitan}} confirmar sus datos (cada 6 meses).",
+        "review": "Revisar"
+      }
+    },
+    "viewOnSite": "Ver en el sitio",
+    "openSite": "Abrir el sitio",
+    "yes": "Sí",
+    "pending": "Por confirmar",
+    "none": "—",
+    "localitiesHelp": "Pueblos y sectores de la comuna. Se muestran en el sitio con sus lugares.",
+    "preview": {
+      "title": "Vista previa en el sitio",
+      "help": "Así la ven los visitantes (versión de teléfono). Los cambios pueden tardar unos minutos en aparecer.",
+      "open": "Abrir en una pestaña",
+      "notPublished": "No está publicada: el sitio todavía no la muestra."
+    }
+  },
+  "notices": {
+    "label": "Aviso",
+    "more": "Más información",
+    "until": "Hasta el {date}"
+  },
+  "businessInvite": {
+    "title": "¿Tienes un comercio en Papudo?",
+    "body": "Súmalo a la guía: alojamiento, comida, actividades o productos locales. Esta temporada es gratis.",
+    "cta": "Sumar mi comercio",
+    "more": "Cómo sumarme"
   }
 }

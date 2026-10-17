@@ -33,7 +33,8 @@ opcional: si falta la traducción de un lugar, se muestra el español y se avisa
 Vercel Web Analytics (sin cookies, sin datos personales). Eventos propios en
 `src/lib/analytics.ts`: `add_to_trip`, `add_route`, `navigate_click`, `share`,
 `qr_visit` (con el `origen` del QR), `save_place`, `live_start` (recorrido en
-vivo) y `camera_start` (guía con cámara). Nunca se envía la ubicación del
+vivo), `camera_start` (guía con cámara) y `cta_click` (botón de acción de un
+comercio, con su `slug` y tipo). Nunca se envía la ubicación del
 usuario: el GPS y la cámara se usan solo dentro del teléfono. Se activa en
 Vercel → Analytics; sin activar, no envía nada.
 
@@ -136,4 +137,61 @@ Fuente: PLADETUR de Papudo 2023–2027, iD (`docs/investigacion/`).
 - El sitio público muestra el estado de verificación que viene de la base.
 - `/admin` va sin prefijo de idioma (solo español) y queda detrás de la misma
   puerta de enlaces que el resto del sitio.
+- Pestaña **Localidades** (pueblos y sectores, con cuántos lugares tiene cada
+  uno, si tiene ubicación y su fuente), enlace «Ver en el sitio» en cada fila
+  publicada y «Abrir el sitio» en la cabecera.
+- **Vista previa**: la ficha publicada se ve dentro del panel en formato
+  teléfono (un `iframe` del mismo sitio, que pasa por la misma puerta de
+  enlaces). Los borradores no tienen vista previa porque el sitio público no
+  los muestra.
 - Pendiente (Fase 2): editar fichas, crear borradores, fotos, usuarios y roles.
+
+## Comentarios de visitantes (reales)
+
+- Se publican al enviarlos (sin cuenta), con nombre opcional, 1–5 estrellas y
+  hasta 500 caracteres. Solo en fichas y eventos reales publicados; las de
+  ejemplo siguen con la demostración local.
+- Freno automático: filtro de groserías (`src/lib/profanity.ts`), campo
+  trampa para robots y límite en la base (3 por hora y 10 por día por
+  remitente; 30 por hora por ficha). El remitente se identifica con un hash
+  con sal de IP y navegador (`REVIEWS_SALT`, o la clave de enlaces): nunca se
+  guarda la IP y la huella no es legible por la API.
+- La única entrada es `submit_review()`; la tabla no admite inserciones
+  directas. En `/admin/comentarios` el personal oculta o vuelve a mostrar
+  (admin y editor) y borra (solo admin); todo queda en `audit_log`. Los
+  cambios se ven al instante en el sitio (`updateTag("reviews")`).
+- Pendiente: respuesta del comercio a una opinión (cuando existan cuentas de
+  negocio).
+
+## Comercios: botón de acción, avisos e invitación (`/admin/comercios`)
+
+- **Botón de acción** por local (WhatsApp, llamar, web, carta, reservas,
+  Instagram): columnas `places.cta_kind`/`cta_value`, editables por admin y
+  editor. WhatsApp y teléfono se arman desde el número (`ctaHref`); el resto
+  exige `https://`. `content.sql` no toca estas columnas. Cada clic se mide
+  con el evento anónimo `cta_click`.
+- **Avisos destacados** (`notices`): título, texto, enlace y fecha de término
+  (fin del día, hora de Chile). De un local, salen en su ficha; generales, en
+  la portada. Se pausan, activan o borran; vencen solos (RLS y un segundo
+  filtro por si la página quedó en caché).
+- **Invitación a comercios** (`site_settings`, solo admin): se enciende o apaga
+  y, con el enlace del formulario, el botón «Sumar mi comercio» va directo a
+  él (explorador, fichas de negocios y `/negocios`).
+- Los cambios se ven al instante (`updateTag` de `content`, `notices`,
+  `settings`).
+
+## Datos de comercios al día (cada 6 meses)
+
+- `places.info_updated_at` (migración 0019): última vez que el comercio
+  confirmó o actualizó sus datos. La registra el personal (admin, editor) con
+  «Marcar actualizada hoy» en `/admin/comercios#actualizacion`; `content.sql`
+  no la toca.
+- Vence a los 6 meses y se avisa 30 días antes (`src/lib/freshness.ts`). El
+  panel ordena primero los sin fecha y los vencidos, muestra un aviso en
+  `/admin` con cuántos faltan y trae el mensaje listo para el comercio (con
+  botón de WhatsApp si el local tiene ese botón de acción).
+- La ficha pública muestra la fecha de la última verificación y, en los
+  comercios, la de confirmación de datos; si pasaron más de 6 meses, avisa al
+  visitante que revise horarios y precios antes de ir.
+- Mientras el sitio esté cerrado, el enlace a la ficha que va en el mensaje
+  solo abre con un enlace de acceso.

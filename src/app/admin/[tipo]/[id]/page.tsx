@@ -6,6 +6,7 @@ import {
   getEntity,
   getSession,
   isEntityKind,
+  publicPath,
   VERIFICATION_STATES,
   type EntityDetail,
 } from "@/lib/admin/api";
@@ -205,6 +206,37 @@ export default async function EntityPage({
           </div>
         </section>
       </div>
+
+      <section className="border-border bg-surface mt-6 rounded-2xl border p-4">
+        <div className="flex flex-wrap items-baseline justify-between gap-2">
+          <h2 className="font-display text-lg font-extrabold">
+            {t("preview.title")}
+          </h2>
+          {entity.publication === "published" && (
+            <a
+              href={publicPath(tipo, entity.slug)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sea-deep text-sm font-semibold underline"
+            >
+              {t("preview.open")} ↗
+            </a>
+          )}
+        </div>
+        {entity.publication === "published" ? (
+          <>
+            <p className="text-muted mt-1 text-sm">{t("preview.help")}</p>
+            <iframe
+              src={publicPath(tipo, entity.slug)}
+              title={t("preview.title")}
+              loading="lazy"
+              className="border-border mx-auto mt-3 block h-[44rem] w-full max-w-[24.5rem] rounded-[2rem] border-8 bg-white"
+            />
+          </>
+        ) : (
+          <p className="text-muted mt-2 text-sm">{t("preview.notPublished")}</p>
+        )}
+      </section>
     </>
   );
 }

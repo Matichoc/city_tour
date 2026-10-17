@@ -213,7 +213,12 @@ export default async function EventPage({
             entityName={event.name}
           />
         ) : (
-          <ReviewsPanel business={false} />
+          <ReviewsPanel
+            business={false}
+            entity="event"
+            slug={event.slug}
+            entityName={event.name}
+          />
         )}
 
         {event.sources.length > 0 ? (

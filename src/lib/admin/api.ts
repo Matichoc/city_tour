@@ -20,6 +20,20 @@ const TABLES: Record<
   ruta: { table: "routes", translations: "route_translations", rpc: "route" },
 };
 
+/** Dirección de la ficha en el sitio público (en español). */
+export function publicPath(
+  kind: EntityKind | "localidad",
+  slug: string,
+): string {
+  const base = {
+    lugar: "/es/lugares",
+    evento: "/es/eventos",
+    ruta: "/es/rutas",
+    localidad: "/es/pueblos",
+  }[kind];
+  return `${base}/${encodeURIComponent(slug)}`;
+}
+
 export const isEntityKind = (v: string): v is EntityKind =>
   (ENTITIES as readonly string[]).includes(v);
 
@@ -177,6 +191,46 @@ export async function getEntity(
   };
 }
 
+export type LocalitySummary = {
+  id: string;
+  slug: string;
+  name: string;
+  hasLocation: boolean;
+  placeCount: number;
+  source: { url: string; label: string } | null;
+};
+
+export async function listLocalities(
+  token: string,
+): Promise<LocalitySummary[]> {
+  const rows = await rest<
+    {
+      id: string;
+      slug: string;
+      latitude: number | null;
+      source_url: string | null;
+      source_label: string | null;
+      translations: { locale: string; name: string }[];
+      places: { count: number }[];
+    }[]
+  >(
+    token,
+    "localities?select=id,slug,latitude,source_url,source_label," +
+      "translations:locality_translations(locale,name),places(count)" +
+      "&order=sort_order,slug",
+  );
+  return rows.map((r) => ({
+    id: r.id,
+    slug: r.slug,
+    name: nameEs(r.translations, r.slug),
+    hasLocation: r.latitude !== null,
+    placeCount: r.places[0]?.count ?? 0,
+    source: r.source_url
+      ? { url: r.source_url, label: r.source_label ?? r.source_url }
+      : null,
+  }));
+}
+
 /** Cambia el estado de verificación con verify_entity() (deja registro). */
 export async function verifyEntity(
   token: string,
@@ -194,6 +248,277 @@ export async function verifyEntity(
       p_status: status,
       p_notes: notes,
       p_evidence_url: evidenceUrl,
+    }),
+  });
+}
+
+// ── Comentarios ───────────────────────────────────────────────────────────
+export type ReviewFilter = "todos" | "visibles" | "ocultos";
+export const REVIEW_FILTERS: ReviewFilter[] = ["todos", "visibles", "ocultos"];
+
+export type AdminReview = {
+  id: string;
+  author: string;
+  rating: number;
+  text: string;
+  status: "visible" | "hidden";
+  createdAt: string;
+  /** Ficha comentada: tipo para el sitio público, slug y nombre en español. */
+  target: { kind: "lugar" | "evento"; slug: string; name: string } | null;
+};
+
+type ReviewRow = {
+  id: string;
+  author_name: string;
+  rating: number;
+  body: string;
+  status: AdminReview["status"];
+  created_at: string;
+  place: { slug: string; translations: Row["translations"] } | null;
+  event: { slug: string; translations: Row["translations"] } | null;
+};
+
+const nameEs = (tr: Row["translations"], slug: string) =>
+  tr.find((t) => t.locale === "es")?.name ?? slug;
+
+export async function listReviewsAdmin(
+  token: string,
+  filter: ReviewFilter,
+): Promise<AdminReview[]> {
+  const status =
+    filter === "visibles"
+      ? "&status=eq.visible"
+      : filter === "ocultos"
+        ? "&status=eq.hidden"
+        : "";
+  const rows = await rest<ReviewRow[]>(
+    token,
+    "reviews?select=id,author_name,rating,body,status,created_at," +
+      "place:places(slug,translations:place_translations(locale,name))," +
+      "event:events(slug,translations:event_translations(locale,name))" +
+      `${status}&order=created_at.desc&limit=200`,
+  );
+  return rows.map((r) => ({
+    id: r.id,
+    author: r.author_name,
+    rating: r.rating,
+    text: r.body,
+    status: r.status,
+    createdAt: r.created_at,
+    target: r.place
+      ? {
+          kind: "lugar",
+          slug: r.place.slug,
+          name: nameEs(r.place.translations, r.place.slug),
+        }
+      : r.event
+        ? {
+            kind: "evento",
+            slug: r.event.slug,
+            name: nameEs(r.event.translations, r.event.slug),
+          }
+        : null,
+  }));
+}
+
+export const canModerate = (s: Session) =>
+  s.role === "admin" || s.role === "editor";
+export const canDeleteReviews = (s: Session) => s.role === "admin";
+
+export async function setReviewStatus(
+  session: Session,
+  id: string,
+  status: AdminReview["status"],
+) {
+  await rest<null>(session.token, `reviews?id=eq.${encodeURIComponent(id)}`, {
+    method: "PATCH",
+    body: JSON.stringify({
+      status,
+      moderated_by: session.userId,
+      moderated_at: new Date().toISOString(),
+    }),
+  });
+}
+
+export async function deleteReview(session: Session, id: string) {
+  await rest<null>(session.token, `reviews?id=eq.${encodeURIComponent(id)}`, {
+    method: "DELETE",
+  });
+}
+
+// ── Comercios: botón de acción, avisos y configuración ───────────────────
+export const CTA_KINDS = [
+  "whatsapp",
+  "phone",
+  "website",
+  "menu",
+  "booking",
+  "instagram",
+] as const;
+export type CtaKindAdmin = (typeof CTA_KINDS)[number];
+
+export type BusinessPlace = {
+  id: string;
+  slug: string;
+  name: string;
+  ctaKind: CtaKindAdmin | null;
+  ctaValue: string | null;
+  /** Última vez que el comercio confirmó sus datos (ISO). */
+  infoUpdatedAt: string | null;
+};
+
+export async function listBusinessPlaces(
+  token: string,
+): Promise<BusinessPlace[]> {
+  const rows = await rest<
+    (Row & {
+      cta_kind: CtaKindAdmin | null;
+      cta_value: string | null;
+      info_updated_at: string | null;
+    })[]
+  >(
+    token,
+    "places?select=id,slug,cta_kind,cta_value,info_updated_at,translations:place_translations(locale,name)" +
+      "&is_business=eq.true&is_demo=eq.false&order=sort_order,slug",
+  );
+  return rows.map((r) => ({
+    id: r.id,
+    slug: r.slug,
+    name: nameEs(r.translations, r.slug),
+    ctaKind: r.cta_kind,
+    ctaValue: r.cta_value,
+    infoUpdatedAt: r.info_updated_at,
+  }));
+}
+
+/** Registra que el comercio confirmó o actualizó sus datos hoy. */
+export async function markInfoUpdated(token: string, id: string) {
+  await rest<null>(token, `places?id=eq.${encodeURIComponent(id)}`, {
+    method: "PATCH",
+    body: JSON.stringify({ info_updated_at: new Date().toISOString() }),
+  });
+}
+
+export async function updatePlaceCta(
+  token: string,
+  id: string,
+  kind: CtaKindAdmin | null,
+  value: string | null,
+) {
+  await rest<null>(token, `places?id=eq.${encodeURIComponent(id)}`, {
+    method: "PATCH",
+    body: JSON.stringify({ cta_kind: kind, cta_value: value }),
+  });
+}
+
+export type AdminNotice = {
+  id: string;
+  title: string;
+  body: string | null;
+  linkUrl: string | null;
+  startsAt: string;
+  endsAt: string;
+  active: boolean;
+  /** Ya pasó su fecha de término. */
+  expired: boolean;
+  placeName: string | null;
+};
+
+export async function listNoticesAdmin(token: string): Promise<AdminNotice[]> {
+  const rows = await rest<
+    {
+      id: string;
+      title: string;
+      body: string | null;
+      link_url: string | null;
+      starts_at: string;
+      ends_at: string;
+      active: boolean;
+      place: { slug: string; translations: Row["translations"] } | null;
+    }[]
+  >(
+    token,
+    "notices?select=id,title,body,link_url,starts_at,ends_at,active," +
+      "place:places(slug,translations:place_translations(locale,name))" +
+      "&order=ends_at.desc&limit=100",
+  );
+  const now = Date.now();
+  return rows.map((r) => ({
+    id: r.id,
+    title: r.title,
+    body: r.body,
+    linkUrl: r.link_url,
+    startsAt: r.starts_at,
+    endsAt: r.ends_at,
+    active: r.active,
+    expired: Date.parse(r.ends_at) <= now,
+    placeName: r.place ? nameEs(r.place.translations, r.place.slug) : null,
+  }));
+}
+
+export async function createNotice(
+  session: Session,
+  notice: {
+    placeId: string | null;
+    title: string;
+    body: string | null;
+    linkUrl: string | null;
+    endsAt: string;
+  },
+) {
+  await rest<null>(session.token, "notices", {
+    method: "POST",
+    headers: { prefer: "return=minimal" },
+    body: JSON.stringify({
+      place_id: notice.placeId,
+      title: notice.title,
+      body: notice.body,
+      link_url: notice.linkUrl,
+      ends_at: notice.endsAt,
+      created_by: session.userId,
+    }),
+  });
+}
+
+export async function setNoticeActive(
+  token: string,
+  id: string,
+  active: boolean,
+) {
+  await rest<null>(token, `notices?id=eq.${encodeURIComponent(id)}`, {
+    method: "PATCH",
+    body: JSON.stringify({ active }),
+  });
+}
+
+export async function deleteNotice(token: string, id: string) {
+  await rest<null>(token, `notices?id=eq.${encodeURIComponent(id)}`, {
+    method: "DELETE",
+  });
+}
+
+export type AdminSettings = {
+  businessFormUrl: string | null;
+  businessInvite: boolean;
+};
+
+export async function getSettingsAdmin(token: string): Promise<AdminSettings> {
+  const rows = await rest<
+    { business_form_url: string | null; business_invite: boolean }[]
+  >(token, "site_settings?select=business_form_url,business_invite");
+  const r = rows[0];
+  return {
+    businessFormUrl: r?.business_form_url ?? null,
+    businessInvite: r?.business_invite ?? true,
+  };
+}
+
+export async function updateSettings(token: string, s: AdminSettings) {
+  await rest<null>(token, "site_settings?id=eq.true", {
+    method: "PATCH",
+    body: JSON.stringify({
+      business_form_url: s.businessFormUrl,
+      business_invite: s.businessInvite,
     }),
   });
 }

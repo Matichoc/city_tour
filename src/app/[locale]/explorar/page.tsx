@@ -11,6 +11,7 @@ import {
 import { buildPageMetadata } from "@/lib/seo";
 import { EmptyState } from "@/components/ui/empty-state";
 import { PageHero } from "@/components/ui/page-hero";
+import { BusinessInvite } from "@/components/business/business-invite";
 import { PlaceCard } from "@/components/place/place-card";
 import { PlacesMap } from "@/components/map/places-map";
 import { CategoryIcon } from "@/components/ui/category-icon";
@@ -413,6 +414,7 @@ export default async function ExplorePage({
             ))}
           </div>
         )}
+        <BusinessInvite />
       </div>
     </main>
   );

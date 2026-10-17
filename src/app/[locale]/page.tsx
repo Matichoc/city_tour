@@ -3,6 +3,8 @@ import type { Metadata } from "next";
 import { Link, getPathname } from "@/i18n/navigation";
 import { resolveLocale } from "@/i18n/utils";
 import { getData, isLocated } from "@/lib/data";
+import { listNotices } from "@/lib/business";
+import { NoticeList } from "@/components/business/notice-list";
 import { CommuneMap3D } from "@/components/map/commune-map-3d";
 import { buildPageMetadata, getSiteUrl, localizedUrl } from "@/lib/seo";
 import { HeroScene } from "@/components/ui/hero-scene";
@@ -41,7 +43,7 @@ export default async function HomePage({
   setRequestLocale(locale);
   const t = await getTranslations("home");
   const te = await getTranslations("events");
-  const data = await getData();
+  const [data, notices] = await Promise.all([getData(), listNotices()]);
   const categories = data.listCategories(locale);
   const places = data.listPlaces(locale).slice(0, 4);
   const routes = data.listRoutes(locale);
@@ -109,6 +111,11 @@ export default async function HomePage({
           </button>
         </form>
       </HeroScene>
+      {notices.length > 0 ? (
+        <div className="mx-auto w-full max-w-3xl px-4 pt-5">
+          <NoticeList notices={notices} />
+        </div>
+      ) : null}
 
       <div className="mx-auto flex w-full max-w-3xl flex-col gap-9 px-4 pt-2 pb-10">
         <section aria-labelledby="que-hacer">

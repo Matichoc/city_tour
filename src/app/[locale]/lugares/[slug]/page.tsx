@@ -25,6 +25,13 @@ import { DEMO_REVIEWS } from "@/content/demo-content";
 import { DemoReviews, RatingSummary } from "@/components/place/demo-reviews";
 import { SaveButton } from "@/components/place/save-button";
 import { ReviewsPanel } from "@/components/place/reviews-panel";
+import { Stars } from "@/components/ui/stars";
+import { PlaceCta } from "@/components/business/place-cta";
+import { NoticeList } from "@/components/business/notice-list";
+import { BusinessInvite } from "@/components/business/business-invite";
+import { listReviews, reviewStats } from "@/lib/reviews";
+import { listNotices } from "@/lib/business";
+import { freshness } from "@/lib/freshness";
 
 export async function generateStaticParams() {
   const data = await getData();
@@ -68,6 +75,13 @@ export default async function PlacePage({
   if (!place) notFound();
   const t = await getTranslations("place");
   const tr = await getTranslations("reviews");
+  const [reviews, notices] = place.demo
+    ? [[], []]
+    : await Promise.all([
+        listReviews("place", place.slug),
+        listNotices(place.slug),
+      ]);
+  const rating = reviewStats(reviews.map((r) => r.rating));
   const seeded = place.demo
     ? (DEMO_REVIEWS[place.slug] ?? []).map((r) => ({
         id: r.id,
@@ -77,6 +91,13 @@ export default async function PlacePage({
         ownerReply: r.ownerReply ? r.ownerReply[locale] : null,
       }))
     : [];
+  const day = (iso: string) =>
+    new Intl.DateTimeFormat(locale, {
+      timeZone: "America/Santiago",
+      dateStyle: "long",
+    }).format(new Date(iso));
+  const infoState =
+    place.business && !place.demo ? freshness(place.infoUpdatedAt) : null;
   const sections = [
     ["resumen", t("tabOverview")],
     ["ubicacion", t("tabLocation")],
@@ -171,10 +192,15 @@ export default async function PlacePage({
               href="#opiniones"
               className="text-muted mt-2 inline-flex items-center gap-2 text-sm hover:underline"
             >
-              <span aria-hidden="true" className="text-sea tracking-tight">
-                ☆☆☆☆☆
-              </span>
-              {tr("count", { count: 0 })}
+              <Stars value={rating.average ?? 0} className="size-4" />
+              {rating.average !== null ? (
+                <span>
+                  <b className="text-foreground">{rating.average.toFixed(1)}</b>{" "}
+                  · {tr("count", { count: rating.count })}
+                </span>
+              ) : (
+                tr("count", { count: 0 })
+              )}
             </a>
           )}
           <div className="mt-3 flex flex-wrap items-center gap-2">
@@ -191,7 +217,10 @@ export default async function PlacePage({
           </div>
         </header>
 
+        <NoticeList notices={notices} />
+
         <div className="flex flex-wrap gap-2">
+          {place.cta ? <PlaceCta slug={place.slug} cta={place.cta} /> : null}
           {place.hasLocation ? <AddToTripButton slug={place.slug} /> : null}
           {place.demo ? null : (
             <TrackedAnchor
@@ -272,8 +301,15 @@ export default async function PlacePage({
             entityName={place.name}
           />
         ) : (
-          <ReviewsPanel business={place.business} />
+          <ReviewsPanel
+            business={place.business}
+            entity="place"
+            slug={place.slug}
+            entityName={place.name}
+          />
         )}
+
+        {place.business && !place.demo ? <BusinessInvite /> : null}
 
         <section id="datos" className="flex scroll-mt-32 flex-col gap-3">
           <h2 className="font-display text-xl font-extrabold">
@@ -307,8 +343,22 @@ export default async function PlacePage({
                 </div>
                 <div className="flex justify-between gap-4 p-4">
                   <dt className="font-bold">{t("lastVerified")}</dt>
-                  <dd className="text-muted">{t("never")}</dd>
+                  <dd className="text-muted">
+                    {place.lastVerifiedAt
+                      ? day(place.lastVerifiedAt)
+                      : t("never")}
+                  </dd>
                 </div>
+                {infoState ? (
+                  <div className="flex justify-between gap-4 p-4">
+                    <dt className="font-bold">{t("infoUpdated")}</dt>
+                    <dd className="text-muted text-right">
+                      {place.infoUpdatedAt
+                        ? t("infoUpdatedOn", { date: day(place.infoUpdatedAt) })
+                        : t("infoNever")}
+                    </dd>
+                  </div>
+                ) : null}
               </>
             )}
             {place.sources.length > 0 ? (
@@ -330,6 +380,14 @@ export default async function PlacePage({
               </div>
             ) : null}
           </dl>
+          {infoState === "overdue" ? (
+            <p
+              role="note"
+              className="bg-sun/30 text-earth rounded-xl p-3 text-sm"
+            >
+              {t("infoStale")}
+            </p>
+          ) : null}
         </section>
       </div>
     </main>

@@ -14,7 +14,13 @@ import {
   type IllustrationKey,
 } from "@/content/images";
 import { DEMO_REVIEWS } from "@/content/demo-content";
-import type { CategorySlug, EventContent, Source } from "@/content/types";
+import type {
+  CategorySlug,
+  CtaKind,
+  EventContent,
+  PlaceCta,
+  Source,
+} from "@/content/types";
 import type { Locale } from "@/i18n/routing";
 import { loadContent } from "@/lib/db/content-source";
 
@@ -65,7 +71,28 @@ export type Place = {
   /** Opiniones simuladas (solo fichas de ejemplo). */
   ratingAverage: number | null;
   ratingCount: number;
+  /** Botón de acción del comercio, listo para enlazar. */
+  cta: { kind: CtaKind; href: string } | null;
+  /** Última verificación en terreno (ISO), si la hubo. */
+  lastVerifiedAt: string | null;
+  /** Última vez que el comercio confirmó sus datos (ISO), si la hubo. */
+  infoUpdatedAt: string | null;
 };
+
+/** Enlace del botón de acción: WhatsApp y teléfono se arman desde el número. */
+export function ctaHref(cta: PlaceCta): string | null {
+  const digits = cta.value.replace(/[^\d+]/g, "");
+  switch (cta.kind) {
+    case "whatsapp": {
+      const n = digits.replace(/^\+/, "");
+      return /^\d{8,15}$/.test(n) ? `https://wa.me/${n}` : null;
+    }
+    case "phone":
+      return /^\+?\d{8,15}$/.test(digits) ? `tel:${digits}` : null;
+    default:
+      return /^https?:\/\//.test(cta.value) ? cta.value : null;
+  }
+}
 
 export type Locality = {
   slug: string;
@@ -227,6 +254,12 @@ export function createData(content: SiteContent, showDemo = SHOW_DEMO) {
       demo: p.demo === true,
       ratingAverage: rating.average,
       ratingCount: rating.count,
+      cta: (() => {
+        const href = p.cta ? ctaHref(p.cta) : null;
+        return p.cta && href ? { kind: p.cta.kind, href } : null;
+      })(),
+      lastVerifiedAt: p.lastVerifiedAt ?? null,
+      infoUpdatedAt: p.infoUpdatedAt ?? null,
     };
   }
 

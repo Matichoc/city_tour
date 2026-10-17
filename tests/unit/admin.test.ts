@@ -31,7 +31,7 @@ vi.mock("next-intl/middleware", () => ({
 }));
 
 import { jwtPayload, needsRefresh } from "@/lib/admin/auth";
-import { listEntities } from "@/lib/admin/api";
+import { listEntities, listLocalities, publicPath } from "@/lib/admin/api";
 import { signIn, verify } from "@/app/admin/actions";
 import proxy from "@/proxy";
 
@@ -244,6 +244,44 @@ describe("listEntities", () => {
       verification: "pending",
     });
     expect(calls[0]!.url).toContain("places?select=");
+  });
+});
+
+describe("localidades y vista previa", () => {
+  it("lista localidades con su cantidad de lugares", async () => {
+    stubFetch(() =>
+      Response.json([
+        {
+          id: PLACE,
+          slug: "pullally",
+          latitude: null,
+          source_url: "https://ej.cl",
+          source_label: null,
+          translations: [{ locale: "es", name: "Pullally" }],
+          places: [{ count: 3 }],
+        },
+      ]),
+    );
+    expect(await listLocalities("t")).toEqual([
+      {
+        id: PLACE,
+        slug: "pullally",
+        name: "Pullally",
+        hasLocation: false,
+        placeCount: 3,
+        source: { url: "https://ej.cl", label: "https://ej.cl" },
+      },
+    ]);
+    expect(calls[0]!.url).toContain("places(count)");
+  });
+
+  it("arma la dirección pública de cada ficha", () => {
+    expect(publicPath("lugar", "playa-papudo")).toBe(
+      "/es/lugares/playa-papudo",
+    );
+    expect(publicPath("evento", "fiesta")).toBe("/es/eventos/fiesta");
+    expect(publicPath("ruta", "costera")).toBe("/es/rutas/costera");
+    expect(publicPath("localidad", "pullally")).toBe("/es/pueblos/pullally");
   });
 });
 
