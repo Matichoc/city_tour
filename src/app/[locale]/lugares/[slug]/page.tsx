@@ -33,6 +33,7 @@ import { listReviews, reviewStats } from "@/lib/reviews";
 import { listNotices } from "@/lib/business";
 import { freshness } from "@/lib/freshness";
 import { formatHours } from "@/lib/hours";
+import { isPastDay } from "@/lib/freshness";
 
 export async function generateStaticParams() {
   const data = await getData();
@@ -108,10 +109,23 @@ export default async function PlacePage({
     place.business && !place.demo ? freshness(place.infoUpdatedAt) : null;
   const sections = [
     ["resumen", t("tabOverview")],
+    ...(place.gallery.length > 0
+      ? ([["fotos", t("tabGallery")]] as const)
+      : []),
     ["ubicacion", t("tabLocation")],
     ["opiniones", t("tabReviews")],
     ["datos", t("tabDetails")],
   ] as const;
+  const sernatur = place.sernatur
+    ? {
+        ...place.sernatur,
+        date: new Intl.DateTimeFormat(locale, {
+          timeZone: "UTC",
+          dateStyle: "medium",
+        }).format(new Date(`${place.sernatur.validUntil}T00:00:00Z`)),
+        expired: isPastDay(place.sernatur.validUntil),
+      }
+    : null;
 
   return (
     <main className="flex flex-col gap-5 pb-10">
@@ -187,9 +201,21 @@ export default async function PlacePage({
               </>
             ) : null}
           </p>
-          <h1 className="font-display mt-1 text-3xl leading-tight font-extrabold">
-            {place.name}
-          </h1>
+          <div className="mt-1 flex items-center gap-3">
+            {place.logo ? (
+              // eslint-disable-next-line @next/next/no-img-element -- archivo local pequeño
+              <img
+                src={place.logo.src}
+                width={place.logo.width}
+                height={place.logo.height}
+                alt={t("logoAlt", { name: place.name })}
+                className="border-border size-14 shrink-0 rounded-full border bg-white object-cover"
+              />
+            ) : null}
+            <h1 className="font-display text-3xl leading-tight font-extrabold">
+              {place.name}
+            </h1>
+          </div>
           {place.demo ? (
             <RatingSummary
               slug={place.slug}
@@ -219,6 +245,18 @@ export default async function PlacePage({
             ) : (
               <StatusBadge verification={place.verification} />
             )}
+            {sernatur ? (
+              <span
+                title={t("sernaturNote")}
+                className="border-sea text-sea-deep inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs font-bold"
+              >
+                <span aria-hidden="true">®</span>
+                {t("sernatur", { number: sernatur.number })} ·{" "}
+                {sernatur.expired
+                  ? t("sernaturExpired", { date: sernatur.date })
+                  : t("sernaturUntil", { date: sernatur.date })}
+              </span>
+            ) : null}
             {place.fallbackToSpanish ? (
               <span className="text-muted text-xs">{t("onlySpanish")}</span>
             ) : null}
@@ -276,6 +314,44 @@ export default async function PlacePage({
           <h2 className="sr-only">{t("tabOverview")}</h2>
           <p className="text-base leading-relaxed">{place.description}</p>
         </section>
+
+        {place.gallery.length > 0 ? (
+          <section id="fotos" className="flex scroll-mt-32 flex-col gap-3">
+            <h2 className="font-display text-xl font-extrabold">
+              {t("tabGallery")}
+            </h2>
+            <ul className="-mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-2">
+              {place.gallery.map((g) => (
+                <li
+                  key={g.src}
+                  className="w-[85%] max-w-md shrink-0 snap-start sm:w-[60%]"
+                >
+                  <figure className="border-border bg-surface overflow-hidden rounded-2xl border">
+                    <a href={g.src} target="_blank" rel="noopener">
+                      {/* eslint-disable-next-line @next/next/no-img-element -- archivo local, se abre en tamaño completo */}
+                      <img
+                        src={g.src}
+                        width={g.width}
+                        height={g.height}
+                        alt={g.alt}
+                        loading="lazy"
+                        decoding="async"
+                        className="h-auto w-full bg-white"
+                      />
+                    </a>
+                    <figcaption className="text-muted flex justify-between gap-2 px-3 py-2 text-xs">
+                      <b className="text-foreground">
+                        {t(`galleryKind.${g.kind}`)}
+                      </b>
+                      <span>{t("imageCredit", { credit: g.credit })}</span>
+                    </figcaption>
+                  </figure>
+                </li>
+              ))}
+            </ul>
+            <p className="text-muted text-xs">{t("galleryNote")}</p>
+          </section>
+        ) : null}
 
         <section id="ubicacion" className="flex scroll-mt-32 flex-col gap-3">
           <h2 className="font-display text-xl font-extrabold">

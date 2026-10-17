@@ -241,3 +241,20 @@ Fuente: PLADETUR de Papudo 2023–2027, iD (`docs/investigacion/`).
 Los tokens de color del sitio pasaron a los colores del logo en versión
 pálida (detalle y contrastes en [`MARCA-REFERENCIA.md`](MARCA-REFERENCIA.md)).
 El logo no se usa.
+
+## Imágenes de los comercios (migración 0022)
+
+- Logo, carta, fotos y promociones que entrega el local (autorizadas en el
+  formulario) van, por ahora, en `public/lugares/<slug>/` como WebP
+  re-codificado (sin metadatos: las fotos de celular traen la ubicación GPS).
+  `content.sql` las registra en `place_images` con tipo, tamaño, texto
+  alternativo en es/en/pt y crédito; solo reemplaza las rutas del repo
+  («/...»), así las que se suban después desde el panel no se pisan.
+- La ficha muestra el logo junto al nombre y una sección «Fotos y carta». Las
+  promociones se rotulan «Publicidad del local» y los precios de la carta se
+  advierten como sujetos a cambio. La ilustración de portada se mantiene hasta
+  tener fotos del lugar.
+- Registro SERNATUR: número y vigencia que informa el local, como texto (no se
+  reproduce el sello oficial); avisa si venció. Se confirma al verificar.
+- No se copian fotos de Google Maps: pertenecen a quien las subió. Solo se
+  usan las que el local entregue.

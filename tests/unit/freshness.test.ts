@@ -22,3 +22,14 @@ describe("vigencia de los datos de un comercio", () => {
     ).toEqual(["never", "overdue", "soon", "ok"]);
   });
 });
+
+describe("vigencias por día", () => {
+  it("compara en hora de Chile", async () => {
+    const { isPastDay } = await import("@/lib/freshness");
+    // 17-10-2026 a las 01:00 en Chile (04:00 UTC)
+    const now = new Date("2026-10-17T04:00:00Z");
+    expect(isPastDay("2026-10-16", now)).toBe(true);
+    expect(isPastDay("2026-10-17", now)).toBe(false);
+    expect(isPastDay("2027-01-31", now)).toBe(false);
+  });
+});

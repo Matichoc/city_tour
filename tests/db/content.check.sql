@@ -33,6 +33,12 @@ select tests.eq('festivos en temporada baja',
 select tests.eq('Instagram, Maps y WhatsApp del local',
   (select instagram || ' ' || maps_url || ' ' || cta_kind from public.places where slug = 'roots-salinas'),
   'https://www.instagram.com/roots.salinas/ https://maps.app.goo.gl/ephntUVKSy3yhpAN7 whatsapp');
+select tests.eq('logo, carta y dos promociones del local, en orden',
+  (select string_agg(kind, ',' order by position) from public.place_images i
+   join public.places p on p.id = i.place_id where p.slug = 'roots-salinas'), 'logo,menu,promo,promo');
+select tests.eq('registro SERNATUR informado por el local',
+  (select sernatur_number || ' ' || sernatur_valid_until from public.places where slug = 'roots-salinas'),
+  '93605 2027-01-31');
 select tests.eq('fecha en que el local confirmó sus datos',
   (select info_updated_at = '2026-10-17T03:53:04Z' from public.places where slug = 'roots-salinas'), true);
 select tests.logout();

@@ -23,6 +23,17 @@ export type LocalityContent = {
 
 export type PlaceText = { name: string; short: string; description: string };
 
+/** Imagen entregada por el comercio (archivo en public/lugares/<slug>/). */
+export type PlaceImage = {
+  src: string;
+  width: number;
+  height: number;
+  /** photo: foto del lugar · menu: carta · promo: publicidad del local. */
+  kind: "photo" | "menu" | "promo";
+  alt: { es: string; en: string; pt: string };
+  credit: string;
+};
+
 /**
  * Horario de una temporada que se repite cada año. Los meses van de 1 a 12
  * (pueden dar la vuelta: 12 → 2); los días, 0 = domingo … 6 = sábado.
@@ -70,6 +81,12 @@ export type PlaceContent = {
   mapsUrl?: string;
   /** Horarios por temporada, como los informó el local. */
   hours?: PlaceHours[];
+  /** Logo del comercio (cuadrado). */
+  logo?: { src: string; width: number; height: number };
+  /** Fotos, carta y promociones que entregó el comercio. */
+  gallery?: PlaceImage[];
+  /** Registro SERNATUR que informó el local (número y vigencia, ISO). */
+  sernatur?: { number: string; validUntil: string };
   source?: Source;
   tvSource?: Source;
   extraSources?: Source[];

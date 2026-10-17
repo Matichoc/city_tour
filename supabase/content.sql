@@ -1,6 +1,6 @@
 -- GENERADO desde src/content con `pnpm db:content`. No editar a mano.
 -- Carga en Supabase el contenido que hoy muestra el sitio. Requiere las
--- migraciones hasta 0021 y supabase/seed.sql. Se puede ejecutar varias veces.
+-- migraciones hasta 0022 y supabase/seed.sql. Se puede ejecutar varias veces.
 -- Mientras no exista el panel municipal, el repo manda: volver a ejecutarlo
 -- sobrescribe los textos de estas fichas.
 begin;
@@ -29,38 +29,39 @@ from (values
 join public.localities l on l.slug = v.slug;
 
 -- Lugares (se crean en borrador y se publican al final, con su ficha en español)
-insert into public.places (slug, sort_order, category_id, locality_id, latitude, longitude, address, is_demo, is_business, instagram, maps_url)
-select v.slug, v.sort_order, c.id, l.id, v.lat::numeric, v.lng::numeric, v.address, v.is_demo, v.is_business, v.instagram, v.maps_url
+insert into public.places (slug, sort_order, category_id, locality_id, latitude, longitude, address, is_demo, is_business, instagram, maps_url, sernatur_number, sernatur_valid_until)
+select v.slug, v.sort_order, c.id, l.id, v.lat::numeric, v.lng::numeric, v.address, v.is_demo, v.is_business, v.instagram, v.maps_url, v.sernatur, v.sernatur_until::date
 from (values
-  ('playa-papudo', 1, 'balneario', 'papudo', -32.5061, -71.4472, null, false, false, null, null),
-  ('playa-chica-papudo', 2, 'balneario', 'papudo', -32.5075, -71.4478, null, false, false, null, null),
-  ('papudo-pullally', 3, 'ruralidad', 'pullally', -32.43467097116685, -71.31775915116937, null, false, false, null, null),
-  ('papudo-salinas-pullally', 4, 'ruralidad', 'las-salinas-papudo', -32.41007831226611, -71.41062008860503, null, false, false, null, null),
-  ('roots-salinas', 5, 'gastronomia', 'las-salinas-papudo', -32.4163125, -71.4118125, 'Estacionamiento de la playa Salinas de Pullally, Las Salinas', false, true, 'https://www.instagram.com/roots.salinas/', 'https://maps.app.goo.gl/ephntUVKSy3yhpAN7'),
-  ('papudo-playa-los-lilenes', 6, 'balneario', null, -32.49109919617068, -71.4326761566141, null, false, false, null, null),
-  ('papudo-parque', 7, 'recreacion', 'papudo', -32.50461851619594, -71.44310276706875, null, false, false, null, null),
-  ('papudo-plaza', 8, 'patrimonio', 'papudo', -32.50745877114493, -71.44604956690678, null, false, false, null, null),
-  ('iglesia-nuestra-senora-de-las-mercedes', 9, 'patrimonio', 'papudo', null, null, null, false, false, null, null),
-  ('humedal-urbano-estero-agua-salada', 10, 'recreacion', 'papudo', null, null, null, false, false, null, null),
-  ('caleta-de-pescadores-papudo', 11, 'gastronomia', 'papudo', null, null, null, false, false, null, null),
-  ('restaurante-donde-pablo', 12, 'gastronomia', 'papudo', null, null, 'Av. Glorias Navales 511, Papudo', false, true, null, null),
-  ('fuente-papudo', 13, 'gastronomia', 'papudo', null, null, null, false, true, null, null),
-  ('hotel-carande', 14, 'alojamiento', 'papudo', null, null, 'Chorrillos 89, Papudo', false, true, null, null),
-  ('demo-parador-ola-mansa', 15, 'balneario', 'papudo', null, null, null, true, true, null, null),
-  ('demo-cabalgatas-del-valle', 16, 'recreacion', 'pullally', null, null, null, true, true, null, null),
-  ('demo-escuela-de-surf-ola-brava', 17, 'deportes', 'las-salinas-papudo', null, null, null, true, true, null, null),
-  ('demo-circuito-casas-antiguas', 18, 'patrimonio', 'papudo', null, null, null, true, true, null, null),
-  ('demo-cocineria-sabor-a-mar', 19, 'gastronomia', 'papudo', null, null, null, true, true, null, null),
-  ('demo-huerta-y-quesos-el-retono', 20, 'ruralidad', 'pullally', null, null, null, true, true, null, null),
-  ('demo-cabanas-brisa-salina', 21, 'alojamiento', 'las-salinas-papudo', null, null, null, true, true, null, null)
-) as v(slug, sort_order, category, locality, lat, lng, address, is_demo, is_business, instagram, maps_url)
+  ('playa-papudo', 1, 'balneario', 'papudo', -32.5061, -71.4472, null, false, false, null, null, null, null),
+  ('playa-chica-papudo', 2, 'balneario', 'papudo', -32.5075, -71.4478, null, false, false, null, null, null, null),
+  ('papudo-pullally', 3, 'ruralidad', 'pullally', -32.43467097116685, -71.31775915116937, null, false, false, null, null, null, null),
+  ('papudo-salinas-pullally', 4, 'ruralidad', 'las-salinas-papudo', -32.41007831226611, -71.41062008860503, null, false, false, null, null, null, null),
+  ('roots-salinas', 5, 'gastronomia', 'las-salinas-papudo', -32.4163125, -71.4118125, 'Estacionamiento de la playa Salinas de Pullally, Las Salinas', false, true, 'https://www.instagram.com/roots.salinas/', 'https://maps.app.goo.gl/ephntUVKSy3yhpAN7', '93605', '2027-01-31'),
+  ('papudo-playa-los-lilenes', 6, 'balneario', null, -32.49109919617068, -71.4326761566141, null, false, false, null, null, null, null),
+  ('papudo-parque', 7, 'recreacion', 'papudo', -32.50461851619594, -71.44310276706875, null, false, false, null, null, null, null),
+  ('papudo-plaza', 8, 'patrimonio', 'papudo', -32.50745877114493, -71.44604956690678, null, false, false, null, null, null, null),
+  ('iglesia-nuestra-senora-de-las-mercedes', 9, 'patrimonio', 'papudo', null, null, null, false, false, null, null, null, null),
+  ('humedal-urbano-estero-agua-salada', 10, 'recreacion', 'papudo', null, null, null, false, false, null, null, null, null),
+  ('caleta-de-pescadores-papudo', 11, 'gastronomia', 'papudo', null, null, null, false, false, null, null, null, null),
+  ('restaurante-donde-pablo', 12, 'gastronomia', 'papudo', null, null, 'Av. Glorias Navales 511, Papudo', false, true, null, null, null, null),
+  ('fuente-papudo', 13, 'gastronomia', 'papudo', null, null, null, false, true, null, null, null, null),
+  ('hotel-carande', 14, 'alojamiento', 'papudo', null, null, 'Chorrillos 89, Papudo', false, true, null, null, null, null),
+  ('demo-parador-ola-mansa', 15, 'balneario', 'papudo', null, null, null, true, true, null, null, null, null),
+  ('demo-cabalgatas-del-valle', 16, 'recreacion', 'pullally', null, null, null, true, true, null, null, null, null),
+  ('demo-escuela-de-surf-ola-brava', 17, 'deportes', 'las-salinas-papudo', null, null, null, true, true, null, null, null, null),
+  ('demo-circuito-casas-antiguas', 18, 'patrimonio', 'papudo', null, null, null, true, true, null, null, null, null),
+  ('demo-cocineria-sabor-a-mar', 19, 'gastronomia', 'papudo', null, null, null, true, true, null, null, null, null),
+  ('demo-huerta-y-quesos-el-retono', 20, 'ruralidad', 'pullally', null, null, null, true, true, null, null, null, null),
+  ('demo-cabanas-brisa-salina', 21, 'alojamiento', 'las-salinas-papudo', null, null, null, true, true, null, null, null, null)
+) as v(slug, sort_order, category, locality, lat, lng, address, is_demo, is_business, instagram, maps_url, sernatur, sernatur_until)
 join public.categories c on c.slug = v.category
 left join public.localities l on l.slug = v.locality
 on conflict (slug) do update set
   sort_order = excluded.sort_order, category_id = excluded.category_id, locality_id = excluded.locality_id,
   latitude = excluded.latitude, longitude = excluded.longitude, address = excluded.address,
   is_demo = excluded.is_demo, is_business = excluded.is_business,
-  instagram = excluded.instagram, maps_url = excluded.maps_url;
+  instagram = excluded.instagram, maps_url = excluded.maps_url,
+  sernatur_number = excluded.sernatur_number, sernatur_valid_until = excluded.sernatur_valid_until;
 
 delete from public.place_translations
   where place_id in (select id from public.places where slug in ('playa-papudo', 'playa-chica-papudo', 'papudo-pullally', 'papudo-salinas-pullally', 'roots-salinas', 'papudo-playa-los-lilenes', 'papudo-parque', 'papudo-plaza', 'iglesia-nuestra-senora-de-las-mercedes', 'humedal-urbano-estero-agua-salada', 'caleta-de-pescadores-papudo', 'restaurante-donde-pablo', 'fuente-papudo', 'hotel-carande', 'demo-parador-ola-mansa', 'demo-cabalgatas-del-valle', 'demo-escuela-de-surf-ola-brava', 'demo-circuito-casas-antiguas', 'demo-cocineria-sabor-a-mar', 'demo-huerta-y-quesos-el-retono', 'demo-cabanas-brisa-salina'));
@@ -75,9 +76,9 @@ from (values
   ('papudo-pullally', 'en', 'Pullally Lagoon', 'A lagoon within the Salinas de Pullally y Dunas de Longotoma Nature Sanctuary (decree published in 2021), at the mouth of the Petorca and La Ligua rivers; the wetland is home to 137 bird species (over a quarter of those recorded in Chile), several of them migratory.', 'In Papudo commune (6,356 residents, 2017 census), this lagoon is part of the Salinas de Pullally y Dunas de Longotoma Nature Sanctuary (decree published in 2021), at the mouth of the Petorca and La Ligua rivers. The wetland has recorded 137 bird species — over a quarter of those described in Chile — including the grey gull, black-necked stilt and American oystercatcher, plus migratory species from the northern hemisphere.', 'draft'),
   ('papudo-salinas-pullally', 'es', 'Salinas de Pullally', 'Sector de salinas del Santuario de la Naturaleza Salinas de Pullally y Dunas de Longotoma (decreto publicado en 2021), entre las desembocaduras de los ríos Petorca y La Ligua.', 'En la comuna de Papudo (6.356 habitantes, Censo 2017), este sector de salinas —a unos 12 km al norte del balneario— es una caleta de pescadores artesanales en la desembocadura del río Ligua, donde botes amarrados a un pequeño muelle cruzan el río. El encuentro entre el río y el mar deja aguas tranquilas aptas para niños, mientras el sector abierto atrae a surfistas por la calidad de sus olas.', null),
   ('papudo-salinas-pullally', 'en', 'Salinas de Pullally', 'The salt-flat sector of the Salinas de Pullally y Dunas de Longotoma Nature Sanctuary (decree published in 2021), between the mouths of the Petorca and La Ligua rivers.', 'In Papudo commune (6,356 residents, 2017 census), this salt-flat sector — about 12 km north of the resort town — is a small artisanal fishing cove at the mouth of the Río Ligua, where boats tied to a small pier ferry people across the river. Where the river meets the sea the water turns calm enough for children, while the open stretch draws surfers for the quality of its waves.', 'draft'),
-  ('roots-salinas', 'es', 'Roots Salinas', 'Comida junto al estacionamiento de la playa Salinas de Pullally. Su especialidad: el «churrasco salinero».', 'Local de comida en Las Salinas, junto al estacionamiento de la playa Salinas de Pullally. Su dueño lo resume en una frase: «churrasco salinero». En enero y febrero abre todos los días; de marzo a diciembre, los fines de semana y festivos.', null),
-  ('roots-salinas', 'en', 'Roots Salinas', 'Food next to the Salinas de Pullally beach parking lot. Its specialty: the «churrasco salinero» steak sandwich.', 'A food spot in Las Salinas, next to the Salinas de Pullally beach parking lot. Its owner sums it up in one phrase: «churrasco salinero» (a local steak sandwich). Open every day in January and February; from March to December, on weekends and public holidays.', 'draft'),
-  ('roots-salinas', 'pt', 'Roots Salinas', 'Comida ao lado do estacionamento da praia Salinas de Pullally. Sua especialidade: o «churrasco salinero».', 'Local de comida em Las Salinas, ao lado do estacionamento da praia Salinas de Pullally. O dono o resume em uma frase: «churrasco salinero» (sanduíche de carne local). Abre todos os dias em janeiro e fevereiro; de março a dezembro, nos fins de semana e feriados.', 'draft'),
+  ('roots-salinas', 'es', 'Roots Salinas', 'Churrascos, hamburguesas, completos y más junto al estacionamiento de la playa Salinas de Pullally. Su especialidad: el «churrasco salinero», de merluza o reineta.', 'Local de comida en Las Salinas, junto al estacionamiento de la playa Salinas de Pullally. Su carta tiene churrascos y hamburguesas, completos, pizzas y fajitas, empanadas, chorrillanas y salchipapas, además de helados y churros. La especialidad de la casa es el «churrasco salinero», de merluza o reineta. Tiene delivery y retiro en el local. En enero y febrero abre todos los días; de marzo a diciembre, los fines de semana y festivos.', null),
+  ('roots-salinas', 'en', 'Roots Salinas', 'Sandwiches, burgers, hot dogs and more next to the Salinas de Pullally beach parking lot. Its specialty: the «churrasco salinero», a hake or reineta fish sandwich.', 'A food spot in Las Salinas, next to the Salinas de Pullally beach parking lot. The menu has churrascos (steak sandwiches) and burgers, Chilean hot dogs, pizzas and fajitas, empanadas, chorrillana and salchipapas, plus ice cream and churros. The house specialty is the «churrasco salinero», made with hake or reineta fish. Delivery and pick-up available. Open every day in January and February; from March to December, on weekends and public holidays.', 'draft'),
+  ('roots-salinas', 'pt', 'Roots Salinas', 'Sanduíches, hambúrgueres, cachorros-quentes e mais ao lado do estacionamento da praia Salinas de Pullally. Sua especialidade: o «churrasco salinero», de merluza ou reineta.', 'Local de comida em Las Salinas, ao lado do estacionamento da praia Salinas de Pullally. O cardápio tem churrascos (sanduíches de carne) e hambúrgueres, cachorros-quentes chilenos, pizzas e fajitas, empanadas, chorrillana e salchipapas, além de sorvetes e churros. A especialidade da casa é o «churrasco salinero», de merluza ou reineta. Tem delivery e retirada no local. Abre todos os dias em janeiro e fevereiro; de março a dezembro, nos fins de semana e feriados.', 'draft'),
   ('papudo-playa-los-lilenes', 'es', 'Playa Los Lilenes', 'Playa escondida y tranquila al norte de Papudo, a la que se llega por un sendero costero de unos 800 m (o a caballo); pocas visitas, ideal para nadar y descansar rodeado de naturaleza.', 'En la comuna de Papudo (6.356 habitantes, Censo 2017), esta playa escondida se alcanza por un sendero costero de unos 800 m que también conecta con Punta Puyay y la llamada "playa del amor" — un circuito de caminata de baja exigencia y pocas visitas, ideal para nadar y descansar rodeado de naturaleza.', null),
   ('papudo-playa-los-lilenes', 'en', 'Los Lilenes Beach', 'A quiet, hidden beach north of Papudo, reached via an ~800 m coastal path (or on horseback); few visitors, great for swimming and relaxing surrounded by nature.', 'In Papudo commune (6,356 residents, 2017 census), this hidden beach is reached along an ~800 m coastal trail that also connects to Punta Puyay and the so-called "playa del amor" — an easy, lightly visited walking circuit, ideal for swimming and relaxing surrounded by nature.', 'draft'),
   ('papudo-parque', 'es', 'Costanera de Papudo', 'Paseo peatonal "La Terraza", desde la gruta de la Virgen de Lourdes hasta Av. Glorias Navales, bordeando Playa Chica y Playa Grande; tiendas de artesanía, restaurantes, juegos infantiles y club de yates.', 'En la comuna de Papudo (6.356 habitantes, Censo 2017), este paseo peatonal —"La Terraza"— bordea Playa Chica y Playa Grande desde la gruta de la Virgen de Lourdes hasta la avenida Glorias Navales. Es el punto de encuentro del balneario en verano, con tiendas de artesanía, restaurantes, juegos infantiles y el club de yates.', null),
@@ -168,6 +169,18 @@ from (values
   ('roots-salinas', 0, '10:00', '19:00', 3, 12, true),
   ('roots-salinas', 6, '10:00', '19:00', 3, 12, true)
 ) as v(slug, day, opens, closes, from_month, to_month, holidays)
+join public.places p on p.slug = v.slug;
+delete from public.place_images
+  where storage_path like '/%'
+    and place_id in (select id from public.places where slug in ('playa-papudo', 'playa-chica-papudo', 'papudo-pullally', 'papudo-salinas-pullally', 'roots-salinas', 'papudo-playa-los-lilenes', 'papudo-parque', 'papudo-plaza', 'iglesia-nuestra-senora-de-las-mercedes', 'humedal-urbano-estero-agua-salada', 'caleta-de-pescadores-papudo', 'restaurante-donde-pablo', 'fuente-papudo', 'hotel-carande', 'demo-parador-ola-mansa', 'demo-cabalgatas-del-valle', 'demo-escuela-de-surf-ola-brava', 'demo-circuito-casas-antiguas', 'demo-cocineria-sabor-a-mar', 'demo-huerta-y-quesos-el-retono', 'demo-cabanas-brisa-salina'));
+insert into public.place_images (place_id, storage_path, kind, width, height, alt_text, alt_text_en, alt_text_pt, credit, position)
+select p.id, v.path, v.kind, v.width::integer, v.height::integer, v.alt, v.alt_en, v.alt_pt, v.credit, v.position::integer
+from (values
+  ('roots-salinas', '/lugares/roots-salinas/logo.webp', 'logo', 320, 320, 'Logo de Roots Salinas', 'Roots Salinas logo', 'Logo de Roots Salinas', 'Roots Salinas', 0),
+  ('roots-salinas', '/lugares/roots-salinas/carta.webp', 'menu', 1536, 1024, 'Carta de Roots Salinas con precios: churrascos y hamburguesas, bebestibles, helados y churros, completos, pizzas y fajitas, choclo y empanadas, cono de papas, chorrillanas y salchipapas.', 'Roots Salinas menu with prices: churrascos and burgers, drinks, ice cream and churros, hot dogs, pizzas and fajitas, corn cups and empanadas, fries cones, chorrillana and salchipapas.', 'Cardápio do Roots Salinas com preços: churrascos e hambúrgueres, bebidas, sorvetes e churros, cachorros-quentes, pizzas e fajitas, milho e empanadas, cone de batatas, chorrillana e salchipapas.', 'Roots Salinas', 1),
+  ('roots-salinas', '/lugares/roots-salinas/promo-combos.webp', 'promo', 1600, 900, 'Promoción de Roots Salinas: combo clásico de hamburguesa, papas fritas y bebida, y papas fritas con salsa cheddar.', 'Roots Salinas promotion: classic combo of burger, fries and a drink, and fries with cheddar sauce.', 'Promoção do Roots Salinas: combo clássico de hambúrguer, batata frita e bebida, e batata frita com molho cheddar.', 'Roots Salinas', 2),
+  ('roots-salinas', '/lugares/roots-salinas/promo-conoce-roots.webp', 'promo', 1600, 900, 'Publicidad de Roots: hamburguesas premium, colaciones y papas fritas, con delivery o retiro en el local.', 'Roots advertisement: premium burgers, set meals and fries, with delivery or pick-up.', 'Publicidade do Roots: hambúrgueres premium, refeições e batatas fritas, com delivery ou retirada no local.', 'Roots Salinas', 3)
+) as v(slug, path, kind, width, height, alt, alt_en, alt_pt, credit, position)
 join public.places p on p.slug = v.slug;
 update public.places p set
   cta_kind = coalesce(p.cta_kind, v.cta_kind), cta_value = coalesce(p.cta_value, v.cta_value),

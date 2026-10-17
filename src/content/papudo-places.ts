@@ -190,23 +190,23 @@ export const PLACES: PlaceContent[] = [
     es: {
       name: "Roots Salinas",
       short:
-        "Comida junto al estacionamiento de la playa Salinas de Pullally. Su especialidad: el «churrasco salinero».",
+        "Churrascos, hamburguesas, completos y más junto al estacionamiento de la playa Salinas de Pullally. Su especialidad: el «churrasco salinero», de merluza o reineta.",
       description:
-        "Local de comida en Las Salinas, junto al estacionamiento de la playa Salinas de Pullally. Su dueño lo resume en una frase: «churrasco salinero». En enero y febrero abre todos los días; de marzo a diciembre, los fines de semana y festivos.",
+        "Local de comida en Las Salinas, junto al estacionamiento de la playa Salinas de Pullally. Su carta tiene churrascos y hamburguesas, completos, pizzas y fajitas, empanadas, chorrillanas y salchipapas, además de helados y churros. La especialidad de la casa es el «churrasco salinero», de merluza o reineta. Tiene delivery y retiro en el local. En enero y febrero abre todos los días; de marzo a diciembre, los fines de semana y festivos.",
     },
     en: {
       name: "Roots Salinas",
       short:
-        "Food next to the Salinas de Pullally beach parking lot. Its specialty: the «churrasco salinero» steak sandwich.",
+        "Sandwiches, burgers, hot dogs and more next to the Salinas de Pullally beach parking lot. Its specialty: the «churrasco salinero», a hake or reineta fish sandwich.",
       description:
-        "A food spot in Las Salinas, next to the Salinas de Pullally beach parking lot. Its owner sums it up in one phrase: «churrasco salinero» (a local steak sandwich). Open every day in January and February; from March to December, on weekends and public holidays.",
+        "A food spot in Las Salinas, next to the Salinas de Pullally beach parking lot. The menu has churrascos (steak sandwiches) and burgers, Chilean hot dogs, pizzas and fajitas, empanadas, chorrillana and salchipapas, plus ice cream and churros. The house specialty is the «churrasco salinero», made with hake or reineta fish. Delivery and pick-up available. Open every day in January and February; from March to December, on weekends and public holidays.",
     },
     pt: {
       name: "Roots Salinas",
       short:
-        "Comida ao lado do estacionamento da praia Salinas de Pullally. Sua especialidade: o «churrasco salinero».",
+        "Sanduíches, hambúrgueres, cachorros-quentes e mais ao lado do estacionamento da praia Salinas de Pullally. Sua especialidade: o «churrasco salinero», de merluza ou reineta.",
       description:
-        "Local de comida em Las Salinas, ao lado do estacionamento da praia Salinas de Pullally. O dono o resume em uma frase: «churrasco salinero» (sanduíche de carne local). Abre todos os dias em janeiro e fevereiro; de março a dezembro, nos fins de semana e feriados.",
+        "Local de comida em Las Salinas, ao lado do estacionamento da praia Salinas de Pullally. O cardápio tem churrascos (sanduíches de carne) e hambúrgueres, cachorros-quentes chilenos, pizzas e fajitas, empanadas, chorrillana e salchipapas, além de sorvetes e churros. A especialidade da casa é o «churrasco salinero», de merluza ou reineta. Tem delivery e retirada no local. Abre todos os dias em janeiro e fevereiro; de março a dezembro, nos fins de semana e feriados.",
     },
     instagram: "https://www.instagram.com/roots.salinas/",
     mapsUrl: "https://maps.app.goo.gl/ephntUVKSy3yhpAN7",
@@ -229,6 +229,48 @@ export const PLACES: PlaceContent[] = [
     ],
     cta: { kind: "whatsapp", value: "+56 9 7270 2991" },
     infoUpdatedAt: "2026-10-17T03:53:04Z",
+    // Logo, carta y promociones: los envió el local (17-10-2026), autorizados
+    // en el formulario. Los precios son los de la carta y pueden cambiar.
+    logo: { src: "/lugares/roots-salinas/logo.webp", width: 320, height: 320 },
+    gallery: [
+      {
+        src: "/lugares/roots-salinas/carta.webp",
+        width: 1536,
+        height: 1024,
+        kind: "menu",
+        alt: {
+          es: "Carta de Roots Salinas con precios: churrascos y hamburguesas, bebestibles, helados y churros, completos, pizzas y fajitas, choclo y empanadas, cono de papas, chorrillanas y salchipapas.",
+          en: "Roots Salinas menu with prices: churrascos and burgers, drinks, ice cream and churros, hot dogs, pizzas and fajitas, corn cups and empanadas, fries cones, chorrillana and salchipapas.",
+          pt: "Cardápio do Roots Salinas com preços: churrascos e hambúrgueres, bebidas, sorvetes e churros, cachorros-quentes, pizzas e fajitas, milho e empanadas, cone de batatas, chorrillana e salchipapas.",
+        },
+        credit: "Roots Salinas",
+      },
+      {
+        src: "/lugares/roots-salinas/promo-combos.webp",
+        width: 1600,
+        height: 900,
+        kind: "promo",
+        alt: {
+          es: "Promoción de Roots Salinas: combo clásico de hamburguesa, papas fritas y bebida, y papas fritas con salsa cheddar.",
+          en: "Roots Salinas promotion: classic combo of burger, fries and a drink, and fries with cheddar sauce.",
+          pt: "Promoção do Roots Salinas: combo clássico de hambúrguer, batata frita e bebida, e batata frita com molho cheddar.",
+        },
+        credit: "Roots Salinas",
+      },
+      {
+        src: "/lugares/roots-salinas/promo-conoce-roots.webp",
+        width: 1600,
+        height: 900,
+        kind: "promo",
+        alt: {
+          es: "Publicidad de Roots: hamburguesas premium, colaciones y papas fritas, con delivery o retiro en el local.",
+          en: "Roots advertisement: premium burgers, set meals and fries, with delivery or pick-up.",
+          pt: "Publicidade do Roots: hambúrgueres premium, refeições e batatas fritas, com delivery ou retirada no local.",
+        },
+        credit: "Roots Salinas",
+      },
+    ],
+    sernatur: { number: "93605", validUntil: "2027-01-31" },
     source: {
       url: "https://www.instagram.com/roots.salinas/",
       label:

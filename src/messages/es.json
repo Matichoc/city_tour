@@ -109,7 +109,20 @@
     "hoursMonths": "{from} a {to}",
     "hoursAllYear": "Todo el año",
     "hoursSource": "Informado por el local",
-    "instagram": "Instagram"
+    "instagram": "Instagram",
+    "logoAlt": "Logo de {name}",
+    "tabGallery": "Fotos y carta",
+    "galleryKind": {
+      "photo": "Foto",
+      "menu": "Carta",
+      "promo": "Publicidad del local"
+    },
+    "galleryNote": "Imágenes entregadas por el local. Los precios de la carta pueden cambiar.",
+    "imageCredit": "Imagen: {credit}",
+    "sernatur": "Registro SERNATUR N° {number}",
+    "sernaturUntil": "vigente hasta {date}",
+    "sernaturExpired": "vencido el {date}",
+    "sernaturNote": "Servicio turístico registrado en SERNATUR, según informa el local."
   },
   "routes": {
     "title": "Rutas",

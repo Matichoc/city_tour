@@ -109,7 +109,20 @@
     "hoursMonths": "{from} a {to}",
     "hoursAllYear": "O ano todo",
     "hoursSource": "Informado pelo local",
-    "instagram": "Instagram"
+    "instagram": "Instagram",
+    "logoAlt": "Logo de {name}",
+    "tabGallery": "Fotos e cardápio",
+    "galleryKind": {
+      "photo": "Foto",
+      "menu": "Cardápio",
+      "promo": "Publicidade do local"
+    },
+    "galleryNote": "Imagens enviadas pelo local. Os preços do cardápio podem mudar.",
+    "imageCredit": "Imagem: {credit}",
+    "sernatur": "Registro SERNATUR nº {number}",
+    "sernaturUntil": "válido até {date}",
+    "sernaturExpired": "vencido em {date}",
+    "sernaturNote": "Serviço turístico registrado no SERNATUR (Serviço Nacional de Turismo do Chile), segundo informa o local."
   },
   "routes": {
     "title": "Roteiros",

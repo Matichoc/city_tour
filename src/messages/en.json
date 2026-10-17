@@ -109,7 +109,20 @@
     "hoursMonths": "{from} to {to}",
     "hoursAllYear": "All year",
     "hoursSource": "Provided by the business",
-    "instagram": "Instagram"
+    "instagram": "Instagram",
+    "logoAlt": "{name} logo",
+    "tabGallery": "Photos & menu",
+    "galleryKind": {
+      "photo": "Photo",
+      "menu": "Menu",
+      "promo": "Business ad"
+    },
+    "galleryNote": "Images provided by the business. Menu prices may change.",
+    "imageCredit": "Image: {credit}",
+    "sernatur": "SERNATUR registration No. {number}",
+    "sernaturUntil": "valid until {date}",
+    "sernaturExpired": "expired on {date}",
+    "sernaturNote": "Tourism service registered with SERNATUR (Chile’s National Tourism Service), as reported by the business."
   },
   "routes": {
     "title": "Routes",
