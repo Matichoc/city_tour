@@ -95,7 +95,7 @@
     "resumen": "La galería de fotos del local muestra una imagen a la vez con flechas a los lados, contador y deslizado con el dedo, sin la barra de desplazamiento."
   },
   "actual": {
-    "pr": 26,
+    "pr": 27,
     "titulo": "Seguridad: Next.js 16.3.8",
     "resumen": "Actualiza Next.js y eslint-config-next de 16.3.5 a 16.3.8 para cerrar los 7 avisos de seguridad de Next (hallazgo DEP-01 de la auditoría). Sin cambios de funcionalidad."
   }
