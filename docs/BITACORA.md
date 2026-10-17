@@ -14,13 +14,12 @@ indicadas en cada versión.
 `docs/bitacora-notas.json` (clave `actual`, y el número de PR cuando exista),
 correr `pnpm bitacora` y subir el cambio en el mismo PR.
 
-## En preparación: v0.20 — Fuente «validada por el representante», videos y edición completa por local
+## En preparación: v0.21 — Plan de idiomas originarios (mapudungun y rapa nui)
 
-La ficha muestra «Validada por el representante del local» en vez de hablar del formulario; cada local se edita completo desde el panel (datos, horarios por temporada, logo, carta, fotos, promociones y videos, con orden, texto y crédito); videos de hasta 50 MB subidos directo a Storage. Accesos a «Nuevo comercio», «Importar planilla» y «Editar ficha, fotos y videos» también desde Fichas → Lugares.
+Plan y planilla de 99 textos para que una persona hablante traduzca; sin código ni traducciones automáticas.
 
-- **Migraciones por correr en Supabase:** 0024
-- **Estado:** en revisión, [PR #23](https://github.com/Matichoc/city_tour/pull/23) (aún no está en `develop`).
-- **Última actualización de esta bitácora:** 2026-10-17 02:53
+- **Estado:** en desarrollo (aún no está en `develop`).
+- **Última actualización de esta bitácora:** 2026-10-17 03:02
 
 ## Avance por día
 
@@ -29,7 +28,7 @@ trabajadas: hay pausas y trabajo sin registrar).
 
 | Día | Ventana de actividad | Registros | Versiones entregadas |
 | --- | --- | ---: | --- |
-| Sábado, 17 de octubre de 2026 | 00:01 – 02:44 | 14 | v0.16, v0.17, v0.18, v0.19 |
+| Sábado, 17 de octubre de 2026 | 00:01 – 02:53 | 15 | v0.16, v0.17, v0.18, v0.19, v0.20 |
 | Viernes, 16 de octubre de 2026 | 00:04 – 23:51 | 15 | v0.9, v0.10, v0.11, v0.12, v0.13, v0.14, v0.15 |
 | Jueves, 15 de octubre de 2026 | 00:05 – 23:52 | 10 | v0.7, v0.8 |
 | Miércoles, 14 de octubre de 2026 | 23:50 – 23:50 | 1 | — |
@@ -37,6 +36,19 @@ trabajadas: hay pausas y trabajo sin registrar).
 | Lunes, 12 de octubre de 2026 | 15:43 – 17:53 | 10 | v0.1, v0.2, v0.3, v0.4 |
 
 ## Versiones
+
+### v0.20 — Fuente «validada por el representante», videos y edición completa por local
+Sábado, 17 de octubre de 2026, 02:58 · [PR #23](https://github.com/Matichoc/city_tour/pull/23)
+
+La ficha muestra «Validada por el representante del local» en vez de hablar del formulario; cada local se edita completo desde el panel (datos, horarios por temporada, logo, carta, fotos, promociones y videos, con orden, texto y crédito); videos de hasta 50 MB subidos directo a Storage. Accesos a «Nuevo comercio», «Importar planilla» y «Editar ficha, fotos y videos» también desde Fichas → Lugares.
+
+**Migraciones en Supabase:** 0024
+
+Registros:
+
+- 10-17 02:43 — Comercios: fuente «validada por el representante», videos y edición completa por local (`8c2ac7d`)
+- 10-17 02:44 — Bitácora: enlaza la entrega en curso con su PR (`385d3be`)
+- 10-17 02:53 — Panel: «Nuevo comercio», «Importar planilla» y «Editar ficha, fotos y videos» desde Fichas (`9520934`)
 
 ### v0.19 — Panel de comercios: crear, fotos, importar la planilla y bitácora
 Sábado, 17 de octubre de 2026, 02:13 · [PR #22](https://github.com/Matichoc/city_tour/pull/22)
