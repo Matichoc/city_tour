@@ -1,7 +1,7 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { Metadata } from "next";
 import { resolveLocale } from "@/i18n/utils";
-import { isLocated, listPlaces, listRoutes } from "@/lib/data";
+import { getData, isLocated } from "@/lib/data";
 import { buildPageMetadata } from "@/lib/seo";
 import { PageHero } from "@/components/ui/page-hero";
 import { TripView } from "@/components/trip/trip-view";
@@ -37,7 +37,8 @@ export default async function TripPage({
   const sp = await searchParams;
   const t = await getTranslations("trip");
   // Solo lugares con coordenada verificada pueden ordenarse en un recorrido.
-  const all = listPlaces(locale);
+  const data = await getData();
+  const all = data.listPlaces(locale);
   const places = all.filter(isLocated);
   const known = new Set(places.map((p) => p.slug));
 
@@ -52,7 +53,7 @@ export default async function TripPage({
       }
     : null;
 
-  const routes = listRoutes(locale).map((r) => ({
+  const routes = data.listRoutes(locale).map((r) => ({
     slug: r.slug,
     name: r.name,
     stopSlugs: r.stops.map((s) => s.place.slug),

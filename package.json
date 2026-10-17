@@ -13,7 +13,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
-    "test:db": "bash tests/db/run.sh"
+    "test:db": "bash tests/db/run.sh",
+    "db:content": "vitest run tests/unit/content-sql.test.ts -u"
   },
   "packageManager": "pnpm@10.28.0",
   "dependencies": {

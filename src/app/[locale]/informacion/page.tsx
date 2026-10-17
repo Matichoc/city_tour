@@ -2,7 +2,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { Metadata } from "next";
 import { Link } from "@/i18n/navigation";
 import { resolveLocale } from "@/i18n/utils";
-import { listLocalities } from "@/lib/data";
+import { getData } from "@/lib/data";
 import { MUNICIPALITY, SPONSOR } from "@/content/catalog";
 import { INFO_BLOCKS } from "@/content/papudo-info";
 import { buildPageMetadata } from "@/lib/seo";
@@ -31,7 +31,8 @@ export default async function InfoPage({
   const locale = resolveLocale((await params).locale);
   setRequestLocale(locale);
   const t = await getTranslations("info");
-  const localities = listLocalities(locale).filter((l) => l.summary);
+  const data = await getData();
+  const localities = data.listLocalities(locale).filter((l) => l.summary);
 
   return (
     <main className="flex flex-col">

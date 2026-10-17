@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import { resolveLocale } from "@/i18n/utils";
-import { getPlace, listPlaceSlugs } from "@/lib/data";
+import { getData } from "@/lib/data";
 import { directionsUrl, searchUrl } from "@/lib/map-config";
 import { TrackedAnchor } from "@/components/analytics/tracked-link";
 import {
@@ -26,9 +26,10 @@ import { DemoReviews, RatingSummary } from "@/components/place/demo-reviews";
 import { SaveButton } from "@/components/place/save-button";
 import { ReviewsPanel } from "@/components/place/reviews-panel";
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
+  const data = await getData();
   return routing.locales.flatMap((locale) =>
-    listPlaceSlugs().map((slug) => ({ locale, slug })),
+    data.listPlaceSlugs().map((slug) => ({ locale, slug })),
   );
 }
 
@@ -39,7 +40,8 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale: raw, slug } = await params;
   const locale = resolveLocale(raw);
-  const place = getPlace(slug, locale);
+  const data = await getData();
+  const place = data.getPlace(slug, locale);
   if (!place) return {};
   const meta = buildPageMetadata({
     locale,
@@ -61,7 +63,8 @@ export default async function PlacePage({
   const { locale: raw, slug } = await params;
   const locale = resolveLocale(raw);
   setRequestLocale(locale);
-  const place = getPlace(slug, locale);
+  const data = await getData();
+  const place = data.getPlace(slug, locale);
   if (!place) notFound();
   const t = await getTranslations("place");
   const tr = await getTranslations("reviews");

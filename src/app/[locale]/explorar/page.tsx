@@ -3,12 +3,10 @@ import type { Metadata } from "next";
 import { Link, redirect } from "@/i18n/navigation";
 import { resolveLocale } from "@/i18n/utils";
 import {
+  getData,
   canonicalCategory,
   illustrationFor,
   isLocated,
-  listCategories,
-  listLocalities,
-  listPlaces,
 } from "@/lib/data";
 import { buildPageMetadata } from "@/lib/seo";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -65,15 +63,16 @@ export default async function ExplorePage({
       locale,
     });
   }
-  const localities = listLocalities(locale);
+  const data = await getData();
+  const localities = data.listLocalities(locale);
   const locality = localities.some((l) => l.slug === sp.pueblo)
     ? sp.pueblo
     : undefined;
   const query = sp.q?.trim() || undefined;
   const view = sp.vista === "mapa" ? "map" : "list";
 
-  const places = listPlaces(locale, { category, locality, query });
-  const categories = listCategories(locale);
+  const places = data.listPlaces(locale, { category, locality, query });
+  const categories = data.listCategories(locale);
 
   const base = { categoria: category, pueblo: locality, q: query };
   const q = (extra: Partial<SearchParams>) =>
@@ -95,7 +94,7 @@ export default async function ExplorePage({
     }))
     .filter((g) => g.items.length > 0);
 
-  const all = listPlaces(locale);
+  const all = data.listPlaces(locale);
   const catItems: FilterItem[] = [
     {
       key: "all",

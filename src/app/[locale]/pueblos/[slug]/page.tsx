@@ -4,15 +4,16 @@ import type { Metadata } from "next";
 import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import { resolveLocale } from "@/i18n/utils";
-import { getLocality, listLocalitySlugs, listPlaces } from "@/lib/data";
+import { getData } from "@/lib/data";
 import { buildPageMetadata, truncate } from "@/lib/seo";
 import { PageHero } from "@/components/ui/page-hero";
 import { PlaceCard } from "@/components/place/place-card";
 import { EmptyState } from "@/components/ui/empty-state";
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
+  const data = await getData();
   return routing.locales.flatMap((locale) =>
-    listLocalitySlugs().map((slug) => ({ locale, slug })),
+    data.listLocalitySlugs().map((slug) => ({ locale, slug })),
   );
 }
 
@@ -23,7 +24,8 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale: raw, slug } = await params;
   const locale = resolveLocale(raw);
-  const village = getLocality(slug, locale);
+  const data = await getData();
+  const village = data.getLocality(slug, locale);
   if (!village) return {};
   return buildPageMetadata({
     locale,
@@ -41,10 +43,11 @@ export default async function VillagePage({
   const { locale: raw, slug } = await params;
   const locale = resolveLocale(raw);
   setRequestLocale(locale);
-  const village = getLocality(slug, locale);
+  const data = await getData();
+  const village = data.getLocality(slug, locale);
   if (!village) notFound();
   const t = await getTranslations("village");
-  const places = listPlaces(locale, { locality: slug });
+  const places = data.listPlaces(locale, { locality: slug });
 
   return (
     <main className="flex flex-col">

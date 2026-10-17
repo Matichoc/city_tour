@@ -2,7 +2,7 @@ import QRCode from "qrcode";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { Metadata } from "next";
 import { getPathname } from "@/i18n/navigation";
-import { getPlace, listPlaces } from "@/lib/data";
+import { getData } from "@/lib/data";
 import { resolveLocale } from "@/i18n/utils";
 import { getSiteUrl, localizedUrl } from "@/lib/seo";
 import { PrintButton } from "@/components/ui/print-button";
@@ -24,8 +24,9 @@ export default async function QrPage({
   const name = (sp.nombre ?? "").trim().slice(0, 60);
   const origin = toOrigin(sp.origen || name);
   // QR para señalética (PLADETUR A1.3): lleva directo a la ficha del lugar.
-  const place = sp.lugar ? getPlace(sp.lugar, locale) : undefined;
-  const places = listPlaces(locale);
+  const data = await getData();
+  const place = sp.lugar ? data.getPlace(sp.lugar, locale) : undefined;
+  const places = data.listPlaces(locale);
   const url = place
     ? `${localizedUrl(locale, { pathname: "/lugares/[slug]", params: { slug: place.slug } })}?origen=hito-${place.slug.slice(0, 40)}${origin ? `-${origin}` : ""}`
     : `${getSiteUrl()}${getPathname({ locale, href: "/" })}${origin ? `?origen=${origin}` : ""}`;

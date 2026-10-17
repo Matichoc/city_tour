@@ -86,3 +86,22 @@ Fuente: PLADETUR de Papudo 2023–2027, iD (`docs/investigacion/`).
   sueltos, estilo letrero de playa), autoalojadas con `@fontsource` (sin
   llamadas a Google en cada visita).
 - **Idioma**: selector desplegable (`<select>` nativo).
+
+## Contenido desde Supabase, con respaldo en el repo
+
+- El sitio lee lugares, eventos, rutas y localidades de Supabase cuando
+  `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_ANON_KEY` están definidas
+  (`src/lib/db/content-source.ts`). Si faltan, si la base falla o si no tiene
+  lugares publicados, usa `src/content`: el sitio nunca queda vacío y
+  producción sigue igual mientras no tenga base propia.
+- Se lee con `fetch` a la API REST (sin `@supabase/supabase-js`, que no hace
+  falta para leer lo publicado) y se refresca cada 5 minutos (ISR, etiqueta
+  `content`). Se envía solo el encabezado `apikey`, que sirve para la clave
+  `anon` y para la nueva `sb_publishable_…`.
+- Las páginas obtienen los datos con `await getData()`; las pruebas usan
+  `createData(STATIC_CONTENT)`.
+- Hasta que exista el panel municipal, `src/content` sigue siendo la fuente:
+  `pnpm db:content` genera `supabase/content.sql` y una prueba avisa si quedó
+  desactualizado.
+- La base de desarrollo va solo en Preview/Development de Vercel; Production
+  tendrá su propio proyecto Supabase.

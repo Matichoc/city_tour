@@ -1,14 +1,10 @@
 import type { MetadataRoute } from "next";
-import {
-  listIndexableEventSlugs,
-  listIndexablePlaceSlugs,
-  listLocalitySlugs,
-  listRouteSlugs,
-} from "@/lib/data";
+import { getData } from "@/lib/data";
 import { localizedUrl } from "@/lib/seo";
 import { routing } from "@/i18n/routing";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const data = await getData();
   const entries: MetadataRoute.Sitemap = [];
   for (const locale of routing.locales) {
     for (const href of [
@@ -22,7 +18,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ] as const) {
       entries.push({ url: localizedUrl(locale, href) });
     }
-    for (const slug of listIndexablePlaceSlugs()) {
+    for (const slug of data.listIndexablePlaceSlugs()) {
       entries.push({
         url: localizedUrl(locale, {
           pathname: "/lugares/[slug]",
@@ -30,7 +26,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
         }),
       });
     }
-    for (const slug of listIndexableEventSlugs()) {
+    for (const slug of data.listIndexableEventSlugs()) {
       entries.push({
         url: localizedUrl(locale, {
           pathname: "/eventos/[slug]",
@@ -38,7 +34,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
         }),
       });
     }
-    for (const slug of listLocalitySlugs()) {
+    for (const slug of data.listLocalitySlugs()) {
       entries.push({
         url: localizedUrl(locale, {
           pathname: "/pueblos/[slug]",
@@ -46,7 +42,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
         }),
       });
     }
-    for (const slug of listRouteSlugs()) {
+    for (const slug of data.listRouteSlugs()) {
       entries.push({
         url: localizedUrl(locale, {
           pathname: "/rutas/[slug]",

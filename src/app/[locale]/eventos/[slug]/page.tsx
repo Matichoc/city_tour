@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import { resolveLocale } from "@/i18n/utils";
-import { getEvent, listEventSlugs } from "@/lib/data";
+import { getData } from "@/lib/data";
 import { eventWhen, monthName } from "@/lib/event-format";
 import { buildPageMetadata, truncate } from "@/lib/seo";
 import { DEMO_REVIEWS } from "@/content/demo-content";
@@ -15,9 +15,10 @@ import { ShareButton } from "@/components/place/share-button";
 import { ReviewsPanel } from "@/components/place/reviews-panel";
 import { DemoReviews } from "@/components/place/demo-reviews";
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
+  const data = await getData();
   return routing.locales.flatMap((locale) =>
-    listEventSlugs().map((slug) => ({ locale, slug })),
+    data.listEventSlugs().map((slug) => ({ locale, slug })),
   );
 }
 
@@ -28,7 +29,8 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale: raw, slug } = await params;
   const locale = resolveLocale(raw);
-  const event = getEvent(slug, locale);
+  const data = await getData();
+  const event = data.getEvent(slug, locale);
   if (!event) return {};
   const meta = buildPageMetadata({
     locale,
@@ -49,7 +51,8 @@ export default async function EventPage({
   const { locale: raw, slug } = await params;
   const locale = resolveLocale(raw);
   setRequestLocale(locale);
-  const event = getEvent(slug, locale);
+  const data = await getData();
+  const event = data.getEvent(slug, locale);
   if (!event) notFound();
   const t = await getTranslations("events");
   const tp = await getTranslations("place");

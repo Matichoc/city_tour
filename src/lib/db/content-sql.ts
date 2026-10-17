@@ -1,0 +1,275 @@
+/**
+ * Convierte el contenido del repo en SQL para cargarlo en Supabase
+ * (supabase/content.sql). Se puede ejecutar varias veces: actualiza por slug,
+ * reemplaza traducciones, fuentes y paradas, y nunca borra fichas.
+ * Todo entra `pending` (sin verificar en terreno) y publicado.
+ */
+import type { SiteContent } from "@/content";
+import type { Source } from "@/content/types";
+
+type Value = string | number | boolean | null | undefined;
+
+const lit = (v: Value): string =>
+  v === null || v === undefined
+    ? "null"
+    : typeof v === "string"
+      ? `'${v.replace(/'/g, "''")}'`
+      : String(v);
+
+const rows = (values: Value[][]): string =>
+  values.map((r) => `  (${r.map(lit).join(", ")})`).join(",\n");
+
+const slugList = (slugs: string[]) => slugs.map(lit).join(", ");
+
+/** es sin estado; el resto queda en borrador hasta que una persona lo revise. */
+const status = (locale: string) => (locale === "es" ? null : "draft");
+
+const sourcesOf = (s: (Source | undefined)[]) =>
+  s.filter((x): x is Source => Boolean(x));
+
+export function contentToSql(content: SiteContent): string {
+  const { localities, places, events, routes } = content;
+  const out: string[] = [];
+  const add = (s: string) => out.push(s.trim() + "\n");
+
+  add(`
+-- GENERADO desde src/content con \`pnpm db:content\`. No editar a mano.
+-- Carga en Supabase el contenido que hoy muestra el sitio. Requiere las
+-- migraciones hasta 0016 y supabase/seed.sql. Se puede ejecutar varias veces.
+-- Mientras no exista el panel municipal, el repo manda: volver a ejecutarlo
+-- sobrescribe los textos de estas fichas.
+begin;
+`);
+
+  // ── Localidades ────────────────────────────────────────────────────────
+  const locSlugs = slugList(localities.map((l) => l.slug));
+  add(`
+-- Localidades
+insert into public.localities (slug, latitude, longitude, sort_order, source_url, source_label) values
+${rows(localities.map((l, i) => [l.slug, l.latitude, l.longitude, i + 1, l.sourceUrl, l.sourceLabel]))}
+on conflict (slug) do update set
+  latitude = excluded.latitude, longitude = excluded.longitude, sort_order = excluded.sort_order,
+  source_url = excluded.source_url, source_label = excluded.source_label;
+
+delete from public.locality_translations
+  where locality_id in (select id from public.localities where slug in (${locSlugs}));
+insert into public.locality_translations (locality_id, locale, name, summary, translation_status)
+select l.id, v.locale::public.locale, v.name, v.summary, v.status::public.translation_status
+from (values
+${rows(
+  localities.flatMap((l) =>
+    [
+      ["es", l.es, l.summary],
+      ["en", l.en, l.summaryEn],
+    ].map(([loc, name, summary]) => [
+      l.slug,
+      loc,
+      name,
+      summary ?? null,
+      status(loc!),
+    ]),
+  ),
+)}
+) as v(slug, locale, name, summary, status)
+join public.localities l on l.slug = v.slug;
+`);
+
+  // ── Lugares ────────────────────────────────────────────────────────────
+  const placeSlugs = slugList(places.map((p) => p.slug));
+  add(`
+-- Lugares (se crean en borrador y se publican al final, con su ficha en español)
+insert into public.places (slug, sort_order, category_id, locality_id, latitude, longitude, address, is_demo, is_business)
+select v.slug, v.sort_order, c.id, l.id, v.lat::numeric, v.lng::numeric, v.address, v.is_demo, v.is_business
+from (values
+${rows(places.map((p, i) => [p.slug, i + 1, p.categorySlug, p.localitySlug, p.latitude, p.longitude, p.address, p.demo === true, p.business === true]))}
+) as v(slug, sort_order, category, locality, lat, lng, address, is_demo, is_business)
+join public.categories c on c.slug = v.category
+left join public.localities l on l.slug = v.locality
+on conflict (slug) do update set
+  sort_order = excluded.sort_order, category_id = excluded.category_id, locality_id = excluded.locality_id,
+  latitude = excluded.latitude, longitude = excluded.longitude, address = excluded.address,
+  is_demo = excluded.is_demo, is_business = excluded.is_business;
+
+delete from public.place_translations
+  where place_id in (select id from public.places where slug in (${placeSlugs}));
+insert into public.place_translations (place_id, locale, name, short_description, full_description, translation_status)
+select p.id, v.locale::public.locale, v.name, v.short, v.description, v.status::public.translation_status
+from (values
+${rows(
+  places.flatMap((p) =>
+    (["es", "en", "pt"] as const).flatMap((loc) => {
+      const t = p[loc];
+      return t
+        ? [[p.slug, loc, t.name, t.short, t.description, status(loc)]]
+        : [];
+    }),
+  ),
+)}
+) as v(slug, locale, name, short, description, status)
+join public.places p on p.slug = v.slug;
+
+delete from public.sources
+  where place_id in (select id from public.places where slug in (${placeSlugs}));
+insert into public.sources (place_id, sort_order, title, url)
+select p.id, v.sort_order, v.title, v.url
+from (values
+${rows(
+  places.flatMap((p) =>
+    sourcesOf([p.source, p.tvSource, ...(p.extraSources ?? [])]).map((s, i) => [
+      p.slug,
+      i,
+      s.label,
+      s.url,
+    ]),
+  ),
+)}
+) as v(slug, sort_order, title, url)
+join public.places p on p.slug = v.slug;
+`);
+
+  // ── Eventos ────────────────────────────────────────────────────────────
+  const eventSlugs = slugList(events.map((e) => e.slug));
+  add(`
+-- Eventos recurrentes
+insert into public.events (slug, sort_order, category_id, locality_id, recurrence_month, recurrence_day, season, featured, is_demo, illustration)
+select v.slug, v.sort_order, c.id, l.id, v.month::smallint, v.day::smallint, v.season, v.featured, v.is_demo, v.illustration
+from (values
+${rows(events.map((e, i) => [e.slug, i + 1, e.categorySlug, e.localitySlug, e.month, e.day, e.season, e.featured === true, e.demo === true, e.illustration]))}
+) as v(slug, sort_order, category, locality, month, day, season, featured, is_demo, illustration)
+join public.categories c on c.slug = v.category
+left join public.localities l on l.slug = v.locality
+on conflict (slug) do update set
+  sort_order = excluded.sort_order, category_id = excluded.category_id, locality_id = excluded.locality_id,
+  recurrence_month = excluded.recurrence_month, recurrence_day = excluded.recurrence_day,
+  season = excluded.season, featured = excluded.featured, is_demo = excluded.is_demo,
+  illustration = excluded.illustration;
+
+delete from public.event_translations
+  where event_id in (select id from public.events where slug in (${eventSlugs}));
+insert into public.event_translations (event_id, locale, name, description, translation_status)
+select e.id, v.locale::public.locale, v.name, v.description, v.status::public.translation_status
+from (values
+${rows(
+  events.flatMap((e) =>
+    (["es", "en", "pt"] as const).flatMap((loc) => {
+      const t = e[loc];
+      return t ? [[e.slug, loc, t.name, t.short, status(loc)]] : [];
+    }),
+  ),
+)}
+) as v(slug, locale, name, description, status)
+join public.events e on e.slug = v.slug;
+
+delete from public.sources
+  where event_id in (select id from public.events where slug in (${eventSlugs}));
+${(() => {
+  const r = events.flatMap((e) =>
+    sourcesOf([e.source, ...(e.extraSources ?? [])]).map((s, i) => [
+      e.slug,
+      i,
+      s.label,
+      s.url,
+    ]),
+  );
+  return r.length === 0
+    ? ""
+    : `insert into public.sources (event_id, sort_order, title, url)
+select e.id, v.sort_order, v.title, v.url
+from (values
+${rows(r)}
+) as v(slug, sort_order, title, url)
+join public.events e on e.slug = v.slug;`;
+})()}
+`);
+
+  // ── Rutas ──────────────────────────────────────────────────────────────
+  const routeSlugs = slugList(routes.map((r) => r.slug));
+  const stops = routes.flatMap((r) =>
+    r.stops.map((s, i) => ({ route: r.slug, position: i, ...s })),
+  );
+  add(`
+-- Rutas y sus paradas
+insert into public.routes (slug, sort_order, duration_minutes, cover_image_path) values
+${rows(routes.map((r, i) => [r.slug, i + 1, r.durationMinutes, r.cover?.src]))}
+on conflict (slug) do update set
+  sort_order = excluded.sort_order, duration_minutes = excluded.duration_minutes, cover_image_path = excluded.cover_image_path;
+
+delete from public.route_translations
+  where route_id in (select id from public.routes where slug in (${routeSlugs}));
+insert into public.route_translations (route_id, locale, name, short_description, cover_alt, translation_status)
+select r.id, v.locale::public.locale, v.name, v.description, v.cover_alt, v.status::public.translation_status
+from (values
+${rows(
+  routes.flatMap((r) =>
+    (["es", "en"] as const).flatMap((loc) => {
+      const t = r[loc];
+      return t
+        ? [[r.slug, loc, t.name, t.description, r.cover?.alt[loc], status(loc)]]
+        : [];
+    }),
+  ),
+)}
+) as v(slug, locale, name, description, cover_alt, status)
+join public.routes r on r.slug = v.slug;
+
+delete from public.route_stops
+  where route_id in (select id from public.routes where slug in (${routeSlugs}));
+insert into public.route_stops (route_id, place_id, position)
+select r.id, p.id, v.position
+from (values
+${rows(stops.map((s) => [s.route, s.position, s.slug]))}
+) as v(route, position, place)
+join public.routes r on r.slug = v.route
+join public.places p on p.slug = v.place;
+${(() => {
+  const r = stops.flatMap((s) =>
+    s.notes
+      ? (["es", "en"] as const).flatMap((loc) =>
+          s.notes![loc]
+            ? [[s.route, s.position, loc, s.notes![loc], status(loc)]]
+            : [],
+        )
+      : [],
+  );
+  return r.length === 0
+    ? ""
+    : `insert into public.route_stop_translations (route_stop_id, locale, narrative, translation_status)
+select s.id, v.locale::public.locale, v.narrative, v.status::public.translation_status
+from (values
+${rows(r)}
+) as v(route, position, locale, narrative, status)
+join public.routes r on r.slug = v.route
+join public.route_stops s on s.route_id = r.id and s.position = v.position;`;
+})()}
+
+delete from public.sources
+  where route_id in (select id from public.routes where slug in (${routeSlugs}));
+${(() => {
+  const r = routes.flatMap((x) =>
+    sourcesOf([x.source]).map((s, i) => [x.slug, i, s.label, s.url]),
+  );
+  return r.length === 0
+    ? ""
+    : `insert into public.sources (route_id, sort_order, title, url)
+select r.id, v.sort_order, v.title, v.url
+from (values
+${rows(r)}
+) as v(slug, sort_order, title, url)
+join public.routes r on r.slug = v.slug;`;
+})()}
+`);
+
+  add(`
+-- Publicar (la verificación sigue en 'pending': nada está confirmado en terreno)
+update public.places set publication_status = 'published'
+  where slug in (${placeSlugs}) and publication_status = 'draft';
+update public.events set publication_status = 'published'
+  where slug in (${eventSlugs}) and publication_status = 'draft';
+update public.routes set publication_status = 'published'
+  where slug in (${routeSlugs}) and publication_status = 'draft';
+
+commit;
+`);
+
+  return out.join("\n");
+}

@@ -5,7 +5,7 @@ import type { Metadata } from "next";
 import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import { resolveLocale } from "@/i18n/utils";
-import { getRoute, isLocated, listRouteSlugs } from "@/lib/data";
+import { getData, isLocated } from "@/lib/data";
 import { buildPageMetadata, localizedUrl, truncate } from "@/lib/seo";
 import { JsonLd } from "@/components/seo/json-ld";
 import { formatDuration } from "@/lib/itinerary-format";
@@ -17,9 +17,10 @@ import { CategoryIcon } from "@/components/ui/category-icon";
 import { PrintButton } from "@/components/ui/print-button";
 import { QrVisit } from "@/components/analytics/qr-visit";
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
+  const data = await getData();
   return routing.locales.flatMap((locale) =>
-    listRouteSlugs().map((slug) => ({ locale, slug })),
+    data.listRouteSlugs().map((slug) => ({ locale, slug })),
   );
 }
 
@@ -30,7 +31,8 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale: raw, slug } = await params;
   const locale = resolveLocale(raw);
-  const route = getRoute(slug, locale);
+  const data = await getData();
+  const route = data.getRoute(slug, locale);
   if (!route) return {};
   return buildPageMetadata({
     locale,
@@ -48,7 +50,8 @@ export default async function RoutePage({
   const { locale: raw, slug } = await params;
   const locale = resolveLocale(raw);
   setRequestLocale(locale);
-  const route = getRoute(slug, locale);
+  const data = await getData();
+  const route = data.getRoute(slug, locale);
   if (!route) notFound();
   const t = await getTranslations("routes");
   const routeUrl = localizedUrl(locale, {

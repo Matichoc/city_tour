@@ -2,7 +2,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { Metadata } from "next";
 import { Link, redirect } from "@/i18n/navigation";
 import { resolveLocale } from "@/i18n/utils";
-import { canonicalCategory, listCategories, listEvents } from "@/lib/data";
+import { getData, canonicalCategory } from "@/lib/data";
 import { eventWhen, monthName } from "@/lib/event-format";
 import { buildPageMetadata } from "@/lib/seo";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -48,12 +48,13 @@ export default async function EventsPage({
     });
   }
 
-  const all = listEvents(locale);
-  const events = listEvents(locale, { category });
+  const data = await getData();
+  const all = data.listEvents(locale);
+  const events = data.listEvents(locale, { category });
   const withEvents = new Set(all.map((e) => e.categorySlug));
-  const categories = listCategories(locale).filter((c) =>
-    withEvents.has(c.slug),
-  );
+  const categories = data
+    .listCategories(locale)
+    .filter((c) => withEvents.has(c.slug));
 
   const slides: FeaturedSlide[] = all
     .filter((e) => e.featured)
