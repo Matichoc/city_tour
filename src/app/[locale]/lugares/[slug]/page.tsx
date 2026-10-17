@@ -329,23 +329,38 @@ export default async function PlacePage({
                   className="w-[85%] max-w-md shrink-0 snap-start sm:w-[60%]"
                 >
                   <figure className="border-border bg-surface overflow-hidden rounded-2xl border">
-                    <a href={g.src} target="_blank" rel="noopener">
-                      {/* eslint-disable-next-line @next/next/no-img-element -- archivo local, se abre en tamaño completo */}
-                      <img
+                    {g.kind === "video" ? (
+                      <video
                         src={g.src}
                         width={g.width}
                         height={g.height}
-                        alt={g.alt}
-                        loading="lazy"
-                        decoding="async"
-                        className="h-auto w-full bg-white"
+                        aria-label={g.alt}
+                        controls
+                        playsInline
+                        preload="metadata"
+                        className="h-auto w-full bg-black"
                       />
-                    </a>
+                    ) : (
+                      <a href={g.src} target="_blank" rel="noopener">
+                        {/* eslint-disable-next-line @next/next/no-img-element -- archivo local, se abre en tamaño completo */}
+                        <img
+                          src={g.src}
+                          width={g.width}
+                          height={g.height}
+                          alt={g.alt}
+                          loading="lazy"
+                          decoding="async"
+                          className="h-auto w-full bg-white"
+                        />
+                      </a>
+                    )}
                     <figcaption className="text-muted flex justify-between gap-2 px-3 py-2 text-xs">
                       <b className="text-foreground">
                         {t(`galleryKind.${g.kind}`)}
                       </b>
-                      <span>{t("imageCredit", { credit: g.credit })}</span>
+                      {g.credit ? (
+                        <span>{t("imageCredit", { credit: g.credit })}</span>
+                      ) : null}
                     </figcaption>
                   </figure>
                 </li>
@@ -502,10 +517,24 @@ export default async function PlacePage({
                 ) : null}
               </>
             )}
-            {place.sources.length > 0 ? (
+            {place.ownerValidated || place.sources.length > 0 ? (
               <div className="flex justify-between gap-4 p-4">
                 <dt className="font-bold">{t("source")}</dt>
                 <dd className="flex flex-col items-end gap-1 text-right">
+                  {place.ownerValidated ? (
+                    place.instagram ? (
+                      <a
+                        className="text-sea underline"
+                        href={place.instagram}
+                        rel="noopener noreferrer"
+                        target="_blank"
+                      >
+                        {t("ownerValidated")}
+                      </a>
+                    ) : (
+                      <span className="text-muted">{t("ownerValidated")}</span>
+                    )
+                  ) : null}
                   {place.sources.map((s) => (
                     <a
                       key={s.url}

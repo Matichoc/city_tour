@@ -14,13 +14,13 @@ indicadas en cada versión.
 `docs/bitacora-notas.json` (clave `actual`, y el número de PR cuando exista),
 correr `pnpm bitacora` y subir el cambio en el mismo PR.
 
-## En preparación: v0.19 — Panel de comercios: crear, fotos e importar planilla
+## En preparación: v0.20 — Fuente «validada por el representante», videos y edición completa por local
 
-Crear y editar comercios y subir su logo, carta y fotos desde el panel; importar la planilla del formulario (Google Sheets o CSV) cargando solo lo nuevo o lo que cambió; contacto interno privado; las fichas editadas en el panel ya no las pisa content.sql; bitácora de avances.
+La ficha muestra «Validada por el representante del local» en vez de hablar del formulario; cada local se edita completo desde el panel (datos, horarios por temporada, logo, carta, fotos, promociones y videos, con orden, texto y crédito); videos de hasta 50 MB subidos directo a Storage. Accesos a «Nuevo comercio», «Importar planilla» y «Editar ficha, fotos y videos» también desde Fichas → Lugares.
 
-- **Migraciones por correr en Supabase:** 0023
-- **Estado:** en revisión, [PR #22](https://github.com/Matichoc/city_tour/pull/22) (aún no está en `develop`).
-- **Última actualización de esta bitácora:** 2026-10-17 02:10
+- **Migraciones por correr en Supabase:** 0024
+- **Estado:** en revisión, [PR #23](https://github.com/Matichoc/city_tour/pull/23) (aún no está en `develop`).
+- **Última actualización de esta bitácora:** 2026-10-17 02:53
 
 ## Avance por día
 
@@ -29,7 +29,7 @@ trabajadas: hay pausas y trabajo sin registrar).
 
 | Día | Ventana de actividad | Registros | Versiones entregadas |
 | --- | --- | ---: | --- |
-| Sábado, 17 de octubre de 2026 | 00:01 – 02:09 | 11 | v0.16, v0.17, v0.18 |
+| Sábado, 17 de octubre de 2026 | 00:01 – 02:44 | 14 | v0.16, v0.17, v0.18, v0.19 |
 | Viernes, 16 de octubre de 2026 | 00:04 – 23:51 | 15 | v0.9, v0.10, v0.11, v0.12, v0.13, v0.14, v0.15 |
 | Jueves, 15 de octubre de 2026 | 00:05 – 23:52 | 10 | v0.7, v0.8 |
 | Miércoles, 14 de octubre de 2026 | 23:50 – 23:50 | 1 | — |
@@ -37,6 +37,18 @@ trabajadas: hay pausas y trabajo sin registrar).
 | Lunes, 12 de octubre de 2026 | 15:43 – 17:53 | 10 | v0.1, v0.2, v0.3, v0.4 |
 
 ## Versiones
+
+### v0.19 — Panel de comercios: crear, fotos, importar la planilla y bitácora
+Sábado, 17 de octubre de 2026, 02:13 · [PR #22](https://github.com/Matichoc/city_tour/pull/22)
+
+Crear y editar comercios y subir su logo, carta y fotos desde el panel; importar la planilla del formulario (Google Sheets o CSV) cargando solo lo nuevo o lo que cambió; contacto interno privado; las fichas editadas en el panel ya no las pisa content.sql; bitácora de avances.
+
+**Migraciones en Supabase:** 0023
+
+Registros:
+
+- 10-17 02:09 — Panel: crear comercios, subir fotos, importar la planilla y bitácora de avances (`637bf68`)
+- 10-17 02:10 — Bitácora: la entrega en curso se une sola con su PR al fusionarse (`d0c307e`)
 
 ### v0.18 — La portada es la imagen real del local
 Sábado, 17 de octubre de 2026, 01:49 · [PR #21](https://github.com/Matichoc/city_tour/pull/21)

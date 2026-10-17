@@ -28,8 +28,11 @@ export type PlaceImage = {
   src: string;
   width: number;
   height: number;
-  /** photo: foto del lugar · menu: carta · promo: publicidad del local. */
-  kind: "photo" | "menu" | "promo";
+  /**
+   * photo: foto del lugar · menu: carta · promo: publicidad del local ·
+   * video: video del local (src es el archivo de video).
+   */
+  kind: "photo" | "menu" | "promo" | "video";
   alt: { es: string; en: string; pt: string };
   credit: string;
 };
@@ -89,6 +92,8 @@ export type PlaceContent = {
   logo?: { src: string; width: number; height: number };
   /** Fotos, carta y promociones que entregó el comercio. */
   gallery?: PlaceImage[];
+  /** El representante del local confirmó los datos de la ficha. */
+  ownerValidated?: boolean;
   /** Registro SERNATUR que informó el local (número y vigencia, ISO). */
   sernatur?: { number: string; validUntil: string };
   source?: Source;

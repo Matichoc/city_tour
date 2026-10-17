@@ -271,17 +271,14 @@ export const PLACES: PlaceContent[] = [
       },
     ],
     sernatur: { number: "93605", validUntil: "2027-01-31" },
+    // Dirección, horarios, carta y contacto los confirmó su representante en
+    // el formulario «Suma tu comercio» (17-10-2026): se muestra como
+    // «Validada por el representante del local». La ubicación viene de Maps.
+    ownerValidated: true,
     source: {
-      url: "https://www.instagram.com/roots.salinas/",
-      label:
-        "Datos entregados por el local (formulario «Suma tu comercio», 17-10-2026)",
+      url: "https://maps.app.goo.gl/JN5FnoUCrZ6MjZXK8",
+      label: "Google Maps — Roots Salinas (HHMQ+F7, Papudo)",
     },
-    extraSources: [
-      {
-        url: "https://maps.app.goo.gl/JN5FnoUCrZ6MjZXK8",
-        label: "Google Maps — Roots Salinas (HHMQ+F7, Papudo)",
-      },
-    ],
   },
   {
     slug: "papudo-playa-los-lilenes",

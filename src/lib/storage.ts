@@ -40,14 +40,23 @@ export async function signedUrls(
   return out;
 }
 
-/** Enlace firmado para que el navegador suba un archivo a una ruta registrada. */
+/**
+ * Enlace firmado para que el navegador suba un archivo directo a Storage (sin
+ * pasar por el servidor, que en Vercel acepta pedidos de pocos MB). Con
+ * `token` del personal, la política del bucket decide si puede subir.
+ */
 export async function signedUploadUrl(
   cfg: SupabaseConfig,
   path: string,
+  opts: { bucket?: string; token?: string } = {},
 ): Promise<string> {
   const res = await fetch(
-    `${cfg.url}/storage/v1/object/upload/sign/${MEDIA_BUCKET}/${path}`,
-    { method: "POST", headers: authHeaders(cfg), cache: "no-store" },
+    `${cfg.url}/storage/v1/object/upload/sign/${opts.bucket ?? MEDIA_BUCKET}/${path}`,
+    {
+      method: "POST",
+      headers: authHeaders(cfg, opts.token),
+      cache: "no-store",
+    },
   );
   if (!res.ok) throw new Error(`Storage ${res.status}: ${await res.text()}`);
   const { url } = (await res.json()) as { url: string };
@@ -59,9 +68,10 @@ export async function removeObjects(
   cfg: SupabaseConfig,
   token: string,
   paths: string[],
+  bucket: string = MEDIA_BUCKET,
 ): Promise<void> {
   if (paths.length === 0) return;
-  const res = await fetch(`${cfg.url}/storage/v1/object/${MEDIA_BUCKET}`, {
+  const res = await fetch(`${cfg.url}/storage/v1/object/${bucket}`, {
     method: "DELETE",
     headers: { ...authHeaders(cfg, token), "content-type": "application/json" },
     body: JSON.stringify({ prefixes: paths }),

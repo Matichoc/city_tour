@@ -138,6 +138,12 @@ export default async function BusinessAdmin({
                 <li key={p.id} className="py-3">
                   <div className="flex flex-wrap items-center gap-2 text-sm">
                     <b>{p.name}</b>
+                    <Link
+                      href={`/admin/comercios/${p.id}`}
+                      className="bg-sea-soft text-sea-deep order-last ml-auto rounded-full px-3 py-1 text-sm font-bold"
+                    >
+                      {tp("nav.editFull")}
+                    </Link>
                     <span
                       className={`rounded-full px-2 py-0.5 text-xs font-bold ${STATE_CLASS[p.state]}`}
                     >
@@ -212,15 +218,23 @@ export default async function BusinessAdmin({
           <ul className="divide-border mt-3 divide-y">
             {data.places.map((p) => (
               <li key={p.id} className="py-3">
-                <p className="font-semibold">
-                  {p.name}{" "}
+                <div className="flex flex-wrap items-center gap-2">
+                  <p className="font-semibold">{p.name}</p>
+                  {p.publication !== "published" && (
+                    <span className="bg-border text-muted rounded-full px-2 py-0.5 text-xs font-bold">
+                      {tp("publication.draft")}
+                    </span>
+                  )}
+                  <span className="text-muted text-xs">
+                    {tp("nav.counts", { images: p.images, videos: p.videos })}
+                  </span>
                   <Link
                     href={`/admin/comercios/${p.id}`}
-                    className="text-sea-deep text-sm font-semibold underline"
+                    className="bg-sea-soft text-sea-deep ml-auto rounded-full px-3 py-1 text-sm font-bold"
                   >
-                    {tp("nav.edit")}
+                    {tp("nav.editFull")}
                   </Link>
-                </p>
+                </div>
                 <form
                   action={saveCta}
                   className="mt-2 flex flex-wrap items-end gap-2"

@@ -462,6 +462,10 @@ export type BusinessPlace = {
   ctaValue: string | null;
   /** Última vez que el comercio confirmó sus datos (ISO). */
   infoUpdatedAt: string | null;
+  publication: "draft" | "published" | "archived";
+  /** Imágenes (logo, carta, fotos, promociones) y videos de la ficha. */
+  images: number;
+  videos: number;
 };
 
 export async function listBusinessPlaces(
@@ -472,10 +476,12 @@ export async function listBusinessPlaces(
       cta_kind: CtaKindAdmin | null;
       cta_value: string | null;
       info_updated_at: string | null;
+      images?: { kind: string }[];
     })[]
   >(
     token,
-    "places?select=id,slug,cta_kind,cta_value,info_updated_at,translations:place_translations(locale,name)" +
+    "places?select=id,slug,publication_status,cta_kind,cta_value,info_updated_at," +
+      "translations:place_translations(locale,name),images:place_images(kind)" +
       "&is_business=eq.true&is_demo=eq.false&order=sort_order,slug",
   );
   return rows.map((r) => ({
@@ -485,6 +491,9 @@ export async function listBusinessPlaces(
     ctaKind: r.cta_kind,
     ctaValue: r.cta_value,
     infoUpdatedAt: r.info_updated_at,
+    publication: r.publication_status,
+    images: (r.images ?? []).filter((i) => i.kind !== "video").length,
+    videos: (r.images ?? []).filter((i) => i.kind === "video").length,
   }));
 }
 

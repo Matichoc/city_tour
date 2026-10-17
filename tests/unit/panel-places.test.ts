@@ -29,9 +29,15 @@ vi.mock("next/cache", () => ({
 import {
   applyImport,
   createPlaceAction,
+  moveImageAction,
+  prepareVideoUpload,
   previewImport,
   publishPlaceAction,
+  registerVideo,
   removePlaceImageAction,
+  saveHoursAction,
+  updateImageAction,
+  updatePlaceAction,
   uploadPlaceImage,
 } from "@/app/admin/places-actions";
 import { applyPlan } from "@/lib/admin/places";
@@ -248,6 +254,8 @@ describe("imágenes del comercio", () => {
     ],
     contacts: [],
     images: [],
+    hours: [],
+    owner_validated: false,
   };
   const withPlace = (url: string, method: string) =>
     url.includes("/places?select=id,slug,publication_status")
@@ -664,5 +672,387 @@ describe("importar desde la planilla", () => {
       "import_snapshot",
       "imported_at",
     ]);
+  });
+});
+
+// ── Videos, textos de imágenes, orden y horarios ─────────────────────────
+describe("edición completa de un local", () => {
+  const place = {
+    id: ID,
+    slug: "roots-salinas",
+    publication_status: "published",
+    address: null,
+    category: { slug: "gastronomia" },
+    locality: null,
+    translations: [
+      {
+        locale: "es",
+        name: "Roots Salinas",
+        short_description: null,
+        full_description: null,
+      },
+    ],
+    contacts: [],
+    images: [],
+    hours: [],
+    owner_validated: true,
+  };
+  const withPlace = (url: string) =>
+    url.includes("/places?select=id,slug,publication_status")
+      ? Response.json([place])
+      : null;
+
+  it("la ficha guarda si la validó el representante del local", async () => {
+    login();
+    stub();
+    expect(
+      await run(createPlaceAction(form({ ...valid, validada: "on" }))),
+    ).toBe(`/admin/comercios/${NEW_ID}?creado=1#fotos`);
+    expect(find("POST", "/rest/v1/places")[0]!.body).toMatchObject({
+      owner_validated: true,
+    });
+    calls = [];
+    await run(createPlaceAction(form(valid)));
+    expect(find("POST", "/rest/v1/places")[0]!.body).toMatchObject({
+      owner_validated: false,
+    });
+    // Ya no se guarda una fuente con el texto del formulario.
+    expect(find("POST", "/rest/v1/sources")).toHaveLength(0);
+    calls = [];
+    await run(updatePlaceAction(form({ ...valid, id: ID, validada: "on" })));
+    expect(find("PATCH", `places?id=eq.${ID}`)[0]!.body).toMatchObject({
+      owner_validated: true,
+      managed_in_panel: true,
+    });
+  });
+
+  it("autoriza la subida de un video directo a Storage con el token del personal", async () => {
+    login();
+    stub((url, method) => {
+      if (
+        url.includes("/storage/v1/object/upload/sign/place-videos/") &&
+        method === "POST"
+      )
+        return Response.json({
+          url: "/object/upload/sign/place-videos/x?token=t",
+        });
+      return withPlace(url);
+    });
+    const res = await prepareVideoUpload(
+      form({ id: ID, mime: "video/mp4", size: "9000000" }),
+    );
+    expect(res).toMatchObject({ ok: true });
+    if (res.ok) {
+      expect(res.path).toMatch(new RegExp(`^${ID}/[0-9a-f-]{36}\\.mp4$`));
+      expect(res.uploadUrl).toBe(
+        "https://demo.supabase.co/storage/v1/object/upload/sign/place-videos/x?token=t",
+      );
+    }
+    const sign = find("POST", "/upload/sign/place-videos/")[0]!;
+    expect(sign.headers.authorization).toMatch(/^Bearer x\./);
+  });
+
+  it("no autoriza videos que no corresponden", async () => {
+    login();
+    stub(withPlace);
+    expect(
+      await prepareVideoUpload(
+        form({ id: ID, mime: "video/x-msvideo", size: "10" }),
+      ),
+    ).toEqual({ ok: false, error: "type" });
+    expect(
+      await prepareVideoUpload(
+        form({ id: ID, mime: "video/mp4", size: String(51 * 1024 * 1024) }),
+      ),
+    ).toEqual({ ok: false, error: "size" });
+    expect(
+      await prepareVideoUpload(form({ id: ID, mime: "video/mp4", size: "0" })),
+    ).toEqual({ ok: false, error: "size" });
+    expect(
+      await prepareVideoUpload(
+        form({ id: "x", mime: "video/mp4", size: "10" }),
+      ),
+    ).toEqual({ ok: false, error: "kind" });
+    expect(find("POST", "/upload/sign/")).toHaveLength(0);
+    role = "verifier";
+    expect(
+      await prepareVideoUpload(form({ id: ID, mime: "video/mp4", size: "10" })),
+    ).toEqual({ ok: false, error: "denied" });
+  });
+
+  it("registra el video en la ficha solo si el archivo existe en nuestro bucket", async () => {
+    login();
+    const path = `${ID}/99999999-aaaa-bbbb-cccc-dddddddddddd.mp4`;
+    const pub = `https://demo.supabase.co/storage/v1/object/public/place-videos/${path}`;
+    stub((url, method) => {
+      if (url === pub && method === "HEAD")
+        return new Response(null, { status: 200 });
+      if (url.includes("/place_images?select=position"))
+        return Response.json([{ position: 3 }]);
+      return withPlace(url);
+    });
+    const ok = await registerVideo(
+      form({ id: ID, path, ancho: "1280", alto: "720", credito: "Roots" }),
+    );
+    expect(ok).toEqual({ ok: true });
+    expect(find("POST", "/rest/v1/place_images")[0]!.body).toMatchObject({
+      place_id: ID,
+      storage_path: pub,
+      kind: "video",
+      width: 1280,
+      height: 720,
+      alt_text: "Video de Roots Salinas",
+      credit: "Roots",
+      position: 4,
+    });
+    expect(updateTag).toHaveBeenCalledWith("content");
+    // Una ruta de otra ficha, o con forma rara, se rechaza sin tocar la base.
+    calls = [];
+    for (const bad of [
+      `otra/${path.split("/")[1]}`,
+      `${ID}/../x.mp4`,
+      `${ID}/a.mp4`,
+    ])
+      expect(
+        await registerVideo(
+          form({ id: ID, path: bad, ancho: "10", alto: "10" }),
+        ),
+      ).toEqual({ ok: false, error: "kind" });
+    expect(find("POST", "/rest/v1/place_images")).toHaveLength(0);
+  });
+
+  it("si el video no llegó a Storage, no lo registra", async () => {
+    login();
+    const path = `${ID}/99999999-aaaa-bbbb-cccc-dddddddddddd.mp4`;
+    stub((url, method) =>
+      method === "HEAD" ? new Response(null, { status: 404 }) : withPlace(url),
+    );
+    expect(
+      await registerVideo(form({ id: ID, path, ancho: "10", alto: "10" })),
+    ).toEqual({ ok: false, error: "save" });
+    expect(find("POST", "/rest/v1/place_images")).toHaveLength(0);
+  });
+
+  it("al quitar un video se borra también del bucket de videos", async () => {
+    login();
+    const IMG = "99999999-aaaa-bbbb-cccc-dddddddddddd";
+    stub((url) =>
+      url.includes("/place_images?select=storage_path")
+        ? Response.json([
+            {
+              storage_path: `https://demo.supabase.co/storage/v1/object/public/place-videos/${ID}/v.mp4`,
+            },
+          ])
+        : null,
+    );
+    await run(removePlaceImageAction(form({ lugar: ID, id: IMG })));
+    const del = find("DELETE", "/storage/v1/object/place-videos")[0]!;
+    expect(del.body).toEqual({ prefixes: [`${ID}/v.mp4`] });
+  });
+
+  it("editar el texto de una imagen borra sus traducciones viejas", async () => {
+    login();
+    const IMG = "99999999-aaaa-bbbb-cccc-dddddddddddd";
+    stub((url) =>
+      url.includes("/place_images?select=alt_text")
+        ? Response.json([{ alt_text: "Carta" }])
+        : null,
+    );
+    expect(
+      await run(
+        updateImageAction(
+          form({
+            lugar: ID,
+            id: IMG,
+            alt: "Carta de verano",
+            credito: "Roots",
+          }),
+        ),
+      ),
+    ).toBe(`/admin/comercios/${ID}?guardado=1#fotos`);
+    expect(find("PATCH", `place_images?id=eq.${IMG}`)[0]!.body).toEqual({
+      alt_text: "Carta de verano",
+      credit: "Roots",
+      alt_text_en: null,
+      alt_text_pt: null,
+    });
+    // Si solo cambia el crédito, las traducciones se conservan.
+    calls = [];
+    await run(
+      updateImageAction(
+        form({ lugar: ID, id: IMG, alt: "Carta", credito: "Otro" }),
+      ),
+    );
+    expect(find("PATCH", `place_images?id=eq.${IMG}`)[0]!.body).toEqual({
+      alt_text: "Carta",
+      credit: "Otro",
+    });
+    // Un texto muy corto se rechaza.
+    expect(
+      await run(updateImageAction(form({ lugar: ID, id: IMG, alt: "ab" }))),
+    ).toBe(`/admin/comercios/${ID}?error=imageText#fotos`);
+  });
+
+  it("sube o baja una imagen intercambiando posiciones", async () => {
+    login();
+    const A = "aaaaaaaa-0000-4000-8000-000000000001";
+    const B = "aaaaaaaa-0000-4000-8000-000000000002";
+    const C = "aaaaaaaa-0000-4000-8000-000000000003";
+    stub((url) =>
+      url.includes("/place_images?select=id,position")
+        ? Response.json([
+            { id: A, position: -2 },
+            { id: B, position: 0 },
+            { id: C, position: 5 },
+          ])
+        : null,
+    );
+    await run(moveImageAction("up", form({ lugar: ID, id: C })));
+    const patches = find("PATCH", "place_images?id=eq.");
+    // Orden nuevo: A, C, B → posiciones 0, 1, 2.
+    expect(
+      Object.fromEntries(
+        patches.map((p) => [
+          p.url.split("eq.")[1],
+          (p.body as { position: number }).position,
+        ]),
+      ),
+    ).toEqual({
+      [A]: 0,
+      [C]: 1,
+      [B]: 2,
+    });
+    // La primera no sube más: no escribe nada.
+    calls = [];
+    await run(moveImageAction("up", form({ lugar: ID, id: A })));
+    expect(find("PATCH", "place_images?id=eq.")).toHaveLength(0);
+    expect(
+      await run(
+        moveImageAction("sideways" as "up", form({ lugar: ID, id: A })),
+      ),
+    ).toBe(`/admin/comercios/${ID}?error=save#fotos`);
+  });
+
+  const hoursForm = (rows: Record<string, string>[]) => {
+    const f = form({ id: ID, n: String(rows.length) });
+    rows.forEach((r, i) =>
+      Object.entries(r).forEach(([k, v]) => f.set(`h${i}_${k}`, v)),
+    );
+    return f;
+  };
+
+  it("guarda los horarios por temporada: agrega los nuevos y recién después quita los viejos", async () => {
+    login();
+    stub((url) =>
+      url.includes("/place_hours?select=id")
+        ? Response.json([{ id: "old-1" }, { id: "old-2" }])
+        : null,
+    );
+    const res = await run(
+      saveHoursAction(
+        hoursForm([
+          {
+            de: "1",
+            a: "2",
+            abre: "09:00",
+            cierra: "22:00",
+            d0: "on",
+            d1: "on",
+            d2: "on",
+            d3: "on",
+            d4: "on",
+            d5: "on",
+            d6: "on",
+          },
+          {
+            de: "3",
+            a: "12",
+            abre: "10:00",
+            cierra: "19:00",
+            d6: "on",
+            d0: "on",
+            fest: "on",
+          },
+          {
+            de: "6",
+            a: "7",
+            abre: "10:00",
+            cierra: "12:00",
+            d1: "on",
+            quitar: "on",
+          },
+          {}, // fila vacía: se ignora
+        ]),
+      ),
+    );
+    expect(res).toBe(`/admin/comercios/${ID}?guardado=1#horarios`);
+    const insert = find("POST", "/rest/v1/place_hours")[0]!;
+    const rows = insert.body as {
+      day_of_week: number;
+      from_month: number;
+      to_month: number;
+      holidays: boolean;
+      opens_at: string;
+    }[];
+    expect(rows).toHaveLength(9); // 7 días en verano + sáb y dom el resto
+    expect(
+      rows
+        .filter((r) => r.from_month === 3 && r.holidays)
+        .map((r) => r.day_of_week)
+        .sort(),
+    ).toEqual([0, 6]);
+    expect(rows.some((r) => r.from_month === 6)).toBe(false); // la fila quitada no se guarda
+    expect(find("PATCH", `places?id=eq.${ID}`)[0]!.body).toEqual({
+      managed_in_panel: true,
+    });
+    // Orden: primero se inserta, después se borra.
+    const order = calls.map(
+      (c) => `${c.method} ${c.url.split("/rest/v1/")[1]?.split("?")[0]}`,
+    );
+    expect(order.indexOf("POST place_hours")).toBeLessThan(
+      order.indexOf("DELETE place_hours"),
+    );
+    expect(find("DELETE", "place_hours?id=in.(old-1,old-2)")).toHaveLength(1);
+  });
+
+  it("rechaza horarios incompletos o inválidos sin tocar nada", async () => {
+    login();
+    stub();
+    const base = { de: "1", a: "2", abre: "09:00", cierra: "22:00", d1: "on" };
+    for (const bad of [
+      { ...base, d1: "" }, // sin días
+      { ...base, de: "13" }, // mes inexistente
+      { ...base, abre: "25:00" }, // hora inexistente
+      { ...base, cierra: "" }, // sin hora de cierre
+    ])
+      expect(await run(saveHoursAction(hoursForm([bad])))).toBe(
+        `/admin/comercios/${ID}?error=hours#horarios`,
+      );
+    expect(find("POST", "/rest/v1/place_hours")).toHaveLength(0);
+    expect(find("DELETE", "place_hours")).toHaveLength(0);
+  });
+
+  it("sin cambios en una planilla importada, una respuesta reconfirmada también deja la ficha validada", async () => {
+    // El plan «update» marca validada por el representante.
+    const items = plan(csv(row({ 6: "Lunes a viernes 9-18" })), [
+      {
+        id: ID,
+        slug: "casa-del-mar",
+        name: "Casa del Mar",
+        importKey: "casa-del-mar",
+        snapshot: snapshotOf(
+          toRecord(readTable(parseCsv(csv(row()))).rows[0]!, LOCS).record!,
+        ),
+        infoUpdatedAt: "2026-10-17T03:53:04.000Z",
+      },
+    ]);
+    stub();
+    await applyPlan({ token: "t", userId: "u", role: "editor" }, items, {
+      publish: false,
+      categories: {},
+    });
+    expect(find("PATCH", `places?id=eq.${ID}`)[0]!.body).toMatchObject({
+      owner_validated: true,
+    });
   });
 });

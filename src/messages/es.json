@@ -115,7 +115,8 @@
     "galleryKind": {
       "photo": "Foto",
       "menu": "Carta",
-      "promo": "Publicidad del local"
+      "promo": "Publicidad del local",
+      "video": "Video"
     },
     "galleryNote": "Imágenes entregadas por el local. Los precios de la carta pueden cambiar.",
     "imageCredit": "Imagen: {credit}",
@@ -123,7 +124,8 @@
     "sernaturUntil": "vigente hasta {date}",
     "sernaturExpired": "vencido el {date}",
     "sernaturNote": "Servicio turístico registrado en SERNATUR, según informa el local.",
-    "website": "Sitio web"
+    "website": "Sitio web",
+    "ownerValidated": "Validada por el representante del local"
   },
   "routes": {
     "title": "Rutas",
@@ -516,7 +518,8 @@
       "site": "En el sitio",
       "places": "Lugares",
       "location": "Ubicación",
-      "source": "Fuente"
+      "source": "Fuente",
+      "edit": "Editar"
     },
     "publication": {
       "draft": "Borrador",
@@ -657,7 +660,9 @@
       "nav": {
         "new": "Nuevo comercio",
         "import": "Importar planilla",
-        "edit": "Editar ficha"
+        "edit": "Editar ficha",
+        "counts": "{images, plural, =0 {Sin imágenes} one {# imagen} other {# imágenes}} · {videos, plural, =0 {sin videos} one {# video} other {# videos}}",
+        "editFull": "Editar ficha, fotos y videos"
       },
       "back": "← Volver a comercios",
       "newTitle": "Nuevo comercio",
@@ -674,7 +679,9 @@
         "sernatur": "El registro SERNATUR necesita su número (solo dígitos) y la fecha de vigencia.",
         "email": "El correo de contacto no es válido.",
         "save": "No se pudo guardar. Revisa tu rol o intenta de nuevo.",
-        "publish": "Solo administración puede publicar."
+        "publish": "Solo administración puede publicar.",
+        "hours": "Revisa los horarios: cada fila necesita mes de inicio y de término, al menos un día y las horas de apertura y cierre.",
+        "imageText": "El texto de la imagen debe tener entre 3 y 300 caracteres."
       },
       "form": {
         "name": "Nombre del negocio",
@@ -701,7 +708,9 @@
         "publish": "Publicar de inmediato (solo administración)",
         "create": "Crear ficha",
         "save": "Guardar cambios",
-        "draftNote": "Sin publicar, la ficha queda como borrador."
+        "draftNote": "Sin publicar, la ficha queda como borrador.",
+        "ownerValidated": "Validada por el representante del local",
+        "ownerValidatedHelp": "Marca esta casilla solo si el dueño o encargado confirmó los datos. La ficha lo muestra como fuente."
       },
       "publication": {
         "published": "Publicada",
@@ -719,7 +728,8 @@
           "photo": "Foto del lugar",
           "menu": "Carta",
           "promo": "Publicidad del local",
-          "logo": "Logo"
+          "logo": "Logo",
+          "video": "Video"
         },
         "pick": "Elegir imágenes",
         "credit": "Crédito (quién la tomó)",
@@ -728,7 +738,7 @@
         "cover": "Hacer portada",
         "upload": "Subir",
         "uploading": "Subiendo {done} de {total}…",
-        "uploaded": "{count, plural, one {Se subió # imagen.} other {Se subieron # imágenes.}}",
+        "uploaded": "{count, plural, one {Se subió # archivo.} other {Se subieron # archivos.}}",
         "saveFirst": "Primero crea la ficha para subir imágenes.",
         "errors": {
           "type": "«{name}»: solo se aceptan JPG, PNG o WebP.",
@@ -736,9 +746,22 @@
           "kind": "Falta indicar qué es la imagen.",
           "read": "«{name}» no se pudo leer como imagen.",
           "save": "«{name}» no se pudo guardar. Intenta de nuevo.",
-          "denied": "No tienes permiso para subir imágenes."
+          "denied": "No tienes permiso para subir imágenes.",
+          "videoSize": "«{name}» pesa más de {max} MB.",
+          "videoType": "«{name}»: solo MP4, WebM o MOV.",
+          "videoRead": "«{name}» no se pudo leer como video."
         },
-        "authNote": "Sube solo imágenes que el local entregó o autorizó."
+        "authNote": "Sube solo imágenes que el local entregó o autorizó.",
+        "moveUp": "Subir",
+        "moveDown": "Bajar",
+        "editText": "Editar texto y crédito",
+        "alt": "Texto alternativo (para quien no ve la imagen)",
+        "saveText": "Guardar texto",
+        "creditHelp": "Se aplica a lo que subas ahora.",
+        "videoTitle": "Videos",
+        "videoHelp": "MP4, WebM o MOV, de hasta {max} MB cada uno. Se suben tal cual, sin achicarlos: si pesa más, comprímelo antes (por ejemplo, exportándolo en calidad media desde el celular).",
+        "videoPick": "Elegir videos",
+        "uploadingVideo": "Subiendo «{name}» ({done} de {total})…"
       },
       "import": {
         "title": "Importar comercios desde una planilla",
@@ -810,6 +833,21 @@
         },
         "newFiles": "Cuando termines, abre cada comercio nuevo para subir su logo, carta y fotos.",
         "open": "Abrir"
+      },
+      "sections": "Secciones de la ficha",
+      "sectionData": "Datos",
+      "hours": {
+        "title": "Horarios por temporada",
+        "help": "Una fila por temporada, que se repite cada año (por ejemplo, de enero a febrero todos los días, y de marzo a diciembre solo fines de semana y festivos). Si hay horarios aquí, la ficha los muestra en vez del texto libre de «Días y horarios». Marca «Quitar» y guarda para borrar una fila.",
+        "season": "Temporada {n}",
+        "from": "Desde el mes",
+        "to": "Hasta el mes",
+        "opens": "Abre",
+        "closes": "Cierra",
+        "days": "Días de la semana",
+        "holidays": "Festivos",
+        "remove": "Quitar",
+        "save": "Guardar horarios"
       }
     }
   },

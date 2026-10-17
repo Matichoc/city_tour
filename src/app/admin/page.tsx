@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import {
+  canModerate,
   ENTITIES,
   getSession,
   isEntityKind,
@@ -58,6 +59,8 @@ export default async function AdminHome({
     console.error("[admin] no se pudo listar", error);
     return <p className="text-coral-ink">{t("loadError")}</p>;
   }
+  // Crear y editar comercios: admin y editor (la base lo exige igual).
+  const canEdit = kind === "lugar" && canModerate(session);
   const count = (v: EntitySummary["verification"]) =>
     rows.filter((r) => r.verification === v).length;
 
@@ -94,6 +97,23 @@ export default async function AdminHome({
         ))}
       </nav>
 
+      {canEdit && (
+        <div className="mt-4 flex flex-wrap gap-2">
+          <Link
+            href="/admin/comercios/nuevo"
+            className="bg-sea-deep rounded-full px-5 py-2 font-bold text-white"
+          >
+            {t("places.nav.new")}
+          </Link>
+          <Link
+            href="/admin/comercios/importar"
+            className="border-border rounded-full border px-5 py-2 font-bold"
+          >
+            {t("places.nav.import")}
+          </Link>
+        </div>
+      )}
+
       {kind === "localidad" ? (
         <LocalityTable rows={localities} t={t} />
       ) : (
@@ -116,6 +136,9 @@ export default async function AdminHome({
                   <th className="px-4 py-3">{t("columns.verification")}</th>
                   <th className="px-4 py-3">{t("columns.lastVerified")}</th>
                   <th className="px-4 py-3">{t("columns.site")}</th>
+                  {canEdit && (
+                    <th className="px-4 py-3">{t("columns.edit")}</th>
+                  )}
                 </tr>
               </thead>
               <tbody>
@@ -160,6 +183,20 @@ export default async function AdminHome({
                         <span className="text-muted">{t("none")}</span>
                       )}
                     </td>
+                    {canEdit && (
+                      <td className="px-4 py-3">
+                        {r.demo ? (
+                          <span className="text-muted">{t("none")}</span>
+                        ) : (
+                          <Link
+                            href={`/admin/comercios/${r.id}`}
+                            className="bg-sea-soft text-sea-deep rounded-full px-3 py-1 text-sm font-bold whitespace-nowrap"
+                          >
+                            {t("places.nav.editFull")}
+                          </Link>
+                        )}
+                      </td>
+                    )}
                   </tr>
                 ))}
               </tbody>

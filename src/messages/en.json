@@ -115,7 +115,8 @@
     "galleryKind": {
       "photo": "Photo",
       "menu": "Menu",
-      "promo": "Business ad"
+      "promo": "Business ad",
+      "video": "Video"
     },
     "galleryNote": "Images provided by the business. Menu prices may change.",
     "imageCredit": "Image: {credit}",
@@ -123,7 +124,8 @@
     "sernaturUntil": "valid until {date}",
     "sernaturExpired": "expired on {date}",
     "sernaturNote": "Tourism service registered with SERNATUR (Chile’s National Tourism Service), as reported by the business.",
-    "website": "Website"
+    "website": "Website",
+    "ownerValidated": "Validated by the business representative"
   },
   "routes": {
     "title": "Routes",
@@ -516,7 +518,8 @@
       "site": "On the site",
       "places": "Places",
       "location": "Location",
-      "source": "Source"
+      "source": "Source",
+      "edit": "Edit"
     },
     "publication": {
       "draft": "Draft",
@@ -657,7 +660,9 @@
       "nav": {
         "new": "New business",
         "import": "Import spreadsheet",
-        "edit": "Edit page"
+        "edit": "Edit page",
+        "counts": "{images, plural, =0 {No images} one {# image} other {# images}} · {videos, plural, =0 {no videos} one {# video} other {# videos}}",
+        "editFull": "Edit page, photos and videos"
       },
       "back": "← Back to businesses",
       "newTitle": "New business",
@@ -674,7 +679,9 @@
         "sernatur": "The SERNATUR registration needs its number (digits only) and the validity date.",
         "email": "The contact email is not valid.",
         "save": "Could not save. Check your role or try again.",
-        "publish": "Only administrators can publish."
+        "publish": "Only administrators can publish.",
+        "hours": "Check the hours: each row needs a start and end month, at least one day and opening and closing times.",
+        "imageText": "The image text must be 3 to 300 characters long."
       },
       "form": {
         "name": "Business name",
@@ -701,7 +708,9 @@
         "publish": "Publish right away (administrators only)",
         "create": "Create page",
         "save": "Save changes",
-        "draftNote": "If not published, the page stays as a draft."
+        "draftNote": "If not published, the page stays as a draft.",
+        "ownerValidated": "Validated by the business representative",
+        "ownerValidatedHelp": "Tick this only if the owner or manager confirmed the details. The page shows it as the source."
       },
       "publication": {
         "published": "Published",
@@ -719,7 +728,8 @@
           "photo": "Photo of the place",
           "menu": "Menu",
           "promo": "Business ad",
-          "logo": "Logo"
+          "logo": "Logo",
+          "video": "Video"
         },
         "pick": "Choose images",
         "credit": "Credit (who took it)",
@@ -728,7 +738,7 @@
         "cover": "Make cover",
         "upload": "Upload",
         "uploading": "Uploading {done} of {total}…",
-        "uploaded": "{count, plural, one {# image uploaded.} other {# images uploaded.}}",
+        "uploaded": "{count, plural, one {# file uploaded.} other {# files uploaded.}}",
         "saveFirst": "Create the page first to upload images.",
         "errors": {
           "type": "“{name}”: only JPG, PNG or WebP are accepted.",
@@ -736,9 +746,22 @@
           "kind": "Say what the image is.",
           "read": "“{name}” could not be read as an image.",
           "save": "“{name}” could not be saved. Try again.",
-          "denied": "You don't have permission to upload images."
+          "denied": "You don't have permission to upload images.",
+          "videoSize": "“{name}” is larger than {max} MB.",
+          "videoType": "“{name}”: only MP4, WebM or MOV.",
+          "videoRead": "“{name}” could not be read as a video."
         },
-        "authNote": "Only upload images the business provided or authorized."
+        "authNote": "Only upload images the business provided or authorized.",
+        "moveUp": "Move up",
+        "moveDown": "Move down",
+        "editText": "Edit text and credit",
+        "alt": "Alt text (for people who can't see the image)",
+        "saveText": "Save text",
+        "creditHelp": "Applies to what you upload now.",
+        "videoTitle": "Videos",
+        "videoHelp": "MP4, WebM or MOV, up to {max} MB each. They are uploaded as they are, without resizing: if it is larger, compress it first (for example, export it at medium quality from the phone).",
+        "videoPick": "Choose videos",
+        "uploadingVideo": "Uploading “{name}” ({done} of {total})…"
       },
       "import": {
         "title": "Import businesses from a spreadsheet",
@@ -810,6 +833,21 @@
         },
         "newFiles": "When you finish, open each new business to upload its logo, menu and photos.",
         "open": "Open"
+      },
+      "sections": "Page sections",
+      "sectionData": "Details",
+      "hours": {
+        "title": "Seasonal hours",
+        "help": "One row per season, repeating every year (for example, January to February every day, and March to December weekends and public holidays only). If hours are set here, the page shows them instead of the free text in “Days and hours”. Tick “Remove” and save to delete a row.",
+        "season": "Season {n}",
+        "from": "From month",
+        "to": "To month",
+        "opens": "Opens",
+        "closes": "Closes",
+        "days": "Days of the week",
+        "holidays": "Public holidays",
+        "remove": "Remove",
+        "save": "Save hours"
       }
     }
   },

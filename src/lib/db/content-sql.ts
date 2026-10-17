@@ -35,7 +35,7 @@ export function contentToSql(content: SiteContent): string {
   add(`
 -- GENERADO desde src/content con \`pnpm db:content\`. No editar a mano.
 -- Carga en Supabase el contenido que hoy muestra el sitio. Requiere las
--- migraciones hasta 0023 y supabase/seed.sql. Se puede ejecutar varias veces.
+-- migraciones hasta 0024 y supabase/seed.sql. Se puede ejecutar varias veces.
 -- El repo manda sobre sus fichas, salvo las que se crearon o editaron en el
 -- panel (managed_in_panel): esas no se tocan.
 begin;
@@ -78,11 +78,11 @@ join public.localities l on l.slug = v.slug;
   const placeSlugs = slugList(places.map((p) => p.slug));
   add(`
 -- Lugares (se crean en borrador y se publican al final, con su ficha en español)
-insert into public.places (slug, sort_order, category_id, locality_id, latitude, longitude, address, is_demo, is_business, instagram, maps_url, sernatur_number, sernatur_valid_until)
-select v.slug, v.sort_order, c.id, l.id, v.lat::numeric, v.lng::numeric, v.address, v.is_demo, v.is_business, v.instagram, v.maps_url, v.sernatur, v.sernatur_until::date
+insert into public.places (slug, sort_order, category_id, locality_id, latitude, longitude, address, is_demo, is_business, instagram, maps_url, sernatur_number, sernatur_valid_until, owner_validated)
+select v.slug, v.sort_order, c.id, l.id, v.lat::numeric, v.lng::numeric, v.address, v.is_demo, v.is_business, v.instagram, v.maps_url, v.sernatur, v.sernatur_until::date, v.owner_validated
 from (values
-${rows(places.map((p, i) => [p.slug, i + 1, p.categorySlug, p.localitySlug, p.latitude, p.longitude, p.address, p.demo === true, p.business === true, p.instagram, p.mapsUrl, p.sernatur?.number, p.sernatur?.validUntil]))}
-) as v(slug, sort_order, category, locality, lat, lng, address, is_demo, is_business, instagram, maps_url, sernatur, sernatur_until)
+${rows(places.map((p, i) => [p.slug, i + 1, p.categorySlug, p.localitySlug, p.latitude, p.longitude, p.address, p.demo === true, p.business === true, p.instagram, p.mapsUrl, p.sernatur?.number, p.sernatur?.validUntil, p.ownerValidated === true]))}
+) as v(slug, sort_order, category, locality, lat, lng, address, is_demo, is_business, instagram, maps_url, sernatur, sernatur_until, owner_validated)
 join public.categories c on c.slug = v.category
 left join public.localities l on l.slug = v.locality
 on conflict (slug) do update set
@@ -90,7 +90,8 @@ on conflict (slug) do update set
   latitude = excluded.latitude, longitude = excluded.longitude, address = excluded.address,
   is_demo = excluded.is_demo, is_business = excluded.is_business,
   instagram = excluded.instagram, maps_url = excluded.maps_url,
-  sernatur_number = excluded.sernatur_number, sernatur_valid_until = excluded.sernatur_valid_until
+  sernatur_number = excluded.sernatur_number, sernatur_valid_until = excluded.sernatur_valid_until,
+  owner_validated = excluded.owner_validated
 where not public.places.managed_in_panel;
 
 delete from public.place_translations

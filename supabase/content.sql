@@ -1,6 +1,6 @@
 -- GENERADO desde src/content con `pnpm db:content`. No editar a mano.
 -- Carga en Supabase el contenido que hoy muestra el sitio. Requiere las
--- migraciones hasta 0023 y supabase/seed.sql. Se puede ejecutar varias veces.
+-- migraciones hasta 0024 y supabase/seed.sql. Se puede ejecutar varias veces.
 -- El repo manda sobre sus fichas, salvo las que se crearon o editaron en el
 -- panel (managed_in_panel): esas no se tocan.
 begin;
@@ -29,31 +29,31 @@ from (values
 join public.localities l on l.slug = v.slug;
 
 -- Lugares (se crean en borrador y se publican al final, con su ficha en español)
-insert into public.places (slug, sort_order, category_id, locality_id, latitude, longitude, address, is_demo, is_business, instagram, maps_url, sernatur_number, sernatur_valid_until)
-select v.slug, v.sort_order, c.id, l.id, v.lat::numeric, v.lng::numeric, v.address, v.is_demo, v.is_business, v.instagram, v.maps_url, v.sernatur, v.sernatur_until::date
+insert into public.places (slug, sort_order, category_id, locality_id, latitude, longitude, address, is_demo, is_business, instagram, maps_url, sernatur_number, sernatur_valid_until, owner_validated)
+select v.slug, v.sort_order, c.id, l.id, v.lat::numeric, v.lng::numeric, v.address, v.is_demo, v.is_business, v.instagram, v.maps_url, v.sernatur, v.sernatur_until::date, v.owner_validated
 from (values
-  ('playa-papudo', 1, 'balneario', 'papudo', -32.5061, -71.4472, null, false, false, null, null, null, null),
-  ('playa-chica-papudo', 2, 'balneario', 'papudo', -32.5075, -71.4478, null, false, false, null, null, null, null),
-  ('papudo-pullally', 3, 'ruralidad', 'pullally', -32.43467097116685, -71.31775915116937, null, false, false, null, null, null, null),
-  ('papudo-salinas-pullally', 4, 'ruralidad', 'las-salinas-papudo', -32.41007831226611, -71.41062008860503, null, false, false, null, null, null, null),
-  ('roots-salinas', 5, 'gastronomia', 'las-salinas-papudo', -32.4163125, -71.4118125, 'Estacionamiento de la playa Salinas de Pullally, Las Salinas', false, true, 'https://www.instagram.com/roots.salinas/', 'https://maps.app.goo.gl/ephntUVKSy3yhpAN7', '93605', '2027-01-31'),
-  ('papudo-playa-los-lilenes', 6, 'balneario', null, -32.49109919617068, -71.4326761566141, null, false, false, null, null, null, null),
-  ('papudo-parque', 7, 'recreacion', 'papudo', -32.50461851619594, -71.44310276706875, null, false, false, null, null, null, null),
-  ('papudo-plaza', 8, 'patrimonio', 'papudo', -32.50745877114493, -71.44604956690678, null, false, false, null, null, null, null),
-  ('iglesia-nuestra-senora-de-las-mercedes', 9, 'patrimonio', 'papudo', null, null, null, false, false, null, null, null, null),
-  ('humedal-urbano-estero-agua-salada', 10, 'recreacion', 'papudo', null, null, null, false, false, null, null, null, null),
-  ('caleta-de-pescadores-papudo', 11, 'gastronomia', 'papudo', null, null, null, false, false, null, null, null, null),
-  ('restaurante-donde-pablo', 12, 'gastronomia', 'papudo', null, null, 'Av. Glorias Navales 511, Papudo', false, true, null, null, null, null),
-  ('fuente-papudo', 13, 'gastronomia', 'papudo', null, null, null, false, true, null, null, null, null),
-  ('hotel-carande', 14, 'alojamiento', 'papudo', null, null, 'Chorrillos 89, Papudo', false, true, null, null, null, null),
-  ('demo-parador-ola-mansa', 15, 'balneario', 'papudo', null, null, null, true, true, null, null, null, null),
-  ('demo-cabalgatas-del-valle', 16, 'recreacion', 'pullally', null, null, null, true, true, null, null, null, null),
-  ('demo-escuela-de-surf-ola-brava', 17, 'deportes', 'las-salinas-papudo', null, null, null, true, true, null, null, null, null),
-  ('demo-circuito-casas-antiguas', 18, 'patrimonio', 'papudo', null, null, null, true, true, null, null, null, null),
-  ('demo-cocineria-sabor-a-mar', 19, 'gastronomia', 'papudo', null, null, null, true, true, null, null, null, null),
-  ('demo-huerta-y-quesos-el-retono', 20, 'ruralidad', 'pullally', null, null, null, true, true, null, null, null, null),
-  ('demo-cabanas-brisa-salina', 21, 'alojamiento', 'las-salinas-papudo', null, null, null, true, true, null, null, null, null)
-) as v(slug, sort_order, category, locality, lat, lng, address, is_demo, is_business, instagram, maps_url, sernatur, sernatur_until)
+  ('playa-papudo', 1, 'balneario', 'papudo', -32.5061, -71.4472, null, false, false, null, null, null, null, false),
+  ('playa-chica-papudo', 2, 'balneario', 'papudo', -32.5075, -71.4478, null, false, false, null, null, null, null, false),
+  ('papudo-pullally', 3, 'ruralidad', 'pullally', -32.43467097116685, -71.31775915116937, null, false, false, null, null, null, null, false),
+  ('papudo-salinas-pullally', 4, 'ruralidad', 'las-salinas-papudo', -32.41007831226611, -71.41062008860503, null, false, false, null, null, null, null, false),
+  ('roots-salinas', 5, 'gastronomia', 'las-salinas-papudo', -32.4163125, -71.4118125, 'Estacionamiento de la playa Salinas de Pullally, Las Salinas', false, true, 'https://www.instagram.com/roots.salinas/', 'https://maps.app.goo.gl/ephntUVKSy3yhpAN7', '93605', '2027-01-31', true),
+  ('papudo-playa-los-lilenes', 6, 'balneario', null, -32.49109919617068, -71.4326761566141, null, false, false, null, null, null, null, false),
+  ('papudo-parque', 7, 'recreacion', 'papudo', -32.50461851619594, -71.44310276706875, null, false, false, null, null, null, null, false),
+  ('papudo-plaza', 8, 'patrimonio', 'papudo', -32.50745877114493, -71.44604956690678, null, false, false, null, null, null, null, false),
+  ('iglesia-nuestra-senora-de-las-mercedes', 9, 'patrimonio', 'papudo', null, null, null, false, false, null, null, null, null, false),
+  ('humedal-urbano-estero-agua-salada', 10, 'recreacion', 'papudo', null, null, null, false, false, null, null, null, null, false),
+  ('caleta-de-pescadores-papudo', 11, 'gastronomia', 'papudo', null, null, null, false, false, null, null, null, null, false),
+  ('restaurante-donde-pablo', 12, 'gastronomia', 'papudo', null, null, 'Av. Glorias Navales 511, Papudo', false, true, null, null, null, null, false),
+  ('fuente-papudo', 13, 'gastronomia', 'papudo', null, null, null, false, true, null, null, null, null, false),
+  ('hotel-carande', 14, 'alojamiento', 'papudo', null, null, 'Chorrillos 89, Papudo', false, true, null, null, null, null, false),
+  ('demo-parador-ola-mansa', 15, 'balneario', 'papudo', null, null, null, true, true, null, null, null, null, false),
+  ('demo-cabalgatas-del-valle', 16, 'recreacion', 'pullally', null, null, null, true, true, null, null, null, null, false),
+  ('demo-escuela-de-surf-ola-brava', 17, 'deportes', 'las-salinas-papudo', null, null, null, true, true, null, null, null, null, false),
+  ('demo-circuito-casas-antiguas', 18, 'patrimonio', 'papudo', null, null, null, true, true, null, null, null, null, false),
+  ('demo-cocineria-sabor-a-mar', 19, 'gastronomia', 'papudo', null, null, null, true, true, null, null, null, null, false),
+  ('demo-huerta-y-quesos-el-retono', 20, 'ruralidad', 'pullally', null, null, null, true, true, null, null, null, null, false),
+  ('demo-cabanas-brisa-salina', 21, 'alojamiento', 'las-salinas-papudo', null, null, null, true, true, null, null, null, null, false)
+) as v(slug, sort_order, category, locality, lat, lng, address, is_demo, is_business, instagram, maps_url, sernatur, sernatur_until, owner_validated)
 join public.categories c on c.slug = v.category
 left join public.localities l on l.slug = v.locality
 on conflict (slug) do update set
@@ -61,7 +61,8 @@ on conflict (slug) do update set
   latitude = excluded.latitude, longitude = excluded.longitude, address = excluded.address,
   is_demo = excluded.is_demo, is_business = excluded.is_business,
   instagram = excluded.instagram, maps_url = excluded.maps_url,
-  sernatur_number = excluded.sernatur_number, sernatur_valid_until = excluded.sernatur_valid_until
+  sernatur_number = excluded.sernatur_number, sernatur_valid_until = excluded.sernatur_valid_until,
+  owner_validated = excluded.owner_validated
 where not public.places.managed_in_panel;
 
 delete from public.place_translations
@@ -134,8 +135,7 @@ from (values
   ('papudo-pullally', 1, 'Consejo de Monumentos Nacionales — Santuario Humedal Salinas de Pullally - Dunas de Longotoma', 'https://www.monumentos.gob.cl/monumentos/santuarios-de-la-naturaleza/humedal-salinas-de-pullally-dunas-de-longotoma'),
   ('papudo-salinas-pullally', 0, 'Wikipedia — Humedal Salinas de Pullally y Dunas de Longotoma', 'https://es.wikipedia.org/wiki/Humedal_Salinas_de_Pullally_y_Dunas_de_Longotoma'),
   ('papudo-salinas-pullally', 1, 'Consejo de Monumentos Nacionales — Santuario Humedal Salinas de Pullally - Dunas de Longotoma', 'https://www.monumentos.gob.cl/monumentos/santuarios-de-la-naturaleza/humedal-salinas-de-pullally-dunas-de-longotoma'),
-  ('roots-salinas', 0, 'Datos entregados por el local (formulario «Suma tu comercio», 17-10-2026)', 'https://www.instagram.com/roots.salinas/'),
-  ('roots-salinas', 1, 'Google Maps — Roots Salinas (HHMQ+F7, Papudo)', 'https://maps.app.goo.gl/JN5FnoUCrZ6MjZXK8'),
+  ('roots-salinas', 0, 'Google Maps — Roots Salinas (HHMQ+F7, Papudo)', 'https://maps.app.goo.gl/JN5FnoUCrZ6MjZXK8'),
   ('papudo-playa-los-lilenes', 0, 'tres60.travel — El Lilén, la playa escondida de Chile', 'https://tres60.travel/el-lilen-la-playa-escondida-de-chile-que-combina-naturaleza-y-tranquilidad/'),
   ('papudo-parque', 0, 'PlayasDeChile.com — Playas en Papudo', 'https://www.playasdechile.com/playas-en-papudo/'),
   ('papudo-plaza', 0, 'Valparaíso Región — Destino Papudo', 'http://www.vregion.cl/petorca/papudo/'),

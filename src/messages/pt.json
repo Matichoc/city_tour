@@ -115,7 +115,8 @@
     "galleryKind": {
       "photo": "Foto",
       "menu": "Cardápio",
-      "promo": "Publicidade do local"
+      "promo": "Publicidade do local",
+      "video": "Vídeo"
     },
     "galleryNote": "Imagens enviadas pelo local. Os preços do cardápio podem mudar.",
     "imageCredit": "Imagem: {credit}",
@@ -123,7 +124,8 @@
     "sernaturUntil": "válido até {date}",
     "sernaturExpired": "vencido em {date}",
     "sernaturNote": "Serviço turístico registrado no SERNATUR (Serviço Nacional de Turismo do Chile), segundo informa o local.",
-    "website": "Site"
+    "website": "Site",
+    "ownerValidated": "Validada pelo representante do local"
   },
   "routes": {
     "title": "Roteiros",
@@ -516,7 +518,8 @@
       "site": "No site",
       "places": "Lugares",
       "location": "Localização",
-      "source": "Fonte"
+      "source": "Fonte",
+      "edit": "Editar"
     },
     "publication": {
       "draft": "Rascunho",
@@ -657,7 +660,9 @@
       "nav": {
         "new": "Novo comércio",
         "import": "Importar planilha",
-        "edit": "Editar página"
+        "edit": "Editar página",
+        "counts": "{images, plural, =0 {Sem imagens} one {# imagem} other {# imagens}} · {videos, plural, =0 {sem vídeos} one {# vídeo} other {# vídeos}}",
+        "editFull": "Editar página, fotos e vídeos"
       },
       "back": "← Voltar aos comércios",
       "newTitle": "Novo comércio",
@@ -674,7 +679,9 @@
         "sernatur": "O registro SERNATUR precisa do número (só dígitos) e da data de validade.",
         "email": "O e-mail de contato não é válido.",
         "save": "Não foi possível salvar. Verifique seu perfil ou tente novamente.",
-        "publish": "Só a administração pode publicar."
+        "publish": "Só a administração pode publicar.",
+        "hours": "Revise os horários: cada linha precisa de mês de início e de término, pelo menos um dia e as horas de abertura e fechamento.",
+        "imageText": "O texto da imagem deve ter de 3 a 300 caracteres."
       },
       "form": {
         "name": "Nome do negócio",
@@ -701,7 +708,9 @@
         "publish": "Publicar imediatamente (só administração)",
         "create": "Criar página",
         "save": "Salvar alterações",
-        "draftNote": "Sem publicar, a página fica como rascunho."
+        "draftNote": "Sem publicar, a página fica como rascunho.",
+        "ownerValidated": "Validada pelo representante do local",
+        "ownerValidatedHelp": "Marque só se o dono ou responsável confirmou os dados. A página mostra isso como fonte."
       },
       "publication": {
         "published": "Publicada",
@@ -719,7 +728,8 @@
           "photo": "Foto do lugar",
           "menu": "Cardápio",
           "promo": "Publicidade do local",
-          "logo": "Logo"
+          "logo": "Logo",
+          "video": "Vídeo"
         },
         "pick": "Escolher imagens",
         "credit": "Crédito (quem tirou)",
@@ -728,7 +738,7 @@
         "cover": "Tornar capa",
         "upload": "Enviar",
         "uploading": "Enviando {done} de {total}…",
-        "uploaded": "{count, plural, one {# imagem enviada.} other {# imagens enviadas.}}",
+        "uploaded": "{count, plural, one {# arquivo enviado.} other {# arquivos enviados.}}",
         "saveFirst": "Crie a página primeiro para enviar imagens.",
         "errors": {
           "type": "«{name}»: só são aceitos JPG, PNG ou WebP.",
@@ -736,9 +746,22 @@
           "kind": "Indique o que é a imagem.",
           "read": "«{name}» não pôde ser lida como imagem.",
           "save": "«{name}» não pôde ser salva. Tente novamente.",
-          "denied": "Você não tem permissão para enviar imagens."
+          "denied": "Você não tem permissão para enviar imagens.",
+          "videoSize": "«{name}» pesa mais de {max} MB.",
+          "videoType": "«{name}»: só MP4, WebM ou MOV.",
+          "videoRead": "«{name}» não pôde ser lido como vídeo."
         },
-        "authNote": "Envie só imagens que o local entregou ou autorizou."
+        "authNote": "Envie só imagens que o local entregou ou autorizou.",
+        "moveUp": "Subir",
+        "moveDown": "Descer",
+        "editText": "Editar texto e crédito",
+        "alt": "Texto alternativo (para quem não vê a imagem)",
+        "saveText": "Salvar texto",
+        "creditHelp": "Vale para o que você enviar agora.",
+        "videoTitle": "Vídeos",
+        "videoHelp": "MP4, WebM ou MOV, de até {max} MB cada um. São enviados como estão, sem reduzir: se pesar mais, comprima antes (por exemplo, exportando em qualidade média pelo celular).",
+        "videoPick": "Escolher vídeos",
+        "uploadingVideo": "Enviando «{name}» ({done} de {total})…"
       },
       "import": {
         "title": "Importar comércios de uma planilha",
@@ -810,6 +833,21 @@
         },
         "newFiles": "Ao terminar, abra cada comércio novo para enviar logo, cardápio e fotos.",
         "open": "Abrir"
+      },
+      "sections": "Seções da página",
+      "sectionData": "Dados",
+      "hours": {
+        "title": "Horários por temporada",
+        "help": "Uma linha por temporada, que se repete todo ano (por exemplo, de janeiro a fevereiro todos os dias, e de março a dezembro só fins de semana e feriados). Se houver horários aqui, a página os mostra no lugar do texto livre de «Dias e horários». Marque «Remover» e salve para apagar uma linha.",
+        "season": "Temporada {n}",
+        "from": "Do mês",
+        "to": "Até o mês",
+        "opens": "Abre",
+        "closes": "Fecha",
+        "days": "Dias da semana",
+        "holidays": "Feriados",
+        "remove": "Remover",
+        "save": "Salvar horários"
       }
     }
   },

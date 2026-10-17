@@ -9,6 +9,7 @@ import {
 } from "@/app/admin/places-actions";
 import { PlaceForm } from "@/components/admin/place-form";
 import { PhotoManager } from "@/components/admin/photo-manager";
+import { HoursEditor } from "@/components/admin/hours-editor";
 import { PublicationBadge } from "@/components/admin/badges";
 
 export default async function EditPlace({
@@ -60,6 +61,27 @@ export default async function EditPlace({
           Verificación
         </Link>
       </div>
+
+      <nav
+        aria-label={t("sections")}
+        className="flex flex-wrap gap-2 text-sm font-semibold"
+      >
+        {(
+          [
+            ["datos", t("sectionData")],
+            ["horarios", t("hours.title")],
+            ["fotos", t("photos.title")],
+          ] as const
+        ).map(([anchor, label]) => (
+          <a
+            key={anchor}
+            href={`#${anchor}`}
+            className="bg-sea-soft text-sea-deep rounded-full px-4 py-1.5"
+          >
+            {label}
+          </a>
+        ))}
+      </nav>
 
       {sp.creado && (
         <p
@@ -116,7 +138,10 @@ export default async function EditPlace({
       </section>
 
       {editable && (
-        <section className="border-border bg-surface rounded-2xl border p-4">
+        <section
+          id="datos"
+          className="border-border bg-surface scroll-mt-4 rounded-2xl border p-4"
+        >
           <h2 className="font-display mb-3 text-lg font-extrabold">
             {t("editTitle")}
           </h2>
@@ -126,6 +151,18 @@ export default async function EditPlace({
             action={updatePlaceAction}
             isAdmin={isAdmin}
           />
+        </section>
+      )}
+
+      {editable && (
+        <section
+          id="horarios"
+          className="border-border bg-surface scroll-mt-4 rounded-2xl border p-4"
+        >
+          <h2 className="font-display mb-3 text-lg font-extrabold">
+            {t("hours.title")}
+          </h2>
+          <HoursEditor placeId={place.id} seasons={place.hours} />
         </section>
       )}
 
