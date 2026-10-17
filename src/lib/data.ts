@@ -19,6 +19,7 @@ import type {
   CtaKind,
   EventContent,
   PlaceCta,
+  PlaceContent,
   PlaceHours,
   PlaceImage,
   Source,
@@ -139,6 +140,11 @@ export type Picture = {
   width: number;
   height: number;
   alt: string;
+  /**
+   * photo: foto real del lugar · logo: logo del comercio (se muestra entero).
+   * Sin valor: ilustración hecha con IA (lleva su rótulo).
+   */
+  kind?: "photo" | "logo";
 };
 
 function picture(key: IllustrationKey, locale: Locale): Picture {
@@ -149,6 +155,33 @@ function picture(key: IllustrationKey, locale: Locale): Picture {
     height: i.height,
     alt: locale === "en" ? i.alt.en : i.alt.es,
   };
+}
+
+/**
+ * Portada real de una ficha: la primera foto del lugar o, si no hay, el logo
+ * del comercio. Solo sin imágenes reales se usa la ilustración con IA.
+ */
+function realPicture(
+  p: PlaceContent,
+  name: string,
+  locale: Locale,
+): Picture | null {
+  const photo = p.gallery?.find((g) => g.kind === "photo");
+  if (photo)
+    return {
+      src: photo.src,
+      width: photo.width,
+      height: photo.height,
+      alt: photo.alt[locale],
+      kind: "photo",
+    };
+  if (p.logo)
+    return {
+      ...p.logo,
+      alt: pick(locale, `Logo de ${name}`, `${name} logo`, `Logo de ${name}`),
+      kind: "logo",
+    };
+  return null;
 }
 
 export const illustrationFor = (key: IllustrationKey, locale: Locale) =>
@@ -263,10 +296,12 @@ export function createData(content: SiteContent, showDemo = SHOW_DEMO) {
       verification: p.verification ?? "pending",
       fallbackToSpanish:
         (locale === "en" && !p.en) || (locale === "pt" && !p.pt),
-      picture: picture(
-        PLACE_ILLUSTRATION[p.slug] ?? CATEGORY_ILLUSTRATION[p.categorySlug],
-        locale,
-      ),
+      picture:
+        realPicture(p, text.name, locale) ??
+        picture(
+          PLACE_ILLUSTRATION[p.slug] ?? CATEGORY_ILLUSTRATION[p.categorySlug],
+          locale,
+        ),
       demo: p.demo === true,
       ratingAverage: rating.average,
       ratingCount: rating.count,
