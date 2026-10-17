@@ -420,5 +420,12 @@
     "exit": "Exit kiosk",
     "example": "Example",
     "demoPlace": "Example page: this business is fictional and was created to show how it would look."
+  },
+  "share": {
+    "expiredTitle": "This link has expired",
+    "expiredBody": "The Papudo en tu mano preview was shared for a limited time. Ask the person who sent it for a new link.",
+    "linkTitle": "Link to share",
+    "linkBody": "Anyone who opens it can see the preview until {expires} (Chile time). After that, the link stops working.",
+    "askPassword": "Enter the key to create links"
   }
 }
