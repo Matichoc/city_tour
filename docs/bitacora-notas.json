@@ -101,5 +101,10 @@
   "27": {
     "titulo": "Seguridad: Next.js 16.3.8",
     "resumen": "Actualiza Next.js y eslint-config-next de 16.3.5 a 16.3.8 para cerrar los 7 avisos de seguridad de Next (hallazgo DEP-01 de la auditoría). Sin cambios de funcionalidad."
+  },
+  "28": {
+    "titulo": "Seguridad: el público no lee el snapshot de importación",
+    "resumen": "Contención de PRIV-01: el rol anónimo ya no puede leer places.import_snapshot (que guardaba nombre y correo de quien inscribió el comercio). El sitio público no cambia. Incluye prueba de base de datos y script para revertir.",
+    "migraciones": "0025"
   }
 }

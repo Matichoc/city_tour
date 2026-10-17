@@ -21,7 +21,7 @@ trabajadas: hay pausas y trabajo sin registrar).
 
 | Día | Ventana de actividad | Registros | Versiones entregadas |
 | --- | --- | ---: | --- |
-| Sábado, 17 de octubre de 2026 | 00:01 – 16:11 | 22 | v0.16, v0.17, v0.18, v0.19, v0.20, v0.21, v0.22, v0.23 |
+| Sábado, 17 de octubre de 2026 | 00:01 – 16:13 | 23 | v0.16, v0.17, v0.18, v0.19, v0.20, v0.21, v0.22, v0.23, v0.24 |
 | Viernes, 16 de octubre de 2026 | 00:04 – 23:51 | 15 | v0.9, v0.10, v0.11, v0.12, v0.13, v0.14, v0.15 |
 | Jueves, 15 de octubre de 2026 | 00:05 – 23:52 | 10 | v0.7, v0.8 |
 | Miércoles, 14 de octubre de 2026 | 23:50 – 23:50 | 1 | — |
@@ -29,6 +29,18 @@ trabajadas: hay pausas y trabajo sin registrar).
 | Lunes, 12 de octubre de 2026 | 15:43 – 17:53 | 10 | v0.1, v0.2, v0.3, v0.4 |
 
 ## Versiones
+
+### v0.24 — Seguridad: el público no lee el snapshot de importación
+Sábado, 17 de octubre de 2026, 16:40 · [PR #28](https://github.com/Matichoc/city_tour/pull/28)
+
+Contención de PRIV-01: el rol anónimo ya no puede leer places.import_snapshot (que guardaba nombre y correo de quien inscribió el comercio). El sitio público no cambia. Incluye prueba de base de datos y script para revertir.
+
+**Migraciones en Supabase:** 0025
+
+Registros:
+
+- 10-17 16:13 — Seguridad (PRIV-01, contención): el público no lee places.import_snapshot (`c6844f3`)
+- 10-17 16:35 — Fusiona develop (DEP-01) y ordena las notas de la bitácora (`b6441bc`)
 
 ### v0.23 — Seguridad: Next.js 16.3.8
 Sábado, 17 de octubre de 2026, 16:29 · [PR #27](https://github.com/Matichoc/city_tour/pull/27)
