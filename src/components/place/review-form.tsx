@@ -289,13 +289,13 @@ export function ReviewForm({
           </ul>
         ) : null}
         {notice ? (
-          <p role="alert" className="text-sm font-bold text-[#a22f18]">
+          <p role="alert" className="text-sm font-bold text-[#b83a3a]">
             {notice}
           </p>
         ) : null}
       </div>
       {state.status !== "idle" && state.status !== "ok" ? (
-        <p role="alert" className="text-sm font-bold text-[#a22f18]">
+        <p role="alert" className="text-sm font-bold text-[#b83a3a]">
           {t(MESSAGE[state.status])}
         </p>
       ) : null}
@@ -319,7 +319,7 @@ export function ReviewForm({
         </p>
       ) : null}
       {state.status === "ok" && state.mediaFailed ? (
-        <p role="alert" className="text-sm font-bold text-[#a22f18]">
+        <p role="alert" className="text-sm font-bold text-[#b83a3a]">
           {t("mediaFailed")}
         </p>
       ) : null}

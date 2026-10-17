@@ -71,8 +71,8 @@ export function PointerShape({ style }: { style: PointerStyle }) {
       return (
         <>
           <g
-            fill="#062a33"
-            stroke="#062a33"
+            fill="#1b1c40"
+            stroke="#1b1c40"
             strokeWidth="9"
             strokeLinejoin="round"
           >
@@ -80,7 +80,7 @@ export function PointerShape({ style }: { style: PointerStyle }) {
             <rect x="28" y="86" width="44" height="10" rx="4" />
           </g>
           <g fill="#ffffff">{parts}</g>
-          <rect x="30" y="85" width="40" height="9" rx="3" fill="#ff7a59" />
+          <rect x="30" y="85" width="40" height="9" rx="3" fill="#e98bbd" />
           <path
             d="M44 66h26M44 76h26"
             stroke="#b8c7cb"
@@ -103,7 +103,7 @@ export function PointerShape({ style }: { style: PointerStyle }) {
               key={f.d}
               className="step-print motion-reduce:animate-none"
               style={{ animationDelay: `${f.d}s` }}
-              fill="#ff7a59"
+              fill="#e98bbd"
               {...OUTLINE}
               strokeWidth="3"
             >
@@ -127,26 +127,26 @@ export function PointerShape({ style }: { style: PointerStyle }) {
           <path
             d="M50 40C30 32 14 38 4 56c16-5 30-4 46 4 16-8 30-9 46-4C86 38 70 32 50 40Z"
             fill="#ffffff"
-            stroke="#062a33"
+            stroke="#1b1c40"
             strokeWidth="3"
             strokeLinejoin="round"
           />
           <path
             d="M50 8c5 12 7 26 5 46l-5 38-5-38c-2-20 0-34 5-46Z"
             fill="#ffffff"
-            stroke="#062a33"
+            stroke="#1b1c40"
             strokeWidth="3"
             strokeLinejoin="round"
           />
           <path
             d="M46 14l4-12 4 12Z"
             fill="#ff9f1c"
-            stroke="#062a33"
+            stroke="#1b1c40"
             strokeWidth="2"
             strokeLinejoin="round"
           />
-          <circle cx="47" cy="24" r="1.8" fill="#062a33" />
-          <circle cx="53" cy="24" r="1.8" fill="#062a33" />
+          <circle cx="47" cy="24" r="1.8" fill="#1b1c40" />
+          <circle cx="53" cy="24" r="1.8" fill="#1b1c40" />
         </>
       );
     case "boat":
@@ -154,24 +154,24 @@ export function PointerShape({ style }: { style: PointerStyle }) {
         <>
           <path
             d="M50 4c20 24 22 58 13 92H37C28 62 30 28 50 4Z"
-            fill="#ff7a59"
+            fill="#e98bbd"
             {...OUTLINE}
           />
           <path
             d="M50 30c20 10 20 30 2 44Z"
             fill="#ffffff"
-            stroke="#062a33"
+            stroke="#1b1c40"
             strokeWidth="2.5"
             strokeLinejoin="round"
           />
-          <circle cx="50" cy="40" r="3" fill="#062a33" />
+          <circle cx="50" cy="40" r="3" fill="#1b1c40" />
         </>
       );
     default:
       return (
         <path
           d="M50 6 L86 82 L50 66 L14 82 Z"
-          fill="#ff7a59"
+          fill="#e98bbd"
           stroke="#ffffff"
           strokeWidth="5"
           strokeLinejoin="round"

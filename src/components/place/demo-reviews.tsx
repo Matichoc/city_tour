@@ -208,7 +208,7 @@ export function DemoReviews({
           />
         </label>
         {error ? (
-          <p role="alert" className="text-sm font-bold text-[#a22f18]">
+          <p role="alert" className="text-sm font-bold text-[#b83a3a]">
             {error === "rating" ? t("errorRating") : t("errorText")}
           </p>
         ) : null}

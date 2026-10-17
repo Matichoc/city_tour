@@ -19,7 +19,7 @@ export function RouteCard({
     <Link
       href={{ pathname: "/rutas/[slug]", params: { slug: route.slug } }}
       style={{ "--i": index } as React.CSSProperties}
-      className="card-lift rise-in relative isolate block min-h-64 overflow-hidden rounded-3xl bg-[linear-gradient(120deg,#07495a,#0b7285_60%,#4a7a37)] text-white shadow-md"
+      className="card-lift rise-in relative isolate block min-h-64 overflow-hidden rounded-3xl bg-[linear-gradient(120deg,#155656,#1b7070_60%,#4a7a37)] text-white shadow-md"
     >
       {route.cover ? (
         // eslint-disable-next-line @next/next/no-img-element
@@ -39,7 +39,7 @@ export function RouteCard({
       {route.cover ? <AiBadge className="absolute top-3 right-3" /> : null}
       <div className="flex min-h-64 flex-col justify-end p-6">
         {kicker ? (
-          <p className="text-xs font-bold tracking-widest text-[#ffe3a8] uppercase">
+          <p className="text-xs font-bold tracking-widest text-[#fbeab0] uppercase">
             {kicker}
           </p>
         ) : null}
@@ -47,7 +47,7 @@ export function RouteCard({
         <p className="mt-2 max-w-md text-sm text-white/90">
           {route.description}
         </p>
-        <p className="mt-3 text-sm font-bold text-[#ffe3a8]">
+        <p className="mt-3 text-sm font-bold text-[#fbeab0]">
           {t("stops", { count: route.stops.length })}
           {route.durationMinutes
             ? ` · ${formatDuration(route.durationMinutes)}`

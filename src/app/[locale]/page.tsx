@@ -82,7 +82,7 @@ export default async function HomePage({
         }}
       />
       <HeroScene>
-        <p className="font-script text-xl text-[#ffe3a8] drop-shadow">
+        <p className="font-script text-xl text-[#fbeab0] drop-shadow">
           {t("kicker")}
         </p>
         <h1 className="shimmer-title font-display mt-2 text-4xl leading-[1.08] font-extrabold sm:text-5xl">

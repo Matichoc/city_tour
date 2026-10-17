@@ -19,7 +19,7 @@ function expiredPage() {
   const html = `<!doctype html><html lang="es"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex"><title>${escapeHtml(es.share.expiredTitle)}</title>
-<style>body{font-family:system-ui,sans-serif;max-width:32rem;margin:15vh auto;padding:0 1rem;color:#0f3b4c;background:#fdf8ef}h1{font-size:1.5rem}</style>
+<style>body{font-family:system-ui,sans-serif;max-width:32rem;margin:15vh auto;padding:0 1rem;color:#22234a;background:#fdf8ef}h1{font-size:1.5rem}</style>
 </head><body><h1>${escapeHtml(es.share.expiredTitle)}</h1><p>${escapeHtml(es.share.expiredBody)}</p></body></html>`;
   return new NextResponse(html, {
     status: 403,

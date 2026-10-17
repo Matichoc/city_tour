@@ -34,7 +34,7 @@ export default async function QrPage({
     type: "svg",
     margin: 1,
     errorCorrectionLevel: "M",
-    color: { dark: "#07495a", light: "#ffffff" },
+    color: { dark: "#155656", light: "#ffffff" },
   });
 
   return (

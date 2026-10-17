@@ -283,7 +283,7 @@ export function LiveTrip({
                   id="live-route-line"
                   type="line"
                   paint={{
-                    "line-color": "#0b7285",
+                    "line-color": "#1b7070",
                     "line-width": 3,
                     "line-opacity": 0.45,
                     "line-dasharray": [1.5, 1.5],
@@ -297,7 +297,7 @@ export function LiveTrip({
                 <Layer
                   id="live-next-line"
                   type="line"
-                  paint={{ "line-color": "#ff7a59", "line-width": 4 }}
+                  paint={{ "line-color": "#e98bbd", "line-width": 4 }}
                   layout={{ "line-cap": "round" }}
                 />
               </Source>
