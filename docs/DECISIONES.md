@@ -33,7 +33,8 @@ opcional: si falta la traducción de un lugar, se muestra el español y se avisa
 Vercel Web Analytics (sin cookies, sin datos personales). Eventos propios en
 `src/lib/analytics.ts`: `add_to_trip`, `add_route`, `navigate_click`, `share`,
 `qr_visit` (con el `origen` del QR), `save_place`, `live_start` (recorrido en
-vivo) y `camera_start` (guía con cámara). Nunca se envía la ubicación del
+vivo), `camera_start` (guía con cámara) y `cta_click` (botón de acción de un
+comercio, con su `slug` y tipo). Nunca se envía la ubicación del
 usuario: el GPS y la cámara se usan solo dentro del teléfono. Se activa en
 Vercel → Analytics; sin activar, no envía nada.
 
@@ -154,3 +155,20 @@ Fuente: PLADETUR de Papudo 2023–2027, iD (`docs/investigacion/`).
   cambios se ven al instante en el sitio (`updateTag("reviews")`).
 - Pendiente: respuesta del comercio a una opinión (cuando existan cuentas de
   negocio).
+
+## Comercios: botón de acción, avisos e invitación (`/admin/comercios`)
+
+- **Botón de acción** por local (WhatsApp, llamar, web, carta, reservas,
+  Instagram): columnas `places.cta_kind`/`cta_value`, editables por admin y
+  editor. WhatsApp y teléfono se arman desde el número (`ctaHref`); el resto
+  exige `https://`. `content.sql` no toca estas columnas. Cada clic se mide
+  con el evento anónimo `cta_click`.
+- **Avisos destacados** (`notices`): título, texto, enlace y fecha de término
+  (fin del día, hora de Chile). De un local, salen en su ficha; generales, en
+  la portada. Se pausan, activan o borran; vencen solos (RLS y un segundo
+  filtro por si la página quedó en caché).
+- **Invitación a comercios** (`site_settings`, solo admin): se enciende o apaga
+  y, con el enlace del formulario, el botón «Sumar mi comercio» va directo a
+  él (explorador, fichas de negocios y `/negocios`).
+- Los cambios se ven al instante (`updateTag` de `content`, `notices`,
+  `settings`).

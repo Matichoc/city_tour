@@ -15,7 +15,8 @@ export type AnalyticsEvent =
   | "qr_visit"
   | "save_place"
   | "live_start"
-  | "camera_start";
+  | "camera_start"
+  | "cta_click";
 
 export function track(
   name: AnalyticsEvent,

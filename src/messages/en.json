@@ -90,7 +90,15 @@
     "demoBadge": "Example",
     "demoBanner": "Example page: this business is fictional and was created to show how it would look in the guide. It does not exist and cannot be visited.",
     "demoLocation": "No location: this is an example page.",
-    "demoSource": "Example page created for the demonstration"
+    "demoSource": "Example page created for the demonstration",
+    "cta": {
+      "whatsapp": "Message on WhatsApp",
+      "phone": "Call",
+      "website": "Visit website",
+      "menu": "See the menu",
+      "booking": "Book",
+      "instagram": "See on Instagram"
+    }
   },
   "routes": {
     "title": "Routes",
@@ -494,7 +502,8 @@
     "loadError": "Could not read the database. Try again in a moment.",
     "nav": {
       "entities": "Listings",
-      "reviews": "Reviews"
+      "reviews": "Reviews",
+      "business": "Businesses"
     },
     "reviews": {
       "title": "Visitor reviews",
@@ -512,6 +521,61 @@
       "saved": "Done. The change is already visible on the public site.",
       "error": "Could not apply. Check your role or try again.",
       "empty": "No reviews in this view."
+    },
+    "business": {
+      "title": "Businesses",
+      "intro": "Action button for each business, featured notices with an end date and the invitation to join the guide.",
+      "saved": "Saved. The public site already shows the change.",
+      "error": "Could not save. Check the data (links with https://, number with country code) or your role.",
+      "save": "Save",
+      "cta": {
+        "title": "Action button on the listing",
+        "help": "A prominent button on the business listing. WhatsApp and phone: the number with country code (+56 9 …). Website, menu, booking and Instagram: the full link.",
+        "none": "There are no businesses in the guide yet.",
+        "kind": "Button type",
+        "noButton": "No button",
+        "value": "Number or link",
+        "placeholder": "+56 9 1234 5678 or https://…"
+      },
+      "notices": {
+        "title": "Featured notices",
+        "help": "Promotions or announcements with an end date. A business's notices appear on its listing; general ones, on the home page. They expire automatically.",
+        "place": "Where it appears",
+        "general": "General (home page)",
+        "until": "Until (inclusive)",
+        "titleField": "Title",
+        "text": "Text (optional, up to 280 characters)",
+        "link": "Link (optional)",
+        "add": "Publish notice",
+        "none": "No notices.",
+        "state": {
+          "active": "Active",
+          "paused": "Paused",
+          "expired": "Expired"
+        },
+        "ends": "ends {date}",
+        "pause": "Pause",
+        "activate": "Activate",
+        "delete": "Delete"
+      },
+      "invite": {
+        "title": "Invitation to businesses",
+        "help": "“Do you run a business in Papudo?” box on the explorer and business listings. With the form link, the button goes straight to it; without it, to the For businesses page.",
+        "show": "Show the invitation",
+        "form": "Business form link",
+        "adminOnly": "Only administration can change this setting."
+      }
     }
+  },
+  "notices": {
+    "label": "Notice",
+    "more": "More information",
+    "until": "Until {date}"
+  },
+  "businessInvite": {
+    "title": "Do you run a business in Papudo?",
+    "body": "Add it to the guide: lodging, food, activities or local products. Free this season.",
+    "cta": "Add my business",
+    "more": "How to join"
   }
 }

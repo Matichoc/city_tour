@@ -25,6 +25,12 @@ import { DEMO_REVIEWS } from "@/content/demo-content";
 import { DemoReviews, RatingSummary } from "@/components/place/demo-reviews";
 import { SaveButton } from "@/components/place/save-button";
 import { ReviewsPanel } from "@/components/place/reviews-panel";
+import { Stars } from "@/components/ui/stars";
+import { PlaceCta } from "@/components/business/place-cta";
+import { NoticeList } from "@/components/business/notice-list";
+import { BusinessInvite } from "@/components/business/business-invite";
+import { listReviews, reviewStats } from "@/lib/reviews";
+import { listNotices } from "@/lib/business";
 
 export async function generateStaticParams() {
   const data = await getData();
@@ -68,6 +74,13 @@ export default async function PlacePage({
   if (!place) notFound();
   const t = await getTranslations("place");
   const tr = await getTranslations("reviews");
+  const [reviews, notices] = place.demo
+    ? [[], []]
+    : await Promise.all([
+        listReviews("place", place.slug),
+        listNotices(place.slug),
+      ]);
+  const rating = reviewStats(reviews.map((r) => r.rating));
   const seeded = place.demo
     ? (DEMO_REVIEWS[place.slug] ?? []).map((r) => ({
         id: r.id,
@@ -171,10 +184,15 @@ export default async function PlacePage({
               href="#opiniones"
               className="text-muted mt-2 inline-flex items-center gap-2 text-sm hover:underline"
             >
-              <span aria-hidden="true" className="text-sea tracking-tight">
-                ☆☆☆☆☆
-              </span>
-              {tr("count", { count: 0 })}
+              <Stars value={rating.average ?? 0} className="size-4" />
+              {rating.average !== null ? (
+                <span>
+                  <b className="text-foreground">{rating.average.toFixed(1)}</b>{" "}
+                  · {tr("count", { count: rating.count })}
+                </span>
+              ) : (
+                tr("count", { count: 0 })
+              )}
             </a>
           )}
           <div className="mt-3 flex flex-wrap items-center gap-2">
@@ -191,7 +209,10 @@ export default async function PlacePage({
           </div>
         </header>
 
+        <NoticeList notices={notices} />
+
         <div className="flex flex-wrap gap-2">
+          {place.cta ? <PlaceCta slug={place.slug} cta={place.cta} /> : null}
           {place.hasLocation ? <AddToTripButton slug={place.slug} /> : null}
           {place.demo ? null : (
             <TrackedAnchor
@@ -279,6 +300,8 @@ export default async function PlacePage({
             entityName={place.name}
           />
         )}
+
+        {place.business && !place.demo ? <BusinessInvite /> : null}
 
         <section id="datos" className="flex scroll-mt-32 flex-col gap-3">
           <h2 className="font-display text-xl font-extrabold">

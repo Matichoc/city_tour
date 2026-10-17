@@ -4,6 +4,11 @@ export type Source = { url: string; label: string };
 
 export type Verification = "pending" | "verified" | "outdated";
 
+/** Botón de acción de un comercio (se edita en /admin/comercios). */
+export type CtaKind =
+  "whatsapp" | "phone" | "website" | "menu" | "booking" | "instagram";
+export type PlaceCta = { kind: CtaKind; value: string };
+
 export type LocalityContent = {
   slug: string;
   es: string;
@@ -38,6 +43,8 @@ export type PlaceContent = {
   demo?: boolean;
   /** Estado de verificación en terreno (de la base); sin dato, `pending`. */
   verification?: Verification;
+  /** Botón de acción del comercio (de la base). */
+  cta?: PlaceCta;
   source?: Source;
   tvSource?: Source;
   extraSources?: Source[];

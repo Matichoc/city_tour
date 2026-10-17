@@ -90,7 +90,15 @@
     "demoBadge": "Ejemplo",
     "demoBanner": "Ficha de ejemplo: este negocio es ficticio y se creó para mostrar cómo se vería en la guía. No existe ni se puede visitar.",
     "demoLocation": "Sin ubicación: es una ficha de ejemplo.",
-    "demoSource": "Ficha de ejemplo creada para la demostración"
+    "demoSource": "Ficha de ejemplo creada para la demostración",
+    "cta": {
+      "whatsapp": "Escribir por WhatsApp",
+      "phone": "Llamar",
+      "website": "Ir al sitio web",
+      "menu": "Ver la carta",
+      "booking": "Reservar",
+      "instagram": "Ver en Instagram"
+    }
   },
   "routes": {
     "title": "Rutas",
@@ -494,7 +502,8 @@
     "loadError": "No se pudo leer la base de datos. Intenta de nuevo en un momento.",
     "nav": {
       "entities": "Fichas",
-      "reviews": "Comentarios"
+      "reviews": "Comentarios",
+      "business": "Comercios"
     },
     "reviews": {
       "title": "Comentarios de visitantes",
@@ -512,6 +521,61 @@
       "saved": "Listo. El cambio ya se ve en el sitio público.",
       "error": "No se pudo aplicar. Revisa tu rol o intenta de nuevo.",
       "empty": "No hay comentarios en esta vista."
+    },
+    "business": {
+      "title": "Comercios",
+      "intro": "Botón de acción de cada local, avisos destacados con fecha de término e invitación a sumarse a la guía.",
+      "saved": "Guardado. El sitio público ya muestra el cambio.",
+      "error": "No se pudo guardar. Revisa los datos (enlaces con https://, número con código de país) o tu rol.",
+      "save": "Guardar",
+      "cta": {
+        "title": "Botón de acción en la ficha",
+        "help": "Un botón destacado en la ficha del local. WhatsApp y teléfono: el número con código de país (+56 9 …). Web, carta, reservas e Instagram: el enlace completo.",
+        "none": "No hay comercios en la guía todavía.",
+        "kind": "Tipo de botón",
+        "noButton": "Sin botón",
+        "value": "Número o enlace",
+        "placeholder": "+56 9 1234 5678 o https://…"
+      },
+      "notices": {
+        "title": "Avisos destacados",
+        "help": "Promociones o anuncios con fecha de término. Los de un local salen en su ficha; los generales, en la portada. Vencen solos.",
+        "place": "Dónde se muestra",
+        "general": "General (portada)",
+        "until": "Hasta (inclusive)",
+        "titleField": "Título",
+        "text": "Texto (opcional, hasta 280 caracteres)",
+        "link": "Enlace (opcional)",
+        "add": "Publicar aviso",
+        "none": "No hay avisos.",
+        "state": {
+          "active": "Activo",
+          "paused": "Pausado",
+          "expired": "Vencido"
+        },
+        "ends": "vence {date}",
+        "pause": "Pausar",
+        "activate": "Activar",
+        "delete": "Borrar"
+      },
+      "invite": {
+        "title": "Invitación a comercios",
+        "help": "Recuadro «¿Tienes un comercio en Papudo?» en el explorador y en las fichas de negocios. Con el enlace del formulario, el botón lleva directo a él; sin enlace, lleva a la página Para negocios.",
+        "show": "Mostrar la invitación",
+        "form": "Enlace del formulario para comercios",
+        "adminOnly": "Solo administración puede cambiar esta configuración."
+      }
     }
+  },
+  "notices": {
+    "label": "Aviso",
+    "more": "Más información",
+    "until": "Hasta el {date}"
+  },
+  "businessInvite": {
+    "title": "¿Tienes un comercio en Papudo?",
+    "body": "Súmalo a la guía: alojamiento, comida, actividades o productos locales. Esta temporada es gratis.",
+    "cta": "Sumar mi comercio",
+    "more": "Cómo sumarme"
   }
 }

@@ -7,9 +7,16 @@ import {
   canDeleteReviews,
   canModerate,
   canVerify,
+  createNotice,
+  CTA_KINDS,
+  deleteNotice,
   deleteReview,
   getSession,
+  setNoticeActive,
   setReviewStatus,
+  updatePlaceCta,
+  updateSettings,
+  type CtaKindAdmin,
   isEntityKind,
   sessionFor,
   verifyEntity,
@@ -17,6 +24,8 @@ import {
   type Verification,
 } from "@/lib/admin/api";
 import { REVIEWS_TAG } from "@/lib/reviews";
+import { NOTICES_TAG, SETTINGS_TAG } from "@/lib/business";
+import { ctaHref } from "@/lib/data";
 import {
   ACCESS_COOKIE,
   REFRESH_COOKIE,
@@ -135,4 +144,123 @@ export async function moderateReview(formData: FormData) {
   // Se retira del sitio público de inmediato.
   updateTag(REVIEWS_TAG);
   redirect(`${back}&guardado=1`);
+}
+
+// ── Comercios ─────────────────────────────────────────────────────────────
+const BUSINESS = "/admin/comercios";
+const UUID = /^[0-9a-f-]{36}$/;
+
+/** Corre una escritura del panel y vuelve a /admin/comercios con el resultado. */
+async function businessWrite(
+  allowed: boolean,
+  write: () => Promise<void>,
+  tag: string,
+  anchor: string,
+) {
+  if (!allowed) redirect(`${BUSINESS}?error=1#${anchor}`);
+  let ok = true;
+  try {
+    await write();
+  } catch (error) {
+    console.error("[admin] comercios: no se pudo guardar", error);
+    ok = false;
+  }
+  if (!ok) redirect(`${BUSINESS}?error=1#${anchor}`);
+  updateTag(tag);
+  redirect(`${BUSINESS}?guardado=1#${anchor}`);
+}
+
+export async function saveCta(formData: FormData) {
+  const session = await getSession();
+  if (!session) redirect("/admin/ingresar");
+  const id = text(formData.get("id"));
+  const kind = text(formData.get("tipo")) as CtaKindAdmin | "";
+  const value = text(formData.get("valor"));
+  const clear = kind === "";
+  const valid =
+    UUID.test(id) &&
+    (clear ||
+      (CTA_KINDS.includes(kind as CtaKindAdmin) &&
+        ctaHref({ kind: kind as CtaKindAdmin, value }) !== null));
+  await businessWrite(
+    canModerate(session) && valid,
+    () =>
+      updatePlaceCta(
+        session.token,
+        id,
+        clear ? null : (kind as CtaKindAdmin),
+        clear ? null : value,
+      ),
+    "content",
+    "botones",
+  );
+}
+
+export async function addNotice(formData: FormData) {
+  const session = await getSession();
+  if (!session) redirect("/admin/ingresar");
+  const placeId = text(formData.get("lugar"));
+  const title = text(formData.get("titulo"));
+  const body = text(formData.get("texto"));
+  const link = text(formData.get("enlace"));
+  const until = text(formData.get("hasta"));
+  // Vence al final del día elegido (hora de Chile).
+  const endsAt = /^\d{4}-\d{2}-\d{2}$/.test(until)
+    ? new Date(`${until}T23:59:59-03:00`)
+    : null;
+  const valid =
+    (placeId === "" || UUID.test(placeId)) &&
+    title.length >= 3 &&
+    title.length <= 80 &&
+    body.length <= 280 &&
+    (link === "" || isHttpUrl(link)) &&
+    endsAt !== null &&
+    endsAt.getTime() > Date.now();
+  await businessWrite(
+    canModerate(session) && valid,
+    () =>
+      createNotice(session, {
+        placeId: placeId || null,
+        title,
+        body: body || null,
+        linkUrl: link || null,
+        endsAt: endsAt!.toISOString(),
+      }),
+    NOTICES_TAG,
+    "avisos",
+  );
+}
+
+export async function changeNotice(formData: FormData) {
+  const session = await getSession();
+  if (!session) redirect("/admin/ingresar");
+  const id = text(formData.get("id"));
+  const action = text(formData.get("accion"));
+  await businessWrite(
+    canModerate(session) &&
+      UUID.test(id) &&
+      ["activar", "pausar", "borrar"].includes(action),
+    () =>
+      action === "borrar"
+        ? deleteNotice(session.token, id)
+        : setNoticeActive(session.token, id, action === "activar"),
+    NOTICES_TAG,
+    "avisos",
+  );
+}
+
+export async function saveSettings(formData: FormData) {
+  const session = await getSession();
+  if (!session) redirect("/admin/ingresar");
+  const url = text(formData.get("formulario"));
+  await businessWrite(
+    session.role === "admin" && (url === "" || isHttpUrl(url)),
+    () =>
+      updateSettings(session.token, {
+        businessFormUrl: url || null,
+        businessInvite: formData.get("invitacion") === "on",
+      }),
+    SETTINGS_TAG,
+    "invitacion",
+  );
 }

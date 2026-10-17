@@ -36,6 +36,9 @@ export default async function AdminLayout({
               <Link href="/admin/comentarios" className="text-sea-deep">
                 {t("nav.reviews")}
               </Link>
+              <Link href="/admin/comercios" className="text-sea-deep">
+                {t("nav.business")}
+              </Link>
             </nav>
           )}
           {session && (

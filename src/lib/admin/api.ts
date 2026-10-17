@@ -291,3 +291,165 @@ export async function deleteReview(session: Session, id: string) {
     method: "DELETE",
   });
 }
+
+// ── Comercios: botón de acción, avisos y configuración ───────────────────
+export const CTA_KINDS = [
+  "whatsapp",
+  "phone",
+  "website",
+  "menu",
+  "booking",
+  "instagram",
+] as const;
+export type CtaKindAdmin = (typeof CTA_KINDS)[number];
+
+export type BusinessPlace = {
+  id: string;
+  slug: string;
+  name: string;
+  ctaKind: CtaKindAdmin | null;
+  ctaValue: string | null;
+};
+
+export async function listBusinessPlaces(
+  token: string,
+): Promise<BusinessPlace[]> {
+  const rows = await rest<
+    (Row & { cta_kind: CtaKindAdmin | null; cta_value: string | null })[]
+  >(
+    token,
+    "places?select=id,slug,cta_kind,cta_value,translations:place_translations(locale,name)" +
+      "&is_business=eq.true&is_demo=eq.false&order=sort_order,slug",
+  );
+  return rows.map((r) => ({
+    id: r.id,
+    slug: r.slug,
+    name: nameEs(r.translations, r.slug),
+    ctaKind: r.cta_kind,
+    ctaValue: r.cta_value,
+  }));
+}
+
+export async function updatePlaceCta(
+  token: string,
+  id: string,
+  kind: CtaKindAdmin | null,
+  value: string | null,
+) {
+  await rest<null>(token, `places?id=eq.${encodeURIComponent(id)}`, {
+    method: "PATCH",
+    body: JSON.stringify({ cta_kind: kind, cta_value: value }),
+  });
+}
+
+export type AdminNotice = {
+  id: string;
+  title: string;
+  body: string | null;
+  linkUrl: string | null;
+  startsAt: string;
+  endsAt: string;
+  active: boolean;
+  /** Ya pasó su fecha de término. */
+  expired: boolean;
+  placeName: string | null;
+};
+
+export async function listNoticesAdmin(token: string): Promise<AdminNotice[]> {
+  const rows = await rest<
+    {
+      id: string;
+      title: string;
+      body: string | null;
+      link_url: string | null;
+      starts_at: string;
+      ends_at: string;
+      active: boolean;
+      place: { slug: string; translations: Row["translations"] } | null;
+    }[]
+  >(
+    token,
+    "notices?select=id,title,body,link_url,starts_at,ends_at,active," +
+      "place:places(slug,translations:place_translations(locale,name))" +
+      "&order=ends_at.desc&limit=100",
+  );
+  const now = Date.now();
+  return rows.map((r) => ({
+    id: r.id,
+    title: r.title,
+    body: r.body,
+    linkUrl: r.link_url,
+    startsAt: r.starts_at,
+    endsAt: r.ends_at,
+    active: r.active,
+    expired: Date.parse(r.ends_at) <= now,
+    placeName: r.place ? nameEs(r.place.translations, r.place.slug) : null,
+  }));
+}
+
+export async function createNotice(
+  session: Session,
+  notice: {
+    placeId: string | null;
+    title: string;
+    body: string | null;
+    linkUrl: string | null;
+    endsAt: string;
+  },
+) {
+  await rest<null>(session.token, "notices", {
+    method: "POST",
+    headers: { prefer: "return=minimal" },
+    body: JSON.stringify({
+      place_id: notice.placeId,
+      title: notice.title,
+      body: notice.body,
+      link_url: notice.linkUrl,
+      ends_at: notice.endsAt,
+      created_by: session.userId,
+    }),
+  });
+}
+
+export async function setNoticeActive(
+  token: string,
+  id: string,
+  active: boolean,
+) {
+  await rest<null>(token, `notices?id=eq.${encodeURIComponent(id)}`, {
+    method: "PATCH",
+    body: JSON.stringify({ active }),
+  });
+}
+
+export async function deleteNotice(token: string, id: string) {
+  await rest<null>(token, `notices?id=eq.${encodeURIComponent(id)}`, {
+    method: "DELETE",
+  });
+}
+
+export type AdminSettings = {
+  businessFormUrl: string | null;
+  businessInvite: boolean;
+};
+
+export async function getSettingsAdmin(token: string): Promise<AdminSettings> {
+  const rows = await rest<
+    { business_form_url: string | null; business_invite: boolean }[]
+  >(token, "site_settings?select=business_form_url,business_invite");
+  const r = rows[0];
+  return {
+    businessFormUrl: r?.business_form_url ?? null,
+    businessInvite: r?.business_invite ?? true,
+  };
+}
+
+export async function updateSettings(token: string, s: AdminSettings) {
+  await rest<null>(token, "site_settings?id=eq.true", {
+    method: "PATCH",
+    body: JSON.stringify({
+      business_form_url: s.businessFormUrl,
+      business_invite: s.businessInvite,
+    }),
+  });
+}
