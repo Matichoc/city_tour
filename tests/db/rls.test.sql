@@ -17,7 +17,7 @@ insert into public.profiles (user_id, role, active) values
 
 insert into public.places (id, category_id, slug, publication_status)
 select '10000000-0000-0000-0000-000000000001', id, 'playa-publicada', 'draft'
-  from public.categories where slug = 'playas';
+  from public.categories where slug = 'balneario';
 insert into public.place_translations (place_id, locale, name, short_description) values
   ('10000000-0000-0000-0000-000000000001', 'es', 'Playa publicada', 'Descripción');
 update public.places set publication_status = 'published'
@@ -87,7 +87,7 @@ select tests.logout();
 select tests.login('authenticated', '00000000-0000-0000-0000-0000000000e1');
 select tests.eq('editor ve borradores', (select count(*)::int from public.places), 2);
 insert into public.places (id, category_id, slug)
-  select '10000000-0000-0000-0000-000000000003', id, 'nuevo-del-editor' from public.categories where slug = 'playas';
+  select '10000000-0000-0000-0000-000000000003', id, 'nuevo-del-editor' from public.categories where slug = 'balneario';
 select tests.raises('editor no crea contenido ya publicado',
   $$insert into public.places (category_id, slug, publication_status)
     select id, 'y', 'published' from public.categories limit 1$$, '42501');
@@ -189,12 +189,16 @@ select tests.logout();
 
 -- ── Traducciones: marcar "requiere revisión" ─────────────────────────────
 insert into public.place_translations (place_id, locale, name, translation_status)
-  values ('10000000-0000-0000-0000-000000000001', 'en', 'Published beach', 'reviewed');
+  values ('10000000-0000-0000-0000-000000000001', 'en', 'Published beach', 'reviewed'),
+         ('10000000-0000-0000-0000-000000000001', 'pt', 'Praia publicada', 'reviewed');
 update public.place_translations set short_description = 'Texto nuevo en español'
   where place_id = '10000000-0000-0000-0000-000000000001' and locale = 'es';
 select tests.eq('cambiar el español marca el inglés para revisión',
   (select translation_status::text from public.place_translations
     where place_id = '10000000-0000-0000-0000-000000000001' and locale = 'en'), 'needs_review');
+select tests.eq('cambiar el español marca el portugués para revisión',
+  (select translation_status::text from public.place_translations
+    where place_id = '10000000-0000-0000-0000-000000000001' and locale = 'pt'), 'needs_review');
 select tests.login('authenticated', '00000000-0000-0000-0000-0000000000e1');
 select tests.eq('el reporte muestra el inglés pendiente de revisión', (
   select english_status from public.v_report_translations
