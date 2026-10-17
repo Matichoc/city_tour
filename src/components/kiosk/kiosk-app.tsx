@@ -165,11 +165,21 @@ export function KioskApp({
         <button
           type="button"
           onClick={() => go({ kind: "home" })}
-          className="font-display text-sea-deep min-h-14 text-left text-2xl font-extrabold"
+          className="font-display text-sea-deep flex min-h-14 items-center gap-3 text-left text-2xl font-extrabold"
         >
-          Papudo en tu mano
-          <span className="text-muted block text-sm font-semibold">
-            {t("subtitle")}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/brand/papudo-simbolo.webp"
+            alt=""
+            width={43}
+            height={50}
+            className="h-12 w-auto"
+          />
+          <span>
+            Papudo en tu Mano
+            <span className="text-muted block text-sm font-semibold">
+              {t("subtitle")}
+            </span>
           </span>
         </button>
         <div className="flex items-center gap-3">

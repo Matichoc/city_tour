@@ -19,17 +19,14 @@ export function TopNav() {
           href="/"
           className="font-display text-sea-deep flex items-center gap-2 text-lg font-extrabold"
         >
-          <svg viewBox="0 0 32 32" className="size-7" aria-hidden="true">
-            <circle cx="22" cy="10" r="5" fill="#f4d36e" />
-            <path
-              d="M2 22c3 0 3-3 6-3s3 3 6 3 3-3 6-3 3 3 6 3v6H2z"
-              fill="#1b7070"
-            />
-            <path
-              d="M2 27c3 0 3-2 6-2s3 2 6 2 3-2 6-2 3 2 6 2v3H2z"
-              fill="#6fcbca"
-            />
-          </svg>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/brand/papudo-simbolo.webp"
+            alt=""
+            width={27}
+            height={32}
+            className="h-8 w-auto"
+          />
           {t("name")}
         </Link>
         <nav

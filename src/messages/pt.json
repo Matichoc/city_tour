@@ -1,6 +1,6 @@
 {
   "brand": {
-    "name": "Papudo en tu mano",
+    "name": "Papudo en tu Mano",
     "tagline": "Praias, campo e patrimônio de Papudo, no seu bolso."
   },
   "nav": {
@@ -19,6 +19,9 @@
   "common": {
     "share": "Compartilhar",
     "copied": "Link copiado!",
+    "subApp": "Papudo en tu Mano é um sub-app de Turismo en tu Mano",
+    "logoParent": "Logo de Turismo en tu Mano",
+    "logoPapudo": "Logo de Papudo en tu Mano",
     "poweredBy": "Desenvolvido por",
     "aiIllustration": "Ilustração IA"
   },
@@ -197,6 +200,8 @@
     "kind": {
       "phone": "Ligar para a Prefeitura"
     },
+    "platformTitle": "Um sub-app de Turismo en tu Mano",
+    "platformBody": "Turismo en tu Mano é a plataforma de guias turísticos e gestão do comércio local para comunas e destinos. Papudo en tu Mano é o seu sub-app para Papudo, Las Salinas e Pullally.",
     "authorTitle": "Quem desenvolve",
     "authorBody": "Este guia é desenvolvido por Cristóbal Roco, especialista em desenvolvimento e soluções de inteligência artificial para negócios.",
     "authorNote": "As ilustrações são feitas com IA e aparecem com a sua etiqueta. Os dados são sempre conferidos com fontes e com a comunidade.",
@@ -238,7 +243,7 @@
     "title": "Para negócios",
     "subtitle": "Inclua sua hospedagem, restaurante ou atividade no guia turístico de Papudo.",
     "pitchTitle": "Os visitantes já estão procurando onde dormir, comer e o que fazer",
-    "pitchBody": "Papudo en tu mano reúne praias, roteiros e percursos da comuna. Seu negócio pode aparecer justo quando alguém monta o seu dia.",
+    "pitchBody": "Papudo en tu Mano reúne praias, roteiros e percursos da comuna. Seu negócio pode aparecer justo quando alguém monta o seu dia.",
     "benefitsTitle": "O que você recebe",
     "benefit": {
       "free": {
@@ -292,7 +297,7 @@
     "generate": "Gerar",
     "help": "O QR leva ao guia e nos diz de qual local veio a visita, sem dados pessoais.",
     "headline": "Descubra Papudo pelo seu celular",
-    "qrAlt": "Código QR para o guia Papudo en tu mano",
+    "qrAlt": "Código QR para o guia Papudo en tu Mano",
     "scan": "Escaneie com a câmera: praias, roteiros e percursos, sem baixar nada.",
     "from": "Recomendado por {name}",
     "print": "Imprimir cartaz",
@@ -482,7 +487,7 @@
   },
   "share": {
     "expiredTitle": "Este link expirou",
-    "expiredBody": "A prévia do Papudo en tu mano foi compartilhada por tempo limitado. Peça um novo link a quem o enviou.",
+    "expiredBody": "A prévia do Papudo en tu Mano foi compartilhada por tempo limitado. Peça um novo link a quem o enviou.",
     "linkTitle": "Link para compartilhar",
     "linkBody": "Quem abri-lo poderá ver a prévia até {expires} (horário do Chile). Depois disso, o link deixa de funcionar.",
     "askPassword": "Digite a chave para criar links",
@@ -641,7 +646,7 @@
         "message": "Mensagem para o comércio",
         "whatsapp": "Enviar por WhatsApp",
         "copyHint": "Copie a mensagem e envie pelo canal que você usa com o comércio.",
-        "template": "Olá, somos a equipe do guia «Papudo en tu mano». Para que os visitantes encontrem informações corretas sobre {name}, você pode confirmar ou atualizar horários, contato, preços e serviços? Assim está sua página hoje: {url} Obrigado!",
+        "template": "Olá, somos a equipe do guia «Papudo en tu Mano». Para que os visitantes encontrem informações corretas sobre {name}, você pode confirmar ou atualizar horários, contato, preços e serviços? Assim está sua página hoje: {url} Obrigado!",
         "pendingCount": "{count, plural, one {# comércio precisa} other {# comércios precisam}} confirmar seus dados (a cada 6 meses).",
         "review": "Revisar"
       }
