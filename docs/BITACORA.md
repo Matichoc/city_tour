@@ -14,13 +14,13 @@ indicadas en cada versión.
 `docs/bitacora-notas.json` (clave `actual`, y el número de PR cuando exista),
 correr `pnpm bitacora` y subir el cambio en el mismo PR.
 
-## En preparación: v0.23 — Seguridad: el contacto de la importación va en una tabla privada
+## En preparación: v0.24 — Seguridad: el contacto de la importación va en una tabla privada
 
 Solución de PRIV-01: el nombre y el correo de quien inscribió el comercio ya no se guardan en places.import_snapshot sino en place_import_private (solo personal). La importación compara con la tabla privada y sigue leyendo filas antiguas. Incluye scripts de respaldo, verificación, limpieza y restauración (a mano, con autorización), probados sobre una base desechable.
 
 - **Migraciones por correr en Supabase:** 0026
 - **Estado:** en revisión, [PR #29](https://github.com/Matichoc/city_tour/pull/29) (aún no está en `develop`).
-- **Última actualización de esta bitácora:** 2026-10-17 16:17
+- **Última actualización de esta bitácora:** 2026-10-17 16:36
 
 ## Avance por día
 
@@ -29,7 +29,7 @@ trabajadas: hay pausas y trabajo sin registrar).
 
 | Día | Ventana de actividad | Registros | Versiones entregadas |
 | --- | --- | ---: | --- |
-| Sábado, 17 de octubre de 2026 | 00:01 – 16:13 | 19 | v0.16, v0.17, v0.18, v0.19, v0.20, v0.21, v0.22 |
+| Sábado, 17 de octubre de 2026 | 00:01 – 16:18 | 22 | v0.16, v0.17, v0.18, v0.19, v0.20, v0.21, v0.22, v0.23 |
 | Viernes, 16 de octubre de 2026 | 00:04 – 23:51 | 15 | v0.9, v0.10, v0.11, v0.12, v0.13, v0.14, v0.15 |
 | Jueves, 15 de octubre de 2026 | 00:05 – 23:52 | 10 | v0.7, v0.8 |
 | Miércoles, 14 de octubre de 2026 | 23:50 – 23:50 | 1 | — |
@@ -37,6 +37,16 @@ trabajadas: hay pausas y trabajo sin registrar).
 | Lunes, 12 de octubre de 2026 | 15:43 – 17:53 | 10 | v0.1, v0.2, v0.3, v0.4 |
 
 ## Versiones
+
+### v0.23 — Seguridad: Next.js 16.3.8
+Sábado, 17 de octubre de 2026, 16:29 · [PR #27](https://github.com/Matichoc/city_tour/pull/27)
+
+Actualiza Next.js y eslint-config-next de 16.3.5 a 16.3.8 para cerrar los 7 avisos de seguridad de Next (hallazgo DEP-01 de la auditoría). Sin cambios de funcionalidad.
+
+Registros:
+
+- 10-17 16:10 — Seguridad (DEP-01): actualiza Next.js y eslint-config-next a 16.3.8 (`bbd3831`)
+- 10-17 16:11 — Bitácora: número de PR de DEP-01 (27) (`eec5bcb`)
 
 ### v0.22 — Galería de la ficha con flechas
 Sábado, 17 de octubre de 2026, 03:15 · [PR #25](https://github.com/Matichoc/city_tour/pull/25)
