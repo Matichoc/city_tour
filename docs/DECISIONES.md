@@ -115,8 +115,8 @@ Fuente: PLADETUR de Papudo 2023–2027, iD (`docs/investigacion/`).
   permanente (`?para=equipo`) y los demás vencen solos (4 h por defecto, máx.
   30 días). Se comparten por `papudo-dev.vercel.app` y
   `papudo-demo.vercel.app`, para que la dirección no lleve el nombre de la
-  rama. `demo` tiene su propia clave (variable por rama en Vercel) para
-  cortarlo sin tocar el enlace del equipo. Guía: [`COMPARTIR-VISTA-PREVIA.md`](COMPARTIR-VISTA-PREVIA.md).
+  rama. El equipo usa la clave de Production (`develop`) y el `demo` la de
+  Preview, así el `demo` se corta sin tocar el enlace del equipo. Guía: [`COMPARTIR-VISTA-PREVIA.md`](COMPARTIR-VISTA-PREVIA.md).
 - Se hizo en el proxy y no con los *Shareable Links* de Vercel porque esos no
   vencen solos. La clave para crear enlaces se pide con la ventana de usuario y
   contraseña del navegador (HTTP Basic) para que no quede en la URL ni en los
