@@ -14,12 +14,12 @@ indicadas en cada versión.
 `docs/bitacora-notas.json` (clave `actual`, y el número de PR cuando exista),
 correr `pnpm bitacora` y subir el cambio en el mismo PR.
 
-## En preparación: v0.22 — Galería de la ficha con flechas
+## En preparación: v0.23 — Seguridad: Next.js 16.3.8
 
-La galería de fotos del local muestra una imagen a la vez con flechas a los lados, contador y deslizado con el dedo, sin la barra de desplazamiento.
+Actualiza Next.js y eslint-config-next de 16.3.5 a 16.3.8 para cerrar los 7 avisos de seguridad de Next (hallazgo DEP-01 de la auditoría). Sin cambios de funcionalidad.
 
-- **Estado:** en desarrollo (aún no está en `develop`).
-- **Última actualización de esta bitácora:** 2026-10-17 03:09
+- **Estado:** en revisión, [PR #27](https://github.com/Matichoc/city_tour/pull/27) (aún no está en `develop`).
+- **Última actualización de esta bitácora:** 2026-10-17 16:11
 
 ## Avance por día
 
@@ -28,7 +28,7 @@ trabajadas: hay pausas y trabajo sin registrar).
 
 | Día | Ventana de actividad | Registros | Versiones entregadas |
 | --- | --- | ---: | --- |
-| Sábado, 17 de octubre de 2026 | 00:01 – 03:02 | 16 | v0.16, v0.17, v0.18, v0.19, v0.20, v0.21 |
+| Sábado, 17 de octubre de 2026 | 00:01 – 16:10 | 19 | v0.16, v0.17, v0.18, v0.19, v0.20, v0.21, v0.22 |
 | Viernes, 16 de octubre de 2026 | 00:04 – 23:51 | 15 | v0.9, v0.10, v0.11, v0.12, v0.13, v0.14, v0.15 |
 | Jueves, 15 de octubre de 2026 | 00:05 – 23:52 | 10 | v0.7, v0.8 |
 | Miércoles, 14 de octubre de 2026 | 23:50 – 23:50 | 1 | — |
@@ -36,6 +36,16 @@ trabajadas: hay pausas y trabajo sin registrar).
 | Lunes, 12 de octubre de 2026 | 15:43 – 17:53 | 10 | v0.1, v0.2, v0.3, v0.4 |
 
 ## Versiones
+
+### v0.22 — Galería de la ficha con flechas
+Sábado, 17 de octubre de 2026, 03:15 · [PR #25](https://github.com/Matichoc/city_tour/pull/25)
+
+La galería de fotos del local muestra una imagen a la vez con flechas a los lados, contador y deslizado con el dedo, sin la barra de desplazamiento.
+
+Registros:
+
+- 10-17 03:09 — Ficha del comercio: galería con flechas a los lados, contador y deslizado (`84a2a10`)
+- 10-17 03:11 — Galería de la ficha: vuelve a mostrar varias fotos y deja solo las flechas a los lados (`c5b564c`)
 
 ### v0.21 — Plan de idiomas originarios (mapudungun y rapa nui)
 Sábado, 17 de octubre de 2026, 03:05 · [PR #24](https://github.com/Matichoc/city_tour/pull/24)
