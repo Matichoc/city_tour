@@ -1,0 +1,85 @@
+{
+  "_ayuda": "Notas a mano de cada entrega, por número de PR. `pnpm bitacora` las junta con el historial de git (días, horas y commits) y escribe docs/BITACORA.md. La entrega en curso va en «actual» con el número de su PR en «pr»; al fusionarse, la bitácora la une sola con su versión.",
+  "1": {
+    "titulo": "Plan de trabajo y flujo de ramas",
+    "resumen": "Plan del proyecto, financiamiento y herramientas, y el flujo de ramas."
+  },
+  "2": {
+    "titulo": "Fase 0: esqueleto del sitio",
+    "resumen": "Next.js 16, textos en español e inglés y un primer sitio de demostración de Papudo."
+  },
+  "3": {
+    "titulo": "Fase 1: base de datos",
+    "resumen": "Migraciones 0001–0015, permisos por rol (RLS), datos iniciales y pruebas de base de datos.",
+    "migraciones": "0001–0015"
+  },
+  "5": {
+    "titulo": "Contenido y funciones de la guía",
+    "resumen": "Lugares, pueblos y la ruta costera de Papudo, mapa, tema de playa y campo, y datos de contacto con su fuente."
+  },
+  "6": {
+    "titulo": "QA y mejoras para la municipalidad",
+    "resumen": "Correcciones, página para negocios, QR para locales, analítica sin cookies y SEO; contenido validado en la web."
+  },
+  "7": {
+    "titulo": "Roots Salinas, primera ficha de comercio",
+    "resumen": "Primer local real de la guía, ubicado con su Plus Code."
+  },
+  "8": {
+    "titulo": "Mapa 3D, recorrido en vivo y cámara",
+    "resumen": "Mapa 3D de la comuna, recorrido en vivo (con modo demostración), guía con cámara y opiniones en la ficha."
+  },
+  "9": {
+    "titulo": "Ajuste de la cámara del recorrido",
+    "resumen": "La cámara también se ofrece lejos de la parada."
+  },
+  "11": {
+    "titulo": "Alineación con el PLADETUR",
+    "resumen": "Categorías según los productos del plan, agenda anual de eventos y modo quiosco para las oficinas de información."
+  },
+  "10": {
+    "titulo": "Cámara a pie y documentos del PLADETUR",
+    "resumen": "Figura guía a elegir (flecha, mano, huellas, gaviota o velero) y alineación del producto y del precio con el plan."
+  },
+  "12": {
+    "titulo": "Formulario para comercios y revisión legal",
+    "resumen": "Formulario «Suma tu comercio» (Google Forms), con envío de fotos por WhatsApp, y lista de revisión legal."
+  },
+  "14": {
+    "titulo": "Sitio conectado a la base de datos",
+    "resumen": "El sitio lee lugares, eventos, rutas y localidades de Supabase y vuelve al contenido del repo si falla. Contenido cargable con supabase/content.sql.",
+    "migraciones": "0016"
+  },
+  "15": {
+    "titulo": "Enlaces para compartir que vencen solos",
+    "resumen": "Vistas previas cerradas y enlaces firmados con duración en horas o días."
+  },
+  "16": {
+    "titulo": "Ambientes main, develop y demo",
+    "resumen": "Ambientes con enlace permanente para el equipo y enlaces temporales para compartir (hasta 30 días), con direcciones sin el nombre de la IA ni de la nube."
+  },
+  "18": {
+    "titulo": "Panel /admin: ver y verificar",
+    "resumen": "develop pasa a ser producción cerrada hasta el financiamiento. Panel con ingreso por correo para ver y verificar lugares, eventos y rutas."
+  },
+  "19": {
+    "titulo": "Comentarios reales, comercios y datos al día",
+    "resumen": "Comentarios que se publican al enviarse y se moderan en el panel; botón de acción, avisos e invitación para comercios; recordatorio de actualizar datos cada 6 meses; localidades y vista previa en el panel; colores de referencia del logo.",
+    "migraciones": "0017, 0018, 0019"
+  },
+  "20": {
+    "titulo": "Fotos y videos en comentarios; Roots Salinas completo; paleta del logo",
+    "resumen": "Fotos y videos con detector gratuito en el navegador y revisión del personal; horarios por temporada, Instagram, logo, carta, promociones y registro SERNATUR de Roots Salinas; el sitio usa los colores del logo en versión pálida.",
+    "migraciones": "0020, 0021, 0022"
+  },
+  "21": {
+    "titulo": "La portada es la imagen real del local",
+    "resumen": "Si el local tiene foto o logo, esa es la portada; la ilustración con IA queda solo para los lugares sin imágenes."
+  },
+  "actual": {
+    "pr": "22",
+    "titulo": "Panel de comercios: crear, fotos e importar planilla",
+    "resumen": "Crear y editar comercios y subir su logo, carta y fotos desde el panel; importar la planilla del formulario (Google Sheets o CSV) cargando solo lo nuevo o lo que cambió; contacto interno privado; las fichas editadas en el panel ya no las pisa content.sql; bitácora de avances.",
+    "migraciones": "0023"
+  }
+}

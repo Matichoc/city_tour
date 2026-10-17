@@ -53,8 +53,10 @@ export type PlaceRow = {
   last_verified_at?: string | null;
   info_updated_at?: string | null;
   instagram?: string | null;
+  website?: string | null;
   maps_url?: string | null;
   hours?: HoursRow[];
+  hours_text?: string | null;
   sernatur_number?: string | null;
   sernatur_valid_until?: string | null;
   images?: {
@@ -137,7 +139,7 @@ export const QUERIES: Record<keyof ContentRows, string> = {
     "places?select=slug,latitude,longitude,address,is_demo,is_business,verification_status,cta_kind,cta_value," +
     "last_verified_at,info_updated_at,instagram,maps_url," +
     "hours:place_hours(day_of_week,opens_at,closes_at,closed,from_month,to_month,holidays)," +
-    "sernatur_number,sernatur_valid_until," +
+    "sernatur_number,sernatur_valid_until,hours_text,website," +
     "images:place_images(storage_path,kind,width,height,alt_text,alt_text_en,alt_text_pt,credit,position)," +
     "category:categories(slug),locality:localities(slug)," +
     `translations:place_translations(locale,name,short_description,full_description),${SOURCES}` +
@@ -255,6 +257,8 @@ function toPlace(r: PlaceRow): PlaceContent | null {
     ...(r.instagram ? { instagram: r.instagram } : {}),
     ...(r.maps_url ? { mapsUrl: r.maps_url } : {}),
     ...(r.hours?.length ? { hours: groupHours(r.hours) } : {}),
+    ...(r.hours_text ? { hoursText: r.hours_text } : {}),
+    ...(r.website ? { website: r.website } : {}),
     ...toImages(r.images ?? []),
     ...(r.sernatur_number && r.sernatur_valid_until
       ? {

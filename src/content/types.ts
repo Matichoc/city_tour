@@ -77,10 +77,14 @@ export type PlaceContent = {
   infoUpdatedAt?: string;
   /** Instagram del local (enlace completo). */
   instagram?: string;
+  /** Sitio web o Facebook del local (https). */
+  website?: string;
   /** Enlace de Google Maps que compartió el local. */
   mapsUrl?: string;
   /** Horarios por temporada, como los informó el local. */
   hours?: PlaceHours[];
+  /** Horario tal como lo escribió el local (si no hay horario por temporada). */
+  hoursText?: string;
   /** Logo del comercio (cuadrado). */
   logo?: { src: string; width: number; height: number };
   /** Fotos, carta y promociones que entregó el comercio. */

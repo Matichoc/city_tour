@@ -122,7 +122,8 @@
     "sernatur": "Registro SERNATUR nº {number}",
     "sernaturUntil": "válido até {date}",
     "sernaturExpired": "vencido em {date}",
-    "sernaturNote": "Serviço turístico registrado no SERNATUR (Serviço Nacional de Turismo do Chile), segundo informa o local."
+    "sernaturNote": "Serviço turístico registrado no SERNATUR (Serviço Nacional de Turismo do Chile), segundo informa o local.",
+    "website": "Site"
   },
   "routes": {
     "title": "Roteiros",
@@ -651,6 +652,165 @@
       "help": "É assim que os visitantes a veem (versão de celular). As mudanças podem levar alguns minutos para aparecer.",
       "open": "Abrir em uma aba",
       "notPublished": "Não publicada: o site ainda não a mostra."
+    },
+    "places": {
+      "nav": {
+        "new": "Novo comércio",
+        "import": "Importar planilha",
+        "edit": "Editar página"
+      },
+      "back": "← Voltar aos comércios",
+      "newTitle": "Novo comércio",
+      "newHelp": "Crie a página de um restaurante, hospedagem, serviço de turismo ou qualquer negócio. Se não publicar, fica como rascunho e o site não a mostra. Depois de criá-la, envie o logo, cardápio e fotos.",
+      "editTitle": "Editar página",
+      "created": "Página criada. Agora envie o logo, cardápio e fotos.",
+      "saved": "Salvo. O site público é atualizado em alguns minutos.",
+      "errors": {
+        "name": "O nome deve ter de 3 a 80 caracteres.",
+        "category": "Escolha o que o negócio oferece.",
+        "text": "Algum texto é muito longo.",
+        "button": "O botão de ação não é válido: WhatsApp ou telefone precisa do número com código do país; os demais, um link completo com https://.",
+        "link": "Revise os links: Instagram (@usuário ou link), site e Google Maps (com https://).",
+        "sernatur": "O registro SERNATUR precisa do número (só dígitos) e da data de validade.",
+        "email": "O e-mail de contato não é válido.",
+        "save": "Não foi possível salvar. Verifique seu perfil ou tente novamente.",
+        "publish": "Só a administração pode publicar."
+      },
+      "form": {
+        "name": "Nome do negócio",
+        "category": "O que oferece",
+        "locality": "Onde fica",
+        "localityNone": "Sem localidade",
+        "address": "Endereço ou como chegar",
+        "short": "Uma frase que o torne especial",
+        "description": "Descrição (opcional)",
+        "hours": "Dias e horários",
+        "hoursHelp": "Como informa o local. Aparece com «Informado pelo local».",
+        "button": "Botão de ação",
+        "buttonNone": "Sem botão",
+        "buttonValue": "Número ou link",
+        "instagram": "Instagram",
+        "web": "Site ou Facebook",
+        "maps": "Link do Google Maps",
+        "sernaturNumber": "Nº de registro SERNATUR",
+        "sernaturDate": "Válido até",
+        "contactTitle": "Contato interno (não é publicado)",
+        "contactHelp": "Para pedir atualizações a cada 6 meses. Só a equipe vê.",
+        "contactName": "Nome de quem inscreveu o negócio",
+        "contactEmail": "E-mail",
+        "publish": "Publicar imediatamente (só administração)",
+        "create": "Criar página",
+        "save": "Salvar alterações",
+        "draftNote": "Sem publicar, a página fica como rascunho."
+      },
+      "publication": {
+        "published": "Publicada",
+        "draft": "Rascunho",
+        "publishNow": "Publicar",
+        "unpublish": "Voltar a rascunho",
+        "adminOnly": "Só a administração pode publicar ou despublicar.",
+        "viewOnSite": "Ver no site"
+      },
+      "photos": {
+        "title": "Logo, cardápio e fotos",
+        "help": "São reduzidas e seus dados ocultos (como a localização do celular) são removidos antes de salvar. A primeira foto é a capa do local; sem fotos, usa-se o logo.",
+        "kind": "O que é",
+        "kinds": {
+          "photo": "Foto do lugar",
+          "menu": "Cardápio",
+          "promo": "Publicidade do local",
+          "logo": "Logo"
+        },
+        "pick": "Escolher imagens",
+        "credit": "Crédito (quem tirou)",
+        "none": "Ainda não há imagens.",
+        "remove": "Remover",
+        "cover": "Tornar capa",
+        "upload": "Enviar",
+        "uploading": "Enviando {done} de {total}…",
+        "uploaded": "{count, plural, one {# imagem enviada.} other {# imagens enviadas.}}",
+        "saveFirst": "Crie a página primeiro para enviar imagens.",
+        "errors": {
+          "type": "«{name}»: só são aceitos JPG, PNG ou WebP.",
+          "size": "«{name}» é muito grande (máx. 4 MB após reduzir).",
+          "kind": "Indique o que é a imagem.",
+          "read": "«{name}» não pôde ser lida como imagem.",
+          "save": "«{name}» não pôde ser salva. Tente novamente.",
+          "denied": "Você não tem permissão para enviar imagens."
+        },
+        "authNote": "Envie só imagens que o local entregou ou autorizou."
+      },
+      "import": {
+        "title": "Importar comércios de uma planilha",
+        "help": "Lê a planilha do formulário «Suma tu comercio» (ou outra com as mesmas perguntas) e mostra o que seria criado ou alterado antes de salvar. Só é carregado o que é novo ou mudou desde a última vez.",
+        "url": "Link da planilha do Google",
+        "urlHelp": "A planilha deve estar compartilhada como «qualquer pessoa com o link pode ver».",
+        "or": "ou envie o arquivo",
+        "file": "Arquivo CSV (Arquivo → Fazer download → Valores separados por vírgula)",
+        "review": "Revisar",
+        "reviewing": "Revisando…",
+        "apply": "Importar o selecionado",
+        "applying": "Importando…",
+        "publish": "Publicar os comércios novos (só administração)",
+        "draftNote": "Sem publicar, os novos ficam como rascunho.",
+        "status": {
+          "new": "Novo",
+          "update": "Mudou",
+          "confirm": "Reconfirmou seus dados",
+          "link": "Já estava no guia",
+          "same": "Sem mudanças",
+          "skip": "Ignorado"
+        },
+        "reason": {
+          "noName": "Sem nome.",
+          "noAuthorization": "Não marcou a autorização para publicar."
+        },
+        "changed": "Mudou: {fields}",
+        "fields": {
+          "name": "nome",
+          "categorySlug": "categoria",
+          "localitySlug": "localidade",
+          "address": "endereço",
+          "phrase": "frase",
+          "hoursText": "horário",
+          "ctaKind": "botão",
+          "ctaValue": "telefone",
+          "instagram": "Instagram",
+          "website": "site",
+          "mapsUrl": "Google Maps",
+          "photoCredit": "crédito das fotos",
+          "contactName": "contato",
+          "contactEmail": "e-mail"
+        },
+        "chooseCategory": "Escolher categoria…",
+        "offered": "Oferece: {offer}",
+        "where": "Onde: {locality}",
+        "duplicates": "Respondeu {count} vezes mais: usa-se a última resposta.",
+        "unknownColumns": "Perguntas novas ainda não importadas: {list}.",
+        "summary": "{count, plural, =0 {Não há comércios na planilha.} one {# comércio na planilha.} other {# comércios na planilha.}}",
+        "nothing": "Não há nada a carregar: tudo está em dia.",
+        "include": "Incluir",
+        "resultTitle": "Importação concluída",
+        "result": {
+          "created": "{count, plural, =0 {Nenhum novo} one {# novo} other {# novos}}",
+          "updated": "{count} com mudanças",
+          "confirmed": "{count} reconfirmaram",
+          "linked": "{count} já existiam e foram vinculados",
+          "same": "{count} sem mudanças",
+          "skipped": "{count} ignorados"
+        },
+        "errorsTitle": "Não foi possível carregar:",
+        "errors": {
+          "badUrl": "O link não é do Google Sheets.",
+          "fetch": "Não foi possível ler a planilha. Verifique se está compartilhada com «qualquer pessoa com o link» ou envie o arquivo CSV.",
+          "empty": "A planilha não tem respostas.",
+          "denied": "Você não tem permissão para importar.",
+          "file": "O arquivo é muito grande ou não pôde ser lido.",
+          "source": "Não foi possível ler a planilha novamente. Revise de novo."
+        },
+        "newFiles": "Ao terminar, abra cada comércio novo para enviar logo, cardápio e fotos.",
+        "open": "Abrir"
+      }
     }
   },
   "notices": {

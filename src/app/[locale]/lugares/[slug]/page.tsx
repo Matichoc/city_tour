@@ -441,6 +441,11 @@ export default async function PlacePage({
                       })}
                       <span className="text-xs">{t("hoursSource")}</span>
                     </dd>
+                  ) : place.hoursText ? (
+                    <dd className="text-muted flex flex-col items-end gap-1 text-right whitespace-pre-line">
+                      {place.hoursText}
+                      <span className="text-xs">{t("hoursSource")}</span>
+                    </dd>
                   ) : (
                     <dd className="text-muted">{t("hoursPending")}</dd>
                   )}
@@ -456,6 +461,23 @@ export default async function PlacePage({
                         className="text-sea underline"
                       >
                         @{place.instagram.replace(/\/+$/, "").split("/").at(-1)}
+                      </a>
+                    </dd>
+                  </div>
+                ) : null}
+                {place.website ? (
+                  <div className="flex justify-between gap-4 p-4">
+                    <dt className="font-bold">{t("website")}</dt>
+                    <dd className="min-w-0 text-right">
+                      <a
+                        href={place.website}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sea break-all underline"
+                      >
+                        {place.website
+                          .replace(/^https?:\/\/(www\.)?/, "")
+                          .replace(/\/$/, "")}
                       </a>
                     </dd>
                   </div>

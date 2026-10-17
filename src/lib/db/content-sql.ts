@@ -35,9 +35,9 @@ export function contentToSql(content: SiteContent): string {
   add(`
 -- GENERADO desde src/content con \`pnpm db:content\`. No editar a mano.
 -- Carga en Supabase el contenido que hoy muestra el sitio. Requiere las
--- migraciones hasta 0022 y supabase/seed.sql. Se puede ejecutar varias veces.
--- Mientras no exista el panel municipal, el repo manda: volver a ejecutarlo
--- sobrescribe los textos de estas fichas.
+-- migraciones hasta 0023 y supabase/seed.sql. Se puede ejecutar varias veces.
+-- El repo manda sobre sus fichas, salvo las que se crearon o editaron en el
+-- panel (managed_in_panel): esas no se tocan.
 begin;
 `);
 
@@ -90,10 +90,11 @@ on conflict (slug) do update set
   latitude = excluded.latitude, longitude = excluded.longitude, address = excluded.address,
   is_demo = excluded.is_demo, is_business = excluded.is_business,
   instagram = excluded.instagram, maps_url = excluded.maps_url,
-  sernatur_number = excluded.sernatur_number, sernatur_valid_until = excluded.sernatur_valid_until;
+  sernatur_number = excluded.sernatur_number, sernatur_valid_until = excluded.sernatur_valid_until
+where not public.places.managed_in_panel;
 
 delete from public.place_translations
-  where place_id in (select id from public.places where slug in (${placeSlugs}));
+  where place_id in (select id from public.places where slug in (${placeSlugs}) and not managed_in_panel);
 insert into public.place_translations (place_id, locale, name, short_description, full_description, translation_status)
 select p.id, v.locale::public.locale, v.name, v.short, v.description, v.status::public.translation_status
 from (values
@@ -108,10 +109,10 @@ ${rows(
   ),
 )}
 ) as v(slug, locale, name, short, description, status)
-join public.places p on p.slug = v.slug;
+join public.places p on p.slug = v.slug and not p.managed_in_panel;
 
 delete from public.sources
-  where place_id in (select id from public.places where slug in (${placeSlugs}));
+  where place_id in (select id from public.places where slug in (${placeSlugs}) and not managed_in_panel);
 insert into public.sources (place_id, sort_order, title, url)
 select p.id, v.sort_order, v.title, v.url
 from (values
@@ -126,7 +127,7 @@ ${rows(
   ),
 )}
 ) as v(slug, sort_order, title, url)
-join public.places p on p.slug = v.slug;
+join public.places p on p.slug = v.slug and not p.managed_in_panel;
 `);
 
   // Horarios por temporada (una fila por día) y datos que entregó el comercio.
@@ -180,7 +181,7 @@ join public.places p on p.slug = v.slug;
   ]);
   add(`
 delete from public.place_hours
-  where place_id in (select id from public.places where slug in (${placeSlugs}));
+  where place_id in (select id from public.places where slug in (${placeSlugs}) and not managed_in_panel);
 ${
   hourRows.length === 0
     ? ""
@@ -189,11 +190,11 @@ select p.id, v.day::smallint, v.opens::time, v.closes::time, v.from_month::small
 from (values
 ${rows(hourRows)}
 ) as v(slug, day, opens, closes, from_month, to_month, holidays)
-join public.places p on p.slug = v.slug;`
+join public.places p on p.slug = v.slug and not p.managed_in_panel;`
 }
 delete from public.place_images
   where storage_path like '/%'
-    and place_id in (select id from public.places where slug in (${placeSlugs}));
+    and place_id in (select id from public.places where slug in (${placeSlugs}) and not managed_in_panel);
 ${
   imageRows.length === 0
     ? ""
@@ -202,7 +203,7 @@ select p.id, v.path, v.kind, v.width::integer, v.height::integer, v.alt, v.alt_e
 from (values
 ${rows(imageRows)}
 ) as v(slug, path, kind, width, height, alt, alt_en, alt_pt, credit, position)
-join public.places p on p.slug = v.slug;`
+join public.places p on p.slug = v.slug and not p.managed_in_panel;`
 }
 ${
   owned.length === 0
@@ -213,7 +214,7 @@ ${
 from (values
 ${rows(owned.map((p) => [p.slug, p.cta?.kind, p.cta?.value, p.infoUpdatedAt]))}
 ) as v(slug, cta_kind, cta_value, info_updated_at)
-where p.slug = v.slug and (p.cta_kind is null or p.info_updated_at is null);`
+where p.slug = v.slug and not p.managed_in_panel and (p.cta_kind is null or p.info_updated_at is null);`
 }
 `);
 
@@ -352,7 +353,7 @@ join public.routes r on r.slug = v.slug;`;
   add(`
 -- Publicar (la verificación sigue en 'pending': nada está confirmado en terreno)
 update public.places set publication_status = 'published'
-  where slug in (${placeSlugs}) and publication_status = 'draft';
+  where slug in (${placeSlugs}) and publication_status = 'draft' and not managed_in_panel;
 update public.events set publication_status = 'published'
   where slug in (${eventSlugs}) and publication_status = 'draft';
 update public.routes set publication_status = 'published'

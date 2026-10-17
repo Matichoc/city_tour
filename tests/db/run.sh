@@ -34,4 +34,13 @@ echo "→ contenido del sitio (dos veces: debe ser idempotente)"
 "${PSQL[@]}" -o /dev/null -f tests/db/reviews.check.sql
 "${PSQL[@]}" -o /dev/null -f tests/db/business.check.sql
 "${PSQL[@]}" -o /dev/null -f tests/db/media.check.sql
+"${PSQL[@]}" -o /dev/null -f tests/db/panel.check.sql
+echo "→ una ficha editada en el panel no la pisa content.sql"
+"${PSQL[@]}" -c "update public.places set managed_in_panel = true, address = 'Dirección editada' where slug = 'playa-papudo';
+  update public.place_translations set short_description = 'EDITADA EN EL PANEL'
+  where locale = 'es' and place_id = (select id from public.places where slug = 'playa-papudo');
+  update public.place_translations set short_description = 'cambiada'
+  where locale = 'es' and place_id = (select id from public.places where slug = 'playa-chica-papudo');"
+"${PSQL[@]}" -f supabase/content.sql
+"${PSQL[@]}" -o /dev/null -f tests/db/managed.check.sql
 echo "✔ Base de datos: migraciones y pruebas OK"
