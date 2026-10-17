@@ -108,8 +108,9 @@ Fuente: PLADETUR de Papudo 2023–2027, iD (`docs/investigacion/`).
 
 ## Enlaces temporales para las vistas previas
 
-- Tres ambientes: `main` (público), `develop` (equipo) y `demo` (para
-  compartir por horas). Las vistas previas se cierran con `SHARE_LINK_SECRET`
+- Ambientes: `develop` (equipo; por ahora es la rama de producción en Vercel,
+  cerrada), `demo` (para compartir por horas) y `main` (en espera hasta abrir
+  el sitio al público). Las vistas previas se cierran con `SHARE_LINK_SECRET`
   (solo en Preview) y se abren con enlaces firmados: el del equipo es
   permanente (`?para=equipo`) y los demás vencen solos (4 h por defecto, máx.
   30 días). Se comparten por `papudo-dev.vercel.app` y

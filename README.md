@@ -40,5 +40,6 @@ herramientas de dispositivo del navegador.
 
 ## Ramas
 
-`main` (producción) ← `develop` (pruebas, equipo) ← `feat/*`. Los PR van a `develop`.
+`main` ← `develop` ← `feat/*`. Los PR van a `develop`. Por ahora `develop` es
+la producción de Vercel (cerrada, solo equipo) y `main` está en espera.
 `demo` es una copia de `develop` para mostrar por horas.

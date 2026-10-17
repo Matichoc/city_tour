@@ -1,34 +1,44 @@
 # Ambientes y enlaces para compartir
 
-| Rama      | Dirección                 | Quién la ve                         |
-| --------- | ------------------------- | ----------------------------------- |
-| `main`    | sitio público             | todo el mundo                       |
-| `develop` | `papudo-dev.vercel.app`   | el equipo, con su enlace permanente |
-| `demo`    | `papudo-demo.vercel.app`  | quien reciba un enlace por horas    |
+Mientras no haya financiamiento, **`develop` es la rama de producción en
+Vercel** y está cerrada: solo la ve el equipo. `main` queda en espera y pasará
+a ser el sitio público cuando se decida abrirlo.
 
-`develop` y `demo` son vistas previas de Vercel cerradas con `SHARE_LINK_SECRET`:
-sin un **enlace vigente** se ve «Este enlace venció». `demo` se actualiza solo
+| Rama      | Dirección                                            | Quién la ve                         |
+| --------- | ---------------------------------------------------- | ----------------------------------- |
+| `develop` | `papudo-dev.vercel.app` (y el dominio de producción) | el equipo, con su enlace permanente |
+| `demo`    | `papudo-demo.vercel.app`                             | quien reciba un enlace por horas    |
+| `main`    | — (en espera)                                        | nadie por ahora                     |
+
+Sin un **enlace vigente** se ve «Este enlace venció». `demo` se actualiza solo
 cuando se decide mostrar algo nuevo (se lleva `develop` a `demo`), así lo que
 se comparte no cambia a mitad de una presentación.
 
 ## Configuración en Vercel (una vez)
 
-1. **Rama de producción = `main`.** *Settings → Environments → Production →
-   Branch Tracking*: `main`.
-2. **Claves.** *Settings → Environment Variables*: `SHARE_LINK_SECRET`, tipo
-   **Secret**, solo en **Preview** (vale para `develop`). Agrega otra
-   `SHARE_LINK_SECRET` con **otro valor**, en **Preview** y limitada a la rama
-   `demo` (campo *Git branch*). Así el `demo` tiene su propia clave y se puede
-   cortar sin tocar el enlace del equipo. (Las variables de Supabase van en
-   *All Pre-Production Environments*.)
-3. **Sin inicio de sesión de Vercel.** *Settings → Deployment Protection*:
-   *Require Log In* desactivado; la clave del paso 2 pasa a ser la puerta.
-4. **Direcciones.** *Settings → Domains → Add*: `papudo-dev.vercel.app` →
-   *Git branch* `develop`; `papudo-demo.vercel.app` → *Git branch* `demo`.
+1. **Rama de producción = `develop`** (*Settings → Environments → Production →
+   Branch Tracking*). Se cambia a `main` el día que se abra el sitio.
+2. **Clave del equipo.** *Settings → Environment Variables*:
+   `SHARE_LINK_SECRET`, tipo **Secret**, en **Production** y **Preview**.
+3. **Clave del demo.** Otra `SHARE_LINK_SECRET` con **otro valor**, en
+   **Preview** y limitada a la rama `demo` (campo *Git branch*); en esa rama
+   manda sobre la del paso 2. Así el `demo` se corta sin tocar al equipo.
+4. **Supabase.** Para que `develop` lea la base de datos, las variables
+   `NEXT_PUBLIC_SUPABASE_*` deben estar también en **Production** (hoy están
+   en *All Pre-Production Environments*, que cubre `demo`).
+5. **Sin inicio de sesión de Vercel.** *Settings → Deployment Protection*:
+   *Require Log In* desactivado; las claves pasan a ser la puerta.
+6. **Direcciones.** *Settings → Domains → Add*: `papudo-dev.vercel.app` →
+   **Production**; `papudo-demo.vercel.app` → *Git branch* `demo`.
 
 Las direcciones automáticas de Vercel (`<proyecto>-git-<rama>-<equipo>.vercel.app`)
 siguen existiendo, pero llevan el nombre de la rama: para compartir se usan
-solo las dos de la tabla.
+solo las de la tabla.
+
+## Abrir el sitio al público (cuando haya financiamiento)
+
+Llevar `develop` a `main`, cambiar *Branch Tracking* a `main`, quitar
+`SHARE_LINK_SECRET` de **Production** y volver a desplegar.
 
 ## Crear un enlace
 
@@ -71,6 +81,6 @@ vence a la misma hora). Después, recargar muestra «Este enlace venció».
 - Mientras el enlace esté vigente, quien lo tenga puede reenviarlo, sacar
   capturas o guardar las páginas. Ningún sitio web puede impedirlo.
 - El enlace del equipo no vence: si se filtra, cambia la `SHARE_LINK_SECRET`
-  de `develop`, vuelve a desplegar `develop` y crea uno nuevo.
+  del equipo (paso 2), vuelve a desplegar `develop` y crea uno nuevo.
 
 Código: `src/proxy.ts`, `src/lib/share-link.ts`, `src/app/api/enlace/route.ts`.
