@@ -170,10 +170,19 @@ const categoryOf = (ref: SlugRef): CategorySlug | null =>
 const isIllustration = (k: string | null): k is IllustrationKey =>
   k !== null && k in ILLUSTRATIONS;
 
-/** Imágenes de la base → logo y galería (solo rutas públicas del sitio). */
+/**
+ * Imágenes de la base → logo y galería. Rutas del sitio («/lugares/...») o
+ * enlaces públicos del bucket place-images (las que se suben en el panel).
+ */
 function toImages(rows: NonNullable<PlaceRow["images"]>) {
   const usable = [...rows]
-    .filter((i) => i.storage_path.startsWith("/") && i.width && i.height)
+    .filter(
+      (i) =>
+        (i.storage_path.startsWith("/") ||
+          i.storage_path.startsWith("https://")) &&
+        i.width &&
+        i.height,
+    )
     .sort((a, b) => a.position - b.position);
   const logo = usable.find((i) => i.kind === "logo");
   const gallery = usable.flatMap((i) =>

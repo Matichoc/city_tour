@@ -252,7 +252,7 @@ describe("ilustraciones", () => {
     const { existsSync } = await import("node:fs");
     const { join } = await import("node:path");
     for (const p of listPlaces("es")) {
-      expect(p.picture.alt.length, p.slug).toBeGreaterThan(20);
+      expect(p.picture.alt.length, p.slug).toBeGreaterThan(8);
       expect(
         existsSync(join(process.cwd(), "public", p.picture.src)),
         p.picture.src,
@@ -266,6 +266,38 @@ describe("ilustraciones", () => {
     expect(getPlace("playa-chica-papudo", "es")!.picture.src).toContain(
       "playa",
     );
+  });
+  it("con imágenes reales, la portada es real y no lleva rótulo de IA", () => {
+    // Roots Salinas solo tiene logo: va de portada, entero.
+    const roots = getPlace("roots-salinas", "es")!;
+    expect(roots.picture.kind).toBe("logo");
+    expect(roots.picture.src).toBe("/lugares/roots-salinas/logo.webp");
+    expect(roots.picture.alt).toBe("Logo de Roots Salinas");
+    expect(getPlace("roots-salinas", "en")!.picture.alt).toBe(
+      "Roots Salinas logo",
+    );
+    // Sin imágenes reales: ilustración con IA (kind sin valor).
+    expect(getPlace("playa-papudo", "es")!.picture.kind).toBeUndefined();
+  });
+  it("una foto del lugar gana al logo", () => {
+    const base = STATIC_CONTENT.places.find((p) => p.slug === "roots-salinas")!;
+    const photo = {
+      src: "/lugares/roots-salinas/foto.webp",
+      width: 800,
+      height: 600,
+      kind: "photo" as const,
+      alt: { es: "Vista", en: "View", pt: "Vista" },
+      credit: "Roots",
+    };
+    const data = createData(
+      {
+        ...STATIC_CONTENT,
+        places: [{ ...base, gallery: [photo, ...(base.gallery ?? [])] }],
+      },
+      true,
+    );
+    const p = data.getPlace("roots-salinas", "es")!;
+    expect(p.picture).toMatchObject({ kind: "photo", src: photo.src });
   });
   it("el texto alternativo cambia con el idioma", () => {
     expect(getPlace("playa-papudo", "en")!.picture.alt).not.toBe(

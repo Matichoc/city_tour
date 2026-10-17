@@ -144,7 +144,9 @@ export default async function PlacePage({
               pathname: "/lugares/[slug]",
               params: { slug: place.slug },
             }),
-            image: `${getSiteUrl()}${place.picture.src}`,
+            image: place.picture.src.startsWith("http")
+              ? place.picture.src
+              : `${getSiteUrl()}${place.picture.src}`,
             ...(place.hasLocation
               ? {
                   geo: {
