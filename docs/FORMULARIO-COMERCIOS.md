@@ -122,6 +122,23 @@ Estos datos son para coordinar contigo y **no se publican**.
 ## Cómo usar las respuestas
 
 - Las respuestas quedan en una planilla de Google. De ahí se cargan los
-  comercios en la app, con fuente «formulario del comercio» y fecha.
+  comercios en la app con **`/admin/comercios/importar`** (pega el enlace de la
+  planilla o sube su CSV), con fuente «formulario del comercio» y fecha.
+- **Cómo se importa:** el panel entiende las columnas por el nombre de la
+  pregunta, no por su posición. Muestra antes qué se crearía o cambiaría y solo
+  carga lo nuevo o lo que cambió desde la última importación. Un comercio que
+  vuelve a responder usa su respuesta más reciente y renueva su fecha de
+  «datos confirmados». Si falta la marca de autorización, la fila se omite.
+- **Preguntas nuevas:** si se agrega una pregunta al formulario, el panel avisa
+  «Preguntas nuevas que todavía no se importan». Para guardarla hay que agregar
+  su columna en `src/lib/import/places-sheet.ts` y en la base.
+- **Datos personales:** el nombre y el correo de quien responde van a
+  `place_contacts` (solo lo ve el personal), nunca a la ficha pública.
+- **Qué entra de cada pregunta:** nombre → ficha; «¿Qué ofreces?» → categoría
+  (si no se reconoce, se elige a mano); «¿Dónde está?» → localidad; frase →
+  descripción corta (sin inventar nada más); horario → texto «Informado por el
+  local»; WhatsApp o teléfono → botón de acción (celular = WhatsApp);
+  Instagram, web y Maps → sus campos; «quién tomó las fotos» → crédito
+  sugerido. Las fotos se suben aparte, desde la ficha.
 - Ninguna ficha se publica como verificada hasta revisarla con el comercio.
 - Pendiente: definir el correo de contacto de la sección 6.

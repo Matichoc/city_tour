@@ -1,8 +1,8 @@
 -- GENERADO desde src/content con `pnpm db:content`. No editar a mano.
 -- Carga en Supabase el contenido que hoy muestra el sitio. Requiere las
--- migraciones hasta 0022 y supabase/seed.sql. Se puede ejecutar varias veces.
--- Mientras no exista el panel municipal, el repo manda: volver a ejecutarlo
--- sobrescribe los textos de estas fichas.
+-- migraciones hasta 0023 y supabase/seed.sql. Se puede ejecutar varias veces.
+-- El repo manda sobre sus fichas, salvo las que se crearon o editaron en el
+-- panel (managed_in_panel): esas no se tocan.
 begin;
 
 -- Localidades
@@ -61,10 +61,11 @@ on conflict (slug) do update set
   latitude = excluded.latitude, longitude = excluded.longitude, address = excluded.address,
   is_demo = excluded.is_demo, is_business = excluded.is_business,
   instagram = excluded.instagram, maps_url = excluded.maps_url,
-  sernatur_number = excluded.sernatur_number, sernatur_valid_until = excluded.sernatur_valid_until;
+  sernatur_number = excluded.sernatur_number, sernatur_valid_until = excluded.sernatur_valid_until
+where not public.places.managed_in_panel;
 
 delete from public.place_translations
-  where place_id in (select id from public.places where slug in ('playa-papudo', 'playa-chica-papudo', 'papudo-pullally', 'papudo-salinas-pullally', 'roots-salinas', 'papudo-playa-los-lilenes', 'papudo-parque', 'papudo-plaza', 'iglesia-nuestra-senora-de-las-mercedes', 'humedal-urbano-estero-agua-salada', 'caleta-de-pescadores-papudo', 'restaurante-donde-pablo', 'fuente-papudo', 'hotel-carande', 'demo-parador-ola-mansa', 'demo-cabalgatas-del-valle', 'demo-escuela-de-surf-ola-brava', 'demo-circuito-casas-antiguas', 'demo-cocineria-sabor-a-mar', 'demo-huerta-y-quesos-el-retono', 'demo-cabanas-brisa-salina'));
+  where place_id in (select id from public.places where slug in ('playa-papudo', 'playa-chica-papudo', 'papudo-pullally', 'papudo-salinas-pullally', 'roots-salinas', 'papudo-playa-los-lilenes', 'papudo-parque', 'papudo-plaza', 'iglesia-nuestra-senora-de-las-mercedes', 'humedal-urbano-estero-agua-salada', 'caleta-de-pescadores-papudo', 'restaurante-donde-pablo', 'fuente-papudo', 'hotel-carande', 'demo-parador-ola-mansa', 'demo-cabalgatas-del-valle', 'demo-escuela-de-surf-ola-brava', 'demo-circuito-casas-antiguas', 'demo-cocineria-sabor-a-mar', 'demo-huerta-y-quesos-el-retono', 'demo-cabanas-brisa-salina') and not managed_in_panel);
 insert into public.place_translations (place_id, locale, name, short_description, full_description, translation_status)
 select p.id, v.locale::public.locale, v.name, v.short, v.description, v.status::public.translation_status
 from (values
@@ -119,10 +120,10 @@ from (values
   ('demo-cabanas-brisa-salina', 'en', 'Brisa Salina Cabins (example)', 'Family cabins between the countryside and the sea, with a barbecue area and parking.', 'An example place to stay: cabins for four to six people with a full kitchen, a shared barbecue area and parking. It shows what an accommodation page would look like.', 'draft'),
   ('demo-cabanas-brisa-salina', 'pt', 'Cabanas Brisa Salina (exemplo)', 'Cabanas para famílias entre o campo e o mar, com churrasqueira e estacionamento.', 'Uma hospedagem de exemplo: cabanas para quatro a seis pessoas com cozinha equipada, churrasqueira compartilhada e estacionamento. Serve para mostrar como seria uma ficha de hospedagem.', 'draft')
 ) as v(slug, locale, name, short, description, status)
-join public.places p on p.slug = v.slug;
+join public.places p on p.slug = v.slug and not p.managed_in_panel;
 
 delete from public.sources
-  where place_id in (select id from public.places where slug in ('playa-papudo', 'playa-chica-papudo', 'papudo-pullally', 'papudo-salinas-pullally', 'roots-salinas', 'papudo-playa-los-lilenes', 'papudo-parque', 'papudo-plaza', 'iglesia-nuestra-senora-de-las-mercedes', 'humedal-urbano-estero-agua-salada', 'caleta-de-pescadores-papudo', 'restaurante-donde-pablo', 'fuente-papudo', 'hotel-carande', 'demo-parador-ola-mansa', 'demo-cabalgatas-del-valle', 'demo-escuela-de-surf-ola-brava', 'demo-circuito-casas-antiguas', 'demo-cocineria-sabor-a-mar', 'demo-huerta-y-quesos-el-retono', 'demo-cabanas-brisa-salina'));
+  where place_id in (select id from public.places where slug in ('playa-papudo', 'playa-chica-papudo', 'papudo-pullally', 'papudo-salinas-pullally', 'roots-salinas', 'papudo-playa-los-lilenes', 'papudo-parque', 'papudo-plaza', 'iglesia-nuestra-senora-de-las-mercedes', 'humedal-urbano-estero-agua-salada', 'caleta-de-pescadores-papudo', 'restaurante-donde-pablo', 'fuente-papudo', 'hotel-carande', 'demo-parador-ola-mansa', 'demo-cabalgatas-del-valle', 'demo-escuela-de-surf-ola-brava', 'demo-circuito-casas-antiguas', 'demo-cocineria-sabor-a-mar', 'demo-huerta-y-quesos-el-retono', 'demo-cabanas-brisa-salina') and not managed_in_panel);
 insert into public.sources (place_id, sort_order, title, url)
 select p.id, v.sort_order, v.title, v.url
 from (values
@@ -152,10 +153,10 @@ from (values
   ('hotel-carande', 0, 'Fodor''s — Hotel Carande', 'https://www.fodors.com/world/south-america/chile/the-central-coast/hotels/reviews/hotel-carande-442059'),
   ('hotel-carande', 1, 'Kayak — Hotel Carande, Papudo', 'https://www.kayak.com/Papudo-Hotels-Hotel-Carande.2918681.ksp')
 ) as v(slug, sort_order, title, url)
-join public.places p on p.slug = v.slug;
+join public.places p on p.slug = v.slug and not p.managed_in_panel;
 
 delete from public.place_hours
-  where place_id in (select id from public.places where slug in ('playa-papudo', 'playa-chica-papudo', 'papudo-pullally', 'papudo-salinas-pullally', 'roots-salinas', 'papudo-playa-los-lilenes', 'papudo-parque', 'papudo-plaza', 'iglesia-nuestra-senora-de-las-mercedes', 'humedal-urbano-estero-agua-salada', 'caleta-de-pescadores-papudo', 'restaurante-donde-pablo', 'fuente-papudo', 'hotel-carande', 'demo-parador-ola-mansa', 'demo-cabalgatas-del-valle', 'demo-escuela-de-surf-ola-brava', 'demo-circuito-casas-antiguas', 'demo-cocineria-sabor-a-mar', 'demo-huerta-y-quesos-el-retono', 'demo-cabanas-brisa-salina'));
+  where place_id in (select id from public.places where slug in ('playa-papudo', 'playa-chica-papudo', 'papudo-pullally', 'papudo-salinas-pullally', 'roots-salinas', 'papudo-playa-los-lilenes', 'papudo-parque', 'papudo-plaza', 'iglesia-nuestra-senora-de-las-mercedes', 'humedal-urbano-estero-agua-salada', 'caleta-de-pescadores-papudo', 'restaurante-donde-pablo', 'fuente-papudo', 'hotel-carande', 'demo-parador-ola-mansa', 'demo-cabalgatas-del-valle', 'demo-escuela-de-surf-ola-brava', 'demo-circuito-casas-antiguas', 'demo-cocineria-sabor-a-mar', 'demo-huerta-y-quesos-el-retono', 'demo-cabanas-brisa-salina') and not managed_in_panel);
 insert into public.place_hours (place_id, day_of_week, opens_at, closes_at, from_month, to_month, holidays)
 select p.id, v.day::smallint, v.opens::time, v.closes::time, v.from_month::smallint, v.to_month::smallint, v.holidays
 from (values
@@ -169,10 +170,10 @@ from (values
   ('roots-salinas', 0, '10:00', '19:00', 3, 12, true),
   ('roots-salinas', 6, '10:00', '19:00', 3, 12, true)
 ) as v(slug, day, opens, closes, from_month, to_month, holidays)
-join public.places p on p.slug = v.slug;
+join public.places p on p.slug = v.slug and not p.managed_in_panel;
 delete from public.place_images
   where storage_path like '/%'
-    and place_id in (select id from public.places where slug in ('playa-papudo', 'playa-chica-papudo', 'papudo-pullally', 'papudo-salinas-pullally', 'roots-salinas', 'papudo-playa-los-lilenes', 'papudo-parque', 'papudo-plaza', 'iglesia-nuestra-senora-de-las-mercedes', 'humedal-urbano-estero-agua-salada', 'caleta-de-pescadores-papudo', 'restaurante-donde-pablo', 'fuente-papudo', 'hotel-carande', 'demo-parador-ola-mansa', 'demo-cabalgatas-del-valle', 'demo-escuela-de-surf-ola-brava', 'demo-circuito-casas-antiguas', 'demo-cocineria-sabor-a-mar', 'demo-huerta-y-quesos-el-retono', 'demo-cabanas-brisa-salina'));
+    and place_id in (select id from public.places where slug in ('playa-papudo', 'playa-chica-papudo', 'papudo-pullally', 'papudo-salinas-pullally', 'roots-salinas', 'papudo-playa-los-lilenes', 'papudo-parque', 'papudo-plaza', 'iglesia-nuestra-senora-de-las-mercedes', 'humedal-urbano-estero-agua-salada', 'caleta-de-pescadores-papudo', 'restaurante-donde-pablo', 'fuente-papudo', 'hotel-carande', 'demo-parador-ola-mansa', 'demo-cabalgatas-del-valle', 'demo-escuela-de-surf-ola-brava', 'demo-circuito-casas-antiguas', 'demo-cocineria-sabor-a-mar', 'demo-huerta-y-quesos-el-retono', 'demo-cabanas-brisa-salina') and not managed_in_panel);
 insert into public.place_images (place_id, storage_path, kind, width, height, alt_text, alt_text_en, alt_text_pt, credit, position)
 select p.id, v.path, v.kind, v.width::integer, v.height::integer, v.alt, v.alt_en, v.alt_pt, v.credit, v.position::integer
 from (values
@@ -181,14 +182,14 @@ from (values
   ('roots-salinas', '/lugares/roots-salinas/promo-combos.webp', 'promo', 1600, 900, 'Promoción de Roots Salinas: combo clásico de hamburguesa, papas fritas y bebida, y papas fritas con salsa cheddar.', 'Roots Salinas promotion: classic combo of burger, fries and a drink, and fries with cheddar sauce.', 'Promoção do Roots Salinas: combo clássico de hambúrguer, batata frita e bebida, e batata frita com molho cheddar.', 'Roots Salinas', 2),
   ('roots-salinas', '/lugares/roots-salinas/promo-conoce-roots.webp', 'promo', 1600, 900, 'Publicidad de Roots: hamburguesas premium, colaciones y papas fritas, con delivery o retiro en el local.', 'Roots advertisement: premium burgers, set meals and fries, with delivery or pick-up.', 'Publicidade do Roots: hambúrgueres premium, refeições e batatas fritas, com delivery ou retirada no local.', 'Roots Salinas', 3)
 ) as v(slug, path, kind, width, height, alt, alt_en, alt_pt, credit, position)
-join public.places p on p.slug = v.slug;
+join public.places p on p.slug = v.slug and not p.managed_in_panel;
 update public.places p set
   cta_kind = coalesce(p.cta_kind, v.cta_kind), cta_value = coalesce(p.cta_value, v.cta_value),
   info_updated_at = coalesce(p.info_updated_at, v.info_updated_at::timestamptz)
 from (values
   ('roots-salinas', 'whatsapp', '+56 9 7270 2991', '2026-10-17T03:53:04Z')
 ) as v(slug, cta_kind, cta_value, info_updated_at)
-where p.slug = v.slug and (p.cta_kind is null or p.info_updated_at is null);
+where p.slug = v.slug and not p.managed_in_panel and (p.cta_kind is null or p.info_updated_at is null);
 
 -- Eventos recurrentes
 insert into public.events (slug, sort_order, category_id, locality_id, recurrence_month, recurrence_day, season, featured, is_demo, illustration)
@@ -305,7 +306,7 @@ join public.routes r on r.slug = v.slug;
 
 -- Publicar (la verificación sigue en 'pending': nada está confirmado en terreno)
 update public.places set publication_status = 'published'
-  where slug in ('playa-papudo', 'playa-chica-papudo', 'papudo-pullally', 'papudo-salinas-pullally', 'roots-salinas', 'papudo-playa-los-lilenes', 'papudo-parque', 'papudo-plaza', 'iglesia-nuestra-senora-de-las-mercedes', 'humedal-urbano-estero-agua-salada', 'caleta-de-pescadores-papudo', 'restaurante-donde-pablo', 'fuente-papudo', 'hotel-carande', 'demo-parador-ola-mansa', 'demo-cabalgatas-del-valle', 'demo-escuela-de-surf-ola-brava', 'demo-circuito-casas-antiguas', 'demo-cocineria-sabor-a-mar', 'demo-huerta-y-quesos-el-retono', 'demo-cabanas-brisa-salina') and publication_status = 'draft';
+  where slug in ('playa-papudo', 'playa-chica-papudo', 'papudo-pullally', 'papudo-salinas-pullally', 'roots-salinas', 'papudo-playa-los-lilenes', 'papudo-parque', 'papudo-plaza', 'iglesia-nuestra-senora-de-las-mercedes', 'humedal-urbano-estero-agua-salada', 'caleta-de-pescadores-papudo', 'restaurante-donde-pablo', 'fuente-papudo', 'hotel-carande', 'demo-parador-ola-mansa', 'demo-cabalgatas-del-valle', 'demo-escuela-de-surf-ola-brava', 'demo-circuito-casas-antiguas', 'demo-cocineria-sabor-a-mar', 'demo-huerta-y-quesos-el-retono', 'demo-cabanas-brisa-salina') and publication_status = 'draft' and not managed_in_panel;
 update public.events set publication_status = 'published'
   where slug in ('feria-internacional-integracion-papudo', 'festival-de-verano-papudo', 'glorias-navales-papudo', 'fiesta-de-san-pedro', 'fiestas-patrias-papudo', 'combate-naval-de-papudo', 'fiesta-costumbrista-pullally', 'demo-noche-de-bandas', 'demo-cata-de-mariscos') and publication_status = 'draft';
 update public.routes set publication_status = 'published'

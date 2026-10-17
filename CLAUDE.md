@@ -25,4 +25,7 @@ compartir por horas; se actualiza solo cuando el usuario lo pide. Ver
 - Antes de cada commit/push: skill `pre-push` (typecheck, lint, test, build, format).
 - No inventar datos turísticos. Todo dato de demostración queda `pending` y
   la UI lo muestra así. Fuente y fecha de verificación para datos reales.
+- Bitácora: al cerrar cada entrega, agregar su nota en
+  `docs/bitacora-notas.json`, correr `pnpm bitacora` y subir `docs/BITACORA.md`
+  en el mismo PR (versiones, días y horas de avance).
 - Español primero: textos solo en `src/messages/{es,en}.json`, nunca fijos en componentes.

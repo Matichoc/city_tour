@@ -79,7 +79,7 @@ export type EntityDetail = EntitySummary & {
   logs: VerificationLog[];
 };
 
-async function rest<T>(
+export async function rest<T>(
   token: string,
   path: string,
   init: RequestInit = {},

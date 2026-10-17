@@ -63,6 +63,14 @@ export default async function EntityPage({
       <div className="mt-2 flex flex-wrap items-center gap-2">
         <PublicationBadge status={entity.publication} />
         <VerificationBadge status={entity.verification} />
+        {tipo === "lugar" && (
+          <Link
+            href={`/admin/comercios/${entity.id}`}
+            className="text-sea-deep text-sm font-semibold underline"
+          >
+            Editar ficha y fotos
+          </Link>
+        )}
         <span className="text-muted text-sm">
           {t("columns.lastVerified")}:{" "}
           {formatDate(entity.lastVerifiedAt) ?? t("never")}

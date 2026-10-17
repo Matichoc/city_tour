@@ -99,8 +99,11 @@ Lo archivado ya no se expone por la API; se consulta desde el SQL Editor.
 
 ## Cambiar el contenido
 
-Hasta que exista el panel municipal (Fase 2), el contenido se edita en
-`src/content` y se lleva a la base así:
+Los comercios nuevos se crean e importan desde el panel (`/admin/comercios`).
+Esas fichas quedan marcadas `managed_in_panel` y **`content.sql` no las
+toca**; tampoco toca las fichas del repo que se editaron o a las que se
+subieron fotos desde el panel. Las demás fichas se siguen editando en
+`src/content` y se llevan a la base así:
 
 ```bash
 pnpm db:content     # regenera supabase/content.sql desde src/content

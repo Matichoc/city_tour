@@ -81,8 +81,10 @@ export type Place = {
   /** Última vez que el comercio confirmó sus datos (ISO), si la hubo. */
   infoUpdatedAt: string | null;
   instagram: string | null;
+  website: string | null;
   mapsUrl: string | null;
   hours: PlaceHours[];
+  hoursText: string | null;
   logo: { src: string; width: number; height: number } | null;
   /** Fotos, carta y promociones del local, con el texto en el idioma pedido. */
   gallery: {
@@ -312,8 +314,10 @@ export function createData(content: SiteContent, showDemo = SHOW_DEMO) {
       lastVerifiedAt: p.lastVerifiedAt ?? null,
       infoUpdatedAt: p.infoUpdatedAt ?? null,
       instagram: p.instagram ?? null,
+      website: p.website ?? null,
       mapsUrl: p.mapsUrl ?? null,
       hours: p.hours ?? [],
+      hoursText: p.hoursText ?? null,
       logo: p.logo ?? null,
       gallery: (p.gallery ?? []).map((g) => ({ ...g, alt: g.alt[locale] })),
       sernatur: p.sernatur ?? null,

@@ -122,7 +122,8 @@
     "sernatur": "SERNATUR registration No. {number}",
     "sernaturUntil": "valid until {date}",
     "sernaturExpired": "expired on {date}",
-    "sernaturNote": "Tourism service registered with SERNATUR (Chile’s National Tourism Service), as reported by the business."
+    "sernaturNote": "Tourism service registered with SERNATUR (Chile’s National Tourism Service), as reported by the business.",
+    "website": "Website"
   },
   "routes": {
     "title": "Routes",
@@ -651,6 +652,165 @@
       "help": "This is how visitors see it (phone version). Changes may take a few minutes to appear.",
       "open": "Open in a tab",
       "notPublished": "Not published: the site does not show it yet."
+    },
+    "places": {
+      "nav": {
+        "new": "New business",
+        "import": "Import spreadsheet",
+        "edit": "Edit page"
+      },
+      "back": "← Back to businesses",
+      "newTitle": "New business",
+      "newHelp": "Create the page for a restaurant, lodging, tourism service or any business. If you don't publish it, it stays as a draft and the site doesn't show it. After creating it you upload its logo, menu and photos.",
+      "editTitle": "Edit page",
+      "created": "Page created. Now upload its logo, menu and photos.",
+      "saved": "Saved. The public site updates in a few minutes.",
+      "errors": {
+        "name": "The name must be 3 to 80 characters long.",
+        "category": "Choose what the business offers.",
+        "text": "A text is too long.",
+        "button": "The action button is not valid: WhatsApp or phone needs the number with country code; the others, a full link with https://.",
+        "link": "Check the links: Instagram (@user or link), website and Google Maps (with https://).",
+        "sernatur": "The SERNATUR registration needs its number (digits only) and the validity date.",
+        "email": "The contact email is not valid.",
+        "save": "Could not save. Check your role or try again.",
+        "publish": "Only administrators can publish."
+      },
+      "form": {
+        "name": "Business name",
+        "category": "What it offers",
+        "locality": "Where it is",
+        "localityNone": "No locality",
+        "address": "Address or directions",
+        "short": "A phrase that makes it special",
+        "description": "Description (optional)",
+        "hours": "Days and hours",
+        "hoursHelp": "As reported by the business. Shown with “Provided by the business”.",
+        "button": "Action button",
+        "buttonNone": "No button",
+        "buttonValue": "Number or link",
+        "instagram": "Instagram",
+        "web": "Website or Facebook",
+        "maps": "Google Maps link",
+        "sernaturNumber": "SERNATUR registration no.",
+        "sernaturDate": "Valid until",
+        "contactTitle": "Internal contact (not published)",
+        "contactHelp": "To ask for updates every 6 months. Only staff see it.",
+        "contactName": "Name of who signed the business up",
+        "contactEmail": "Email",
+        "publish": "Publish right away (administrators only)",
+        "create": "Create page",
+        "save": "Save changes",
+        "draftNote": "If not published, the page stays as a draft."
+      },
+      "publication": {
+        "published": "Published",
+        "draft": "Draft",
+        "publishNow": "Publish",
+        "unpublish": "Back to draft",
+        "adminOnly": "Only administrators can publish or unpublish.",
+        "viewOnSite": "View on site"
+      },
+      "photos": {
+        "title": "Logo, menu and photos",
+        "help": "They are resized and their hidden data (like phone location) is removed before saving. The first photo is the business cover; with no photos, the logo is used.",
+        "kind": "What it is",
+        "kinds": {
+          "photo": "Photo of the place",
+          "menu": "Menu",
+          "promo": "Business ad",
+          "logo": "Logo"
+        },
+        "pick": "Choose images",
+        "credit": "Credit (who took it)",
+        "none": "There are no images yet.",
+        "remove": "Remove",
+        "cover": "Make cover",
+        "upload": "Upload",
+        "uploading": "Uploading {done} of {total}…",
+        "uploaded": "{count, plural, one {# image uploaded.} other {# images uploaded.}}",
+        "saveFirst": "Create the page first to upload images.",
+        "errors": {
+          "type": "“{name}”: only JPG, PNG or WebP are accepted.",
+          "size": "“{name}” is too large (max. 4 MB after resizing).",
+          "kind": "Say what the image is.",
+          "read": "“{name}” could not be read as an image.",
+          "save": "“{name}” could not be saved. Try again.",
+          "denied": "You don't have permission to upload images."
+        },
+        "authNote": "Only upload images the business provided or authorized."
+      },
+      "import": {
+        "title": "Import businesses from a spreadsheet",
+        "help": "Reads the “Suma tu comercio” form spreadsheet (or another with the same questions) and shows what would be created or changed before saving anything. Only what is new or changed since last time is loaded.",
+        "url": "Google spreadsheet link",
+        "urlHelp": "The spreadsheet must be shared as “anyone with the link can view”.",
+        "or": "or upload the file",
+        "file": "CSV file (File → Download → Comma-separated values)",
+        "review": "Review",
+        "reviewing": "Reviewing…",
+        "apply": "Import selected",
+        "applying": "Importing…",
+        "publish": "Publish the new businesses (administrators only)",
+        "draftNote": "If not published, new ones stay as drafts.",
+        "status": {
+          "new": "New",
+          "update": "Changed",
+          "confirm": "Reconfirmed its data",
+          "link": "Already in the guide",
+          "same": "No changes",
+          "skip": "Skipped"
+        },
+        "reason": {
+          "noName": "No name.",
+          "noAuthorization": "Did not tick the publishing authorization."
+        },
+        "changed": "Changed: {fields}",
+        "fields": {
+          "name": "name",
+          "categorySlug": "category",
+          "localitySlug": "locality",
+          "address": "address",
+          "phrase": "phrase",
+          "hoursText": "hours",
+          "ctaKind": "button",
+          "ctaValue": "phone",
+          "instagram": "Instagram",
+          "website": "website",
+          "mapsUrl": "Google Maps",
+          "photoCredit": "photo credit",
+          "contactName": "contact",
+          "contactEmail": "email"
+        },
+        "chooseCategory": "Choose category…",
+        "offered": "Offers: {offer}",
+        "where": "Where: {locality}",
+        "duplicates": "Answered {count} more times: the latest answer is used.",
+        "unknownColumns": "New questions not imported yet: {list}.",
+        "summary": "{count, plural, =0 {No businesses in the spreadsheet.} one {# business in the spreadsheet.} other {# businesses in the spreadsheet.}}",
+        "nothing": "Nothing to load: everything is up to date.",
+        "include": "Include",
+        "resultTitle": "Import finished",
+        "result": {
+          "created": "{count, plural, =0 {None new} one {# new} other {# new}}",
+          "updated": "{count} with changes",
+          "confirmed": "{count} reconfirmed",
+          "linked": "{count} already existed and were linked",
+          "same": "{count} unchanged",
+          "skipped": "{count} skipped"
+        },
+        "errorsTitle": "Could not load:",
+        "errors": {
+          "badUrl": "The link is not a Google Sheets link.",
+          "fetch": "Could not read the spreadsheet. Check it is shared with “anyone with the link” or upload the CSV file.",
+          "empty": "The spreadsheet has no answers.",
+          "denied": "You don't have permission to import.",
+          "file": "The file is too large or could not be read.",
+          "source": "Could not read the spreadsheet again. Review it again."
+        },
+        "newFiles": "When you finish, open each new business to upload its logo, menu and photos.",
+        "open": "Open"
+      }
     }
   },
   "notices": {

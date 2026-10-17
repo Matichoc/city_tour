@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import Link from "next/link";
+import { NextIntlClientProvider } from "next-intl";
 import { getTranslations } from "next-intl/server";
 import { getSession } from "@/lib/admin/api";
 import { signOut } from "@/app/admin/actions";
+import es from "@/messages/es.json";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations({ locale: "es", namespace: "admin" });
@@ -64,7 +66,13 @@ export default async function AdminLayout({
           )}
         </div>
       </header>
-      <main className="mx-auto w-full max-w-5xl px-4 py-6">{children}</main>
+      <main className="mx-auto w-full max-w-5xl px-4 py-6">
+        {/* Los componentes de cliente del panel (fotos, importación) leen sus
+            textos aquí: el panel va fuera del layout con idiomas. */}
+        <NextIntlClientProvider locale="es" messages={{ admin: es.admin }}>
+          {children}
+        </NextIntlClientProvider>
+      </main>
     </div>
   );
 }

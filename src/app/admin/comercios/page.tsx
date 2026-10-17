@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import {
@@ -54,6 +55,7 @@ export default async function BusinessAdmin({
   });
   const ta = await getTranslations({ locale: "es", namespace: "admin" });
   const tc = await getTranslations({ locale: "es", namespace: "place.cta" });
+  const tp = await getTranslations({ locale: "es", namespace: "admin.places" });
   const sp = await searchParams;
 
   let data;
@@ -79,6 +81,19 @@ export default async function BusinessAdmin({
       <div>
         <h1 className="font-display text-2xl font-extrabold">{t("title")}</h1>
         <p className="text-muted mt-1 text-sm">{t("intro")}</p>
+        {editable && (
+          <div className="mt-3 flex flex-wrap gap-2">
+            <Link href="/admin/comercios/nuevo" className={primary}>
+              {tp("nav.new")}
+            </Link>
+            <Link
+              href="/admin/comercios/importar"
+              className="border-border rounded-full border px-5 py-2 font-bold"
+            >
+              {tp("nav.import")}
+            </Link>
+          </div>
+        )}
       </div>
 
       {sp.guardado && (
@@ -197,7 +212,15 @@ export default async function BusinessAdmin({
           <ul className="divide-border mt-3 divide-y">
             {data.places.map((p) => (
               <li key={p.id} className="py-3">
-                <p className="font-semibold">{p.name}</p>
+                <p className="font-semibold">
+                  {p.name}{" "}
+                  <Link
+                    href={`/admin/comercios/${p.id}`}
+                    className="text-sea-deep text-sm font-semibold underline"
+                  >
+                    {tp("nav.edit")}
+                  </Link>
+                </p>
                 <form
                   action={saveCta}
                   className="mt-2 flex flex-wrap items-end gap-2"

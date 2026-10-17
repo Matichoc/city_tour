@@ -8,6 +8,7 @@ Next.js 16 · TypeScript · Tailwind 4 · next-intl · Supabase
 - Plan de trabajo: [`docs/PLAN.md`](docs/PLAN.md)
 - Financiamiento y herramientas: [`docs/FINANCIAMIENTO.md`](docs/FINANCIAMIENTO.md)
 - Ambientes (`main`, `develop`, `demo`) y enlaces para compartir: [`docs/COMPARTIR-VISTA-PREVIA.md`](docs/COMPARTIR-VISTA-PREVIA.md)
+- Bitácora de avances (versiones, días y horas): [`docs/BITACORA.md`](docs/BITACORA.md)
 
 ## Ver el sitio
 

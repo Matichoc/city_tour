@@ -236,6 +236,34 @@ Fuente: PLADETUR de Papudo 2023–2027, iD (`docs/investigacion/`).
   solo si están vacíos; después mandan los cambios del panel.
 - Primer comercio: Roots Salinas (17-10-2026).
 
+## Comercios desde el panel e importación de la planilla (migración 0023)
+
+- **Crear y editar** (`/admin/comercios/nuevo` y `/admin/comercios/<id>`): un
+  editor crea la ficha en borrador; solo un administrador publica o vuelve a
+  borrador (la base lo exige). Sin traducciones inventadas: el texto va en
+  español y en inglés y portugués se muestra el español con aviso.
+- **Fotos, carta y logo** desde la ficha: el navegador achica la foto, el
+  servidor la vuelve a codificar a WebP sin metadatos (con `sharp`) y la guarda
+  en el bucket público `place-images`. Máx. 4 MB por pedido (Vercel acepta
+  4,5 MB). La primera foto es la portada; sin fotos, el logo. Quitar una
+  imagen borra también el archivo.
+- **Contacto interno** (`place_contacts`): nombre y correo de quien inscribió el
+  negocio; solo lo ve el personal.
+- **Panel manda sobre el repo:** una ficha creada o editada en el panel queda
+  `managed_in_panel` y `content.sql` ya no la toca (hay una prueba en
+  `tests/db/managed.check.sql`).
+- **Importar la planilla** (`/admin/comercios/importar`, detalle en
+  [`FORMULARIO-COMERCIOS.md`](FORMULARIO-COMERCIOS.md)): primero se revisa (no
+  guarda nada) y luego se importa lo seleccionado; el plan se recalcula al
+  importar, no se confía en lo que mostró la pantalla. Se compara campo por
+  campo con lo importado la vez anterior (`import_snapshot`), así lo que se
+  editó a mano en otros campos se conserva. Una ficha que ya existía se
+  vincula sin pisar sus datos. La planilla debe estar compartida con «cualquier
+  persona con el enlace»; si no, se sube el CSV. Los comercios nuevos entran en
+  borrador salvo que un administrador marque publicar.
+- **Bitácora** (`docs/BITACORA.md`, `pnpm bitacora`): versiones, días y horas
+  de avance, generada desde git y de `docs/bitacora-notas.json`.
+
 ## Paleta desde el logo municipal
 
 Los tokens de color del sitio pasaron a los colores del logo en versión
