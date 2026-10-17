@@ -43,7 +43,11 @@ export default async function proxy(request: NextRequest) {
       secure: request.nextUrl.protocol === "https:",
       sameSite: "lax",
       path: "/",
-      expires: new Date(expiresAt),
+      // El del equipo no vence: la cookie dura lo máximo que aceptan los
+      // navegadores (400 días); abrir el enlace de nuevo la renueva.
+      ...(expiresAt === Infinity
+        ? { maxAge: 400 * 24 * 3600 }
+        : { expires: new Date(expiresAt) }),
     });
     return response;
   }

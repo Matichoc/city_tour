@@ -108,12 +108,12 @@ Fuente: PLADETUR de Papudo 2023–2027, iD (`docs/investigacion/`).
 
 ## Enlaces temporales para las vistas previas
 
-- Tres ambientes: `main` (público), `develop` (equipo, `papudo-dev.vercel.app`)
-  y `demo` (para compartir por horas, `papudo-demo.vercel.app`). Las vistas
-  previas se cierran con `SHARE_LINK_SECRET` (solo en Preview) y se abren con
-  enlaces firmados que vencen solos (4 h por defecto, máx. 30 días). Las
-  direcciones propias evitan compartir las automáticas de Vercel, que llevan
-  el nombre de la rama. Guía: [`COMPARTIR-VISTA-PREVIA.md`](COMPARTIR-VISTA-PREVIA.md).
+- Tres ambientes: `main` (público), `develop` (equipo) y `demo` (para
+  compartir por horas). Las vistas previas se cierran con `SHARE_LINK_SECRET`
+  (solo en Preview) y se abren con enlaces firmados: el del equipo es
+  permanente (`?para=equipo`) y los demás vencen solos (4 h por defecto, máx.
+  30 días). Se comparten por un dominio propio (`equipo.` y `demo.`) para que
+  la dirección no lleve el nombre del servicio ni de la rama. Guía: [`COMPARTIR-VISTA-PREVIA.md`](COMPARTIR-VISTA-PREVIA.md).
 - Se hizo en el proxy y no con los *Shareable Links* de Vercel porque esos no
   vencen solos. La clave para crear enlaces se pide con la ventana de usuario y
   contraseña del navegador (HTTP Basic) para que no quede en la URL ni en los

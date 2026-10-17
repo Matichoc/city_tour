@@ -1,11 +1,17 @@
 import { createHash, timingSafeEqual } from "node:crypto";
 import type { NextRequest } from "next/server";
-import { ACCESS_PARAM, parseDuration, signAccess } from "@/lib/share-link";
+import {
+  ACCESS_PARAM,
+  TEAM,
+  parseDuration,
+  signAccess,
+} from "@/lib/share-link";
 import { escapeHtml } from "@/lib/html";
 import es from "@/messages/es.json";
 
 /**
- * Crea un enlace temporal: `/api/enlace?horas=4` o `/api/enlace?dias=30`. El navegador pide usuario y
+ * Crea un enlace temporal (`/api/enlace?horas=4`, `/api/enlace?dias=30`) o el
+ * permanente del equipo (`/api/enlace?para=equipo`). El navegador pide usuario y
  * contraseña; la contraseña es `SHARE_LINK_SECRET` (el usuario da igual). Así
  * la clave no queda en la URL ni en los registros.
  */
@@ -34,15 +40,23 @@ export async function GET(request: NextRequest) {
     });
   }
 
-  const hours = parseDuration(request.nextUrl.searchParams);
-  const expiresAt = Date.now() + hours * 3_600_000;
+  const params = request.nextUrl.searchParams;
+  const forTeam = params.get("para") === TEAM;
+  const expiresAt = forTeam
+    ? Infinity
+    : Date.now() + parseDuration(params) * 3_600_000;
   const url = new URL("/es", request.nextUrl.origin);
   url.searchParams.set(ACCESS_PARAM, await signAccess(secret, expiresAt));
-  const expires = new Intl.DateTimeFormat("es-CL", {
-    timeZone: "America/Santiago",
-    dateStyle: "full",
-    timeStyle: "short",
-  }).format(expiresAt);
+  const body = forTeam
+    ? es.share.teamLinkBody
+    : es.share.linkBody.replace(
+        "{expires}",
+        new Intl.DateTimeFormat("es-CL", {
+          timeZone: "America/Santiago",
+          dateStyle: "full",
+          timeStyle: "short",
+        }).format(expiresAt),
+      );
 
   const html = `<!doctype html><html lang="es"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -50,7 +64,7 @@ export async function GET(request: NextRequest) {
 <style>body{font-family:system-ui,sans-serif;max-width:40rem;margin:10vh auto;padding:0 1rem;color:#0f3b4c;background:#fdf8ef}code{display:block;word-break:break-all;background:#fff;padding:.75rem;border-radius:.5rem;font-size:1rem}</style>
 </head><body><h1>${escapeHtml(es.share.linkTitle)}</h1>
 <code>${escapeHtml(url.toString())}</code>
-<p>${escapeHtml(es.share.linkBody.replace("{expires}", expires))}</p></body></html>`;
+<p>${escapeHtml(body)}</p></body></html>`;
   return new Response(html, {
     headers: {
       "content-type": "text/html; charset=utf-8",

@@ -57,6 +57,17 @@ describe("signAccess / verifyAccess", () => {
     }
   });
 
+  it("el enlace del equipo no vence y solo vale con la misma clave", async () => {
+    const token = await signAccess(SECRET, Infinity);
+    expect(token.startsWith("equipo.")).toBe(true);
+    const enCienAnios = Date.now() + 100 * 365 * 24 * HOUR;
+    expect(await verifyAccess(SECRET, token, enCienAnios)).toBe(Infinity);
+    expect(await verifyAccess("otra", token)).toBeNull();
+    // La firma de un enlace por horas no sirve para hacerse pasar por el del equipo.
+    const [, sig] = (await signAccess(SECRET, Date.now() + HOUR)).split(".");
+    expect(await verifyAccess(SECRET, `equipo.${sig}`)).toBeNull();
+  });
+
   it("acota las horas", () => {
     expect(parseHours(null)).toBe(4);
     expect(parseHours("abc")).toBe(4);
@@ -86,6 +97,16 @@ describe("proxy", () => {
     const res = await proxy(req("https://x.vercel.app/es"));
     expect(res.status).toBe(403);
     expect(await res.text()).toContain("Este enlace venció");
+  });
+
+  it("el enlace del equipo deja una cookie de 400 días", async () => {
+    vi.stubEnv("SHARE_LINK_SECRET", SECRET);
+    const token = await signAccess(SECRET, Infinity);
+    const res = await proxy(req(`https://x.vercel.app/es?acceso=${token}`));
+    expect(res.status).toBe(307);
+    const cookie = res.cookies.get(ACCESS_COOKIE);
+    expect(cookie?.value).toBe(token);
+    expect(cookie?.maxAge).toBe(400 * 24 * 3600);
   });
 
   it("un enlace vigente deja la cookie y limpia la dirección", async () => {
@@ -145,6 +166,21 @@ describe("/api/enlace", () => {
       }),
     );
     expect(mala.status).toBe(401);
+  });
+
+  it("con ?para=equipo entrega el enlace permanente", async () => {
+    vi.stubEnv("SHARE_LINK_SECRET", SECRET);
+    const res = await createLink(
+      new NextRequest("https://x.vercel.app/api/enlace?para=equipo", {
+        headers: { authorization: basic(SECRET) },
+      }),
+    );
+    const html = await res.text();
+    expect(html).toContain("no vence");
+    const token = html.match(/acceso=([^<\s]+)/)![1]!;
+    expect(await verifyAccess(SECRET, decodeURIComponent(token))).toBe(
+      Infinity,
+    );
   });
 
   it("con la clave entrega un enlace que funciona por las horas pedidas", async () => {
