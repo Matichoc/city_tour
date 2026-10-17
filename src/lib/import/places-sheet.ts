@@ -256,6 +256,16 @@ export const DATA_FIELDS = [
 ] as const satisfies readonly (keyof Record_)[];
 export type DataField = (typeof DATA_FIELDS)[number];
 
+/**
+ * Datos personales de quien inscribió el comercio. Se comparan con la
+ * importación anterior, pero NO van en `places.import_snapshot` (que puede
+ * leerse en público): se guardan aparte, en `place_import_private`.
+ */
+export const CONTACT_FIELDS = ["contactName", "contactEmail"] as const;
+export type ContactField = (typeof CONTACT_FIELDS)[number];
+const isContact = (f: DataField): f is ContactField =>
+  (CONTACT_FIELDS as readonly string[]).includes(f);
+
 const orNull = (s: string | undefined) => (s && s.trim() ? s.trim() : null);
 
 export type RowIssue = "noName" | "noAuthorization";
@@ -310,7 +320,10 @@ export type ExistingPlace = {
   /** Nombre en español. */
   name: string;
   importKey: string | null;
+  /** Últimos valores importados, sin datos personales. */
   snapshot: Partial<Record<DataField, string | null>> | null;
+  /** Último contacto importado (tabla privada); null si aún no hay. */
+  contactSnapshot?: Partial<Record<ContactField, string | null>> | null;
   infoUpdatedAt: string | null;
 };
 
@@ -338,11 +351,36 @@ export type PlanItem = {
   duplicates: number;
 };
 
-export const snapshotOf = (r: Record_): Record<DataField, string | null> =>
-  Object.fromEntries(DATA_FIELDS.map((f) => [f, r[f] ?? null])) as Record<
-    DataField,
-    string | null
-  >;
+type PublicField = Exclude<DataField, ContactField>;
+
+/** Valores importados que se guardan en `places.import_snapshot` (sin contacto). */
+export const snapshotOf = (r: Record_): Record<PublicField, string | null> =>
+  Object.fromEntries(
+    DATA_FIELDS.filter((f) => !isContact(f)).map((f) => [f, r[f] ?? null]),
+  ) as Record<PublicField, string | null>;
+
+/** Contacto importado: va a `place_import_private`, nunca a `places`. */
+export const contactSnapshotOf = (
+  r: Record_,
+): Record<ContactField, string | null> => ({
+  contactName: r.contactName ?? null,
+  contactEmail: r.contactEmail ?? null,
+});
+
+/**
+ * Valor de un campo en la importación anterior. El contacto sale de la tabla
+ * privada; en filas antiguas aún puede estar dentro de `import_snapshot`.
+ * `undefined` = no hay referencia previa (no se compara).
+ */
+function previous(
+  found: ExistingPlace,
+  f: DataField,
+): string | null | undefined {
+  if (!isContact(f)) return found.snapshot![f] ?? null;
+  if (found.contactSnapshot) return found.contactSnapshot[f] ?? null;
+  if (f in found.snapshot!) return found.snapshot![f] ?? null;
+  return undefined;
+}
 
 const later = (a: string | null, b: string | null) =>
   !!a && (!b || Date.parse(a) > Date.parse(b));
@@ -417,10 +455,14 @@ export function planImport(
         : "link";
       continue;
     }
-    const now = snapshotOf(r);
-    it.changed = DATA_FIELDS.filter(
-      (f) => (found.snapshot![f] ?? null) !== now[f],
-    );
+    const nowAll: Record<DataField, string | null> = {
+      ...snapshotOf(r),
+      ...contactSnapshotOf(r),
+    };
+    it.changed = DATA_FIELDS.filter((f) => {
+      const before = previous(found, f);
+      return before !== undefined && before !== nowAll[f];
+    });
     it.status =
       it.changed.length > 0
         ? "update"

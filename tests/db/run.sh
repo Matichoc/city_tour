@@ -36,6 +36,9 @@ echo "→ contenido del sitio (dos veces: debe ser idempotente)"
 "${PSQL[@]}" -o /dev/null -f tests/db/media.check.sql
 "${PSQL[@]}" -o /dev/null -f tests/db/panel.check.sql
 "${PSQL[@]}" -o /dev/null -f tests/db/privacy.check.sql
+echo "→ PRIV-01: respaldo, limpieza y restauración"
+if [[ -n "${DATABASE_URL:-}" ]]; then PRIV_URL="$DATABASE_URL"; else PRIV_URL="postgresql:///city_tour_test"; fi
+bash tests/db/priv01-limpieza-respaldo.sh "$PRIV_URL"
 "${PSQL[@]}" -o /dev/null -f tests/db/videos.check.sql
 echo "→ una ficha editada en el panel no la pisa content.sql"
 "${PSQL[@]}" -c "update public.places set managed_in_panel = true, address = 'Dirección editada' where slug = 'playa-papudo';

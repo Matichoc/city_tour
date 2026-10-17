@@ -9,9 +9,11 @@ import type { CategorySlug, CtaKind, PlaceHours } from "@/content/types";
 import { groupHours } from "@/lib/hours";
 import {
   DATA_FIELDS,
+  contactSnapshotOf,
   planImport,
   slugify,
   snapshotOf,
+  type ContactField,
   type DataField,
   type ExistingPlace,
   type PlanItem,
@@ -153,9 +155,28 @@ async function saveContact(
   );
 }
 
+/**
+ * Guarda el último contacto importado en la tabla privada (solo personal).
+ * Va aparte de `places.import_snapshot` porque esa columna no debe tener
+ * datos personales (PRIV-01).
+ */
+async function saveContactSnapshot(
+  token: string,
+  placeId: string,
+  contact: Record<ContactField, string | null>,
+) {
+  await post(
+    token,
+    "place_import_private?on_conflict=place_id",
+    { place_id: placeId, contact, updated_at: new Date().toISOString() },
+    "resolution=merge-duplicates,return=minimal",
+  );
+}
+
 type ImportMeta = {
   importKey: string;
-  snapshot: Record<DataField, string | null>;
+  snapshot: Record<Exclude<DataField, ContactField>, string | null>;
+  contactSnapshot: Record<ContactField, string | null>;
   confirmedAt: string | null;
 };
 
@@ -211,6 +232,8 @@ export async function createPlace(
     name: input.contactName,
     email: input.contactEmail,
   });
+  if (opts.import)
+    await saveContactSnapshot(token, row.id, opts.import.contactSnapshot);
   const published = opts.publish && session.role === "admin";
   if (published)
     await patch(token, `places?id=eq.${enc(row.id)}`, {
@@ -584,10 +607,13 @@ export async function loadImportContext(token: string) {
         import_snapshot: ExistingPlace["snapshot"];
         info_updated_at: string | null;
         translations: { locale: string; name: string }[];
+        place_import_private: {
+          contact: ExistingPlace["contactSnapshot"];
+        } | null;
       }[]
     >(
       token,
-      "places?select=id,slug,import_key,import_snapshot,info_updated_at,translations:place_translations(locale,name)",
+      "places?select=id,slug,import_key,import_snapshot,info_updated_at,translations:place_translations(locale,name),place_import_private(contact)",
     ),
     listLocalityOptions(token),
   ]);
@@ -597,6 +623,7 @@ export async function loadImportContext(token: string) {
     name: p.translations.find((t) => t.locale === "es")?.name ?? p.slug,
     importKey: p.import_key,
     snapshot: p.import_snapshot,
+    contactSnapshot: p.place_import_private?.contact ?? null,
     infoUpdatedAt: p.info_updated_at,
   }));
   return { existing, localities };
@@ -679,6 +706,7 @@ export async function applyPlan(
           import: {
             importKey: r.key,
             snapshot: snapshotOf(r),
+            contactSnapshot: contactSnapshotOf(r),
             confirmedAt: r.confirmedAt,
           },
         });
@@ -686,6 +714,15 @@ export async function applyPlan(
       } else if (it.existing) {
         const id = it.existing.id;
         const body: Record<string, unknown> = {};
+        // El contacto importado se guarda aparte, antes de tocar la ficha: así
+        // `import_snapshot` nunca lleva datos personales (ni en filas antiguas,
+        // cuyo snapshot se reemplaza aquí).
+        if (
+          it.status === "update" ||
+          it.status === "link" ||
+          !it.existing.importKey
+        )
+          await saveContactSnapshot(token, id, contactSnapshotOf(r));
         if (it.status === "link" || !it.existing.importKey) {
           body.import_key = r.key;
           body.import_snapshot = snapshotOf(r);

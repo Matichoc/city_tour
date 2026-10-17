@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { parseCsv, sheetCsvUrl } from "@/lib/import/csv";
 import {
   categoryOf,
+  contactSnapshotOf,
   parseLink,
   parsePhone,
   parseTimestamp,
@@ -253,5 +254,86 @@ describe("plan de importación", () => {
       status: "skip",
       reason: "noAuthorization",
     });
+  });
+});
+
+// PRIV-01: el contacto (nombre y correo) no va en el snapshot público.
+describe("snapshot sin datos personales", () => {
+  const rec = () => toRecord(table(ROOTS).rows[0]!, LOCS).record!;
+  const withContact = (name: string, email: string) => {
+    const row = [...ROOTS];
+    row[12] = name;
+    row[13] = email;
+    return row;
+  };
+
+  it("snapshotOf no incluye nombre ni correo de contacto", () => {
+    const snap = snapshotOf(rec());
+    expect(Object.keys(snap)).not.toContain("contactName");
+    expect(Object.keys(snap)).not.toContain("contactEmail");
+    expect(JSON.stringify(snap)).not.toMatch(/@/);
+  });
+
+  it("el contacto va en su propio snapshot, aparte", () => {
+    const r = toRecord(
+      table(withContact("Ana", "ANA@ejemplo.cl")).rows[0]!,
+      LOCS,
+    ).record!;
+    expect(contactSnapshotOf(r)).toEqual({
+      contactName: "Ana",
+      contactEmail: "ana@ejemplo.cl",
+    });
+  });
+
+  it("detecta un cambio de contacto comparando con el snapshot privado", () => {
+    const r = toRecord(
+      table(withContact("Ana", "ana@ejemplo.cl")).rows[0]!,
+      LOCS,
+    ).record!;
+    const ex = existing({
+      importKey: r.key,
+      snapshot: snapshotOf(r),
+      contactSnapshot: { contactName: "Ana", contactEmail: "ana@ejemplo.cl" },
+    });
+    expect(
+      planImport(table(withContact("Ana", "ana@ejemplo.cl")), [ex], LOCS)
+        .items[0],
+    ).toMatchObject({ status: "same", changed: [] });
+    const item = planImport(
+      table(withContact("Ana", "otra@ejemplo.cl")),
+      [ex],
+      LOCS,
+    ).items[0]!;
+    expect(item).toMatchObject({
+      status: "update",
+      changed: ["contactEmail"],
+    });
+  });
+
+  it("filas antiguas, con el contacto aún dentro del snapshot, se siguen comparando", () => {
+    const r = toRecord(
+      table(withContact("Ana", "ana@ejemplo.cl")).rows[0]!,
+      LOCS,
+    ).record!;
+    const legacy = {
+      ...snapshotOf(r),
+      contactName: "Ana",
+      contactEmail: "ana@ejemplo.cl",
+    };
+    const ex = existing({ importKey: r.key, snapshot: legacy });
+    expect(
+      planImport(table(withContact("Ana", "ana@ejemplo.cl")), [ex], LOCS)
+        .items[0]!.status,
+    ).toBe("same");
+    expect(
+      planImport(table(withContact("Beto", "ana@ejemplo.cl")), [ex], LOCS)
+        .items[0]!.changed,
+    ).toEqual(["contactName"]);
+  });
+
+  it("sin referencia previa de contacto, no se inventa un cambio", () => {
+    const r = rec();
+    const ex = existing({ importKey: r.key, snapshot: snapshotOf(r) });
+    expect(planImport(table(ROOTS), [ex], LOCS).items[0]!.changed).toEqual([]);
   });
 });

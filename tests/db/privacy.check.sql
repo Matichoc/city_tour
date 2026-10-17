@@ -58,4 +58,31 @@ select tests.eq('el editor lee import_snapshot (lo necesita la importación)',
   (select import_snapshot ->> 'name' from public.places where slug = 'priv-comercio'), 'Comercio');
 select tests.logout();
 
+-- 0026: el contacto de la importación vive en una tabla solo para personal.
+select tests.login('authenticated', '00000000-0000-0000-0000-00000000bb01');
+insert into public.place_import_private (place_id, contact)
+  select id, '{"contactName":"Persona Prueba","contactEmail":"persona@prueba.test"}'::jsonb
+  from public.places where slug = 'priv-comercio';
+select tests.eq('el editor guarda y lee el contacto privado',
+  (select contact ->> 'contactEmail' from public.place_import_private), 'persona@prueba.test');
+select tests.logout();
+
+select tests.login('anon');
+select tests.raises('anon no lee el contacto privado',
+  $$select contact from public.place_import_private$$, '42501');
+select tests.raises('anon no escribe el contacto privado',
+  $$insert into public.place_import_private (place_id) select id from public.places limit 1$$, '42501');
+select tests.logout();
+
+select tests.login('authenticated', '00000000-0000-0000-0000-00000000bb02');
+select tests.eq('un usuario sin rol no ve el contacto privado',
+  (select count(*)::int from public.place_import_private), 0);
+select tests.raises('un usuario sin rol no lo escribe',
+  $$insert into public.place_import_private (place_id) select id from public.places limit 1$$, '42501');
+select tests.logout();
+
+select tests.eq('la tabla privada no tiene trigger de auditoría (copiaría el contacto a audit_log)',
+  (select count(*)::int from pg_trigger
+   where tgrelid = 'public.place_import_private'::regclass and not tgisinternal), 0);
+
 rollback;
