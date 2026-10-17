@@ -125,7 +125,10 @@
     "sernaturExpired": "vencido el {date}",
     "sernaturNote": "Servicio turístico registrado en SERNATUR, según informa el local.",
     "website": "Sitio web",
-    "ownerValidated": "Validada por el representante del local"
+    "ownerValidated": "Validada por el representante del local",
+    "galleryPrev": "Foto anterior",
+    "galleryNext": "Foto siguiente",
+    "galleryCount": "{current} de {total}"
   },
   "routes": {
     "title": "Rutas",
