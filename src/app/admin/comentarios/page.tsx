@@ -12,7 +12,7 @@ import {
 } from "@/lib/admin/api";
 import { formatDate } from "@/components/admin/badges";
 import { Stars } from "@/components/ui/stars";
-import { moderateReview } from "@/app/admin/actions";
+import { moderateMedia, moderateReview } from "@/app/admin/actions";
 
 const PUBLIC_PATH = { lugar: "lugares", evento: "eventos" } as const;
 
@@ -117,6 +117,69 @@ export default async function ReviewsAdmin({
                 </p>
               )}
               <p className="mt-2 text-sm whitespace-pre-line">{r.text}</p>
+              {r.media.length > 0 && (
+                <ul className="mt-3 flex flex-wrap gap-3">
+                  {r.media.map((m) => (
+                    <li
+                      key={m.id}
+                      className="border-border w-40 overflow-hidden rounded-xl border"
+                    >
+                      <div className="bg-sea-soft aspect-square">
+                        {m.url && m.kind === "video" ? (
+                          <video
+                            src={m.url}
+                            controls
+                            preload="metadata"
+                            className="size-full object-cover"
+                          />
+                        ) : m.url ? (
+                          // eslint-disable-next-line @next/next/no-img-element -- enlace firmado de Storage, de corta duración
+                          <img
+                            src={m.url}
+                            alt=""
+                            className="size-full object-cover"
+                          />
+                        ) : null}
+                      </div>
+                      <div className="flex flex-wrap items-center gap-1 p-2 text-xs">
+                        <span className="font-bold">
+                          {t(`reviews.media.${m.status}`)}
+                        </span>
+                        {m.status === "pending" && m.attention && (
+                          <span className="bg-coral/10 text-coral-ink rounded-full px-2 py-0.5 font-bold">
+                            {t("reviews.media.attention")}
+                          </span>
+                        )}
+                      </div>
+                      {canModerate(session) && m.status !== "rejected" && (
+                        <form
+                          action={moderateMedia}
+                          className="flex gap-1 px-2 pb-2"
+                        >
+                          <input type="hidden" name="id" value={m.id} />
+                          <input type="hidden" name="filtro" value={filter} />
+                          {m.status === "pending" && (
+                            <button
+                              name="accion"
+                              value="aprobar"
+                              className={button}
+                            >
+                              {t("reviews.media.approve")}
+                            </button>
+                          )}
+                          <button
+                            name="accion"
+                            value="rechazar"
+                            className={`${button} text-coral-ink`}
+                          >
+                            {t("reviews.media.reject")}
+                          </button>
+                        </form>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              )}
               {canModerate(session) && (
                 <form
                   action={moderateReview}

@@ -14,6 +14,7 @@ import {
   getSession,
   setNoticeActive,
   setReviewStatus,
+  setMediaStatus,
   updatePlaceCta,
   markInfoUpdated,
   updateSettings,
@@ -143,6 +144,35 @@ export async function moderateReview(formData: FormData) {
   }
   if (!ok) redirect(`${back}&error=1`);
   // Se retira del sitio público de inmediato.
+  updateTag(REVIEWS_TAG);
+  redirect(`${back}&guardado=1`);
+}
+
+export async function moderateMedia(formData: FormData) {
+  const id = text(formData.get("id"));
+  const action = text(formData.get("accion"));
+  const back = `/admin/comentarios?filtro=${encodeURIComponent(text(formData.get("filtro")) || "todos")}`;
+  const session = await getSession();
+  if (!session) redirect("/admin/ingresar");
+  if (
+    !/^[0-9a-f-]{36}$/.test(id) ||
+    !["aprobar", "rechazar"].includes(action) ||
+    !canModerate(session)
+  ) {
+    redirect(`${back}&error=1`);
+  }
+  let ok = true;
+  try {
+    await setMediaStatus(
+      session,
+      id,
+      action === "aprobar" ? "approved" : "rejected",
+    );
+  } catch (error) {
+    console.error("[admin] moderación de archivo falló", error);
+    ok = false;
+  }
+  if (!ok) redirect(`${back}&error=1`);
   updateTag(REVIEWS_TAG);
   redirect(`${back}&guardado=1`);
 }

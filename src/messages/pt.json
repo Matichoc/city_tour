@@ -371,7 +371,23 @@
     "errorProfanity": "Sua avaliação tem palavras ofensivas. Reescreva, por favor.",
     "errorRate": "Você enviou várias avaliações seguidas. Tente de novo mais tarde.",
     "errorGeneric": "Não foi possível publicar sua avaliação. Tente de novo em instantes.",
-    "sending": "Publicando…"
+    "sending": "Publicando…",
+    "mediaLabel": "Fotos ou vídeo (opcional)",
+    "mediaHelp": "Até 4 arquivos (um único vídeo, de no máx. 1 minuto), 25 MB cada. São revisados antes de aparecer.",
+    "checking": "Verificando…",
+    "blocked": "“{name}” não pode ser publicado: parece ter conteúdo impróprio.",
+    "unreadable": "Não conseguimos verificar “{name}”. Tente um JPG, PNG ou vídeo MP4.",
+    "tooLong": "“{name}” tem mais de 1 minuto.",
+    "tooBig": "“{name}” tem mais de 25 MB.",
+    "tooMany": "Você pode enviar até 4 arquivos e um único vídeo.",
+    "badType": "“{name}” não é uma foto JPG, PNG ou WebP nem um vídeo MP4, WebM ou MOV.",
+    "remove": "Remover {name}",
+    "uploading": "Enviando arquivos…",
+    "mediaPending": "Suas fotos e vídeos aparecerão quando a equipe revisá-los.",
+    "mediaFailed": "Sua opinião foi publicada, mas não conseguimos enviar os arquivos. Tente novamente mais tarde.",
+    "errorMedia": "Um dos arquivos não pode ser publicado.",
+    "photoAlt": "Foto de {author}",
+    "videoLabel": "Vídeo de {author}"
   },
   "events": {
     "title": "Agenda de eventos",
@@ -520,7 +536,8 @@
       "filter": {
         "todos": "Todos",
         "visibles": "Visíveis",
-        "ocultos": "Ocultos"
+        "ocultos": "Ocultos",
+        "archivos": "Mídia a revisar"
       },
       "on": "Em",
       "hiddenBadge": "Oculto",
@@ -529,7 +546,16 @@
       "delete": "Apagar",
       "saved": "Pronto. A mudança já aparece no site público.",
       "error": "Não foi possível aplicar. Confira seu papel ou tente de novo.",
-      "empty": "Não há comentários nesta visão."
+      "empty": "Não há comentários nesta visão.",
+      "media": {
+        "pending": "A revisar",
+        "approved": "Aprovado",
+        "rejected": "Rejeitado",
+        "uploading": "Enviando",
+        "attention": "Revisar com cuidado",
+        "approve": "Aprovar",
+        "reject": "Rejeitar"
+      }
     },
     "business": {
       "title": "Negócios",

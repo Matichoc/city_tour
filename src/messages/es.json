@@ -371,7 +371,23 @@
     "errorProfanity": "Tu opinión tiene palabras ofensivas. Reescríbela, por favor.",
     "errorRate": "Enviaste varias opiniones seguidas. Intenta de nuevo más tarde.",
     "errorGeneric": "No se pudo publicar tu opinión. Intenta de nuevo en un momento.",
-    "sending": "Publicando…"
+    "sending": "Publicando…",
+    "mediaLabel": "Fotos o video (opcional)",
+    "mediaHelp": "Hasta 4 archivos (un solo video, de máx. 1 minuto), 25 MB cada uno. Se revisan antes de mostrarse.",
+    "checking": "Revisando…",
+    "blocked": "«{name}» no se puede publicar: parece tener contenido inapropiado.",
+    "unreadable": "No pudimos revisar «{name}». Prueba con JPG, PNG o un video MP4.",
+    "tooLong": "«{name}» dura más de 1 minuto.",
+    "tooBig": "«{name}» pesa más de 25 MB.",
+    "tooMany": "Puedes subir hasta 4 archivos y un solo video.",
+    "badType": "«{name}» no es una foto JPG, PNG o WebP ni un video MP4, WebM o MOV.",
+    "remove": "Quitar {name}",
+    "uploading": "Subiendo archivos…",
+    "mediaPending": "Tus fotos y videos se mostrarán cuando el equipo los revise.",
+    "mediaFailed": "Tu opinión se publicó, pero no pudimos subir los archivos. Intenta de nuevo más tarde.",
+    "errorMedia": "Uno de los archivos no se puede publicar.",
+    "photoAlt": "Foto de {author}",
+    "videoLabel": "Video de {author}"
   },
   "events": {
     "title": "Agenda de eventos",
@@ -520,7 +536,8 @@
       "filter": {
         "todos": "Todos",
         "visibles": "Visibles",
-        "ocultos": "Ocultos"
+        "ocultos": "Ocultos",
+        "archivos": "Fotos por revisar"
       },
       "on": "En",
       "hiddenBadge": "Oculto",
@@ -529,7 +546,16 @@
       "delete": "Borrar",
       "saved": "Listo. El cambio ya se ve en el sitio público.",
       "error": "No se pudo aplicar. Revisa tu rol o intenta de nuevo.",
-      "empty": "No hay comentarios en esta vista."
+      "empty": "No hay comentarios en esta vista.",
+      "media": {
+        "pending": "Por revisar",
+        "approved": "Aprobado",
+        "rejected": "Rechazado",
+        "uploading": "Subiendo",
+        "attention": "Revisar con cuidado",
+        "approve": "Aprobar",
+        "reject": "Rechazar"
+      }
     },
     "business": {
       "title": "Comercios",

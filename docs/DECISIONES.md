@@ -195,3 +195,25 @@ Fuente: PLADETUR de Papudo 2023–2027, iD (`docs/investigacion/`).
   visitante que revise horarios y precios antes de ir.
 - Mientras el sitio esté cerrado, el enlace a la ficha que va en el mensaje
   solo abre con un enlace de acceso.
+
+## Fotos y videos en los comentarios (migración 0020)
+
+- Hasta 4 archivos por comentario (un solo video, de máx. 1 minuto), 25 MB
+  cada uno; JPG, PNG, WebP, MP4, WebM o MOV.
+- **Detector gratuito en el navegador**: NSFW.js (modelo MobileNetV2), sin
+  cuenta ni costo y sin enviar nada a terceros. Se carga solo al elegir un
+  archivo; en los videos revisa 8 cuadros y usa el peor. Bloquea el desnudo
+  explícito (`Porn`/`Hentai`); «Sexy» no bloquea (trajes de baño en una guía
+  de playas), pero marca el archivo como «Revisar con cuidado».
+  Reglas en `src/lib/media-policy.ts`.
+- Como el detector del navegador se puede saltar, **nada se publica solo**:
+  los archivos van a un bucket privado (`review-media`) y quedan «por
+  revisar» hasta que el personal los aprueba en `/admin/comentarios`
+  (filtro «Fotos por revisar»). Rechazar o borrar el comentario borra el
+  archivo. El sitio los muestra con enlaces firmados que solo se pueden crear
+  para lo aprobado de comentarios visibles.
+- Los visitantes solo suben a rutas que registró `attach_review_media()`
+  (mismo remitente que el comentario, dentro de 15 minutos) y antes de 30
+  minutos; `finish_review_media()` deja en revisión solo lo que llegó.
+- Más adelante, con tráfico: un servicio en el servidor (Sightengine, Google
+  Vision o AWS Rekognition) podría aprobar solo lo que pase su revisión.

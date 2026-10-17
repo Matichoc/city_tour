@@ -6,6 +6,12 @@
 import { cookies } from "next/headers";
 import { ACCESS_COOKIE, jwtPayload } from "@/lib/admin/auth";
 import { supabaseConfig } from "@/lib/db/content-source";
+import {
+  needsAttention,
+  type MediaKind,
+  type Scores,
+} from "@/lib/media-policy";
+import { removeObjects, signedUrls } from "@/lib/storage";
 
 export const ENTITIES = ["lugar", "evento", "ruta"] as const;
 export type EntityKind = (typeof ENTITIES)[number];
@@ -253,8 +259,25 @@ export async function verifyEntity(
 }
 
 // ── Comentarios ───────────────────────────────────────────────────────────
-export type ReviewFilter = "todos" | "visibles" | "ocultos";
-export const REVIEW_FILTERS: ReviewFilter[] = ["todos", "visibles", "ocultos"];
+export type ReviewFilter = "todos" | "visibles" | "ocultos" | "archivos";
+export const REVIEW_FILTERS: ReviewFilter[] = [
+  "todos",
+  "visibles",
+  "ocultos",
+  "archivos",
+];
+
+export type MediaStatus = "uploading" | "pending" | "approved" | "rejected";
+export type AdminMedia = {
+  id: string;
+  path: string;
+  kind: MediaKind;
+  status: MediaStatus;
+  /** Enlace firmado (corto) para verlo en el panel. */
+  url: string | null;
+  /** El detector marcó algo dudoso, o no hay puntaje. */
+  attention: boolean;
+};
 
 export type AdminReview = {
   id: string;
@@ -265,6 +288,7 @@ export type AdminReview = {
   createdAt: string;
   /** Ficha comentada: tipo para el sitio público, slug y nombre en español. */
   target: { kind: "lugar" | "evento"; slug: string; name: string } | null;
+  media: AdminMedia[];
 };
 
 type ReviewRow = {
@@ -276,6 +300,14 @@ type ReviewRow = {
   created_at: string;
   place: { slug: string; translations: Row["translations"] } | null;
   event: { slug: string; translations: Row["translations"] } | null;
+  media: {
+    id: string;
+    path: string;
+    kind: MediaKind;
+    status: MediaStatus;
+    ai_scores: Scores | null;
+    created_at: string;
+  }[];
 };
 
 const nameEs = (tr: Row["translations"], slug: string) =>
@@ -291,13 +323,33 @@ export async function listReviewsAdmin(
       : filter === "ocultos"
         ? "&status=eq.hidden"
         : "";
+  // «archivos»: solo comentarios con fotos o videos por revisar.
+  const media =
+    filter === "archivos"
+      ? "pending_media:review_media!inner(id),media:review_media(id,path,kind,status,ai_scores,created_at)" +
+        "&pending_media.status=eq.pending"
+      : "media:review_media(id,path,kind,status,ai_scores,created_at)";
   const rows = await rest<ReviewRow[]>(
     token,
     "reviews?select=id,author_name,rating,body,status,created_at," +
       "place:places(slug,translations:place_translations(locale,name))," +
-      "event:events(slug,translations:event_translations(locale,name))" +
-      `${status}&order=created_at.desc&limit=200`,
+      "event:events(slug,translations:event_translations(locale,name))," +
+      `${media}${status}&order=created_at.desc&limit=200`,
   );
+  const cfg = supabaseConfig()!;
+  const visible = rows.flatMap((r) =>
+    r.media
+      .filter((m) => m.status === "pending" || m.status === "approved")
+      .map((m) => m.path),
+  );
+  const urls = await signedUrls(cfg, visible, {
+    token,
+    expiresIn: 3600,
+    init: { cache: "no-store" },
+  }).catch((error) => {
+    console.error("[admin] no se pudieron firmar los archivos", error);
+    return new Map<string, string>();
+  });
   return rows.map((r) => ({
     id: r.id,
     author: r.author_name,
@@ -318,7 +370,42 @@ export async function listReviewsAdmin(
             name: nameEs(r.event.translations, r.event.slug),
           }
         : null,
+    media: [...r.media]
+      .filter((m) => m.status !== "uploading")
+      .sort((a, b) => a.created_at.localeCompare(b.created_at))
+      .map((m) => ({
+        id: m.id,
+        path: m.path,
+        kind: m.kind,
+        status: m.status,
+        url: urls.get(m.path) ?? null,
+        attention: needsAttention(m.ai_scores),
+      })),
   }));
+}
+
+/** Aprueba o rechaza un archivo; al rechazar, el archivo se borra del bucket. */
+export async function setMediaStatus(
+  session: Session,
+  id: string,
+  status: "approved" | "rejected",
+) {
+  const [row] = await rest<{ path: string }[]>(
+    session.token,
+    `review_media?id=eq.${encodeURIComponent(id)}`,
+    {
+      method: "PATCH",
+      headers: { prefer: "return=representation" },
+      body: JSON.stringify({
+        status,
+        moderated_by: session.userId,
+        moderated_at: new Date().toISOString(),
+      }),
+    },
+  );
+  if (!row) throw new Error("archivo no encontrado o sin permiso");
+  if (status === "rejected")
+    await removeObjects(supabaseConfig()!, session.token, [row.path]);
 }
 
 export const canModerate = (s: Session) =>
@@ -341,6 +428,16 @@ export async function setReviewStatus(
 }
 
 export async function deleteReview(session: Session, id: string) {
+  // Primero sus archivos: al borrar el comentario, sus filas se van en cascada.
+  const media = await rest<{ path: string }[]>(
+    session.token,
+    `review_media?select=path&review_id=eq.${encodeURIComponent(id)}`,
+  );
+  await removeObjects(
+    supabaseConfig()!,
+    session.token,
+    media.map((m) => m.path),
+  );
   await rest<null>(session.token, `reviews?id=eq.${encodeURIComponent(id)}`, {
     method: "DELETE",
   });
