@@ -121,3 +121,19 @@ Fuente: PLADETUR de Papudo 2023–2027, iD (`docs/investigacion/`).
   vencen solos. La clave para crear enlaces se pide con la ventana de usuario y
   contraseña del navegador (HTTP Basic) para que no quede en la URL ni en los
   registros.
+
+## Panel `/admin` (primera parte: ver y verificar)
+
+- `/admin/ingresar`: correo y contraseña de Supabase Auth. Solo entra quien
+  tiene perfil activo en `profiles` (admin, editor o verificador); los tokens
+  van en cookies httpOnly limitadas a `/admin` y el proxy renueva el de acceso
+  antes de que venza. Se usa la API REST con `fetch`, sin librerías.
+- `/admin`: lugares, eventos y rutas con su estado de publicación y
+  verificación (incluye borradores, por RLS de personal). `/admin/<tipo>/<id>`:
+  fuentes, historial y formulario que llama a `verify_entity()` (solo admin y
+  verificador; deja registro en `verification_logs`). Al guardar se invalida
+  la caché del contenido (`revalidateTag("content", "max")`).
+- El sitio público muestra el estado de verificación que viene de la base.
+- `/admin` va sin prefijo de idioma (solo español) y queda detrás de la misma
+  puerta de enlaces que el resto del sitio.
+- Pendiente (Fase 2): editar fichas, crear borradores, fotos, usuarios y roles.

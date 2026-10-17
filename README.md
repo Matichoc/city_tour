@@ -26,6 +26,9 @@ herramientas de dispositivo del navegador.
 > el sitio lo lee de la base; sin ellas, del repo
 > ([`docs/SETUP-SUPABASE.md`](docs/SETUP-SUPABASE.md)).
 
+Panel municipal: `/admin` (iniciar sesión con un usuario que tenga perfil en
+`profiles`; ver [`docs/DECISIONES.md`](docs/DECISIONES.md)).
+
 ## Scripts
 
 | Comando                        | Descripción                                         |

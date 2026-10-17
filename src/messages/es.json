@@ -428,5 +428,63 @@
     "linkBody": "Quien lo abra podrá ver la vista previa hasta el {expires} (hora de Chile). Después, el enlace deja de funcionar.",
     "askPassword": "Escribe la clave para crear enlaces",
     "teamLinkBody": "Enlace permanente del equipo: no vence. Compártelo solo con el equipo; si se filtra, cambia la clave y crea uno nuevo (eso corta también los enlaces por horas)."
+  },
+  "admin": {
+    "title": "Panel municipal",
+    "signIn": {
+      "title": "Ingresar al panel",
+      "email": "Correo",
+      "password": "Contraseña",
+      "submit": "Ingresar",
+      "error": "Correo o contraseña incorrectos, o tu cuenta no tiene acceso al panel.",
+      "notConfigured": "El panel necesita la base de datos configurada."
+    },
+    "signOut": "Salir",
+    "role": {
+      "admin": "Administración",
+      "editor": "Edición",
+      "verifier": "Verificación",
+      "org_manager": "Negocio"
+    },
+    "tabs": {
+      "lugar": "Lugares",
+      "evento": "Eventos",
+      "ruta": "Rutas"
+    },
+    "summary": "{total} en total · {verified} verificados · {pending} pendientes · {outdated} desactualizados",
+    "columns": {
+      "name": "Nombre",
+      "publication": "Publicación",
+      "verification": "Verificación",
+      "lastVerified": "Última verificación"
+    },
+    "publication": {
+      "draft": "Borrador",
+      "published": "Publicado",
+      "archived": "Archivado"
+    },
+    "verification": {
+      "pending": "Pendiente",
+      "verified": "Verificado",
+      "outdated": "Desactualizado"
+    },
+    "demo": "Ejemplo",
+    "never": "Nunca",
+    "back": "Volver al panel",
+    "sources": "Fuentes",
+    "noSources": "Sin fuentes registradas.",
+    "history": "Historial de verificación",
+    "noHistory": "Todavía no se ha verificado.",
+    "form": {
+      "title": "Cambiar estado de verificación",
+      "status": "Nuevo estado",
+      "notes": "Nota (qué se revisó y cómo)",
+      "evidence": "Enlace de evidencia (foto, documento…)",
+      "submit": "Guardar",
+      "saved": "Guardado. El sitio público se actualiza en unos minutos.",
+      "error": "No se pudo guardar. Revisa tu rol o intenta de nuevo.",
+      "readOnly": "Tu rol puede ver, pero no verificar."
+    },
+    "loadError": "No se pudo leer la base de datos. Intenta de nuevo en un momento."
   }
 }

@@ -428,5 +428,63 @@
     "linkBody": "Quem abri-lo poderá ver a prévia até {expires} (horário do Chile). Depois disso, o link deixa de funcionar.",
     "askPassword": "Digite a chave para criar links",
     "teamLinkBody": "Link permanente da equipe: não expira. Compartilhe só com a equipe; se vazar, troque a chave e crie um novo (isso também corta os links por horas)."
+  },
+  "admin": {
+    "title": "Painel municipal",
+    "signIn": {
+      "title": "Entrar no painel",
+      "email": "E-mail",
+      "password": "Senha",
+      "submit": "Entrar",
+      "error": "E-mail ou senha incorretos, ou sua conta não tem acesso ao painel.",
+      "notConfigured": "O painel precisa do banco de dados configurado."
+    },
+    "signOut": "Sair",
+    "role": {
+      "admin": "Administração",
+      "editor": "Edição",
+      "verifier": "Verificação",
+      "org_manager": "Negócio"
+    },
+    "tabs": {
+      "lugar": "Lugares",
+      "evento": "Eventos",
+      "ruta": "Roteiros"
+    },
+    "summary": "{total} no total · {verified} verificados · {pending} pendentes · {outdated} desatualizados",
+    "columns": {
+      "name": "Nome",
+      "publication": "Publicação",
+      "verification": "Verificação",
+      "lastVerified": "Última verificação"
+    },
+    "publication": {
+      "draft": "Rascunho",
+      "published": "Publicado",
+      "archived": "Arquivado"
+    },
+    "verification": {
+      "pending": "Pendente",
+      "verified": "Verificado",
+      "outdated": "Desatualizado"
+    },
+    "demo": "Exemplo",
+    "never": "Nunca",
+    "back": "Voltar ao painel",
+    "sources": "Fontes",
+    "noSources": "Sem fontes registradas.",
+    "history": "Histórico de verificação",
+    "noHistory": "Ainda não verificado.",
+    "form": {
+      "title": "Alterar estado de verificação",
+      "status": "Novo estado",
+      "notes": "Nota (o que foi conferido e como)",
+      "evidence": "Link de evidência (foto, documento…)",
+      "submit": "Salvar",
+      "saved": "Salvo. O site público é atualizado em alguns minutos.",
+      "error": "Não foi possível salvar. Confira seu papel ou tente de novo.",
+      "readOnly": "Seu papel pode ver, mas não verificar."
+    },
+    "loadError": "Não foi possível ler o banco de dados. Tente de novo em instantes."
   }
 }
