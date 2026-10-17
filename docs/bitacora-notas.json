@@ -90,8 +90,13 @@
     "titulo": "Plan de idiomas originarios (mapudungun y rapa nui)",
     "resumen": "Plan y planilla de 99 textos para que una persona hablante traduzca; sin código ni traducciones automáticas."
   },
-  "actual": {
+  "25": {
     "titulo": "Galería de la ficha con flechas",
     "resumen": "La galería de fotos del local muestra una imagen a la vez con flechas a los lados, contador y deslizado con el dedo, sin la barra de desplazamiento."
+  },
+  "actual": {
+    "pr": 26,
+    "titulo": "Marca: Papudo en tu Mano, sub-app de Turismo en tu Mano",
+    "resumen": "Dos logos con fondo transparente: la «P» de Papudo en tu Mano en la barra superior, el quiosco y los íconos de la app, y Turismo en tu Mano como marca madre en el pie y en Información. Textos en tres idiomas y «Mano» en mayúscula solo en el nombre de la marca."
   }
 }
