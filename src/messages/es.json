@@ -426,6 +426,7 @@
     "expiredBody": "La vista previa de Papudo en tu mano se compartió por tiempo limitado. Pide un enlace nuevo a quien te lo envió.",
     "linkTitle": "Enlace para compartir",
     "linkBody": "Quien lo abra podrá ver la vista previa hasta el {expires} (hora de Chile). Después, el enlace deja de funcionar.",
-    "askPassword": "Escribe la clave para crear enlaces"
+    "askPassword": "Escribe la clave para crear enlaces",
+    "teamLinkBody": "Enlace permanente del equipo: no vence. Compártelo solo con el equipo; si se filtra, cambia la clave y crea uno nuevo (eso corta también los enlaces por horas)."
   }
 }

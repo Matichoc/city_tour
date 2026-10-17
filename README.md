@@ -7,7 +7,7 @@ Next.js 16 · TypeScript · Tailwind 4 · next-intl · Supabase
 
 - Plan de trabajo: [`docs/PLAN.md`](docs/PLAN.md)
 - Financiamiento y herramientas: [`docs/FINANCIAMIENTO.md`](docs/FINANCIAMIENTO.md)
-- Compartir una vista previa por unas horas: [`docs/COMPARTIR-VISTA-PREVIA.md`](docs/COMPARTIR-VISTA-PREVIA.md)
+- Ambientes (`main`, `develop`, `demo`) y enlaces para compartir: [`docs/COMPARTIR-VISTA-PREVIA.md`](docs/COMPARTIR-VISTA-PREVIA.md)
 
 ## Ver el sitio
 
@@ -40,4 +40,5 @@ herramientas de dispositivo del navegador.
 
 ## Ramas
 
-`main` (producción) ← `develop` (pruebas) ← `feat/*`. Los PR van a `develop`.
+`main` (producción) ← `develop` (pruebas, equipo) ← `feat/*`. Los PR van a `develop`.
+`demo` es una copia de `develop` para mostrar por horas.

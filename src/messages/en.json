@@ -426,6 +426,7 @@
     "expiredBody": "The Papudo en tu mano preview was shared for a limited time. Ask the person who sent it for a new link.",
     "linkTitle": "Link to share",
     "linkBody": "Anyone who opens it can see the preview until {expires} (Chile time). After that, the link stops working.",
-    "askPassword": "Enter the key to create links"
+    "askPassword": "Enter the key to create links",
+    "teamLinkBody": "Permanent team link: it does not expire. Share it only with the team; if it leaks, change the key and create a new one (that also cuts the timed links)."
   }
 }
