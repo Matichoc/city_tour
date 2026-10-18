@@ -44,9 +44,11 @@ descubrir leyéndolas; este documento no incluye pasos para aprovecharlo.
 4. Un tope de espacio y una limpieza de subidas abandonadas.
 5. Que filtrar groserías y bots siga ocurriendo antes de aceptar el envío.
 
-**Fuera de alcance:** ocultar los comentarios hasta que se aprueben (cambia el
-comportamiento y requiere tu decisión), cuentas de visitantes y la analítica
-(`DB-01`, ver 8).
+**Decidido:** los comentarios **se siguen publicando al enviarse** (no se ocultan
+hasta aprobarlos), y el panel avisa al equipo que hay comentarios nuevos por
+revisar (ver 5.8).
+
+**Fuera de alcance:** cuentas de visitantes y avisos por correo o WhatsApp.
 
 ## 4. Alternativas
 
@@ -161,6 +163,29 @@ token = payload + "." + base64url(HMAC-SHA256(secreto, payload))
 2. Se cambia la variable en Vercel y se despliega.
 3. Pasada una hora, se elimina el anterior.
 
+### 5.8 Aviso de comentarios nuevos en el panel
+
+Los comentarios siguen apareciendo en el sitio apenas se envían. Para que el
+equipo se entere sin tener que revisar a ciegas, el panel muestra cuáles son
+nuevos:
+
+- **Aviso visible:** un contador junto a **Comentarios** en el menú del panel y
+  en la portada del panel («3 comentarios nuevos por revisar»). Incluye las
+  fotos y videos pendientes, que ya tienen su propio filtro.
+- **Lista:** los comentarios sin revisar llevan la etiqueta **Nuevo** y hay un
+  filtro **Por revisar**.
+- **Cómo se revisa:** un botón **Marcar como revisado** (y **Marcar todos**).
+  Ocultar, volver a mostrar o borrar un comentario también lo da por revisado.
+- **Datos:** columna `reviewed_at` (y quién lo revisó) en `reviews`; los
+  permisos para marcar son los de moderación (administración y edición). La
+  migración marca como revisados los comentarios que ya existen, para que el
+  contador parta en cero y no dé una falsa alarma.
+- **Pruebas:** el contador cuenta solo lo no revisado y lo visible u oculto
+  sin revisar; marcar revisado lo baja; un comentario nuevo lo sube; un visitante
+  no puede marcar ni ver el estado.
+- **Más adelante (no incluido):** aviso por correo o WhatsApp cuando llegue un
+  comentario; requiere un servicio de envío.
+
 ## 6. Orden de despliegue (sin corte)
 
 | Paso | Qué | Quién |
@@ -184,8 +209,9 @@ antiguas siguen disponibles. Después del 5, volver atrás exige reponerlas
 - **Vercel:** variable `REVIEW_GATE_SECRET` (tipo **Sensitive**, solo servidor)
   y, para Turnstile, `NEXT_PUBLIC_TURNSTILE_SITE_KEY` y `TURNSTILE_SECRET_KEY`.
   También `REVIEWS_SALT` (obligatoria).
-- **Cloudflare (opcional, gratis):** crear un widget de Turnstile para el
-  dominio y copiar las dos claves.
+- **Cloudflare (decidido: se usa Turnstile):** en el panel de Cloudflare,
+  *Turnstile → Add widget*, con el dominio del sitio, y copiar las dos claves
+  (la del sitio es pública; la secreta va solo en Vercel).
 
 ## 7. Pruebas
 
@@ -218,6 +244,8 @@ Se escriben **primero** y deben fallar antes de la corrección.
 **e2e**
 
 13. Un comentario normal y uno con foto siguen funcionando de punta a punta.
+14. Un comentario nuevo hace aparecer el aviso en el panel y **Marcar como
+    revisado** lo quita.
 
 ## 8. Riesgos, decisiones y alcance relacionado
 
@@ -230,17 +258,22 @@ Se escriben **primero** y deben fallar antes de la corrección.
 | Pruebas existentes | Hay que adaptarlas con un ayudante que genere pruebas válidas. |
 | `analytics_events` abiertos (`DB-01`) | No se usa en la aplicación. Quitar su política de inserción abierta es 1 h y puede ir en la migración B si lo apruebas. |
 
-**Decisiones que necesito de ti antes de implementar**
+**Decididas**
 
-1. ¿Los valores de la sección 5.4 te parecen bien o los ajustamos?
-2. ¿Activamos Turnstile (requiere una cuenta gratuita de Cloudflare)?
-3. ¿Apruebas el botón «Limpiar subidas abandonadas» en `/admin/comentarios`?
-4. ¿Incluimos la eliminación de la política de inserción abierta de
-   `analytics_events` en la migración B?
-5. ¿Ocultar los comentarios nuevos hasta aprobarlos? (Fuera de este diseño; es
-   un cambio de comportamiento.)
+- Los comentarios **se publican al enviarse**, y el panel avisa de los nuevos
+  (5.8).
+- **Se usa Turnstile** (ya hay cuenta de Cloudflare).
 
-**Estimación:** 1,5 a 2 días de desarrollo con pruebas, más unos 30 minutos de
+**Pendientes (se explican en lenguaje simple en la conversación)**
+
+1. ¿Te parecen bien los valores de la sección 5.4, o los ajustamos?
+2. ¿Apruebas el botón «Limpiar subidas abandonadas» en `/admin/comentarios`?
+   (Son reservas de archivos que nadie terminó de subir; ver 5.6.)
+3. ¿Incluimos quitar la política de inserción abierta de `analytics_events` en
+   la migración B? (Es una tabla de estadísticas que la aplicación no usa y que
+   hoy deja agregar filas a cualquiera; ver 8.)
+
+**Estimación:** 2 a 2,5 días de desarrollo con pruebas (incluye el aviso en el panel), más unos 30 minutos de
 pasos manuales tuyos (Supabase, Vercel y, si se activa, Cloudflare).
 
 ## 9. Qué no cambia

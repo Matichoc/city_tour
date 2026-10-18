@@ -16,10 +16,10 @@ correr `pnpm bitacora` y subir el cambio en el mismo PR.
 
 ## En preparación: v0.27 — Recorrido en vivo: a pie o en auto, ruta por calles, plan y manual
 
-El recorrido en vivo ofrece ir a pie o en auto, con el auto sugerido cuando la parada está lejos, y ahora traza el camino por las calles reales (OpenStreetMap / FOSSGIS): distancia y tiempo reales de cada modo, lo ya recorrido en gris, recálculo si la persona se desvía, y la flecha de la cámara a pie orienta por la calle. Pide permiso una vez antes de enviar la ubicación al servicio de rutas, que pasa por un servidor propio con tope de uso, caché y sin registrar coordenadas; sin servicio, sigue la guía aproximada. Incluye el plan por fases (docs/PLAN-RUTAS-AUTO-Y-A-PIE.md, con el resultado de la prueba de motores) y el manual de administración (docs/MANUAL-ADMINISTRACION.md). También el diseño técnico de ABUSE-01/02 (docs/DISENO-ABUSE-01-02.md): comentarios y archivos con prueba firmada (HMAC), topes que no dependen del visitante y limpieza de subidas abandonadas; solo diseño, sin implementar.
+El recorrido en vivo ofrece ir a pie o en auto, con el auto sugerido cuando la parada está lejos, y ahora traza el camino por las calles reales (OpenStreetMap / FOSSGIS): distancia y tiempo reales de cada modo, lo ya recorrido en gris, recálculo si la persona se desvía, y la flecha de la cámara a pie orienta por la calle. Pide permiso una vez antes de enviar la ubicación al servicio de rutas, que pasa por un servidor propio con tope de uso, caché y sin registrar coordenadas; sin servicio, sigue la guía aproximada. Incluye el plan por fases (docs/PLAN-RUTAS-AUTO-Y-A-PIE.md, con el resultado de la prueba de motores) y el manual de administración (docs/MANUAL-ADMINISTRACION.md). También el diseño técnico de ABUSE-01/02 (docs/DISENO-ABUSE-01-02.md): comentarios y archivos con prueba firmada (HMAC), topes que no dependen del visitante y limpieza de subidas abandonadas; con aviso de comentarios nuevos en el panel; solo diseño, sin implementar.
 
 - **Estado:** en revisión, [PR #31](https://github.com/Matichoc/city_tour/pull/31) (aún no está en `develop`).
-- **Última actualización de esta bitácora:** 2026-10-17 22:30
+- **Última actualización de esta bitácora:** 2026-10-17 22:56
 
 ## Avance por día
 
@@ -28,7 +28,7 @@ trabajadas: hay pausas y trabajo sin registrar).
 
 | Día | Ventana de actividad | Registros | Versiones entregadas |
 | --- | --- | ---: | --- |
-| Sábado, 17 de octubre de 2026 | 00:01 – 22:23 | 30 | v0.16, v0.17, v0.18, v0.19, v0.20, v0.21, v0.22, v0.23, v0.24, v0.25, v0.26 |
+| Sábado, 17 de octubre de 2026 | 00:01 – 22:30 | 31 | v0.16, v0.17, v0.18, v0.19, v0.20, v0.21, v0.22, v0.23, v0.24, v0.25, v0.26 |
 | Viernes, 16 de octubre de 2026 | 00:04 – 23:51 | 15 | v0.9, v0.10, v0.11, v0.12, v0.13, v0.14, v0.15 |
 | Jueves, 15 de octubre de 2026 | 00:05 – 23:52 | 10 | v0.7, v0.8 |
 | Miércoles, 14 de octubre de 2026 | 23:50 – 23:50 | 1 | — |
