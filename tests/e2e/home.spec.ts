@@ -78,7 +78,9 @@ test("recorrido en vivo: sigue la ubicación y ofrece la cámara en tramos corto
   await page.getByRole("button", { name: /Iniciar recorrido/ }).click();
   const live = page.getByRole("dialog", { name: "Recorrido en vivo" });
   await expect(live).toBeVisible();
-  await expect(live.getByText(/a pie/)).toBeVisible();
+  const modes = live.getByRole("radiogroup", { name: "¿Cómo vas a ir?" });
+  await expect(modes.getByRole("radio", { name: /A pie/ })).toBeChecked();
+  await expect(modes.getByRole("radio", { name: /En auto/ })).toBeVisible();
   await expect(
     live
       .getByRole("button", { name: /Guíame con la cámara/ })
@@ -86,6 +88,30 @@ test("recorrido en vivo: sigue la ubicación y ofrece la cámara en tramos corto
   ).toBeVisible();
   await live.getByRole("button", { name: "Terminar" }).click();
   await expect(live).toBeHidden();
+});
+
+test("recorrido en vivo: lejos de la parada sugiere el auto y se puede cambiar a pie", async ({
+  page,
+  context,
+}) => {
+  // Unos 30 km al sur: no tiene sentido sugerir caminar.
+  await context.grantPermissions(["geolocation"]);
+  await context.setGeolocation({ latitude: -32.78, longitude: -71.52 });
+  await page.goto("/es/recorrido?l=playa-chica-papudo,playa-papudo");
+  await page.getByRole("button", { name: /Iniciar recorrido/ }).click();
+  const live = page.getByRole("dialog", { name: "Recorrido en vivo" });
+  const modes = live.getByRole("radiogroup", { name: "¿Cómo vas a ir?" });
+  await expect(modes.getByRole("radio", { name: /En auto/ })).toBeChecked();
+  // En auto no se ofrece la cámara a pie.
+  await expect(
+    live.getByRole("button", { name: /con la cámara|dirección con la cámara/ }),
+  ).toHaveCount(0);
+  await modes.getByRole("radio", { name: /A pie/ }).click();
+  await expect(modes.getByRole("radio", { name: /A pie/ })).toBeChecked();
+  await expect(
+    live.getByRole("button", { name: /con la cámara/ }),
+  ).toBeVisible();
+  await live.getByRole("button", { name: "Terminar" }).click();
 });
 
 test("ficha: guardar un lugar y verlo en Tus guardados, sin reseñas inventadas", async ({
@@ -117,7 +143,7 @@ test("recorrido en vivo: el modo demostración simula la caminata sin GPS", asyn
     .click();
   const live = page.getByRole("dialog", { name: "Recorrido en vivo" });
   await expect(live.getByText(/Modo demostración/)).toBeVisible();
-  await expect(live.getByText(/a pie/)).toBeVisible();
+  await expect(live.getByRole("radio", { name: /A pie/ })).toBeChecked();
   await expect(
     live.getByRole("button", { name: /Guíame con la cámara/ }),
   ).toBeVisible();
@@ -140,7 +166,13 @@ test("recorrido en vivo: si estás cerca de una parada que no es la primera, la 
   await expect(
     live.getByText(/Estás más cerca de Salinas de Pullally/),
   ).toBeVisible();
-  // La cámara también se ofrece para la parada lejana, como dirección.
+  // Para la parada lejana se sugiere el auto (sin cámara a pie); si la
+  // persona elige ir a pie, la cámara se ofrece como dirección.
+  await expect(live.getByRole("radio", { name: /En auto/ })).toBeChecked();
+  await expect(live.getByRole("button", { name: /con la cámara/ })).toHaveCount(
+    0,
+  );
+  await live.getByRole("radio", { name: /A pie/ }).click();
   await expect(
     live.getByRole("button", { name: /Ver la dirección con la cámara/ }),
   ).toBeVisible();

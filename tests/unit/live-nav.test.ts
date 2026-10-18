@@ -1,6 +1,13 @@
 import { describe, expect, it } from "vitest";
 import {
+  CAR_SUGGEST_FROM_M,
+  CAR_SPEED_KMH,
+  DETOUR_FACTOR,
+  WALK_SPEED_KMH,
   bearingDegrees,
+  estimateLeg,
+  formatMinutes,
+  suggestedMode,
   distanceMeters,
   formatMeters,
   headingFromOrientation,
@@ -87,5 +94,63 @@ describe("modo demostración", () => {
   it("acelera los tramos largos para que la demo no se haga eterna", () => {
     expect(demoStepMeters(300)).toBe(25);
     expect(demoStepMeters(12000)).toBe(600);
+  });
+});
+
+describe("modos de viaje: a pie y en auto (estimados)", () => {
+  it("el camino real es más largo que la línea recta, según el modo", () => {
+    expect(estimateLeg(1000, "walk").meters).toBeCloseTo(
+      1000 * DETOUR_FACTOR.walk,
+    );
+    expect(estimateLeg(1000, "car").meters).toBeCloseTo(
+      1000 * DETOUR_FACTOR.car,
+    );
+  });
+
+  it("los minutos salen de la velocidad de cada modo", () => {
+    const walk = estimateLeg(2000, "walk");
+    expect(walk.minutes).toBe(
+      Math.round((walk.meters / 1000 / WALK_SPEED_KMH) * 60),
+    );
+    const car = estimateLeg(2000, "car");
+    expect(car.minutes).toBe(
+      Math.round((car.meters / 1000 / CAR_SPEED_KMH) * 60),
+    );
+    expect(car.minutes).toBeLessThan(walk.minutes);
+  });
+
+  it("nunca estima menos de un minuto", () => {
+    expect(estimateLeg(5, "walk").minutes).toBe(1);
+    expect(estimateLeg(0, "car").minutes).toBe(1);
+  });
+
+  it("lo cercano se sugiere a pie", () => {
+    expect(suggestedMode(80)).toBe("walk");
+    expect(suggestedMode(1500)).toBe("walk");
+  });
+
+  it("lo lejano se sugiere en auto", () => {
+    expect(suggestedMode(CAR_SUGGEST_FROM_M + 1)).toBe("car");
+    expect(suggestedMode(30_000)).toBe("car");
+  });
+
+  it("en el tramo intermedio, a pie solo si no pasa de ~45 minutos", () => {
+    expect(suggestedMode(2000)).toBe("walk");
+    expect(estimateLeg(2000, "walk").minutes).toBeLessThanOrEqual(45);
+    expect(suggestedMode(3500)).toBe("car");
+    expect(estimateLeg(3500, "walk").minutes).toBeGreaterThan(45);
+  });
+
+  it("una caminata de 30 km no se presenta como el modo sugerido", () => {
+    expect(suggestedMode(30_000)).not.toBe("walk");
+    expect(estimateLeg(30_000, "car").minutes).toBeLessThan(180);
+  });
+
+  it("formatea los minutos para leerlos rápido", () => {
+    expect(formatMinutes(1)).toBe("1 min");
+    expect(formatMinutes(45)).toBe("45 min");
+    expect(formatMinutes(60)).toBe("1 h");
+    expect(formatMinutes(90)).toBe("1 h 30 min");
+    expect(formatMinutes(750)).toBe("12 h 30 min");
   });
 });

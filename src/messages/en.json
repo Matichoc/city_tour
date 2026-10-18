@@ -323,7 +323,7 @@
     "skip": "Skip stop",
     "openMaps": "Open in Google Maps",
     "cameraOpen": "Guide me with the camera",
-    "straightLineNote": "Straight-line distance: the real path may be longer. To follow streets, open Google Maps.",
+    "straightLineNote": "Estimated times and distances: the real street route may vary. To follow streets, open Google Maps.",
     "done": "Trip completed!",
     "backToTrip": "Back to my trip",
     "cameraKicker": "Walking guide",
@@ -355,7 +355,12 @@
     "cameraFar": "See the direction with the camera",
     "nearestHint": "You're closer to {name} ({distance}). Want to start there?",
     "nearestGo": "Go to {name}",
-    "cameraOffHint": "If you opened the link from WhatsApp or Instagram, open it in Chrome or Safari and allow camera access."
+    "cameraOffHint": "If you opened the link from WhatsApp or Instagram, open it in Chrome or Safari and allow camera access.",
+    "distanceStraight": "{distance} away in a straight line",
+    "modeLabel": "How are you going?",
+    "modeWalk": "On foot",
+    "modeCar": "By car",
+    "modeEstimate": "≈ {time} · {distance}"
   },
   "saved": {
     "save": "Save",

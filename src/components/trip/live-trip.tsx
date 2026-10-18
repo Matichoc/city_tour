@@ -9,12 +9,15 @@ import { CATEGORY_PIN_COLOR, getMapStyleUrl } from "@/lib/map-config";
 import {
   demoStepMeters,
   distanceMeters,
+  estimateLeg,
   formatMeters,
+  formatMinutes,
   isArrived,
   isShortWalk,
   moveToward,
   offsetPoint,
-  walkMinutes,
+  suggestedMode,
+  type TravelMode,
 } from "@/lib/live-nav";
 import { track } from "@/lib/analytics";
 import { WalkCamera, type LivePosition } from "@/components/trip/walk-camera";
@@ -29,9 +32,14 @@ export type LiveStop = {
 
 type GeoStatus = "waiting" | "ok" | "denied" | "unavailable";
 
-function walkingUrl(from: LivePosition | null, to: LiveStop): string {
+function directionsLink(
+  from: LivePosition | null,
+  to: LiveStop,
+  mode: TravelMode,
+): string {
   const origin = from ? `&origin=${from.latitude},${from.longitude}` : "";
-  return `https://www.google.com/maps/dir/?api=1${origin}&destination=${to.latitude},${to.longitude}&travelmode=walking`;
+  const travel = mode === "car" ? "driving" : "walking";
+  return `https://www.google.com/maps/dir/?api=1${origin}&destination=${to.latitude},${to.longitude}&travelmode=${travel}`;
 }
 
 /**
@@ -58,6 +66,11 @@ export function LiveTrip({
   const [index, setIndex] = useState(0);
   const [follow, setFollow] = useState(true);
   const [cameraOpen, setCameraOpen] = useState(false);
+  // Modo elegido a mano para la parada actual; sin elegir, manda el sugerido.
+  const [chosen, setChosen] = useState<{
+    index: number;
+    mode: TravelMode;
+  } | null>(null);
   const [mapFailed, setMapFailed] = useState(false);
   const mapLoaded = useRef(false);
 
@@ -65,6 +78,12 @@ export function LiveTrip({
   const distance = position && next ? distanceMeters(position, next) : null;
   const arrived =
     distance !== null && isArrived(distance, position?.accuracy ?? 0);
+  const mode: TravelMode =
+    chosen?.index === index
+      ? chosen.mode
+      : distance !== null
+        ? suggestedMode(distance)
+        : "walk";
 
   // Si hay otra parada pendiente mucho más cerca que la próxima (el recorrido
   // parte por la primera de la lista, no por la más cercana), se ofrece
@@ -398,13 +417,49 @@ export function LiveTrip({
                 <p className="text-muted text-sm">
                   {arrived
                     ? t("arrived", { name: next.name })
-                    : t("distance", {
+                    : t("distanceStraight", {
                         distance: formatMeters(distance, locale),
-                        minutes: walkMinutes(distance),
                       })}
                 </p>
               ) : null}
             </div>
+            {distance !== null && !arrived ? (
+              <div
+                role="radiogroup"
+                aria-label={t("modeLabel")}
+                className="grid grid-cols-2 gap-2"
+              >
+                {(["walk", "car"] as const).map((m) => {
+                  const leg = estimateLeg(distance, m);
+                  const selected = mode === m;
+                  return (
+                    <button
+                      key={m}
+                      type="button"
+                      role="radio"
+                      aria-checked={selected}
+                      onClick={() => setChosen({ index, mode: m })}
+                      className={`flex min-h-14 flex-col items-start rounded-xl border-2 px-3 py-2 text-left ${
+                        selected
+                          ? "border-sea bg-sea-soft"
+                          : "border-border bg-surface"
+                      }`}
+                    >
+                      <span className="text-sm font-extrabold">
+                        {m === "walk" ? "🚶" : "🚗"}{" "}
+                        {t(m === "walk" ? "modeWalk" : "modeCar")}
+                      </span>
+                      <span className="text-muted text-xs">
+                        {t("modeEstimate", {
+                          time: formatMinutes(leg.minutes),
+                          distance: formatMeters(leg.meters, locale),
+                        })}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            ) : null}
             <div className="flex flex-wrap gap-2">
               {arrived ? (
                 <button
@@ -416,7 +471,7 @@ export function LiveTrip({
                 </button>
               ) : (
                 <>
-                  {distance !== null ? (
+                  {distance !== null && mode === "walk" ? (
                     <button
                       type="button"
                       onClick={() => {
@@ -434,7 +489,7 @@ export function LiveTrip({
                     </button>
                   ) : null}
                   <a
-                    href={walkingUrl(position, next)}
+                    href={directionsLink(position, next, mode)}
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={() => track("navigate_click", { slug: next.slug })}

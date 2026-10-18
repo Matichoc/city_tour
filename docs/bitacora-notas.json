@@ -108,9 +108,8 @@
     "migraciones": "0025"
   },
   "actual": {
-    "pr": 29,
-    "titulo": "Seguridad: el contacto de la importación va en una tabla privada",
-    "resumen": "Solución de PRIV-01: el nombre y el correo de quien inscribió el comercio ya no se guardan en places.import_snapshot sino en place_import_private (solo personal). La importación compara con la tabla privada y sigue leyendo filas antiguas. Incluye scripts de respaldo, verificación, limpieza y restauración (a mano, con autorización), probados sobre una base desechable.",
-    "migraciones": "0026"
+    "pr": 31,
+    "titulo": "Recorrido en vivo: a pie o en auto",
+    "resumen": "Fase 0 del plan de recorridos: el recorrido en vivo ofrece ir a pie o en auto, con tiempo y distancia estimados de cada modo, y sugiere el auto cuando la parada está lejos (ya no presenta 30 km como una caminata de horas). «Abrir en Google Maps» usa el modo elegido y la cámara a pie solo se ofrece a pie. Textos en español, inglés y portugués. Los tiempos son estimados en línea recta con un factor de rodeo; las rutas por calles vienen en la Fase 1."
   }
 }

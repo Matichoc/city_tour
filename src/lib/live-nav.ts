@@ -13,6 +13,23 @@ export const ARRIVAL_RADIUS_M = 35;
 /** Hasta esta distancia (m) se ofrece la guía con la cámara. */
 export const SHORT_WALK_MAX_M = 1500;
 
+/** Modos de viaje que ofrece el recorrido. */
+export type TravelMode = "walk" | "car";
+/** Velocidad media en auto por Papudo y los caminos de la comuna (a calibrar en terreno). */
+export const CAR_SPEED_KMH = 35;
+/**
+ * El camino por calles es más largo que la línea recta. Mientras no haya una
+ * ruta real, se estima multiplicando por este factor (a calibrar en terreno).
+ */
+export const DETOUR_FACTOR: Record<TravelMode, number> = {
+  walk: 1.3,
+  car: 1.4,
+};
+/** Desde esta distancia en línea recta se sugiere ir en auto. */
+export const CAR_SUGGEST_FROM_M = 5000;
+/** Si a pie pasa de estos minutos, se sugiere el auto. */
+export const WALK_SUGGEST_MAX_MIN = 45;
+
 export function distanceMeters(a: GeoPoint, b: GeoPoint): number {
   return haversineDistanceKm(a, b) * 1000;
 }
@@ -45,6 +62,36 @@ export function relativeBearing(target: number, heading: number): number {
 
 export function walkMinutes(meters: number): number {
   return Math.max(1, Math.round((meters / 1000 / WALK_SPEED_KMH) * 60));
+}
+
+/** Distancia y minutos estimados de un tramo, según el modo (sin ruta real). */
+export function estimateLeg(
+  straightMeters: number,
+  mode: TravelMode,
+): { meters: number; minutes: number } {
+  const meters = straightMeters * DETOUR_FACTOR[mode];
+  const speed = mode === "walk" ? WALK_SPEED_KMH : CAR_SPEED_KMH;
+  return {
+    meters,
+    minutes: Math.max(1, Math.round((meters / 1000 / speed) * 60)),
+  };
+}
+
+/** Modo que se sugiere según la distancia en línea recta a la parada. */
+export function suggestedMode(straightMeters: number): TravelMode {
+  if (straightMeters > CAR_SUGGEST_FROM_M) return "car";
+  if (straightMeters <= SHORT_WALK_MAX_M) return "walk";
+  return estimateLeg(straightMeters, "walk").minutes > WALK_SUGGEST_MAX_MIN
+    ? "car"
+    : "walk";
+}
+
+/** «45 min», «1 h», «1 h 30 min». */
+export function formatMinutes(minutes: number): string {
+  if (minutes < 60) return `${minutes} min`;
+  const h = Math.floor(minutes / 60);
+  const m = minutes % 60;
+  return m === 0 ? `${h} h` : `${h} h ${m} min`;
 }
 
 export function isArrived(meters: number, accuracyMeters = 0): boolean {
