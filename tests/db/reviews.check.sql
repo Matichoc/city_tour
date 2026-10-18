@@ -11,26 +11,28 @@ insert into public.profiles (user_id, role) values
 
 select tests.login('anon');
 select tests.eq('anon comenta un lugar publicado',
-  (select public.submit_review('place', 'playa-papudo', 'Ana', 5::smallint, 'Muy linda la playa', repeat('a', 32))) is not null, true);
+  (select tests.submit_review('place', 'playa-papudo', 'Ana', 5::smallint, 'Muy linda la playa', repeat('a', 32))) is not null, true);
 select tests.eq('anon comenta un evento publicado',
-  (select public.submit_review('event', 'demo-noche-de-bandas', 'Beto', 4::smallint, 'Buen ambiente', repeat('b', 32))) is not null, true);
+  (select tests.submit_review('event', 'demo-noche-de-bandas', 'Beto', 4::smallint, 'Buen ambiente', repeat('b', 32))) is not null, true);
 select tests.raises('no se comenta lo que no existe',
-  $$select public.submit_review('place', 'no-existe', 'Ana', 5::smallint, 'Hola hola', repeat('c', 32))$$, 'P0002');
+  $$select tests.submit_review('place', 'no-existe', 'Ana', 5::smallint, 'Hola hola', repeat('c', 32))$$, 'P0002');
 select tests.raises('estrellas fuera de rango',
-  $$select public.submit_review('place', 'playa-papudo', 'Ana', 6::smallint, 'Hola hola', repeat('c', 32))$$, '23514');
+  $$select tests.submit_review('place', 'playa-papudo', 'Ana', 6::smallint, 'Hola hola', repeat('c', 32))$$, '23514');
 select tests.raises('texto vacío',
-  $$select public.submit_review('place', 'playa-papudo', 'Ana', 3::smallint, '  ', repeat('c', 32))$$, '23514');
-select public.submit_review('place', 'playa-papudo', 'Ana', 4::smallint, 'Segunda opinión', repeat('a', 32));
-select public.submit_review('place', 'playa-papudo', 'Ana', 4::smallint, 'Tercera opinión', repeat('a', 32));
-select tests.raises('máximo 3 por hora por remitente',
-  $$select public.submit_review('place', 'playa-papudo', 'Ana', 4::smallint, 'Cuarta opinión', repeat('a', 32))$$, '54000');
+  $$select tests.submit_review('place', 'playa-papudo', 'Ana', 3::smallint, '  ', repeat('c', 32))$$, '23514');
+select tests.submit_review('place', 'playa-papudo', 'Ana', 4::smallint, 'Segunda opinión', repeat('a', 32));
+select tests.submit_review('place', 'playa-papudo', 'Ana', 4::smallint, 'Tercera opinión', repeat('a', 32));
+select tests.submit_review('place', 'playa-papudo', 'Ana', 4::smallint, 'Cuarta opinión', repeat('a', 32));
+select tests.submit_review('place', 'playa-papudo', 'Ana', 4::smallint, 'Quinta opinión', repeat('a', 32));
+select tests.raises('máximo 5 por hora por remitente',
+  $$select tests.submit_review('place', 'playa-papudo', 'Ana', 4::smallint, 'Sexta opinión', repeat('a', 32))$$, '54000');
 select tests.raises('anon no inserta directo',
   $$insert into public.reviews (place_id, author_name, rating, body, sender_hash)
     select id, 'X', 5, 'directo', repeat('d', 32) from public.places limit 1$$, '42501');
 select tests.raises('anon no ve la huella del remitente',
   $$select sender_hash from public.reviews$$, '42501');
 select tests.eq('anon ve los comentarios visibles',
-  (select count(*)::int from public.reviews), 4);
+  (select count(*)::int from public.reviews), 6);
 select tests.raises('anon no modera',
   $$update public.reviews set status = 'hidden'$$, '42501');
 select tests.logout();
@@ -50,7 +52,7 @@ select tests.logout();
 
 select tests.login('authenticated', '00000000-0000-0000-0000-00000000aa01');
 select tests.eq('admin ve también los ocultos',
-  (select count(*)::int from public.reviews), 4);
+  (select count(*)::int from public.reviews), 6);
 select tests.eq('admin borra',
   tests.rowcount($$delete from public.reviews where body = 'Segunda opinión'$$), 1);
 select tests.logout();

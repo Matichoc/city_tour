@@ -432,7 +432,8 @@
     "mediaFailed": "Sua opinião foi publicada, mas não conseguimos enviar os arquivos. Tente novamente mais tarde.",
     "errorMedia": "Um dos arquivos não pode ser publicado.",
     "photoAlt": "Foto de {author}",
-    "videoLabel": "Vídeo de {author}"
+    "videoLabel": "Vídeo de {author}",
+    "errorCaptcha": "Não conseguimos verificar que você é uma pessoa. Recarregue a página e tente de novo."
   },
   "events": {
     "title": "Agenda de eventos",
@@ -574,12 +575,14 @@
     "nav": {
       "entities": "Fichas",
       "reviews": "Comentários",
-      "business": "Negócios"
+      "business": "Negócios",
+      "reviewsBadge": "{count} para revisar"
     },
     "reviews": {
       "title": "Comentários de visitantes",
       "intro": "São publicados ao serem enviados. Oculte os inadequados; apagar é definitivo (só administração).",
       "filter": {
+        "nuevos": "Para revisar",
         "todos": "Todos",
         "visibles": "Visíveis",
         "ocultos": "Ocultos",
@@ -601,6 +604,17 @@
         "attention": "Revisar com cuidado",
         "approve": "Aprovar",
         "reject": "Rejeitar"
+      },
+      "newBadge": "Novo",
+      "markReviewed": "Marcar como revisado",
+      "markAll": "Marcar todos como revisados",
+      "newCount": "{count, plural, one {# comentário precisa} other {# comentários precisam}} da sua revisão.",
+      "reviewNow": "Revisar agora",
+      "abandoned": {
+        "title": "Envios abandonados",
+        "help": "Arquivos que alguém começou a enviar e nunca terminou. Ocupam espaço e ninguém vai revisá-los.",
+        "count": "{count, plural, one {# envio abandonado} other {# envios abandonados}}",
+        "clean": "Limpar envios abandonados"
       }
     },
     "business": {

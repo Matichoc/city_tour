@@ -432,7 +432,8 @@
     "mediaFailed": "Tu opinión se publicó, pero no pudimos subir los archivos. Intenta de nuevo más tarde.",
     "errorMedia": "Uno de los archivos no se puede publicar.",
     "photoAlt": "Foto de {author}",
-    "videoLabel": "Video de {author}"
+    "videoLabel": "Video de {author}",
+    "errorCaptcha": "No pudimos comprobar que eres una persona. Recarga la página e inténtalo de nuevo."
   },
   "events": {
     "title": "Agenda de eventos",
@@ -574,12 +575,14 @@
     "nav": {
       "entities": "Fichas",
       "reviews": "Comentarios",
-      "business": "Comercios"
+      "business": "Comercios",
+      "reviewsBadge": "{count} por revisar"
     },
     "reviews": {
       "title": "Comentarios de visitantes",
       "intro": "Se publican al enviarse. Oculta los inapropiados; borrar es definitivo (solo administración).",
       "filter": {
+        "nuevos": "Por revisar",
         "todos": "Todos",
         "visibles": "Visibles",
         "ocultos": "Ocultos",
@@ -601,6 +604,17 @@
         "attention": "Revisar con cuidado",
         "approve": "Aprobar",
         "reject": "Rechazar"
+      },
+      "newBadge": "Nuevo",
+      "markReviewed": "Marcar como revisado",
+      "markAll": "Marcar todos como revisados",
+      "newCount": "{count, plural, one {# comentario necesita} other {# comentarios necesitan}} tu revisión.",
+      "reviewNow": "Revisar ahora",
+      "abandoned": {
+        "title": "Subidas abandonadas",
+        "help": "Archivos que alguien empezó a enviar y nunca terminó de subir. Ocupan espacio y nadie los va a revisar.",
+        "count": "{count, plural, one {# subida abandonada} other {# subidas abandonadas}}",
+        "clean": "Limpiar subidas abandonadas"
       }
     },
     "business": {

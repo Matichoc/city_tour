@@ -18,12 +18,14 @@ import {
 } from "@/lib/media-policy";
 import type { ReviewEntity } from "@/lib/reviews";
 import { StarShape } from "@/components/ui/stars";
+import { Turnstile } from "@/components/place/turnstile";
 
 const MESSAGE: Record<Exclude<SubmitState["status"], "idle" | "ok">, string> = {
   rating: "errorRating",
   text: "errorText",
   profanity: "errorProfanity",
   rate: "errorRate",
+  captcha: "errorCaptcha",
   media: "errorMedia",
   error: "errorGeneric",
 };
@@ -294,6 +296,7 @@ export function ReviewForm({
           </p>
         ) : null}
       </div>
+      <Turnstile resetKey={state} />
       {state.status !== "idle" && state.status !== "ok" ? (
         <p role="alert" className="text-sm font-bold text-[#b83a3a]">
           {t(MESSAGE[state.status])}

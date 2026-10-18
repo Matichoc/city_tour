@@ -4,7 +4,9 @@ import { getTranslations } from "next-intl/server";
 import {
   canDeleteReviews,
   canModerate,
+  countReviewNotices,
   getSession,
+  listAbandonedUploads,
   listReviewsAdmin,
   REVIEW_FILTERS,
   type AdminReview,
@@ -12,7 +14,12 @@ import {
 } from "@/lib/admin/api";
 import { formatDate } from "@/components/admin/badges";
 import { Stars } from "@/components/ui/stars";
-import { moderateMedia, moderateReview } from "@/app/admin/actions";
+import {
+  cleanupAbandonedUploads,
+  markAllReviewed,
+  moderateMedia,
+  moderateReview,
+} from "@/app/admin/actions";
 
 const PUBLIC_PATH = { lugar: "lugares", evento: "eventos" } as const;
 
@@ -38,6 +45,11 @@ export default async function ReviewsAdmin({
     console.error("[admin] no se pudieron listar comentarios", error);
     return <p className="text-coral-ink">{t("loadError")}</p>;
   }
+  const [notices, abandoned] = await Promise.all([
+    countReviewNotices(session.token),
+    // El aviso de subidas es secundario: si falla, la lista igual se muestra.
+    listAbandonedUploads(session.token).catch(() => []),
+  ]);
   const button =
     "border-border rounded-full border px-3 py-1 text-sm font-semibold";
 
@@ -48,7 +60,25 @@ export default async function ReviewsAdmin({
       </h1>
       <p className="text-muted mt-1 text-sm">{t("reviews.intro")}</p>
 
-      <nav className="mt-4 flex gap-2" aria-label={t("reviews.title")}>
+      {notices > 0 && filter !== "nuevos" && (
+        <p
+          role="status"
+          className="bg-sun/30 text-earth mt-4 flex flex-wrap items-center gap-2 rounded-xl p-3 text-sm"
+        >
+          {t("reviews.newCount", { count: notices })}
+          <Link
+            href="/admin/comentarios?filtro=nuevos"
+            className="font-bold underline"
+          >
+            {t("reviews.reviewNow")}
+          </Link>
+        </p>
+      )}
+
+      <nav
+        className="mt-4 flex flex-wrap gap-2"
+        aria-label={t("reviews.title")}
+      >
         {REVIEW_FILTERS.map((f) => (
           <Link
             key={f}
@@ -64,6 +94,13 @@ export default async function ReviewsAdmin({
           </Link>
         ))}
       </nav>
+
+      {canModerate(session) && filter === "nuevos" && reviews.length > 0 && (
+        <form action={markAllReviewed} className="mt-3">
+          <input type="hidden" name="filtro" value={filter} />
+          <button className={button}>{t("reviews.markAll")}</button>
+        </form>
+      )}
 
       {sp.guardado && (
         <p
@@ -97,6 +134,11 @@ export default async function ReviewsAdmin({
                 <Stars value={r.rating} className="size-4" />
                 <b>{r.author}</b>
                 <span className="text-muted">{formatDate(r.createdAt)}</span>
+                {r.reviewedAt === null && (
+                  <span className="bg-coral text-coral-ink rounded-full px-2 py-0.5 text-xs font-extrabold">
+                    {t("reviews.newBadge")}
+                  </span>
+                )}
                 {r.status === "hidden" && (
                   <span className="bg-border text-muted rounded-full px-2 py-0.5 text-xs font-bold">
                     {t("reviews.hiddenBadge")}
@@ -187,6 +229,11 @@ export default async function ReviewsAdmin({
                 >
                   <input type="hidden" name="id" value={r.id} />
                   <input type="hidden" name="filtro" value={filter} />
+                  {r.reviewedAt === null && (
+                    <button name="accion" value="revisar" className={button}>
+                      {t("reviews.markReviewed")}
+                    </button>
+                  )}
                   {r.status === "visible" ? (
                     <button name="accion" value="ocultar" className={button}>
                       {t("reviews.hide")}
@@ -210,6 +257,27 @@ export default async function ReviewsAdmin({
             </li>
           ))}
         </ul>
+      )}
+
+      {canModerate(session) && abandoned.length > 0 && (
+        <section className="border-border bg-surface mt-8 rounded-2xl border p-4">
+          <h2 className="font-display text-lg font-extrabold">
+            {t("reviews.abandoned.title")}
+          </h2>
+          <p className="text-muted mt-1 text-sm">
+            {t("reviews.abandoned.help")}
+          </p>
+          <form
+            action={cleanupAbandonedUploads}
+            className="mt-3 flex flex-wrap items-center gap-3"
+          >
+            <input type="hidden" name="filtro" value={filter} />
+            <span className="text-sm font-bold">
+              {t("reviews.abandoned.count", { count: abandoned.length })}
+            </span>
+            <button className={button}>{t("reviews.abandoned.clean")}</button>
+          </form>
+        </section>
       )}
     </>
   );

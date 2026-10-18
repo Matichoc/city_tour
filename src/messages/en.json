@@ -432,7 +432,8 @@
     "mediaFailed": "Your review was published, but we couldn’t upload the files. Please try again later.",
     "errorMedia": "One of the files can’t be published.",
     "photoAlt": "Photo by {author}",
-    "videoLabel": "Video by {author}"
+    "videoLabel": "Video by {author}",
+    "errorCaptcha": "We couldn't verify that you are a person. Reload the page and try again."
   },
   "events": {
     "title": "Events calendar",
@@ -574,12 +575,14 @@
     "nav": {
       "entities": "Listings",
       "reviews": "Reviews",
-      "business": "Businesses"
+      "business": "Businesses",
+      "reviewsBadge": "{count} to review"
     },
     "reviews": {
       "title": "Visitor reviews",
       "intro": "They are published when sent. Hide inappropriate ones; deleting is permanent (administration only).",
       "filter": {
+        "nuevos": "To review",
         "todos": "All",
         "visibles": "Visible",
         "ocultos": "Hidden",
@@ -601,6 +604,17 @@
         "attention": "Check carefully",
         "approve": "Approve",
         "reject": "Reject"
+      },
+      "newBadge": "New",
+      "markReviewed": "Mark as reviewed",
+      "markAll": "Mark all as reviewed",
+      "newCount": "{count, plural, one {# review needs} other {# reviews need}} your attention.",
+      "reviewNow": "Review now",
+      "abandoned": {
+        "title": "Abandoned uploads",
+        "help": "Files someone started sending but never finished uploading. They take up space and nobody will review them.",
+        "count": "{count, plural, one {# abandoned upload} other {# abandoned uploads}}",
+        "clean": "Clean up abandoned uploads"
       }
     },
     "business": {

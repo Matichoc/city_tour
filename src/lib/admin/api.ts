@@ -259,8 +259,10 @@ export async function verifyEntity(
 }
 
 // ── Comentarios ───────────────────────────────────────────────────────────
-export type ReviewFilter = "todos" | "visibles" | "ocultos" | "archivos";
+export type ReviewFilter =
+  "nuevos" | "todos" | "visibles" | "ocultos" | "archivos";
 export const REVIEW_FILTERS: ReviewFilter[] = [
+  "nuevos",
   "todos",
   "visibles",
   "ocultos",
@@ -286,6 +288,8 @@ export type AdminReview = {
   text: string;
   status: "visible" | "hidden";
   createdAt: string;
+  /** Cuándo lo revisó el personal; null = comentario nuevo por revisar. */
+  reviewedAt: string | null;
   /** Ficha comentada: tipo para el sitio público, slug y nombre en español. */
   target: { kind: "lugar" | "evento"; slug: string; name: string } | null;
   media: AdminMedia[];
@@ -298,6 +302,7 @@ type ReviewRow = {
   body: string;
   status: AdminReview["status"];
   created_at: string;
+  reviewed_at: string | null;
   place: { slug: string; translations: Row["translations"] } | null;
   event: { slug: string; translations: Row["translations"] } | null;
   media: {
@@ -322,7 +327,9 @@ export async function listReviewsAdmin(
       ? "&status=eq.visible"
       : filter === "ocultos"
         ? "&status=eq.hidden"
-        : "";
+        : filter === "nuevos"
+          ? "&reviewed_at=is.null"
+          : "";
   // «archivos»: solo comentarios con fotos o videos por revisar.
   const media =
     filter === "archivos"
@@ -331,7 +338,7 @@ export async function listReviewsAdmin(
       : "media:review_media(id,path,kind,status,ai_scores,created_at)";
   const rows = await rest<ReviewRow[]>(
     token,
-    "reviews?select=id,author_name,rating,body,status,created_at," +
+    "reviews?select=id,author_name,rating,body,status,created_at,reviewed_at," +
       "place:places(slug,translations:place_translations(locale,name))," +
       "event:events(slug,translations:event_translations(locale,name))," +
       `${media}${status}&order=created_at.desc&limit=200`,
@@ -357,6 +364,7 @@ export async function listReviewsAdmin(
     text: r.body,
     status: r.status,
     createdAt: r.created_at,
+    reviewedAt: r.reviewed_at,
     target: r.place
       ? {
           kind: "lugar",
@@ -390,7 +398,7 @@ export async function setMediaStatus(
   id: string,
   status: "approved" | "rejected",
 ) {
-  const [row] = await rest<{ path: string }[]>(
+  const [row] = await rest<{ path: string; review_id: string }[]>(
     session.token,
     `review_media?id=eq.${encodeURIComponent(id)}`,
     {
@@ -406,6 +414,8 @@ export async function setMediaStatus(
   if (!row) throw new Error("archivo no encontrado o sin permiso");
   if (status === "rejected")
     await removeObjects(supabaseConfig()!, session.token, [row.path]);
+  // Quien revisa un archivo ya vio el comentario.
+  await markReviewed(session, row.review_id);
 }
 
 export const canModerate = (s: Session) =>
@@ -417,14 +427,100 @@ export async function setReviewStatus(
   id: string,
   status: AdminReview["status"],
 ) {
+  const now = new Date().toISOString();
   await rest<null>(session.token, `reviews?id=eq.${encodeURIComponent(id)}`, {
     method: "PATCH",
     body: JSON.stringify({
       status,
       moderated_by: session.userId,
-      moderated_at: new Date().toISOString(),
+      moderated_at: now,
+      // Moderar un comentario es haberlo revisado.
+      reviewed_at: now,
+      reviewed_by: session.userId,
     }),
   });
+}
+
+/** Da por revisado un comentario, o todos los que faltan (sin `id`). */
+export async function markReviewed(session: Session, id?: string) {
+  await rest<null>(
+    session.token,
+    id
+      ? `reviews?id=eq.${encodeURIComponent(id)}`
+      : "reviews?reviewed_at=is.null",
+    {
+      method: "PATCH",
+      body: JSON.stringify({
+        reviewed_at: new Date().toISOString(),
+        reviewed_by: session.userId,
+      }),
+    },
+  );
+}
+
+/**
+ * Cuántos comentarios necesitan atención del equipo: los nuevos sin revisar y
+ * los que tienen fotos o videos pendientes (sin contar dos veces). Si la base no
+ * responde devuelve 0: el aviso nunca rompe el panel.
+ */
+export async function countReviewNotices(token: string): Promise<number> {
+  try {
+    const [fresh, withMedia] = await Promise.all([
+      rest<{ id: string }[]>(
+        token,
+        "reviews?select=id&reviewed_at=is.null&limit=100",
+      ),
+      rest<{ review_id: string }[]>(
+        token,
+        "review_media?select=review_id&status=eq.pending&limit=100",
+      ),
+    ]);
+    return new Set([
+      ...fresh.map((r) => r.id),
+      ...withMedia.map((m) => m.review_id),
+    ]).size;
+  } catch (error) {
+    console.error("[admin] no se pudo contar los comentarios nuevos", error);
+    return 0;
+  }
+}
+
+/** Reservas de archivos que nadie terminó de subir (más de 1 hora) o ya descartadas sin moderar. */
+const ABANDONED_FILTER = () =>
+  `review_media?select=id,path&or=(and(status.eq.uploading,created_at.lt.${new Date(
+    Date.now() - 3_600_000,
+  ).toISOString()}),and(status.eq.rejected,moderated_at.is.null))&limit=500`;
+
+export async function listAbandonedUploads(
+  token: string,
+): Promise<{ id: string; path: string }[]> {
+  return rest<{ id: string; path: string }[]>(token, ABANDONED_FILTER());
+}
+
+/** Borra los archivos abandonados de Storage y los deja registrados como descartados. */
+export async function cleanupAbandonedUploads(
+  session: Session,
+): Promise<number> {
+  const rows = await listAbandonedUploads(session.token);
+  if (rows.length === 0) return 0;
+  await removeObjects(
+    supabaseConfig()!,
+    session.token,
+    rows.map((r) => r.path),
+  );
+  await rest<null>(
+    session.token,
+    `review_media?id=in.(${rows.map((r) => encodeURIComponent(r.id)).join(",")})`,
+    {
+      method: "PATCH",
+      body: JSON.stringify({
+        status: "rejected",
+        moderated_by: session.userId,
+        moderated_at: new Date().toISOString(),
+      }),
+    },
+  );
+  return rows.length;
 }
 
 export async function deleteReview(session: Session, id: string) {
