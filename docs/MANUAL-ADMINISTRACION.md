@@ -2,7 +2,7 @@
 
 Para quien administra la guía «Papudo en tu Mano». Está escrito paso a paso y
 solo describe lo que el panel hace hoy. Lo que aún no existe (por ejemplo,
-armar rutas en auto o a pie) está en `docs/PLAN-RUTAS-AUTO-Y-A-PIE.md`.
+las rutas por calles en auto o a pie) está en `docs/PLAN-RUTAS-AUTO-Y-A-PIE.md`.
 
 ## 1. Quién puede hacer qué
 
@@ -173,6 +173,7 @@ Ver `docs/COMPARTIR-VISTA-PREVIA.md`: se crea un enlace que vence solo
 
 ## 7. Pendiente de este manual
 
-- Rutas en **auto o a pie**: se agrega cuando exista el constructor de rutas
-  (Fase 4 del plan).
+- Las rutas en **auto o a pie** las arma la app sola, sobre la marcha, para
+  cada visitante: no requieren administración. Se documentará cualquier ajuste
+  que haga falta cuando estén hechas.
 - Capturas de pantalla de cada paso.

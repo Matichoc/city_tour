@@ -6,16 +6,19 @@ brújula, cámara a pie) **no se toca**: este plan lo extiende.
 
 ## 1. Resumen
 
-1. Hoy todo es **a pie y en línea recta**. Un lugar a 30 km se presenta como una
-   caminata de muchas horas.
-2. Queremos que, según la distancia, la app ofrezca **auto y a pie** (como
-   Google Maps) y, cuando se está cerca, vaya directo a pie.
-3. El camino debe seguir **las calles**, no una diagonal sobre las casas, y la
-   **flecha/brújula debe orientar por esa calle**.
-4. Las **rutas que arma el equipo** podrán ser en auto, a pie o mixtas, con sus
-   tiempos calculados según el modo.
-5. Se hace por fases chicas; la primera arregla lo más confuso sin servicios
-   externos.
+Decisiones ya tomadas (versión 2 de este plan):
+
+- **La ruta se arma sobre la marcha**, desde donde estás hasta la parada, por
+  calles reales, y se **recalcula** si te desvías. **No** habrá rutas
+  prehechas ni constructor de rutas en el panel.
+- Cerca: a pie. Lejos: **auto y a pie**, como Google Maps, con auto sugerido.
+- El camino se dibuja **por las calles** (nunca una diagonal) y la
+  **flecha/brújula orienta por la calle**.
+- En auto se ve **bien por dónde ir** en el mapa, y se puede abrir Google Maps
+  o Waze para la navegación con voz.
+- Se acepta que la ubicación viaje al servicio de rutas **solo al calcular la
+  ruta**, con aviso claro y sin registro.
+- Fase 0 aprobada y hecha (#31).
 
 ## 2. Lo que vimos y por qué pasa (verificado en el código)
 
@@ -26,7 +29,6 @@ brújula, cámara a pie) **no se toca**: este plan lo extiende.
 | Línea diagonal recta "por encima de las casas" | El tramo hacia la próxima parada se dibuja como una línea entre dos puntos; no hay una ruta por calles | `live-trip.tsx` (`toNext`) |
 | La flecha apunta en diagonal, no por donde se camina | El rumbo se calcula en línea recta al destino | `live-nav.ts` (`bearingDegrees`) |
 | Tiempos del itinerario inconsistentes con el recorrido en vivo | El itinerario supone **40 km/h** en línea recta; el recorrido en vivo supone **4,5 km/h** | `itinerary-engine/build-itinerary.ts` vs `live-nav.ts` |
-| Las rutas del equipo no distinguen auto/a pie en pantalla | La tabla `routes` ya tiene `transport_mode` (`walk`, `bike`, `car`, `mixed`), pero **ninguna pantalla lo usa**; y el panel solo edita fichas de lugares completas, las rutas se cargan desde el repositorio (`content.sql`) | `0002_enums_and_helpers.sql`, `0008_routes.sql`, `src/app/admin/` |
 
 La app dice hoy «Tu ubicación no sale de tu teléfono» (`startLiveNote`). Eso
 importa para el diseño (ver 4.2).
@@ -42,7 +44,7 @@ importa para el diseño (ver 4.2).
 - Los tiempos usan el modo elegido y dicen que son estimados.
 - Sin internet o si el servicio de rutas falla, **la app sigue funcionando como
   hoy** (línea recta, avisándolo).
-- Una ruta armada por el equipo declara su modo y sus tiempos salen de él.
+- Si te desvías de la calle, la ruta se **recalcula** sola.
 
 ## 4. Diseño
 
@@ -86,6 +88,20 @@ Pullally y la ruta costera). Se decide con datos: calidad en calles de Papudo,
 cupo, términos y costo. Cambiar de proveedor después debe ser solo
 configuración.
 
+**Qué cambia al calcular la ruta en vivo (y no precalcular):** cada persona que
+use el recorrido genera consultas al servicio. Por eso el spike mide también el
+**cupo y el costo reales** (¿alcanzan los planes gratuitos?) y se evalúa una
+instancia propia de Valhalla u OSRM si no alcanzan. Se reduce el gasto con:
+recalcular **solo si te desvías** más de ~40 m o cambia la parada (no en cada
+lectura del GPS), caché por tramo con coordenadas redondeadas y un tope por
+persona y por día.
+
+**Sobre «usar las opciones de los mapas integrados»:** nuestro mapa (MapLibre
+con OpenFreeMap) solo **dibuja**; no calcula rutas. Para dibujar el camino
+dentro de la app necesitamos un servicio de rutas aparte. Para la **navegación
+con voz giro a giro** se abre Google Maps, Waze o Apple Maps con el modo
+correcto, que ya hacen eso muy bien.
+
 Requisitos comunes:
 
 - La llamada pasa por **nuestro servidor** (una ruta de Next), nunca desde el
@@ -93,11 +109,11 @@ Requisitos comunes:
   abuso (se alinea con el diseño de ABUSE-01/02).
 - Se registran **cero datos personales** y se cachea por tramo redondeado.
 - Atribución: «© OpenStreetMap contributors» y lo que pida el proveedor.
-- **Privacidad (decisión tuya):** para trazar la ruta desde donde estás hay que
+- **Privacidad (aceptada):** para trazar la ruta desde donde estás hay que
   enviar tu ubicación al servicio. Hoy la promesa es que no sale del teléfono.
-  Propuesta: enviarla **solo cuando la persona pulsa «Calcular ruta»**, mostrar
-  un aviso claro en ese momento y actualizar el texto de privacidad. Las rutas
-  entre paradas del equipo se precalculan y no usan ubicación de nadie (ver 4.5).
+  Se envía **solo cuando la persona pide la ruta** (y al recalcular si se
+  desvía), con un aviso claro en ese momento, y se actualiza el texto de
+  privacidad (`startLiveNote` y la política). Sin registrar nada.
 
 ### 4.3 La flecha y la brújula siguen la calle
 
@@ -111,8 +127,8 @@ la calle**, no hacia el destino:
 3. Flecha = rumbo hacia ese punto menos hacia dónde apunta el teléfono (lo que
    ya existe en `relativeBearing`).
 4. **Fuera de ruta:** si te alejas >30–40 m de la línea durante unos segundos,
-   se recalcula desde tu posición (con límite de frecuencia). Si no hay
-   servicio, se vuelve a la línea recta avisándolo.
+   se **recalcula desde tu posición** (con límite de frecuencia, ver 4.2). Si
+   no hay servicio, se vuelve a la línea recta avisándolo.
 5. **Llegada:** se mantiene el radio actual (35 m) hacia la parada.
 6. La cámara a pie usa el mismo rumbo.
 
@@ -134,30 +150,7 @@ sin salir de casa.
 - Cada tramo del itinerario puede tener su modo (p. ej. auto hasta el sector y
   a pie por el pueblo).
 
-### 4.5 Rutas armadas por el equipo
-
-Hoy el panel no arma rutas. Se propone un **constructor de rutas** en `/admin`:
-
-1. Elegir las paradas (lugares) y su orden.
-2. Elegir el modo de la ruta (auto, a pie o mixta) y, si es mixta, el modo de
-   cada tramo.
-3. El sistema **calcula una vez** cada tramo (geometría, distancia, duración),
-   lo muestra en un mapa de vista previa y lo **guarda**. Los visitantes no
-   llaman al servicio de rutas para las rutas publicadas: es más rápido, gratis
-   y no usa ubicación de nadie.
-4. El equipo puede ajustar el tiempo sugerido y recalcular si cambia una parada.
-5. Publicar (solo administración, como el resto).
-
-### 4.6 Datos (migración futura `0027`, no aplicada)
-
-- `route_stops`: agregar `leg_mode` (`walk` | `car`) para el tramo que llega a
-  esa parada, por defecto el de la ruta.
-- Tabla `route_legs` (por ruta y tramo): modo, geometría codificada, distancia,
-  duración, proveedor y fecha de cálculo. Lectura pública solo de rutas
-  publicadas; escritura admin/editor.
-- Todo aditivo, con prueba de base de datos y sin tocar lo existente.
-
-### 4.7 Cuando algo falla
+### 4.5 Cuando algo falla
 
 | Situación | Qué hace la app |
 | --- | --- |
@@ -170,15 +163,14 @@ Hoy el panel no arma rutas. Se propone un **constructor de rutas** en `/admin`:
 
 | Fase | Qué entrega | Pruebas | Esfuerzo* |
 | --- | --- | --- | --- |
-| **0. Arreglo inmediato (sin servicios externos)** | Selector auto/a pie con tiempos **estimados por modo**; el modo sugerido según distancia; «Abrir en Google Maps» con el modo elegido; deja de decir "12 horas" a pie para lo lejano | Unitarias de reglas y tiempos; e2e del selector | 1 día |
-| **1. Rutas por calles** | `RouteProvider`, spike de 2 candidatos, ruta de Next con caché y límite, línea por calles en el mapa, tiempos reales, atribución | Unitarias con `fetch` simulado y fallback; e2e | 2–3 días |
-| **2. Flecha por la calle** | Ajuste a la línea, punto adelantado, fuera de ruta, cámara a pie con el nuevo rumbo, demo sobre la calle | Unitarias de geometría; e2e en demo; **prueba en terreno** | 2 días |
-| **3. Itinerario por modo** | Estimador único, orden óptimo por tiempo, modo por tramo | Unitarias del motor | 2–3 días |
-| **4. Constructor de rutas en el panel** | Pantalla, tramos precalculados, migración 0027, vista previa | BD + unitarias + e2e del panel | 3–4 días |
-| **5. Manual y cierre** | Manual de administración al día, checklist de terreno, ajuste de umbrales | — | 1 día |
+| **0. Arreglo inmediato** ✅ (#31) | Selector auto/a pie con tiempos **estimados por modo**, modo sugerido según distancia, Google Maps con el modo elegido | Unitarias y e2e | hecho |
+| **1. Ruta por calles en vivo** | `RouteProvider`, **spike de 2 candidatos** (calidad en Papudo, cupo, costo), ruta de Next con caché, tope y aviso de privacidad, camino dibujado por calles para auto y a pie, tiempos y distancias reales, **recálculo al desviarte**, atribución | Unitarias con `fetch` simulado, caché, tope y fallback; e2e | 3–4 días |
+| **2. Flecha por la calle** | Ajuste a la línea, punto adelantado, fuera de ruta, cámara a pie con el nuevo rumbo, demo caminando por la calle | Unitarias de geometría; e2e en demo; **prueba en terreno** | 2 días |
+| **3. Itinerario por modo** | Estimador único de tiempos, orden óptimo por tiempo, modo por tramo (también usando la ruta real cuando exista) | Unitarias del motor | 2–3 días |
+| **4. Manual y cierre** | Manual de administración al día, checklist de terreno, ajuste de umbrales | — | 1 día |
 
-\* Estimaciones mías, de trabajo efectivo; la prueba en terreno y las
-decisiones de abajo pueden moverlas.
+\* Estimaciones mías, de trabajo efectivo; el spike y la prueba en terreno
+pueden moverlas.
 
 Cada fase es **un PR aparte**, con bitácora, pruebas de regresión y sin cambiar
 lo que ya funciona (mapa, GPS, brújula, cámara).
@@ -188,7 +180,6 @@ lo que ya funciona (mapa, GPS, brújula, cámara).
 - **Unitarias:** reglas de modo y umbrales; tiempos por modo; geometría (ajuste
   a la línea, punto adelantado, fuera de ruta, distancia restante); cliente de
   rutas con respuestas simuladas, error, límite y sin red.
-- **Base de datos:** migración 0027 (permisos, lectura solo de lo publicado).
 - **e2e (modo demostración):** aparece el selector; el camino sigue la calle;
   la flecha cambia al doblar.
 - **Terreno (Papudo):** (1) parada a 200 m a pie; (2) parada a ~2 km; (3) Las
@@ -200,28 +191,32 @@ lo que ya funciona (mapa, GPS, brújula, cámara).
 | Riesgo | Mitigación |
 | --- | --- |
 | Calles de Papudo/Pullally mal o incompletas en OpenStreetMap | El spike lo mide primero; corregir el mapa abierto es posible y gratuito |
-| Cupo o términos del servicio de rutas | Caché, precálculo de rutas del equipo, interfaz intercambiable |
-| Costo si crece el uso | Precálculo + caché; medir antes de pagar |
+| Cupo o términos del servicio de rutas (ahora cada visita consulta) | Recálculo solo al desviarse, caché, tope por persona/día, interfaz intercambiable, instancia propia si hace falta |
+| Costo si crece el uso | Medir en el spike antes de decidir; caché y topes |
 | Privacidad de la ubicación | Envío solo al pulsar «Calcular ruta», aviso claro, sin registro |
 | GPS impreciso en calles angostas | Tolerancias y recalculo limitado; se ajusta con pruebas en terreno |
 | Abuso del servicio de rutas desde el sitio | Límite por IP/ventana y topes diarios; mismo enfoque de ABUSE-01/02 |
 
-## 8. Decisiones que necesito de ti
+## 8. Decisiones
 
-1. ¿Empezamos por la **Fase 0** (arreglo inmediato, sin servicios externos)?
-2. ¿Aceptas que, **al pulsar «Calcular ruta»**, la ubicación viaje a nuestro
-   servidor y al proveedor de rutas, con aviso y sin registro? Si prefieres que
-   nunca salga del teléfono, la ruta por calles solo existiría entre paradas ya
-   precalculadas.
-3. ¿Auto como **visualización + abrir Google Maps/Waze** (recomendado) o
-   quieres navegación con voz dentro de la app (mucho más trabajo)?
-4. ¿Qué rutas del equipo existen hoy o quieres armar primero? ¿Alguna **mixta**
-   (auto hasta un sector y a pie después)?
-5. ¿Los umbrales de 1,5 km y 5 km te parecen bien para Papudo?
-6. ¿Presupuesto: solo gratuito, o hay margen para un proveedor pago si el
-   spike lo justifica?
+**Ya tomadas**
+
+1. Empezar por la Fase 0. ✅
+2. La ubicación puede viajar al servicio de rutas al calcular el camino, con
+   aviso claro y sin registro.
+3. Sin rutas prehechas: la ruta se arma y se recalcula sobre la marcha.
+4. En auto se ve el camino en el mapa y se puede abrir Google Maps o Waze.
+
+**Pendientes**
+
+5. ¿Los umbrales de 1,5 km y 5 km te parecen bien para Papudo? (ya están en la
+   Fase 0; se ajustan tras la prueba en terreno).
+6. ¿Presupuesto para el servicio de rutas: solo gratuito, o hay margen para un
+   plan pago o una instancia propia si el spike lo justifica?
+7. ¿La navegación con voz queda en Google Maps/Waze (recomendado) o la
+   quieres dentro de la app? (mucho más trabajo)
 
 ## 9. Fuera de alcance por ahora
 
-Navegación giro a giro con voz, rutas sin conexión, transporte público,
+Navegación giro a giro con voz dentro de la app, rutas prehechas por el equipo, rutas sin conexión, transporte público,
 bicicleta, tráfico en tiempo real y reservas.
