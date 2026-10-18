@@ -458,6 +458,8 @@ test("explorar: las categorías son desplegables cerrados, sin filtro repetido",
   await page.goto("/es/explorar");
   // El filtro «Qué buscas» ya no existe: los grupos son la forma de elegir.
   await expect(page.getByRole("button", { name: /Qué buscas/ })).toHaveCount(0);
+  // El buscador vive solo en la portada: Explorar es para navegar.
+  await expect(page.getByRole("searchbox")).toHaveCount(0);
   const balneario = page.locator("details", { hasText: "Balneario" }).first();
   await expect(balneario).not.toHaveAttribute("open", "");
   await expect(page.getByRole("link", { name: /Playa Chica/ })).toBeHidden();
