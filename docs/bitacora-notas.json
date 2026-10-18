@@ -115,10 +115,14 @@
     "titulo": "Seguridad: comentarios y archivos con prueba firmada",
     "resumen": "Cierra ABUSE-01/02 y DB-01. Los comentarios y las subidas de fotos solo entran con una prueba firmada por nuestro servidor (HMAC, uso único, atada al contenido, vence en 2 minutos), de modo que nadie puede saltarse los controles llamando directo a la base. Topes por persona, por ficha y globales (comentarios, archivos y espacio pendiente) que no dependen del visitante; Cloudflare Turnstile opcional; las reservas de archivos abandonadas se descartan solas y un botón del panel libera su espacio. Los comentarios siguen publicándose al enviarse y el panel avisa de los nuevos (contador, etiqueta «Nuevo» y filtro «Por revisar»). Se quita la inserción abierta de analytics_events. (Migraciones 0027–0029.)"
   },
-  "actual": {
-    "pr": 33,
+  "33": {
     "titulo": "Retira el modo de transición de los comentarios",
-    "resumen": "Sin REVIEW_GATE_SECRET los comentarios ya no recurren a las funciones antiguas (eliminadas en producción por la migración 0029): no se envía nada y se avisa en los registros. Limpieza de código muerto, sin cambios visibles ni migraciones.",
+    "resumen": "Sin REVIEW_GATE_SECRET los comentarios ya no recurren a las funciones antiguas (eliminadas en producción por la migración 0029): no se envía nada y se avisa en los registros. Limpieza de código muerto, sin cambios visibles ni migraciones."
+  },
+  "actual": {
+    "pr": 34,
+    "titulo": "Inicio y Explorar sin repeticiones",
+    "resumen": "La portada deja de repetir lo mismo que Explorar: bienvenida nueva («Papudo te espera»), buscador que explica qué se puede buscar con ejemplos que devuelven resultados, fila compacta de accesos por categoría y «Destacados del mes» (5: fiestas de hoy a 30 días más y, para completar, lugares publicados). Se quita la lista «Para empezar» y solo se muestra la ruta destacada. Explorar queda para navegar: sin buscador ni el filtro repetido de categorías, con los grupos desplegables cerrados y el filtro por pueblo. Sin datos nuevos; sin migraciones.",
     "migraciones": "—"
   }
 }

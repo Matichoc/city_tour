@@ -8,11 +8,14 @@ import { NoticeList } from "@/components/business/notice-list";
 import { CommuneMap3D } from "@/components/map/commune-map-3d";
 import { buildPageMetadata, getSiteUrl, localizedUrl } from "@/lib/seo";
 import { HeroScene } from "@/components/ui/hero-scene";
+import { SearchSuggestions } from "@/components/ui/search-suggestions";
+import { CategoryShortcuts } from "@/components/home/category-shortcuts";
 import {
-  CategoryCardFace,
-  categoryCardClass,
-} from "@/components/ui/category-card";
-import { PlaceCard } from "@/components/place/place-card";
+  FeaturedCard,
+  type FeaturedItem,
+} from "@/components/home/featured-card";
+import { eventWhen } from "@/lib/event-format";
+import { eventsInWindow, todayInChile } from "@/lib/featured";
 import { RouteCard } from "@/components/route/route-card";
 import { QrVisit } from "@/components/analytics/qr-visit";
 import { JsonLd } from "@/components/seo/json-ld";
@@ -43,9 +46,10 @@ export default async function HomePage({
   setRequestLocale(locale);
   const t = await getTranslations("home");
   const te = await getTranslations("events");
+  const ts = await getTranslations("search");
+  const tp = await getTranslations("place");
   const [data, notices] = await Promise.all([getData(), listNotices()]);
   const categories = data.listCategories(locale);
-  const places = data.listPlaces(locale).slice(0, 4);
   const routes = data.listRoutes(locale);
   const mapPlaces = data
     .listPlaces(locale)
@@ -58,7 +62,40 @@ export default async function HomePage({
       category: p.categorySlug,
     }));
   const localities = data.listLocalities(locale);
-  const eventCount = data.listEvents(locale).length;
+  const allEvents = data.listEvents(locale);
+  const eventCount = allEvents.length;
+
+  // «Destacados del mes»: las fiestas de hoy a 30 días más y, para completar
+  // hasta 5, los primeros lugares (primero los reales, luego los de ejemplo).
+  const FEATURED_COUNT = 5;
+  const featured: FeaturedItem[] = eventsInWindow(allEvents, todayInChile())
+    .slice(0, FEATURED_COUNT)
+    .map((e) => ({
+      kind: "event" as const,
+      slug: e.slug,
+      kicker: [e.categoryName, e.localityName].filter(Boolean).join(" · "),
+      name: e.name,
+      detail: eventWhen(te, locale, e),
+      picture: e.picture,
+      demoLabel: e.demo ? te("demoBadge") : null,
+    }));
+  const candidates = data.listPlaces(locale);
+  for (const p of [
+    ...candidates.filter((x) => !x.demo),
+    ...candidates.filter((x) => x.demo),
+  ]) {
+    if (featured.length >= FEATURED_COUNT) break;
+    featured.push({
+      kind: "place",
+      slug: p.slug,
+      kicker: [p.categoryName, p.localityName].filter(Boolean).join(" · "),
+      name: p.name,
+      detail: p.shortDescription,
+      picture: p.picture,
+      demoLabel: p.demo ? tp("demoBadge") : null,
+    });
+  }
+  const examples = [1, 2, 3, 4].map((n) => ts(`example${n}`));
 
   return (
     <main className="flex flex-col">
@@ -101,6 +138,7 @@ export default async function HomePage({
             name="q"
             type="search"
             placeholder={t("search")}
+            aria-describedby="search-hint"
             className="text-foreground placeholder:text-muted min-h-12 min-w-0 flex-1 rounded-full border-0 bg-white px-5 shadow-lg"
           />
           <button
@@ -110,6 +148,14 @@ export default async function HomePage({
             {t("searchGo")}
           </button>
         </form>
+        <div className="mt-3">
+          <SearchSuggestions
+            tone="hero"
+            hint={ts("hint")}
+            tryLabel={ts("tryLabel")}
+            examples={examples}
+          />
+        </div>
       </HeroScene>
       {notices.length > 0 ? (
         <div className="mx-auto w-full max-w-3xl px-4 pt-5">
@@ -119,29 +165,37 @@ export default async function HomePage({
 
       <div className="mx-auto flex w-full max-w-3xl flex-col gap-9 px-4 pt-2 pb-10">
         <section aria-labelledby="que-hacer">
-          <h2 id="que-hacer" className="font-display text-3xl font-extrabold">
+          <h2 id="que-hacer" className="font-display text-2xl font-extrabold">
             {t("whatToDo")}
           </h2>
-          <p className="text-muted text-sm sm:hidden">{t("whatToDoHint")}</p>
-          <ul className="-mx-4 mt-3 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pt-1 pb-4 sm:mx-0 sm:grid sm:grid-cols-4 sm:overflow-visible sm:px-0">
-            {categories.map((c, i) => (
+          <div className="mt-3">
+            <CategoryShortcuts categories={categories} />
+          </div>
+        </section>
+
+        <section aria-labelledby="destacados">
+          <div className="flex items-baseline justify-between gap-3">
+            <h2
+              id="destacados"
+              className="font-display text-2xl font-extrabold"
+            >
+              {t("featured")}
+            </h2>
+            <Link
+              href="/explorar"
+              className="text-sea shrink-0 text-sm font-bold"
+            >
+              {t("seeAll")}
+            </Link>
+          </div>
+          <p className="text-muted text-sm">{t("featuredHint")}</p>
+          <ul className="-mx-4 mt-3 flex snap-x snap-mandatory [scrollbar-width:none] gap-3 overflow-x-auto px-4 pb-3 sm:mx-0 sm:px-0 [&::-webkit-scrollbar]:hidden">
+            {featured.map((item, i) => (
               <li
-                key={c.slug}
-                className="rise-in w-40 shrink-0 snap-start sm:w-auto"
-                style={{ "--i": i } as React.CSSProperties}
+                key={`${item.kind}-${item.slug}`}
+                className="w-64 shrink-0 snap-start sm:w-72"
               >
-                <Link
-                  href={{ pathname: "/explorar", query: { categoria: c.slug } }}
-                  className={`${categoryCardClass} h-60 sm:h-48`}
-                >
-                  <CategoryCardFace
-                    category={c.slug}
-                    name={c.name}
-                    index={i}
-                    compactOnWide
-                    countLabel={t("placesCount", { count: c.count })}
-                  />
-                </Link>
+                <FeaturedCard item={item} index={i} />
               </li>
             ))}
           </ul>
@@ -202,14 +256,22 @@ export default async function HomePage({
           <h2 id="rutas-destacadas" className="sr-only">
             {t("featuredRoute")}
           </h2>
-          {routes.map((r, i) => (
+          {routes.slice(0, 1).map((r, i) => (
             <RouteCard
               key={r.slug}
               route={r}
               index={i}
-              kicker={i === 0 ? t("featuredRoute") : undefined}
+              kicker={t("featuredRoute")}
             />
           ))}
+          {routes.length > 1 ? (
+            <Link
+              href="/rutas"
+              className="text-sea self-start text-sm font-bold underline"
+            >
+              {t("moreRoutes", { count: routes.length })}
+            </Link>
+          ) : null}
         </section>
 
         <section aria-labelledby="eventos-home">
@@ -248,27 +310,6 @@ export default async function HomePage({
               {te("viewCalendar")}
             </span>
           </Link>
-        </section>
-
-        <section aria-labelledby="destacados">
-          <div className="flex items-baseline justify-between">
-            <h2
-              id="destacados"
-              className="font-display text-2xl font-extrabold"
-            >
-              {t("featured")}
-            </h2>
-            <Link href="/explorar" className="text-sea text-sm font-bold">
-              {t("seeAll")}
-            </Link>
-          </div>
-          <ul className="mt-3 grid gap-4 sm:grid-cols-2">
-            {places.map((p, i) => (
-              <li key={p.slug}>
-                <PlaceCard place={p} index={i} />
-              </li>
-            ))}
-          </ul>
         </section>
 
         <p
