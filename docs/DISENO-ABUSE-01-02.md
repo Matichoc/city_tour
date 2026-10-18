@@ -1,6 +1,9 @@
 # Diseño técnico: comentarios y subida de archivos con privilegios mínimos
 
-Estado: **solo diseño, nada implementado**. Corresponde a los hallazgos
+Estado: **implementado** en el código y en las migraciones `0027`, `0028` y
+`0029`; **falta aplicarlo en producción** (ver «Despliegue en producción» al
+final). Lo que cambió respecto del diseño original está en «Diferencias con el
+diseño». Corresponde a los hallazgos
 `ABUSE-01` (límites de envío de comentarios) y `ABUSE-02` (almacenamiento) de la
 auditoría de seguridad. La alternativa elegida es la **B: privilegios mínimos
 con prueba firmada (HMAC)**, sin usar la clave `service_role`.
@@ -281,3 +284,35 @@ pasos manuales tuyos (Supabase, Vercel y, si se activa, Cloudflare).
 El formulario y el flujo para el visitante, el filtro de groserías, el campo
 trampa, la revisión del personal de fotos y videos, las políticas de lectura y
 las pruebas de base de datos que ya existen.
+
+## 10. Diferencias con el diseño
+
+- **Sin `pg_cron`:** no hace falta activarlo. La limpieza de nonces y el
+  vencimiento de las reservas de archivos (más de 1 hora) ocurren dentro de las
+  propias funciones, en cada envío.
+- **Botón «Limpiar subidas abandonadas»:** borra de Storage los archivos de las
+  reservas abandonadas y las deja registradas como descartadas. Aparece en
+  `/admin/comentarios` solo si hay algo que limpiar.
+- **Modo de transición:** mientras `REVIEW_GATE_SECRET` no esté definido en
+  Vercel, el servidor usa las funciones antiguas (como hasta ahora) y lo avisa
+  en los registros. Así se puede desplegar el código antes de cargar el
+  secreto. Cuando todo esté verificado y aplicada la migración `0029`, ese
+  camino antiguo se retira del código.
+- **Aviso en el panel:** contador junto a «Comentarios» y en la portada,
+  etiqueta «Nuevo», filtro «Por revisar» y botones para marcar uno o todos.
+  Moderar un comentario o un archivo también lo da por revisado.
+
+## 11. Despliegue en producción (en este orden)
+
+| Paso | Qué | Quién |
+| --- | --- | --- |
+| 1 | Aplicar `0027_review_gate.sql` y `0028_review_notice.sql` en el SQL Editor (aditivas; no cambian nada visible) | tú |
+| 2 | Generar un secreto (`openssl rand -base64 48`) y cargarlo en la base con `supabase/manual/cargar-secreto-comentarios.sql` (reemplazando el valor de ejemplo, solo en el SQL Editor) | tú |
+| 3 | En Vercel (Production, y Preview si se prueba ahí), tipo **Sensitive**: `REVIEW_GATE_SECRET` (el mismo valor) y `REVIEWS_SALT` (otro valor largo y aleatorio). Opcional: `NEXT_PUBLIC_TURNSTILE_SITE_KEY` y `TURNSTILE_SECRET_KEY` | tú |
+| 4 | Fusionar el PR y esperar el despliegue | tú |
+| 5 | Verificar en el sitio: un comentario normal, uno con foto, y que en `/admin` aparece el aviso de comentario nuevo | tú |
+| 6 | Aplicar `0029_close_open_doors.sql` (cierra las funciones antiguas y la inserción abierta de `analytics_events`) | tú |
+| 7 | Probar otra vez un comentario; si algo falla, `supabase/manual/revertir-0029.sql` | tú |
+
+Si se aplicara `0029` antes de cargar el secreto y desplegar, los comentarios
+dejarían de funcionar hasta completar los pasos 2 a 4.

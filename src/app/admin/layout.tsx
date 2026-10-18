@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import Link from "next/link";
 import { NextIntlClientProvider } from "next-intl";
 import { getTranslations } from "next-intl/server";
-import { getSession } from "@/lib/admin/api";
+import { countReviewNotices, getSession } from "@/lib/admin/api";
 import { signOut } from "@/app/admin/actions";
 import es from "@/messages/es.json";
 
@@ -20,6 +20,8 @@ export default async function AdminLayout({
 }) {
   const t = await getTranslations({ locale: "es", namespace: "admin" });
   const session = await getSession();
+  // Comentarios nuevos por revisar: un número junto a «Comentarios».
+  const notices = session ? await countReviewNotices(session.token) : 0;
   return (
     <div className="bg-background min-h-dvh">
       <header className="border-border bg-surface border-b">
@@ -37,6 +39,14 @@ export default async function AdminLayout({
               </Link>
               <Link href="/admin/comentarios" className="text-sea-deep">
                 {t("nav.reviews")}
+                {notices > 0 && (
+                  <span
+                    aria-label={t("nav.reviewsBadge", { count: notices })}
+                    className="bg-coral text-coral-ink ml-1.5 rounded-full px-2 py-0.5 text-xs font-extrabold"
+                  >
+                    {notices >= 100 ? "99+" : notices}
+                  </span>
+                )}
               </Link>
               <Link href="/admin/comercios" className="text-sea-deep">
                 {t("nav.business")}

@@ -8,6 +8,12 @@ import { hasProfanity } from "@/lib/profanity";
 import { REVIEWS_TAG, type ReviewEntity } from "@/lib/reviews";
 import { parseMediaMeta } from "@/lib/media-policy";
 import { signedUploadUrl } from "@/lib/storage";
+import {
+  gateSecret,
+  reviewBind,
+  signProof,
+  type ProofAct,
+} from "@/lib/review-gate";
 
 export type SubmitState = {
   status:
@@ -17,6 +23,7 @@ export type SubmitState = {
     | "text"
     | "profanity"
     | "rate"
+    | "captcha"
     | "media"
     | "error";
   /** Comentario publicado: id y enlaces para subir sus archivos (en orden). */
@@ -30,16 +37,63 @@ const text = (v: FormDataEntryValue | null) =>
   typeof v === "string" ? v.trim() : "";
 
 /**
- * Huella anónima del remitente para limitar envíos: hash con sal de la IP y
- * el navegador. Nunca se guarda la IP.
+ * Huella anónima del remitente para limitar envíos: hash con sal de la IP.
+ * Nunca se guarda la IP, y el navegador (User-Agent) no cuenta: cambiarlo no
+ * cambia la huella. Con la prueba firmada (REVIEW_GATE_SECRET) la sal es
+ * obligatoria; sin ella, devuelve null y no se envía nada.
  */
-async function senderHash(): Promise<string> {
+async function senderHash(): Promise<string | null> {
   const h = await headers();
   const ip = (h.get("x-forwarded-for") ?? "").split(",")[0]!.trim();
-  const salt = process.env.REVIEWS_SALT ?? process.env.SHARE_LINK_SECRET ?? "";
-  return createHash("sha256")
-    .update(`${salt}|${ip}|${h.get("user-agent") ?? ""}`)
-    .digest("hex");
+  let salt: string;
+  if (gateSecret()) {
+    salt = process.env.REVIEWS_SALT ?? "";
+    if (!salt) return null;
+  } else {
+    // Modo de transición (sin REVIEW_GATE_SECRET): como antes.
+    salt = process.env.REVIEWS_SALT ?? process.env.SHARE_LINK_SECRET ?? "";
+  }
+  return createHash("sha256").update(`${salt}|${ip}`).digest("hex");
+}
+
+/** Cloudflare Turnstile: si hay clave secreta, exige y valida el token del formulario. */
+async function passesCaptcha(token: string): Promise<boolean> {
+  const secret = process.env.TURNSTILE_SECRET_KEY;
+  if (!secret) return true;
+  if (!token) return false;
+  const h = await headers();
+  const ip = (h.get("x-forwarded-for") ?? "").split(",")[0]!.trim();
+  try {
+    const res = await fetch(
+      "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+      {
+        method: "POST",
+        headers: { "content-type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({
+          secret,
+          response: token,
+          ...(ip ? { remoteip: ip } : {}),
+        }),
+        cache: "no-store",
+        signal: AbortSignal.timeout(5000),
+      },
+    );
+    const data = (await res.json()) as { success?: boolean };
+    return res.ok && data.success === true;
+  } catch {
+    // Sin respuesta de Cloudflare no se publica (falla cerrado).
+    return false;
+  }
+}
+
+/** Prueba firmada para la acción indicada, o null en el modo de transición. */
+function proofFor(
+  act: ProofAct,
+  sender: string,
+  bind: string,
+): { p_proof: string } | null {
+  const secret = gateSecret();
+  return secret ? { p_proof: signProof({ act, sender, bind, secret }) } : null;
 }
 
 export async function submitReview(
@@ -68,19 +122,44 @@ export async function submitReview(
   const cfg = supabaseConfig();
   if (!cfg) return { status: "error" };
   const sender = await senderHash();
-  const res = await fetch(`${cfg.url}/rest/v1/rpc/submit_review`, {
-    method: "POST",
-    headers: { apikey: cfg.key, "content-type": "application/json" },
-    body: JSON.stringify({
-      p_entity: entity,
-      p_slug: slug,
-      p_author: author || formData.get("anonimo") || "Visitante",
-      p_rating: rating,
-      p_body: body,
-      p_sender_hash: sender,
-    }),
-    cache: "no-store",
-  }).catch(() => null);
+  if (!sender) {
+    console.error(
+      "[comentarios] falta REVIEWS_SALT: no se envía el comentario",
+    );
+    return { status: "error" };
+  }
+  if (!(await passesCaptcha(text(formData.get("cf-turnstile-response"))))) {
+    return { status: "captcha" };
+  }
+  // El nombre que se envía es el mismo sobre el que se firma la prueba.
+  const authorSent = author || text(formData.get("anonimo")) || "Visitante";
+  const proof = proofFor(
+    "review",
+    sender,
+    reviewBind({ entity, slug, author: authorSent, rating, body }),
+  );
+  if (!proof) {
+    console.warn(
+      "[comentarios] REVIEW_GATE_SECRET no está definido: se usan las funciones antiguas",
+    );
+  }
+  const res = await fetch(
+    `${cfg.url}/rest/v1/rpc/${proof ? "submit_review_v2" : "submit_review"}`,
+    {
+      method: "POST",
+      headers: { apikey: cfg.key, "content-type": "application/json" },
+      body: JSON.stringify({
+        p_entity: entity,
+        p_slug: slug,
+        p_author: authorSent,
+        p_rating: rating,
+        p_body: body,
+        p_sender_hash: sender,
+        ...proof,
+      }),
+      cache: "no-store",
+    },
+  ).catch(() => null);
 
   if (!res?.ok) {
     const detail = res ? await res.text() : "";
@@ -94,11 +173,17 @@ export async function submitReview(
 
   // Archivos: se registran (mismo remitente) y se preparan enlaces de subida.
   try {
-    const paths = await rpc<string[]>(cfg, "attach_review_media", {
-      p_review: reviewId,
-      p_sender_hash: sender,
-      p_files: media,
-    });
+    const attachProof = proofFor("media", sender, reviewId);
+    const paths = await rpc<string[]>(
+      cfg,
+      attachProof ? "attach_review_media_v2" : "attach_review_media",
+      {
+        p_review: reviewId,
+        p_sender_hash: sender,
+        p_files: media,
+        ...attachProof,
+      },
+    );
     const uploads = await Promise.all(
       paths.map((path) => signedUploadUrl(cfg, path)),
     );
@@ -132,10 +217,14 @@ export async function finishReviewMedia(reviewId: string): Promise<number> {
   const cfg = supabaseConfig();
   if (!cfg || !/^[0-9a-f-]{36}$/.test(reviewId)) return 0;
   try {
-    return await rpc<number>(cfg, "finish_review_media", {
-      p_review: reviewId,
-      p_sender_hash: await senderHash(),
-    });
+    const sender = await senderHash();
+    if (!sender) return 0;
+    const proof = proofFor("finish", sender, reviewId);
+    return await rpc<number>(
+      cfg,
+      proof ? "finish_review_media_v2" : "finish_review_media",
+      { p_review: reviewId, p_sender_hash: sender, ...proof },
+    );
   } catch (error) {
     console.error("[comentarios] finish_review_media falló", error);
     return 0;

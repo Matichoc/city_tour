@@ -8,6 +8,7 @@ import {
   isEntityKind,
   listBusinessPlaces,
   listEntities,
+  countReviewNotices,
   listLocalities,
   publicPath,
   type EntityKind,
@@ -40,6 +41,7 @@ export default async function AdminHome({
   let rows: EntitySummary[] = [];
   let localities: LocalitySummary[] = [];
   let staleBusinesses = 0;
+  const reviewNotices = await countReviewNotices(session.token);
   try {
     const [entities, businesses] = await Promise.all([
       kind === "localidad"
@@ -66,6 +68,20 @@ export default async function AdminHome({
 
   return (
     <>
+      {reviewNotices > 0 && (
+        <p
+          role="status"
+          className="bg-sun/30 text-earth mb-4 flex flex-wrap items-center gap-2 rounded-xl p-3 text-sm"
+        >
+          {t("reviews.newCount", { count: reviewNotices })}
+          <Link
+            href="/admin/comentarios?filtro=nuevos"
+            className="font-bold underline"
+          >
+            {t("reviews.reviewNow")}
+          </Link>
+        </p>
+      )}
       {staleBusinesses > 0 && (
         <p
           role="status"

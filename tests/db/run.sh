@@ -13,7 +13,7 @@ else
   PSQL=(psql -d city_tour_test -v ON_ERROR_STOP=1 -q)
 fi
 
-"${PSQL[@]}" -c "drop schema if exists public cascade; drop schema if exists auth cascade; drop schema if exists storage cascade; drop schema if exists extensions cascade; drop schema if exists tests cascade; create schema public;"
+"${PSQL[@]}" -c "drop schema if exists public cascade; drop schema if exists auth cascade; drop schema if exists storage cascade; drop schema if exists extensions cascade; drop schema if exists tests cascade; drop schema if exists private cascade; create schema public;"
 "${PSQL[@]}" -f tests/db/supabase_shim.sql
 for f in supabase/migrations/*.sql; do
   echo "→ $f"
@@ -34,6 +34,7 @@ echo "→ contenido del sitio (dos veces: debe ser idempotente)"
 "${PSQL[@]}" -o /dev/null -f tests/db/reviews.check.sql
 "${PSQL[@]}" -o /dev/null -f tests/db/business.check.sql
 "${PSQL[@]}" -o /dev/null -f tests/db/media.check.sql
+"${PSQL[@]}" -o /dev/null -f tests/db/gate.check.sql
 "${PSQL[@]}" -o /dev/null -f tests/db/panel.check.sql
 "${PSQL[@]}" -o /dev/null -f tests/db/privacy.check.sql
 echo "→ PRIV-01: respaldo, limpieza y restauración"

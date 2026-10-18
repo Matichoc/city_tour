@@ -11,6 +11,8 @@ import {
   CTA_KINDS,
   deleteNotice,
   deleteReview,
+  cleanupAbandonedUploads as cleanupUploads,
+  markReviewed,
   getSession,
   setNoticeActive,
   setReviewStatus,
@@ -122,7 +124,7 @@ export async function moderateReview(formData: FormData) {
   if (!session) redirect("/admin/ingresar");
   if (
     !/^[0-9a-f-]{36}$/.test(id) ||
-    !["ocultar", "mostrar", "borrar"].includes(action) ||
+    !["ocultar", "mostrar", "borrar", "revisar"].includes(action) ||
     !canModerate(session) ||
     (action === "borrar" && !canDeleteReviews(session))
   ) {
@@ -132,6 +134,7 @@ export async function moderateReview(formData: FormData) {
   let ok = true;
   try {
     if (action === "borrar") await deleteReview(session, id);
+    else if (action === "revisar") await markReviewed(session, id);
     else
       await setReviewStatus(
         session,
@@ -146,6 +149,38 @@ export async function moderateReview(formData: FormData) {
   // Se retira del sitio público de inmediato.
   updateTag(REVIEWS_TAG);
   redirect(`${back}&guardado=1`);
+}
+
+/** Da por revisados todos los comentarios nuevos. */
+export async function markAllReviewed(formData: FormData) {
+  const back = `/admin/comentarios?filtro=${encodeURIComponent(text(formData.get("filtro")) || "todos")}`;
+  const session = await getSession();
+  if (!session) redirect("/admin/ingresar");
+  if (!canModerate(session)) redirect(`${back}&error=1`);
+  let ok = true;
+  try {
+    await markReviewed(session);
+  } catch (error) {
+    console.error("[admin] marcar todos como revisados falló", error);
+    ok = false;
+  }
+  redirect(`${back}${ok ? "&guardado=1" : "&error=1"}`);
+}
+
+/** Borra los archivos que se reservaron y nadie terminó de subir. */
+export async function cleanupAbandonedUploads(formData: FormData) {
+  const back = `/admin/comentarios?filtro=${encodeURIComponent(text(formData.get("filtro")) || "todos")}`;
+  const session = await getSession();
+  if (!session) redirect("/admin/ingresar");
+  if (!canModerate(session)) redirect(`${back}&error=1`);
+  let ok = true;
+  try {
+    await cleanupUploads(session);
+  } catch (error) {
+    console.error("[admin] limpieza de subidas abandonadas falló", error);
+    ok = false;
+  }
+  redirect(`${back}${ok ? "&guardado=1" : "&error=1"}`);
 }
 
 export async function moderateMedia(formData: FormData) {
