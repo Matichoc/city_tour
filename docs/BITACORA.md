@@ -14,12 +14,12 @@ indicadas en cada versión.
 `docs/bitacora-notas.json` (clave `actual`, y el número de PR cuando exista),
 correr `pnpm bitacora` y subir el cambio en el mismo PR.
 
-## En preparación: v0.27 — Recorrido en vivo: a pie o en auto
+## En preparación: v0.27 — Recorrido en vivo: a pie o en auto, y plan de rutas y manual de administración
 
-Fase 0 del plan de recorridos: el recorrido en vivo ofrece ir a pie o en auto, con tiempo y distancia estimados de cada modo, y sugiere el auto cuando la parada está lejos (ya no presenta 30 km como una caminata de horas). «Abrir en Google Maps» usa el modo elegido y la cámara a pie solo se ofrece a pie. Textos en español, inglés y portugués. Los tiempos son estimados en línea recta con un factor de rodeo; las rutas por calles vienen en la Fase 1.
+Fase 0 del plan de recorridos: el recorrido en vivo ofrece ir a pie o en auto, con tiempo y distancia estimados de cada modo, y sugiere el auto cuando la parada está lejos (ya no presenta 30 km como una caminata de horas). «Abrir en Google Maps» usa el modo elegido y la cámara a pie solo se ofrece a pie. Textos en español, inglés y portugués. Los tiempos son estimados (línea recta con factor de rodeo); la ruta por calles que se arma y recalcula sobre la marcha viene en la Fase 1. Incluye el plan por fases de los recorridos (docs/PLAN-RUTAS-AUTO-Y-A-PIE.md) y el manual paso a paso del panel de administración, con cómo dar acceso a otros administradores (docs/MANUAL-ADMINISTRACION.md).
 
 - **Estado:** en revisión, [PR #31](https://github.com/Matichoc/city_tour/pull/31) (aún no está en `develop`).
-- **Última actualización de esta bitácora:** 2026-10-17 21:30
+- **Última actualización de esta bitácora:** 2026-10-17 22:06
 
 ## Avance por día
 
@@ -28,7 +28,7 @@ trabajadas: hay pausas y trabajo sin registrar).
 
 | Día | Ventana de actividad | Registros | Versiones entregadas |
 | --- | --- | ---: | --- |
-| Sábado, 17 de octubre de 2026 | 00:01 – 16:41 | 25 | v0.16, v0.17, v0.18, v0.19, v0.20, v0.21, v0.22, v0.23, v0.24, v0.25, v0.26 |
+| Sábado, 17 de octubre de 2026 | 00:01 – 21:31 | 26 | v0.16, v0.17, v0.18, v0.19, v0.20, v0.21, v0.22, v0.23, v0.24, v0.25, v0.26 |
 | Viernes, 16 de octubre de 2026 | 00:04 – 23:51 | 15 | v0.9, v0.10, v0.11, v0.12, v0.13, v0.14, v0.15 |
 | Jueves, 15 de octubre de 2026 | 00:05 – 23:52 | 10 | v0.7, v0.8 |
 | Miércoles, 14 de octubre de 2026 | 23:50 – 23:50 | 1 | — |
