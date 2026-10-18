@@ -293,11 +293,10 @@ las pruebas de base de datos que ya existen.
 - **Botón «Limpiar subidas abandonadas»:** borra de Storage los archivos de las
   reservas abandonadas y las deja registradas como descartadas. Aparece en
   `/admin/comentarios` solo si hay algo que limpiar.
-- **Modo de transición:** mientras `REVIEW_GATE_SECRET` no esté definido en
-  Vercel, el servidor usa las funciones antiguas (como hasta ahora) y lo avisa
-  en los registros. Así se puede desplegar el código antes de cargar el
-  secreto. Cuando todo esté verificado y aplicada la migración `0029`, ese
-  camino antiguo se retira del código.
+- **Sin secreto no se publica:** si falta `REVIEW_GATE_SECRET` (o
+  `REVIEWS_SALT`) en Vercel, el servidor no envía el comentario y lo avisa en
+  los registros. Las funciones antiguas ya no existen (migración `0029`), así
+  que el antiguo «modo de transición» se retiró del código.
 - **Aviso en el panel:** contador junto a «Comentarios» y en la portada,
   etiqueta «Nuevo», filtro «Por revisar» y botones para marcar uno o todos.
   Moderar un comentario o un archivo también lo da por revisado.
