@@ -27,29 +27,29 @@
   },
   "home": {
     "metaTitle": "Guía turística de Papudo",
-    "kicker": "Papudo · Región de Valparaíso",
-    "title": "Sal, sol y campo: ¡vamos a Papudo!",
-    "subtitle": "Playas para el chapuzón, dunas para perderse y rincones con sabor a pueblo. Tu guía de bolsillo para disfrutar en familia, sin crear cuenta.",
-    "search": "¿Qué se te antoja? Playa, helado, paseo…",
+    "kicker": "Papudo · donde el campo se encuentra con el mar",
+    "title": "Papudo te espera",
+    "subtitle": "Playas de aguas claras, dunas, cerros y caletas. Toma tu guía de bolsillo y camina el pueblo a tu ritmo.",
+    "search": "Busca un lugar o un plan",
     "searchGo": "Buscar",
     "whatToDo": "¿Qué quieres hacer?",
-    "placesCount": "{count, plural, =0 {Pronto} one {# lugar} other {# lugares}}",
     "featuredRoute": "Ruta destacada",
     "seeRoute": "Ver la ruta",
-    "featured": "Para empezar",
+    "featured": "Destacados del mes",
     "seeAll": "Ver todo",
     "demoNotice": "Versión de prueba: los lugares tienen su fuente, pero aún están pendientes de verificación en terreno. Alojamiento y gastronomía se suman con la Municipalidad y la Cámara de Comercio.",
     "mapTitle": "La comuna en 3D",
     "mapSubtitle": "Mar, dunas y cerros de Papudo, Pullally y Las Salinas. Toca un punto para ver su ficha.",
     "mapOpen": "Mapa completo",
     "mapVillages": "Pueblos de la comuna",
-    "whatToDoHint": "Elige un plan y desliza para ver más",
-    "kioskLink": "Ver el modo quiosco (para tablets)"
+    "kioskLink": "Ver el modo quiosco (para tablets)",
+    "featuredHint": "Lo mejor para partir este mes.",
+    "moreRoutes": "Ver las {count} rutas"
   },
   "explore": {
     "title": "Explorar Papudo",
     "subtitle": "Playas, campo y patrimonio de la comuna.",
-    "search": "Buscar por nombre o pueblo",
+    "search": "Busca un lugar o un plan",
     "searchGo": "Buscar",
     "categories": "Qué buscas",
     "all": "Todo",
@@ -897,5 +897,13 @@
     "body": "Súmalo a la guía: alojamiento, comida, actividades o productos locales. Esta temporada es gratis.",
     "cta": "Sumar mi comercio",
     "more": "Cómo sumarme"
+  },
+  "search": {
+    "hint": "Escribe el nombre de un lugar, lo que quieres hacer o comer, o un pueblo de la comuna.",
+    "tryLabel": "Prueba con:",
+    "example1": "Playa",
+    "example2": "Mariscos",
+    "example3": "Dunas",
+    "example4": "Restaurante"
   }
 }

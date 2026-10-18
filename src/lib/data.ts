@@ -337,7 +337,7 @@ export function createData(content: SiteContent, showDemo = SHOW_DEMO) {
         (p) =>
           !q ||
           normalize(
-            `${p.name} ${p.shortDescription} ${p.localityName ?? ""}`,
+            `${p.name} ${p.shortDescription} ${p.categoryName} ${p.localityName ?? ""}`,
           ).includes(q),
       );
   }

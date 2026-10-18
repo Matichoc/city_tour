@@ -15,6 +15,7 @@ import { BusinessInvite } from "@/components/business/business-invite";
 import { PlaceCard } from "@/components/place/place-card";
 import { PlacesMap } from "@/components/map/places-map";
 import { CategoryIcon } from "@/components/ui/category-icon";
+import { SearchSuggestions } from "@/components/ui/search-suggestions";
 import { FilterMenu, type FilterItem } from "@/components/ui/filter-menu";
 
 type SearchParams = {
@@ -50,6 +51,7 @@ export default async function ExplorePage({
   setRequestLocale(locale);
   const sp = await searchParams;
   const t = await getTranslations("explore");
+  const ts = await getTranslations("search");
 
   const category = canonicalCategory(sp.categoria) ?? undefined;
   // Enlaces anteriores (?categoria=playas) pasan a la categoría actual.
@@ -96,22 +98,6 @@ export default async function ExplorePage({
     .filter((g) => g.items.length > 0);
 
   const all = data.listPlaces(locale);
-  const catItems: FilterItem[] = [
-    {
-      key: "all",
-      label: t("all"),
-      href: { pathname: "/explorar", query: q({ categoria: undefined }) },
-      active: !category,
-      count: all.length,
-    },
-    ...categories.map((c) => ({
-      key: c.slug,
-      label: c.name,
-      href: { pathname: "/explorar" as const, query: q({ categoria: c.slug }) },
-      active: category === c.slug,
-      count: c.count,
-    })),
-  ];
   const locItems: FilterItem[] = [
     {
       key: "all",
@@ -199,6 +185,7 @@ export default async function ExplorePage({
               type="search"
               defaultValue={query}
               placeholder={t("search")}
+              aria-describedby={query ? undefined : "search-hint"}
               className="border-border bg-surface min-h-12 w-full min-w-0 rounded-full border-2 pr-4 pl-11 shadow-sm"
             />
           </div>
@@ -210,30 +197,15 @@ export default async function ExplorePage({
           </button>
         </form>
 
-        <div className="flex flex-col gap-3 sm:flex-row">
-          <FilterMenu
-            label={t("categories")}
-            valueLabel={categoryLabel ?? t("all")}
-            items={catItems}
-            active={Boolean(category)}
-            icon={
-              category ? (
-                <CategoryIcon category={category} className="size-5" />
-              ) : (
-                <svg
-                  viewBox="0 0 24 24"
-                  className="size-5"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.8"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z" />
-                </svg>
-              )
-            }
+        {query ? null : (
+          <SearchSuggestions
+            hint={ts("hint")}
+            tryLabel={ts("tryLabel")}
+            examples={[1, 2, 3, 4].map((n) => ts(`example${n}`))}
           />
+        )}
+
+        <div className="flex flex-col gap-3 sm:flex-row">
           <FilterMenu
             label={t("localities")}
             valueLabel={localityLabel ?? t("allLocalities")}

@@ -343,12 +343,12 @@ test("una ficha real no tiene formulario de opiniones ni opiniones inventadas", 
   expect(await sitemap.text()).not.toContain("demo-");
 });
 
-test("portada: tarjetas verticales de «¿Qué quieres hacer?» y selector de idioma desplegable", async ({
+test("portada: accesos por categoría de «¿Qué quieres hacer?» y selector de idioma desplegable", async ({
   page,
 }) => {
   await page.goto("/es");
   await expect(
-    page.getByRole("heading", { name: /vamos a Papudo/ }),
+    page.getByRole("heading", { name: "Papudo te espera", level: 1 }),
   ).toBeVisible();
   const tarjetas = page
     .getByRole("region", { name: "¿Qué quieres hacer?" })
@@ -452,14 +452,59 @@ test("celular: la barra inferior incluye Eventos", async ({ page }) => {
   await expect(page).toHaveURL(/\/es\/eventos$/);
 });
 
-test("explorar: las categorías vienen cerradas y se abren para ver los lugares", async ({
+test("explorar: las categorías son desplegables cerrados, sin filtro repetido", async ({
   page,
 }) => {
   await page.goto("/es/explorar");
+  // El filtro «Qué buscas» ya no existe: los grupos son la forma de elegir.
+  await expect(page.getByRole("button", { name: /Qué buscas/ })).toHaveCount(0);
   const balneario = page.locator("details", { hasText: "Balneario" }).first();
   await expect(balneario).not.toHaveAttribute("open", "");
   await expect(page.getByRole("link", { name: /Playa Chica/ })).toBeHidden();
   await balneario.locator("summary").click();
+  await expect(
+    page.getByRole("link", { name: /Playa Chica/ }).first(),
+  ).toBeVisible();
+});
+
+test("explorar: llegar desde un acceso del inicio muestra solo ese grupo, abierto", async ({
+  page,
+}) => {
+  await page.goto("/es/explorar?categoria=gastronomia");
+  const grupos = page.locator("details");
+  await expect(grupos).toHaveCount(1);
+  await expect(grupos.first()).toHaveAttribute("open", "");
+});
+
+test("portada: cinco destacados, accesos por categoría y sin lista repetida", async ({
+  page,
+}) => {
+  await page.goto("/es");
+  const destacados = page.locator('section[aria-labelledby="destacados"]');
+  await expect(
+    destacados.getByRole("heading", { name: "Destacados del mes" }),
+  ).toBeVisible();
+  await expect(destacados.getByRole("listitem")).toHaveCount(5);
+  await expect(page.getByText("Para empezar")).toHaveCount(0);
+  // Una fila de accesos lleva a Explorar ya filtrado.
+  await page
+    .locator("#que-hacer")
+    .locator("..")
+    .getByRole("link", { name: /Gastronomía/ })
+    .click();
+  await expect(page).toHaveURL(/\/es\/explorar\?categoria=gastronomia/);
+});
+
+test("buscador: explica qué se puede buscar y los ejemplos llevan a resultados", async ({
+  page,
+}) => {
+  await page.goto("/es");
+  await expect(
+    page.getByText(/lo que quieres hacer o comer/).first(),
+  ).toBeVisible();
+  await page.getByRole("link", { name: "Playa", exact: true }).first().click();
+  await expect(page).toHaveURL(/\/es\/explorar\?q=Playa/);
+  await expect(page.getByText(/^\d+ lugares?$/).first()).toBeVisible();
   await expect(
     page.getByRole("link", { name: /Playa Chica/ }).first(),
   ).toBeVisible();

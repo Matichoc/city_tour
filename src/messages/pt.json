@@ -27,29 +27,29 @@
   },
   "home": {
     "metaTitle": "Guia turístico de Papudo",
-    "kicker": "Papudo · Região de Valparaíso",
-    "title": "Sal, sol e campo: vamos para Papudo!",
-    "subtitle": "Praias para um mergulho, dunas para se perder e cantinhos com sabor de vila. Seu guia de bolso para curtir em família, sem criar conta.",
-    "search": "O que você está com vontade? Praia, sorvete, passeio…",
+    "kicker": "Papudo · onde o campo encontra o mar",
+    "title": "Papudo espera por você",
+    "subtitle": "Praias de águas claras, dunas, morros e enseadas. Pegue seu guia de bolso e percorra a vila no seu ritmo.",
+    "search": "Procure um lugar ou programa",
     "searchGo": "Buscar",
     "whatToDo": "O que você quer fazer?",
-    "placesCount": "{count, plural, =0 {Em breve} one {# lugar} other {# lugares}}",
     "featuredRoute": "Roteiro em destaque",
     "seeRoute": "Ver o roteiro",
-    "featured": "Para começar",
+    "featured": "Destaques do mês",
     "seeAll": "Ver tudo",
     "demoNotice": "Versão de teste: os lugares têm sua fonte, mas ainda aguardam verificação no local. Hospedagem e gastronomia serão incluídas com a Prefeitura e a Câmara de Comércio.",
     "mapTitle": "A comuna em 3D",
     "mapSubtitle": "Mar, dunas e morros de Papudo, Pullally e Las Salinas. Toque em um ponto para ver sua ficha.",
     "mapOpen": "Mapa completo",
     "mapVillages": "Localidades da comuna",
-    "whatToDoHint": "Escolha um programa e deslize para ver mais",
-    "kioskLink": "Ver o modo quiosque (para tablets)"
+    "kioskLink": "Ver o modo quiosque (para tablets)",
+    "featuredHint": "O melhor para começar este mês.",
+    "moreRoutes": "Ver os {count} roteiros"
   },
   "explore": {
     "title": "Explorar Papudo",
     "subtitle": "Praias, campo e patrimônio da comuna.",
-    "search": "Buscar por nome ou localidade",
+    "search": "Procure um lugar ou programa",
     "searchGo": "Buscar",
     "categories": "O que procura",
     "all": "Tudo",
@@ -897,5 +897,13 @@
     "body": "Inclua-o no guia: hospedagem, comida, atividades ou produtos locais. Grátis nesta temporada.",
     "cta": "Incluir meu negócio",
     "more": "Como participar"
+  },
+  "search": {
+    "hint": "Digite o nome de um lugar, o que quer fazer ou comer, ou uma localidade da comuna.",
+    "tryLabel": "Experimente:",
+    "example1": "Praia",
+    "example2": "Frutos do mar",
+    "example3": "Dunas",
+    "example4": "Restaurante"
   }
 }
