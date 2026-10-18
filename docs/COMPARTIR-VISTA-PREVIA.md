@@ -36,6 +36,34 @@ Las direcciones automáticas de Vercel (`<proyecto>-git-<rama>-<equipo>.vercel.a
 siguen existiendo, pero llevan el nombre de la rama: para compartir se usan
 solo las de la tabla.
 
+## Que no quede nada abierto
+
+Solo deben verse `develop` (equipo) y `demo` (con enlace por horas). Tres
+protecciones:
+
+1. **Solo se construyen tres ramas.** `vercel.json` omite el despliegue de
+   cualquier rama que no sea `develop`, `demo` o `main`: las ramas de trabajo
+   (`feat/…`, `claude/…`) ya no generan vistas previas con dirección propia.
+2. **Una vista previa sin clave se cierra sola.** Si una vista previa llega sin
+   `SHARE_LINK_SECRET`, `proxy.ts` responde «Este enlace venció» en vez de
+   abrirse. (En producción sin clave sigue abierto, que es lo que se hace el
+   día que se abre el sitio.)
+3. **Las versiones antiguas hay que borrarlas en Vercel.** Una versión
+   construida antes del cierre (por ejemplo, las de las ramas viejas) conserva
+   su dirección para siempre y sigue abierta: el código nuevo no la alcanza.
+   Se borran a mano (ver abajo).
+
+### Borrar las versiones antiguas (una vez, en Vercel)
+
+1. *Project → Deployments*. Filtra por **Environment: Preview**.
+2. En cada versión que no sea la vigente de `develop` ni de `demo`: menú **⋯ →
+   Delete**. Al borrarla, su dirección (incluida la de la rama) deja de existir.
+3. *Settings → General → Deployment Retention*: configura que las versiones de
+   **Preview** se borren solas a los pocos días (por ejemplo, 7 o 14), así no
+   se acumulan.
+4. Comprueba abriendo en una ventana privada la dirección que querías cerrar:
+   debe dar «404» (borrada) o «Este enlace venció» (cerrada).
+
 ## Abrir el sitio al público (cuando haya financiamiento)
 
 Llevar `develop` a `main`, cambiar *Branch Tracking* a `main`, quitar la
