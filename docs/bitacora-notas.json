@@ -115,6 +115,6 @@
   "actual": {
     "pr": 30,
     "titulo": "Plan de recorridos en auto y a pie, y manual de administración",
-    "resumen": "Plan por fases para ofrecer auto y a pie según la distancia, trazar el camino por calles, orientar la flecha por la calle y armar rutas con modo de transporte; más el manual paso a paso del panel, con cómo dar acceso a otros administradores. Solo documentos, sin código."
+    "resumen": "Plan por fases para ofrecer auto y a pie según la distancia, trazar el camino por calles, orientar la flecha por la calle y calcular la ruta sobre la marcha, sin rutas prehechas; más el manual paso a paso del panel, con cómo dar acceso a otros administradores. Solo documentos, sin código."
   }
 }
