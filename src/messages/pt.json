@@ -179,7 +179,7 @@
     "sharedLoad": "Carregar o roteiro compartilhado",
     "sharedKeep": "Manter o meu",
     "startLive": "Iniciar roteiro",
-    "startLiveNote": "Usa a sua localização para guiá-lo parada por parada. Sua localização não sai do seu celular.",
+    "startLiveNote": "Usa a sua localização para guiá-lo parada por parada. Ela fica no seu celular; só se você aceitar a rota pelas ruas, ela é enviada para calculá-la e não é guardada.",
     "startDemo": "Não está em Papudo? Testar com localização simulada"
   },
   "map": {
@@ -360,7 +360,17 @@
     "modeLabel": "Como você vai?",
     "modeWalk": "A pé",
     "modeCar": "De carro",
-    "modeEstimate": "≈ {time} · {distance}"
+    "modeEstimate": "≈ {time} · {distance}",
+    "routeConsentTitle": "Rota pelas ruas",
+    "routeConsentText": "Para traçar o caminho pelas ruas enviamos a sua localização e o destino a um serviço de mapas aberto (OpenStreetMap). Não a guardamos nem a registramos.",
+    "routeConsentAccept": "Calcular rota pelas ruas",
+    "routeConsentDecline": "Agora não",
+    "routeLoading": "Traçando o caminho pelas ruas…",
+    "routeFailed": "Não conseguimos traçar a rota pelas ruas; mostramos um guia aproximado.",
+    "routeCredit": "Rotas: © colaboradores do OpenStreetMap e FOSSGIS.",
+    "routeFix": "Corrigir o mapa",
+    "remaining": "Faltam {distance} · {time}",
+    "modeReal": "{time} · {distance}"
   },
   "saved": {
     "save": "Salvar",

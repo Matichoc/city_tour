@@ -109,7 +109,7 @@
   },
   "actual": {
     "pr": 31,
-    "titulo": "Recorrido en vivo: a pie o en auto, y plan de rutas y manual de administración",
-    "resumen": "Fase 0 del plan de recorridos: el recorrido en vivo ofrece ir a pie o en auto, con tiempo y distancia estimados de cada modo, y sugiere el auto cuando la parada está lejos (ya no presenta 30 km como una caminata de horas). «Abrir en Google Maps» usa el modo elegido y la cámara a pie solo se ofrece a pie. Textos en español, inglés y portugués. Los tiempos son estimados (línea recta con factor de rodeo); la ruta por calles que se arma y recalcula sobre la marcha viene en la Fase 1. Incluye el plan por fases de los recorridos (docs/PLAN-RUTAS-AUTO-Y-A-PIE.md) y el manual paso a paso del panel de administración, con cómo dar acceso a otros administradores (docs/MANUAL-ADMINISTRACION.md)."
+    "titulo": "Recorrido en vivo: a pie o en auto, ruta por calles, plan y manual",
+    "resumen": "El recorrido en vivo ofrece ir a pie o en auto, con el auto sugerido cuando la parada está lejos, y ahora traza el camino por las calles reales (OpenStreetMap / FOSSGIS): distancia y tiempo reales de cada modo, lo ya recorrido en gris, recálculo si la persona se desvía, y la flecha de la cámara a pie orienta por la calle. Pide permiso una vez antes de enviar la ubicación al servicio de rutas, que pasa por un servidor propio con tope de uso, caché y sin registrar coordenadas; sin servicio, sigue la guía aproximada. Incluye el plan por fases (docs/PLAN-RUTAS-AUTO-Y-A-PIE.md, con el resultado de la prueba de motores) y el manual de administración (docs/MANUAL-ADMINISTRACION.md)."
   }
 }

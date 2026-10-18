@@ -114,6 +114,74 @@ test("recorrido en vivo: lejos de la parada sugiere el auto y se puede cambiar a
   await live.getByRole("button", { name: "Terminar" }).click();
 });
 
+// Ruta por calles simulada (el servicio externo no se llama en las pruebas).
+const fakeRoute = (mode: string) => ({
+  mode,
+  distanceMeters: mode === "car" ? 25553 : 13838,
+  durationSeconds: mode === "car" ? 2004 : 11160,
+  coordinates: [
+    [-71.4478, -32.5075],
+    [-71.4475, -32.5069],
+    [-71.4466, -32.5066],
+  ],
+});
+
+test("recorrido en vivo: pide permiso antes de enviar la ubicación y traza la ruta por calles", async ({
+  page,
+  context,
+}) => {
+  const asked: string[] = [];
+  await page.route("**/api/ruta?**", async (route) => {
+    const url = new URL(route.request().url());
+    asked.push(url.searchParams.get("mode") ?? "");
+    await route.fulfill({
+      json: fakeRoute(url.searchParams.get("mode") ?? "walk"),
+    });
+  });
+  await context.grantPermissions(["geolocation"]);
+  await context.setGeolocation({ latitude: -32.78, longitude: -71.52 });
+  await page.goto("/es/recorrido?l=playa-chica-papudo,playa-papudo");
+  await page.getByRole("button", { name: /Iniciar recorrido/ }).click();
+  const live = page.getByRole("dialog", { name: "Recorrido en vivo" });
+  // Sin permiso no se envía nada al servicio de rutas.
+  await expect(live.getByText("Ruta por las calles")).toBeVisible();
+  expect(asked).toEqual([]);
+  await live.getByRole("button", { name: "Calcular ruta por calles" }).click();
+  // Con permiso: ruta a pie y en auto, con tiempos reales (sin «≈»).
+  await expect(live.getByText(/Rutas: © colaboradores/)).toBeVisible();
+  expect(asked).toEqual(["walk", "car"]);
+  const modes = live.getByRole("radiogroup", { name: "¿Cómo vas a ir?" });
+  await expect(modes.getByRole("radio", { name: /En auto/ })).toContainText(
+    "33 min · 25,6 km",
+  );
+  await expect(modes.getByRole("radio", { name: /A pie/ })).toContainText(
+    "3 h 6 min",
+  );
+  await expect(live.getByRole("button", { name: /Calcular ruta/ })).toHaveCount(
+    0,
+  );
+});
+
+test("recorrido en vivo: si no se puede trazar la ruta, avisa y sigue con la guía aproximada", async ({
+  page,
+  context,
+}) => {
+  await page.addInitScript(() =>
+    localStorage.setItem("papudo.route-consent", "1"),
+  );
+  await page.route("**/api/ruta?**", (route) =>
+    route.fulfill({ status: 502, json: { error: "upstream" } }),
+  );
+  await context.grantPermissions(["geolocation"]);
+  await context.setGeolocation({ latitude: -32.78, longitude: -71.52 });
+  await page.goto("/es/recorrido?l=playa-chica-papudo,playa-papudo");
+  await page.getByRole("button", { name: /Iniciar recorrido/ }).click();
+  const live = page.getByRole("dialog", { name: "Recorrido en vivo" });
+  await expect(live.getByText(/No pudimos trazar la ruta/)).toBeVisible();
+  // Sigue mostrando los tiempos estimados.
+  await expect(live.getByText(/≈/).first()).toBeVisible();
+});
+
 test("ficha: guardar un lugar y verlo en Tus guardados, sin reseñas inventadas", async ({
   page,
 }) => {

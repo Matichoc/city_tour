@@ -179,7 +179,7 @@
     "sharedLoad": "Load the shared trip",
     "sharedKeep": "Keep mine",
     "startLive": "Start trip",
-    "startLiveNote": "Uses your location to guide you stop by stop. Your location never leaves your phone.",
+    "startLiveNote": "Uses your location to guide you stop by stop. It stays on your phone; only if you accept the street route is it sent to calculate it, and it is not stored.",
     "startDemo": "Not in Papudo? Try it with a simulated location"
   },
   "map": {
@@ -360,7 +360,17 @@
     "modeLabel": "How are you going?",
     "modeWalk": "On foot",
     "modeCar": "By car",
-    "modeEstimate": "≈ {time} · {distance}"
+    "modeEstimate": "≈ {time} · {distance}",
+    "routeConsentTitle": "Route by streets",
+    "routeConsentText": "To draw the way along the streets we send your location and the destination to an open map service (OpenStreetMap). We don't store or log it.",
+    "routeConsentAccept": "Calculate route by streets",
+    "routeConsentDecline": "Not now",
+    "routeLoading": "Drawing the way along the streets…",
+    "routeFailed": "We couldn't draw the street route; showing an approximate guide.",
+    "routeCredit": "Routes: © OpenStreetMap contributors and FOSSGIS.",
+    "routeFix": "Fix the map",
+    "remaining": "{distance} left · {time}",
+    "modeReal": "{time} · {distance}"
   },
   "saved": {
     "save": "Save",

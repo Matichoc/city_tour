@@ -1,6 +1,11 @@
 import { describe, expect, it } from "vitest";
 import {
   CAR_SUGGEST_FROM_M,
+  distanceToPolylineMeters,
+  lookaheadPoint,
+  splitRouteAt,
+  polylineLength,
+  snapToPolyline,
   CAR_SPEED_KMH,
   DETOUR_FACTOR,
   WALK_SPEED_KMH,
@@ -141,6 +146,16 @@ describe("modos de viaje: a pie y en auto (estimados)", () => {
     expect(estimateLeg(3500, "walk").minutes).toBeGreaterThan(45);
   });
 
+  it("con la ruta real a pie, decide por esos minutos y no por la línea recta", () => {
+    // En línea recta son 2 km (a pie, sí), pero por calles hay una hora.
+    expect(suggestedMode(2000, 60)).toBe("car");
+    expect(suggestedMode(2000, 20)).toBe("walk");
+    // Cerca siempre se sugiere a pie.
+    expect(suggestedMode(300, 60)).toBe("walk");
+    // Lejos siempre en auto, aunque la ruta a pie sea corta.
+    expect(suggestedMode(6000, 30)).toBe("car");
+  });
+
   it("una caminata de 30 km no se presenta como el modo sugerido", () => {
     expect(suggestedMode(30_000)).not.toBe("walk");
     expect(estimateLeg(30_000, "car").minutes).toBeLessThan(180);
@@ -152,5 +167,79 @@ describe("modos de viaje: a pie y en auto (estimados)", () => {
     expect(formatMinutes(60)).toBe("1 h");
     expect(formatMinutes(90)).toBe("1 h 30 min");
     expect(formatMinutes(750)).toBe("12 h 30 min");
+  });
+});
+
+describe("seguir una ruta por calles", () => {
+  // Calle en «L»: ~222 m al norte y luego ~222 m al este.
+  const a = { latitude: -32.5, longitude: -71.45 };
+  const b = offsetPoint(a, 0, 222);
+  const c = offsetPoint(b, 90, 222);
+  const line: [number, number][] = [
+    [a.longitude, a.latitude],
+    [b.longitude, b.latitude],
+    [c.longitude, c.latitude],
+  ];
+
+  it("mide el largo de la ruta", () => {
+    expect(polylineLength(line)).toBeGreaterThan(440);
+    expect(polylineLength(line)).toBeLessThan(450);
+    expect(polylineLength([line[0]!])).toBe(0);
+  });
+
+  it("un punto sobre la calle está a ~0 m", () => {
+    const onStreet = offsetPoint(a, 0, 100);
+    expect(distanceToPolylineMeters(onStreet, line)!).toBeLessThan(1);
+  });
+
+  it("un punto al costado se mide en perpendicular, no al vértice", () => {
+    const side = offsetPoint(offsetPoint(a, 0, 100), 90, 30);
+    expect(distanceToPolylineMeters(side, line)!).toBeCloseTo(30, 0);
+  });
+
+  it("al pasar la esquina, la distancia es a la calle más cercana", () => {
+    const nearCorner = offsetPoint(offsetPoint(b, 0, 40), 90, 60);
+    const d = distanceToPolylineMeters(nearCorner, line)!;
+    expect(d).toBeLessThan(45);
+    expect(d).toBeGreaterThan(35);
+  });
+
+  it("ubica en qué tramo y cuánto se ha avanzado", () => {
+    const onSecond = offsetPoint(b, 90, 100);
+    const snap = snapToPolyline(onSecond, line)!;
+    expect(snap.segment).toBe(1);
+    expect(snap.along).toBeGreaterThan(315);
+    expect(snap.along).toBeLessThan(325);
+  });
+
+  it("el punto adelantado sigue la calle, también al doblar", () => {
+    const start = snapToPolyline(offsetPoint(a, 0, 210), line)!;
+    const ahead = lookaheadPoint(line, start.along, 40);
+    // 12 m antes de la esquina + 28 m ya hacia el este.
+    expect(distanceMeters(ahead, b)).toBeGreaterThan(20);
+    expect(bearingDegrees(offsetPoint(a, 0, 210), ahead)).toBeGreaterThan(30);
+    expect(bearingDegrees(offsetPoint(a, 0, 210), ahead)).toBeLessThan(80);
+  });
+
+  it("el punto adelantado no pasa del final", () => {
+    const ahead = lookaheadPoint(line, 430, 100);
+    expect(distanceMeters(ahead, c)).toBeLessThan(1);
+  });
+
+  it("parte la ruta en lo ya recorrido y lo que falta", () => {
+    const here = offsetPoint(b, 90, 100);
+    const snap = snapToPolyline(here, line)!;
+    const { done, todo } = splitRouteAt(line, snap);
+    expect(done[0]).toEqual(line[0]);
+    expect(todo.at(-1)).toEqual(line[2]);
+    // El punto de corte une las dos mitades.
+    expect(done.at(-1)).toEqual(todo[0]);
+    expect(done).toHaveLength(3);
+    expect(todo).toHaveLength(2);
+  });
+
+  it("sin ruta no hay nada que medir", () => {
+    expect(snapToPolyline(a, [])).toBeNull();
+    expect(distanceToPolylineMeters(a, [line[0]!])).toBeNull();
   });
 });

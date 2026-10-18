@@ -14,13 +14,22 @@ import {
   formatMinutes,
   isArrived,
   isShortWalk,
+  lookaheadPoint,
   moveToward,
   offsetPoint,
+  polylineLength,
+  snapToPolyline,
+  splitRouteAt,
   suggestedMode,
+  type LngLat,
   type TravelMode,
 } from "@/lib/live-nav";
+import { readRouteConsent, saveRouteConsent } from "@/lib/routing/client";
+import { useStreetRoutes } from "@/components/trip/use-street-routes";
 import { track } from "@/lib/analytics";
 import { WalkCamera, type LivePosition } from "@/components/trip/walk-camera";
+
+const routeTotalOf = (line: LngLat[]) => polylineLength(line);
 
 export type LiveStop = {
   slug: string;
@@ -73,17 +82,87 @@ export function LiveTrip({
   } | null>(null);
   const [mapFailed, setMapFailed] = useState(false);
   const mapLoaded = useRef(false);
+  // Permiso para enviar la ubicación al servicio de rutas (se pide una vez).
+  const [consent, setConsent] = useState(false);
+  const [declined, setDeclined] = useState(false);
+  useEffect(() => {
+    queueMicrotask(() => setConsent(readRouteConsent()));
+  }, []);
 
   const next = index < stops.length ? stops[index]! : null;
   const distance = position && next ? distanceMeters(position, next) : null;
   const arrived =
     distance !== null && isArrived(distance, position?.accuracy ?? 0);
+  // Ruta por calles hasta la próxima parada (a pie y en auto); se recalcula si te desvías.
+  const modeRef = useRef<TravelMode>("walk");
+  const { routes, status: routeStatus } = useStreetRoutes({
+    enabled: consent,
+    position,
+    target: next,
+    modeRef,
+  });
+  const realWalkMinutes = routes.walk
+    ? Math.max(1, Math.round(routes.walk.durationSeconds / 60))
+    : undefined;
   const mode: TravelMode =
     chosen?.index === index
       ? chosen.mode
       : distance !== null
-        ? suggestedMode(distance)
+        ? suggestedMode(distance, realWalkMinutes)
         : "walk";
+  useEffect(() => {
+    modeRef.current = mode;
+  }, [mode]);
+  const activeRoute = routes[mode] ?? null;
+  const line = activeRoute?.coordinates ?? null;
+  const routeLineRef = useRef<LngLat[] | null>(null);
+  useEffect(() => {
+    routeLineRef.current = line;
+  }, [line]);
+  // Una ruta larga (p. ej. en auto) se encuadra completa, una vez por parada y modo.
+  const fittedFor = useRef<string | null>(null);
+  useEffect(() => {
+    if (!line || !next || routeTotalOf(line) < 1500) return;
+    const key = `${next.slug}:${mode}`;
+    if (fittedFor.current === key) return;
+    fittedFor.current = key;
+    const lngs = line.map((p) => p[0]);
+    const lats = line.map((p) => p[1]);
+    queueMicrotask(() => {
+      setFollow(false);
+      mapRef.current?.fitBounds(
+        [
+          [Math.min(...lngs), Math.min(...lats)],
+          [Math.max(...lngs), Math.max(...lats)],
+        ],
+        { padding: 48, duration: 800 },
+      );
+    });
+  }, [line, next, mode]);
+  const snap = position && line ? snapToPolyline(position, line) : null;
+  // La flecha apunta por la calle: un punto unos metros más adelante sobre la
+  // ruta (o la calle más cercana si te saliste de ella).
+  const aim =
+    mode === "walk" && snap
+      ? snap.distance > 25
+        ? snap.point
+        : lookaheadPoint(line!, snap.along, 20)
+      : undefined;
+  const routeTotal = useMemo(() => (line ? polylineLength(line) : 0), [line]);
+  const remainingRatio =
+    snap && routeTotal > 0
+      ? Math.max(0, routeTotal - snap.along) / routeTotal
+      : null;
+  const remaining =
+    activeRoute && remainingRatio !== null
+      ? {
+          meters: activeRoute.distanceMeters * remainingRatio,
+          minutes: Math.max(
+            1,
+            Math.round((activeRoute.durationSeconds * remainingRatio) / 60),
+          ),
+        }
+      : null;
 
   // Si hay otra parada pendiente mucho más cerca que la próxima (el recorrido
   // parte por la primera de la lista, no por la más cercana), se ofrece
@@ -120,6 +199,18 @@ export function LiveTrip({
     const id = window.setInterval(() => {
       setPosition((prev) => {
         if (!prev) return prev;
+        const street = routeLineRef.current;
+        const onStreet = street ? snapToPolyline(prev, street) : null;
+        if (street && onStreet) {
+          // Con ruta por calles, la persona simulada camina por la calle.
+          const left = polylineLength(street) - onStreet.along;
+          const step = demoStepMeters(left);
+          const moved =
+            onStreet.distance > 15
+              ? moveToward(prev, onStreet.point, step)
+              : lookaheadPoint(street, onStreet.along, step);
+          return { ...prev, ...moved };
+        }
         const step = demoStepMeters(distanceMeters(prev, target));
         const moved = moveToward(prev, target, step);
         return { ...prev, ...moved };
@@ -234,6 +325,25 @@ export function LiveTrip({
     [position, next],
   );
 
+  // La ruta por calles, partida en lo ya recorrido (gris) y lo que falta.
+  const street = useMemo(() => {
+    if (!line) return null;
+    const here = position ? snapToPolyline(position, line) : null;
+    const parts =
+      here && here.distance <= 60
+        ? splitRouteAt(line, here)
+        : { done: [] as LngLat[], todo: line };
+    const feature = (coordinates: LngLat[]) => ({
+      type: "Feature" as const,
+      properties: {},
+      geometry: { type: "LineString" as const, coordinates },
+    });
+    return {
+      done: parts.done.length > 1 ? feature(parts.done) : null,
+      todo: feature(parts.todo),
+    };
+  }, [line, position]);
+
   const closeCamera = useCallback(() => setCameraOpen(false), []);
 
   return (
@@ -296,7 +406,7 @@ export function LiveTrip({
             attributionControl={{ compact: true }}
             style={{ width: "100%", height: "100%" }}
           >
-            {stops.length > 1 ? (
+            {stops.length > 1 && !street ? (
               <Source id="live-route" type="geojson" data={route}>
                 <Layer
                   id="live-route-line"
@@ -311,12 +421,52 @@ export function LiveTrip({
                 />
               </Source>
             ) : null}
-            {toNext ? (
+            {street ? (
+              <>
+                {street.done ? (
+                  <Source
+                    id="live-street-done"
+                    type="geojson"
+                    data={street.done}
+                  >
+                    <Layer
+                      id="live-street-done-line"
+                      type="line"
+                      paint={{
+                        "line-color": "#7c8b8f",
+                        "line-width": 5,
+                        "line-opacity": 0.7,
+                      }}
+                      layout={{ "line-cap": "round", "line-join": "round" }}
+                    />
+                  </Source>
+                ) : null}
+                <Source id="live-street" type="geojson" data={street.todo}>
+                  <Layer
+                    id="live-street-casing"
+                    type="line"
+                    paint={{ "line-color": "#ffffff", "line-width": 9 }}
+                    layout={{ "line-cap": "round", "line-join": "round" }}
+                  />
+                  <Layer
+                    id="live-street-line"
+                    type="line"
+                    paint={{ "line-color": "#e98bbd", "line-width": 5.5 }}
+                    layout={{ "line-cap": "round", "line-join": "round" }}
+                  />
+                </Source>
+              </>
+            ) : toNext ? (
+              // Sin ruta por calles: guía aproximada, en línea punteada.
               <Source id="live-next" type="geojson" data={toNext}>
                 <Layer
                   id="live-next-line"
                   type="line"
-                  paint={{ "line-color": "#e98bbd", "line-width": 4 }}
+                  paint={{
+                    "line-color": "#e98bbd",
+                    "line-width": 4,
+                    "line-dasharray": [2, 2],
+                  }}
                   layout={{ "line-cap": "round" }}
                 />
               </Source>
@@ -430,7 +580,16 @@ export function LiveTrip({
                 className="grid grid-cols-2 gap-2"
               >
                 {(["walk", "car"] as const).map((m) => {
-                  const leg = estimateLeg(distance, m);
+                  const real = routes[m];
+                  const leg = real
+                    ? {
+                        meters: real.distanceMeters,
+                        minutes: Math.max(
+                          1,
+                          Math.round(real.durationSeconds / 60),
+                        ),
+                      }
+                    : estimateLeg(distance, m);
                   const selected = mode === m;
                   return (
                     <button
@@ -450,7 +609,7 @@ export function LiveTrip({
                         {t(m === "walk" ? "modeWalk" : "modeCar")}
                       </span>
                       <span className="text-muted text-xs">
-                        {t("modeEstimate", {
+                        {t(real ? "modeReal" : "modeEstimate", {
                           time: formatMinutes(leg.minutes),
                           distance: formatMeters(leg.meters, locale),
                         })}
@@ -459,6 +618,51 @@ export function LiveTrip({
                   );
                 })}
               </div>
+            ) : null}
+            {!consent && !declined && position && !arrived ? (
+              <div className="bg-sea-soft flex flex-col gap-2 rounded-xl p-3">
+                <p className="text-sm font-extrabold">
+                  {t("routeConsentTitle")}
+                </p>
+                <p className="text-sm">{t("routeConsentText")}</p>
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      saveRouteConsent();
+                      setConsent(true);
+                    }}
+                    className="bg-sea min-h-11 rounded-full px-5 text-sm font-extrabold text-white"
+                  >
+                    {t("routeConsentAccept")}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setDeclined(true)}
+                    className="border-border min-h-11 rounded-full border-2 px-4 text-sm font-bold"
+                  >
+                    {t("routeConsentDecline")}
+                  </button>
+                </div>
+              </div>
+            ) : null}
+            {consent && routeStatus === "loading" ? (
+              <p role="status" className="text-muted text-sm">
+                {t("routeLoading")}
+              </p>
+            ) : null}
+            {consent && routeStatus === "failed" ? (
+              <p role="status" className="text-muted text-sm">
+                {t("routeFailed")}
+              </p>
+            ) : null}
+            {remaining && !arrived ? (
+              <p className="text-sm font-bold">
+                {t("remaining", {
+                  distance: formatMeters(remaining.meters, locale),
+                  time: formatMinutes(remaining.minutes),
+                })}
+              </p>
             ) : null}
             <div className="flex flex-wrap gap-2">
               {arrived ? (
@@ -507,7 +711,21 @@ export function LiveTrip({
                 </>
               )}
             </div>
-            <p className="text-muted text-xs">{t("straightLineNote")}</p>
+            {activeRoute ? (
+              <p className="text-muted text-xs">
+                {t("routeCredit")}{" "}
+                <a
+                  href="https://www.openstreetmap.org/fixthemap"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline"
+                >
+                  {t("routeFix")}
+                </a>
+              </p>
+            ) : (
+              <p className="text-muted text-xs">{t("straightLineNote")}</p>
+            )}
           </>
         ) : (
           <div className="flex flex-col gap-3">
@@ -526,7 +744,13 @@ export function LiveTrip({
       </section>
 
       {cameraOpen && next ? (
-        <WalkCamera target={next} position={position} onClose={closeCamera} />
+        <WalkCamera
+          target={next}
+          position={position}
+          aim={aim}
+          remaining={remaining?.meters ?? null}
+          onClose={closeCamera}
+        />
       ) : null}
     </div>
   );

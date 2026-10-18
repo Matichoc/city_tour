@@ -77,13 +77,18 @@ export function estimateLeg(
   };
 }
 
-/** Modo que se sugiere según la distancia en línea recta a la parada. */
-export function suggestedMode(straightMeters: number): TravelMode {
+/**
+ * Modo que se sugiere según la distancia en línea recta a la parada. Si ya se
+ * conoce la ruta real a pie (`realWalkMinutes`), decide con esos minutos.
+ */
+export function suggestedMode(
+  straightMeters: number,
+  realWalkMinutes?: number,
+): TravelMode {
   if (straightMeters > CAR_SUGGEST_FROM_M) return "car";
   if (straightMeters <= SHORT_WALK_MAX_M) return "walk";
-  return estimateLeg(straightMeters, "walk").minutes > WALK_SUGGEST_MAX_MIN
-    ? "car"
-    : "walk";
+  const walk = realWalkMinutes ?? estimateLeg(straightMeters, "walk").minutes;
+  return walk > WALK_SUGGEST_MAX_MIN ? "car" : "walk";
 }
 
 /** «45 min», «1 h», «1 h 30 min». */
@@ -172,4 +177,122 @@ export function moveToward(
 /** Paso por segundo del modo demostración: un tramo corto dura unos 20 s. */
 export function demoStepMeters(distance: number): number {
   return Math.max(25, distance / 20);
+}
+
+/** Punto de una ruta: [longitud, latitud], como en GeoJSON. */
+export type LngLat = [number, number];
+
+const EARTH_R = 6371000;
+
+/** Proyección plana local (metros) alrededor de `origin`: sirve en distancias cortas. */
+function toXY(origin: GeoPoint, lng: number, lat: number): [number, number] {
+  const toRad = Math.PI / 180;
+  return [
+    (lng - origin.longitude) *
+      toRad *
+      Math.cos(origin.latitude * toRad) *
+      EARTH_R,
+    (lat - origin.latitude) * toRad * EARTH_R,
+  ];
+}
+
+/** Largo total de una ruta, en metros. */
+export function polylineLength(line: LngLat[]): number {
+  let total = 0;
+  for (let i = 1; i < line.length; i++) {
+    total += distanceMeters(
+      { latitude: line[i - 1]![1], longitude: line[i - 1]![0] },
+      { latitude: line[i]![1], longitude: line[i]![0] },
+    );
+  }
+  return total;
+}
+
+export type RouteSnap = {
+  /** Distancia (m) del punto a la ruta. */
+  distance: number;
+  /** Tramo de la ruta donde cae (0 = entre los dos primeros puntos). */
+  segment: number;
+  /** Metros avanzados desde el inicio de la ruta hasta ese punto. */
+  along: number;
+  /** El punto de la ruta más cercano. */
+  point: GeoPoint;
+};
+
+/** Punto de la ruta más cercano a `p` (medido en perpendicular a cada tramo). */
+export function snapToPolyline(p: GeoPoint, line: LngLat[]): RouteSnap | null {
+  if (line.length < 2) return null;
+  let best: RouteSnap | null = null;
+  let before = 0;
+  for (let i = 1; i < line.length; i++) {
+    const [ax, ay] = toXY(p, line[i - 1]![0], line[i - 1]![1]);
+    const [bx, by] = toXY(p, line[i]![0], line[i]![1]);
+    const dx = bx - ax;
+    const dy = by - ay;
+    const len2 = dx * dx + dy * dy;
+    const len = Math.sqrt(len2);
+    // El punto `p` es el origen (0, 0) de la proyección.
+    const t =
+      len2 === 0 ? 0 : Math.max(0, Math.min(1, -(ax * dx + ay * dy) / len2));
+    const cx = ax + t * dx;
+    const cy = ay + t * dy;
+    const distance = Math.hypot(cx, cy);
+    if (!best || distance < best.distance) {
+      best = {
+        distance,
+        segment: i - 1,
+        along: before + t * len,
+        point: {
+          latitude: line[i - 1]![1] + t * (line[i]![1] - line[i - 1]![1]),
+          longitude: line[i - 1]![0] + t * (line[i]![0] - line[i - 1]![0]),
+        },
+      };
+    }
+    before += len;
+  }
+  return best;
+}
+
+/** Distancia (m) de `p` a la ruta, o null si no hay ruta. */
+export function distanceToPolylineMeters(
+  p: GeoPoint,
+  line: LngLat[],
+): number | null {
+  return snapToPolyline(p, line)?.distance ?? null;
+}
+
+/** Punto de la ruta a `meters` más adelante de lo avanzado (`along`); no pasa del final. */
+export function lookaheadPoint(
+  line: LngLat[],
+  along: number,
+  meters: number,
+): GeoPoint {
+  const last = line[line.length - 1]!;
+  let remaining = Math.max(0, along + meters);
+  for (let i = 1; i < line.length; i++) {
+    const a = { latitude: line[i - 1]![1], longitude: line[i - 1]![0] };
+    const b = { latitude: line[i]![1], longitude: line[i]![0] };
+    const len = distanceMeters(a, b);
+    if (remaining <= len) {
+      const t = len === 0 ? 0 : remaining / len;
+      return {
+        latitude: a.latitude + t * (b.latitude - a.latitude),
+        longitude: a.longitude + t * (b.longitude - a.longitude),
+      };
+    }
+    remaining -= len;
+  }
+  return { latitude: last[1], longitude: last[0] };
+}
+
+/** Parte la ruta en el tramo ya recorrido y el que falta, unidos en el punto más cercano. */
+export function splitRouteAt(
+  line: LngLat[],
+  snap: RouteSnap,
+): { done: LngLat[]; todo: LngLat[] } {
+  const cut: LngLat = [snap.point.longitude, snap.point.latitude];
+  return {
+    done: [...line.slice(0, snap.segment + 1), cut],
+    todo: [cut, ...line.slice(snap.segment + 1)],
+  };
 }

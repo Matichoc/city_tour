@@ -115,6 +115,31 @@ Requisitos comunes:
   desvía), con un aviso claro en ese momento, y se actualiza el texto de
   privacidad (`startLiveNote` y la política). Sin registrar nada.
 
+**Resultado de la prueba de motores (18-oct-2026, desde el servidor, trayectos
+reales de Papudo):**
+
+| Trayecto (línea recta) | OSRM FOSSGIS auto | OSRM FOSSGIS a pie | Valhalla FOSSGIS auto | Valhalla FOSSGIS a pie |
+| --- | --- | --- | --- | --- |
+| Playa Chica → Playa de Papudo (192 m) | 841 m · 1,6 min | 202 m · 2,7 min | 1104 m · 2,7 min | 204 m · 2,3 min |
+| Playa de Papudo → Salinas de Pullally (11,2 km) | 25,6 km · 33 min | 13,8 km · 186 min | 25,8 km · 49 min | 13,4 km · 194 min |
+| Plaza → Playa Chica (325 m) | 793 m · 1,8 min | 796 m · 10,6 min | 1019 m · 2,2 min | 772 m · 9,7 min |
+
+- Todos devuelven **geometría por calles** (de 12 a ~900 puntos) en menos de 1 s.
+- Los dos motores coinciden en distancias; Valhalla estima más tiempo en auto
+  (más realista en caminos rurales). El OSRM de demostración
+  (`router.project-osrm.org`) solo sirve para auto y no es para producción.
+- **Política del OSRM de FOSSGIS** (leída en su página): atribución con enlace
+  para corregir el mapa, User-Agent válido, **máximo 1 consulta por segundo**,
+  sin uso intensivo; las consultas quedan en su registro. Valhalla de FOSSGIS: uso
+  justo, sin garantía (términos por confirmar).
+- **Elegido para la demo: OSRM de FOSSGIS** (política clara, a pie y auto). La
+  interfaz `RouteProvider` permite cambiar a Valhalla o a un servicio propio o
+  pago sin tocar la pantalla.
+- Hallazgo para los tiempos estimados sin conexión: el camino real en auto fue
+  **2,3 veces** la línea recta en el trayecto largo (rodea la costa) y varias
+  veces en el centro (calles de un solo sentido). El factor de rodeo del auto
+  (1,4) es optimista; se recalibra con más trayectos.
+
 ### 4.3 La flecha y la brújula siguen la calle
 
 Con la línea por calles, el rumbo se calcula hacia un **punto adelantado sobre
@@ -164,8 +189,8 @@ sin salir de casa.
 | Fase | Qué entrega | Pruebas | Esfuerzo* |
 | --- | --- | --- | --- |
 | **0. Arreglo inmediato** ✅ (#31) | Selector auto/a pie con tiempos **estimados por modo**, modo sugerido según distancia, Google Maps con el modo elegido | Unitarias y e2e | hecho |
-| **1. Ruta por calles en vivo** | `RouteProvider`, **spike de 2 candidatos** (calidad en Papudo, cupo, costo), ruta de Next con caché, tope y aviso de privacidad, camino dibujado por calles para auto y a pie, tiempos y distancias reales, **recálculo al desviarte**, atribución | Unitarias con `fetch` simulado, caché, tope y fallback; e2e | 3–4 días |
-| **2. Flecha por la calle** | Ajuste a la línea, punto adelantado, fuera de ruta, cámara a pie con el nuevo rumbo, demo caminando por la calle | Unitarias de geometría; e2e en demo; **prueba en terreno** | 2 días |
+| **1. Ruta por calles en vivo** ✅ (#31) | `RouteProvider`, **spike de 2 candidatos** (calidad en Papudo, cupo, costo), ruta de Next con caché, tope y aviso de privacidad, camino dibujado por calles para auto y a pie, tiempos y distancias reales, **recálculo al desviarte**, atribución | Unitarias con `fetch` simulado, caché, tope y fallback; e2e | 3–4 días |
+| **2. Flecha por la calle** ✅ (#31; falta la prueba en terreno) | Ajuste a la línea, punto adelantado, fuera de ruta, cámara a pie con el nuevo rumbo, demo caminando por la calle | Unitarias de geometría; e2e en demo; **prueba en terreno** | 2 días |
 | **3. Itinerario por modo** | Estimador único de tiempos, orden óptimo por tiempo, modo por tramo (también usando la ruta real cuando exista) | Unitarias del motor | 2–3 días |
 | **4. Manual y cierre** | Manual de administración al día, checklist de terreno, ajuste de umbrales | — | 1 día |
 
