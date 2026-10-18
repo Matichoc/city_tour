@@ -124,7 +124,7 @@
     "resumen": "La portada deja de repetir lo mismo que Explorar: bienvenida nueva («Papudo te espera»), buscador que explica qué se puede buscar con ejemplos que devuelven resultados, fila compacta de accesos por categoría y «Destacados del mes» (5: fiestas de hoy a 30 días más y, para completar, lugares publicados). Se quita la lista «Para empezar» y solo se muestra la ruta destacada. Explorar queda para navegar: sin buscador ni el filtro repetido de categorías, con los grupos desplegables cerrados y el filtro por pueblo. Sin datos nuevos; sin migraciones."
   },
   "actual": {
-    "pr": 0,
+    "pr": 35,
     "titulo": "Cierra las vistas previas antiguas y las nuevas",
     "resumen": "Solo se construyen develop, demo y main (vercel.json omite el resto), y una vista previa que llegue sin SHARE_LINK_SECRET responde «Este enlace venció» en vez de abrirse. Las versiones anteriores a este cierre conservan su dirección en Vercel: se documenta cómo borrarlas y cómo hacer que se borren solas. Sin cambios visibles ni migraciones.",
     "migraciones": "—"
