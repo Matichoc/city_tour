@@ -14,13 +14,13 @@ indicadas en cada versión.
 `docs/bitacora-notas.json` (clave `actual`, y el número de PR cuando exista),
 correr `pnpm bitacora` y subir el cambio en el mismo PR.
 
-## En preparación: v0.29 — Inicio y Explorar sin repeticiones
+## En preparación: v0.30 — Inicio y Explorar sin repeticiones
 
 La portada deja de repetir lo mismo que Explorar: bienvenida nueva («Papudo te espera»), buscador que explica qué se puede buscar con ejemplos que devuelven resultados, fila compacta de accesos por categoría y «Destacados del mes» (5: fiestas de hoy a 30 días más y, para completar, lugares publicados). Se quita la lista «Para empezar» y solo se muestra la ruta destacada. Explorar queda para navegar: sin buscador ni el filtro repetido de categorías, con los grupos desplegables cerrados y el filtro por pueblo. Sin datos nuevos; sin migraciones.
 
 - **Migraciones por correr en Supabase:** —
 - **Estado:** en revisión, [PR #34](https://github.com/Matichoc/city_tour/pull/34) (aún no está en `develop`).
-- **Última actualización de esta bitácora:** 2026-10-18 00:23
+- **Última actualización de esta bitácora:** 2026-10-18 00:26
 
 ## Avance por día
 
@@ -29,7 +29,7 @@ trabajadas: hay pausas y trabajo sin registrar).
 
 | Día | Ventana de actividad | Registros | Versiones entregadas |
 | --- | --- | ---: | --- |
-| Domingo, 18 de octubre de 2026 | 00:20 – 00:22 | 2 | — |
+| Domingo, 18 de octubre de 2026 | 00:09 – 00:23 | 5 | v0.29 |
 | Sábado, 17 de octubre de 2026 | 00:01 – 23:30 | 34 | v0.16, v0.17, v0.18, v0.19, v0.20, v0.21, v0.22, v0.23, v0.24, v0.25, v0.26, v0.27, v0.28 |
 | Viernes, 16 de octubre de 2026 | 00:04 – 23:51 | 15 | v0.9, v0.10, v0.11, v0.12, v0.13, v0.14, v0.15 |
 | Jueves, 15 de octubre de 2026 | 00:05 – 23:52 | 10 | v0.7, v0.8 |
@@ -38,6 +38,16 @@ trabajadas: hay pausas y trabajo sin registrar).
 | Lunes, 12 de octubre de 2026 | 15:43 – 17:53 | 10 | v0.1, v0.2, v0.3, v0.4 |
 
 ## Versiones
+
+### v0.29 — Retira el modo de transición de los comentarios
+Domingo, 18 de octubre de 2026, 00:26 · [PR #33](https://github.com/Matichoc/city_tour/pull/33)
+
+Sin REVIEW_GATE_SECRET los comentarios ya no recurren a las funciones antiguas (eliminadas en producción por la migración 0029): no se envía nada y se avisa en los registros. Limpieza de código muerto, sin cambios visibles ni migraciones.
+
+Registros:
+
+- 10-18 00:09 — Retira el modo de transición de los comentarios (`4bf7777`)
+- 10-18 00:09 — Bitácora: nota de la entrega #33 (`fdd579b`)
 
 ### v0.28 — Seguridad: comentarios y archivos con prueba firmada
 Sábado, 17 de octubre de 2026, 23:45 · [PR #32](https://github.com/Matichoc/city_tour/pull/32)

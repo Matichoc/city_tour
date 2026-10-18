@@ -10,7 +10,7 @@ import { createHash, createHmac, randomBytes } from "node:crypto";
  */
 export type ProofAct = "review" | "media" | "finish";
 
-/** Secreto de firma, o null si no está configurado (modo de transición). */
+/** Secreto de firma, o null si no está configurado (entonces no se envía nada). */
 export function gateSecret(
   env: Record<string, string | undefined> = process.env,
 ): string | null {

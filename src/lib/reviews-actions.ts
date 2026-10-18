@@ -39,20 +39,14 @@ const text = (v: FormDataEntryValue | null) =>
 /**
  * Huella anónima del remitente para limitar envíos: hash con sal de la IP.
  * Nunca se guarda la IP, y el navegador (User-Agent) no cuenta: cambiarlo no
- * cambia la huella. Con la prueba firmada (REVIEW_GATE_SECRET) la sal es
- * obligatoria; sin ella, devuelve null y no se envía nada.
+ * cambia la huella. La sal (REVIEWS_SALT) es obligatoria; sin ella devuelve
+ * null y no se envía nada.
  */
 async function senderHash(): Promise<string | null> {
   const h = await headers();
   const ip = (h.get("x-forwarded-for") ?? "").split(",")[0]!.trim();
-  let salt: string;
-  if (gateSecret()) {
-    salt = process.env.REVIEWS_SALT ?? "";
-    if (!salt) return null;
-  } else {
-    // Modo de transición (sin REVIEW_GATE_SECRET): como antes.
-    salt = process.env.REVIEWS_SALT ?? process.env.SHARE_LINK_SECRET ?? "";
-  }
+  const salt = process.env.REVIEWS_SALT ?? "";
+  if (!salt) return null;
   return createHash("sha256").update(`${salt}|${ip}`).digest("hex");
 }
 
@@ -86,7 +80,7 @@ async function passesCaptcha(token: string): Promise<boolean> {
   }
 }
 
-/** Prueba firmada para la acción indicada, o null en el modo de transición. */
+/** Prueba firmada para la acción indicada, o null si falta REVIEW_GATE_SECRET (no se envía nada). */
 function proofFor(
   act: ProofAct,
   sender: string,
@@ -139,27 +133,25 @@ export async function submitReview(
     reviewBind({ entity, slug, author: authorSent, rating, body }),
   );
   if (!proof) {
-    console.warn(
-      "[comentarios] REVIEW_GATE_SECRET no está definido: se usan las funciones antiguas",
+    console.error(
+      "[comentarios] falta REVIEW_GATE_SECRET: no se envía el comentario",
     );
+    return { status: "error" };
   }
-  const res = await fetch(
-    `${cfg.url}/rest/v1/rpc/${proof ? "submit_review_v2" : "submit_review"}`,
-    {
-      method: "POST",
-      headers: { apikey: cfg.key, "content-type": "application/json" },
-      body: JSON.stringify({
-        p_entity: entity,
-        p_slug: slug,
-        p_author: authorSent,
-        p_rating: rating,
-        p_body: body,
-        p_sender_hash: sender,
-        ...proof,
-      }),
-      cache: "no-store",
-    },
-  ).catch(() => null);
+  const res = await fetch(`${cfg.url}/rest/v1/rpc/submit_review_v2`, {
+    method: "POST",
+    headers: { apikey: cfg.key, "content-type": "application/json" },
+    body: JSON.stringify({
+      p_entity: entity,
+      p_slug: slug,
+      p_author: authorSent,
+      p_rating: rating,
+      p_body: body,
+      p_sender_hash: sender,
+      ...proof,
+    }),
+    cache: "no-store",
+  }).catch(() => null);
 
   if (!res?.ok) {
     const detail = res ? await res.text() : "";
@@ -174,16 +166,13 @@ export async function submitReview(
   // Archivos: se registran (mismo remitente) y se preparan enlaces de subida.
   try {
     const attachProof = proofFor("media", sender, reviewId);
-    const paths = await rpc<string[]>(
-      cfg,
-      attachProof ? "attach_review_media_v2" : "attach_review_media",
-      {
-        p_review: reviewId,
-        p_sender_hash: sender,
-        p_files: media,
-        ...attachProof,
-      },
-    );
+    if (!attachProof) throw new Error("falta REVIEW_GATE_SECRET");
+    const paths = await rpc<string[]>(cfg, "attach_review_media_v2", {
+      p_review: reviewId,
+      p_sender_hash: sender,
+      p_files: media,
+      ...attachProof,
+    });
     const uploads = await Promise.all(
       paths.map((path) => signedUploadUrl(cfg, path)),
     );
@@ -220,11 +209,12 @@ export async function finishReviewMedia(reviewId: string): Promise<number> {
     const sender = await senderHash();
     if (!sender) return 0;
     const proof = proofFor("finish", sender, reviewId);
-    return await rpc<number>(
-      cfg,
-      proof ? "finish_review_media_v2" : "finish_review_media",
-      { p_review: reviewId, p_sender_hash: sender, ...proof },
-    );
+    if (!proof) throw new Error("falta REVIEW_GATE_SECRET");
+    return await rpc<number>(cfg, "finish_review_media_v2", {
+      p_review: reviewId,
+      p_sender_hash: sender,
+      ...proof,
+    });
   } catch (error) {
     console.error("[comentarios] finish_review_media falló", error);
     return 0;
