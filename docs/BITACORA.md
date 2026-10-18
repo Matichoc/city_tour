@@ -14,13 +14,13 @@ indicadas en cada versión.
 `docs/bitacora-notas.json` (clave `actual`, y el número de PR cuando exista),
 correr `pnpm bitacora` y subir el cambio en el mismo PR.
 
-## En preparación: v0.28 — Seguridad: comentarios y archivos con prueba firmada
+## En preparación: v0.29 — Retira el modo de transición de los comentarios
 
-Cierra ABUSE-01/02 y DB-01. Los comentarios y las subidas de fotos solo entran con una prueba firmada por nuestro servidor (HMAC, uso único, atada al contenido, vence en 2 minutos), de modo que nadie puede saltarse los controles llamando directo a la base. Topes por persona, por ficha y globales (comentarios, archivos y espacio pendiente) que no dependen del visitante; Cloudflare Turnstile opcional; las reservas de archivos abandonadas se descartan solas y un botón del panel libera su espacio. Los comentarios siguen publicándose al enviarse y el panel avisa de los nuevos (contador, etiqueta «Nuevo» y filtro «Por revisar»). Se quita la inserción abierta de analytics_events.
+Sin REVIEW_GATE_SECRET los comentarios ya no recurren a las funciones antiguas (eliminadas en producción por la migración 0029): no se envía nada y se avisa en los registros. Limpieza de código muerto, sin cambios visibles ni migraciones.
 
-- **Migraciones por correr en Supabase:** 0027–0029
-- **Estado:** en revisión, [PR #32](https://github.com/Matichoc/city_tour/pull/32) (aún no está en `develop`).
-- **Última actualización de esta bitácora:** 2026-10-17 23:30
+- **Migraciones por correr en Supabase:** —
+- **Estado:** en revisión, [PR #33](https://github.com/Matichoc/city_tour/pull/33) (aún no está en `develop`).
+- **Última actualización de esta bitácora:** 2026-10-18 00:09
 
 ## Avance por día
 
@@ -29,7 +29,8 @@ trabajadas: hay pausas y trabajo sin registrar).
 
 | Día | Ventana de actividad | Registros | Versiones entregadas |
 | --- | --- | ---: | --- |
-| Sábado, 17 de octubre de 2026 | 00:01 – 23:26 | 33 | v0.16, v0.17, v0.18, v0.19, v0.20, v0.21, v0.22, v0.23, v0.24, v0.25, v0.26, v0.27 |
+| Domingo, 18 de octubre de 2026 | 00:09 – 00:09 | 1 | — |
+| Sábado, 17 de octubre de 2026 | 00:01 – 23:30 | 34 | v0.16, v0.17, v0.18, v0.19, v0.20, v0.21, v0.22, v0.23, v0.24, v0.25, v0.26, v0.27, v0.28 |
 | Viernes, 16 de octubre de 2026 | 00:04 – 23:51 | 15 | v0.9, v0.10, v0.11, v0.12, v0.13, v0.14, v0.15 |
 | Jueves, 15 de octubre de 2026 | 00:05 – 23:52 | 10 | v0.7, v0.8 |
 | Miércoles, 14 de octubre de 2026 | 23:50 – 23:50 | 1 | — |
@@ -37,6 +38,17 @@ trabajadas: hay pausas y trabajo sin registrar).
 | Lunes, 12 de octubre de 2026 | 15:43 – 17:53 | 10 | v0.1, v0.2, v0.3, v0.4 |
 
 ## Versiones
+
+### v0.28 — Seguridad: comentarios y archivos con prueba firmada
+Sábado, 17 de octubre de 2026, 23:45 · [PR #32](https://github.com/Matichoc/city_tour/pull/32)
+
+Cierra ABUSE-01/02 y DB-01. Los comentarios y las subidas de fotos solo entran con una prueba firmada por nuestro servidor (HMAC, uso único, atada al contenido, vence en 2 minutos), de modo que nadie puede saltarse los controles llamando directo a la base. Topes por persona, por ficha y globales (comentarios, archivos y espacio pendiente) que no dependen del visitante; Cloudflare Turnstile opcional; las reservas de archivos abandonadas se descartan solas y un botón del panel libera su espacio. Los comentarios siguen publicándose al enviarse y el panel avisa de los nuevos (contador, etiqueta «Nuevo» y filtro «Por revisar»). Se quita la inserción abierta de analytics_events. (Migraciones 0027–0029.)
+
+Registros:
+
+- 10-17 23:26 — Seguridad (ABUSE-01/02, DB-01): comentarios y archivos con prueba firmada (`0d9c55a`)
+- 10-17 23:30 — Merge remote-tracking branch 'origin/develop' into fix/seguridad-abuse-comentarios (`d958fc0`)
+- 10-17 23:30 — Bitácora: incorpora la entrega de #31 tras fusionarlo (`db17e9c`)
 
 ### v0.27 — Recorrido en vivo: a pie o en auto, ruta por calles, plan y manual
 Sábado, 17 de octubre de 2026, 23:30 · [PR #31](https://github.com/Matichoc/city_tour/pull/31)
