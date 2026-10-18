@@ -11,8 +11,11 @@ preguntas que el abogado debe responder.
      Ley 19.628 mientras tanto.
    - Qué datos recogemos: correo y nombre de quienes crean cuenta (Google o
      correo), datos de contacto de dueños de comercio, reseñas y analítica
-     anónima sin cookies. El GPS y la cámara se usan solo en el teléfono y no
-     se envían a ningún servidor.
+     anónima sin cookies. El GPS y la cámara se usan en el teléfono. Solo si
+     la persona acepta «Calcular ruta por calles», su ubicación y el destino se
+     envían a nuestro servidor y, desde ahí, al servicio de rutas abierto
+     (OpenStreetMap / FOSSGIS) para trazar el camino; no se guardan ni se
+     registran (FOSSGIS puede registrar las consultas en su propio servidor).
    - Base legal de cada tratamiento (consentimiento, contrato), plazo de
      conservación y cómo se ejercen los derechos (acceso, rectificación,
      eliminación).

@@ -179,7 +179,7 @@
     "sharedLoad": "Load the shared trip",
     "sharedKeep": "Keep mine",
     "startLive": "Start trip",
-    "startLiveNote": "Uses your location to guide you stop by stop. Your location never leaves your phone.",
+    "startLiveNote": "Uses your location to guide you stop by stop. It stays on your phone; only if you accept the street route is it sent to calculate it, and it is not stored.",
     "startDemo": "Not in Papudo? Try it with a simulated location"
   },
   "map": {
@@ -323,7 +323,7 @@
     "skip": "Skip stop",
     "openMaps": "Open in Google Maps",
     "cameraOpen": "Guide me with the camera",
-    "straightLineNote": "Straight-line distance: the real path may be longer. To follow streets, open Google Maps.",
+    "straightLineNote": "Estimated times and distances: the real street route may vary. To follow streets, open Google Maps.",
     "done": "Trip completed!",
     "backToTrip": "Back to my trip",
     "cameraKicker": "Walking guide",
@@ -355,7 +355,22 @@
     "cameraFar": "See the direction with the camera",
     "nearestHint": "You're closer to {name} ({distance}). Want to start there?",
     "nearestGo": "Go to {name}",
-    "cameraOffHint": "If you opened the link from WhatsApp or Instagram, open it in Chrome or Safari and allow camera access."
+    "cameraOffHint": "If you opened the link from WhatsApp or Instagram, open it in Chrome or Safari and allow camera access.",
+    "distanceStraight": "{distance} away in a straight line",
+    "modeLabel": "How are you going?",
+    "modeWalk": "On foot",
+    "modeCar": "By car",
+    "modeEstimate": "≈ {time} · {distance}",
+    "routeConsentTitle": "Route by streets",
+    "routeConsentText": "To draw the way along the streets we send your location and the destination to an open map service (OpenStreetMap). We don't store or log it.",
+    "routeConsentAccept": "Calculate route by streets",
+    "routeConsentDecline": "Not now",
+    "routeLoading": "Drawing the way along the streets…",
+    "routeFailed": "We couldn't draw the street route; showing an approximate guide.",
+    "routeCredit": "Routes: © OpenStreetMap contributors and FOSSGIS.",
+    "routeFix": "Fix the map",
+    "remaining": "{distance} left · {time}",
+    "modeReal": "{time} · {distance}"
   },
   "saved": {
     "save": "Save",

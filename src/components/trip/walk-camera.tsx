@@ -39,10 +39,16 @@ const CARDINALS = ["n", "ne", "e", "se", "s", "sw", "w", "nw"] as const;
 export function WalkCamera({
   target,
   position,
+  aim,
+  remaining,
   onClose,
 }: {
   target: { name: string; latitude: number; longitude: number };
   position: LivePosition | null;
+  /** Punto de la calle hacia donde apuntar (con ruta por calles); sin él, el destino. */
+  aim?: { latitude: number; longitude: number };
+  /** Metros que faltan por la calle; sin ellos, la distancia en línea recta. */
+  remaining?: number | null;
   onClose: () => void;
 }) {
   const t = useTranslations("live");
@@ -125,7 +131,7 @@ export function WalkCamera({
   }
 
   const distance = position ? distanceMeters(position, target) : null;
-  const bearing = position ? bearingDegrees(position, target) : null;
+  const bearing = position ? bearingDegrees(position, aim ?? target) : null;
   const heading = compass ?? position?.course ?? null;
   const rotation =
     bearing !== null && heading !== null
@@ -200,7 +206,7 @@ export function WalkCamera({
         )}
         {distance !== null && !arrived ? (
           <p className="font-display text-5xl font-extrabold drop-shadow-lg">
-            {formatMeters(distance, locale)}
+            {formatMeters(remaining ?? distance, locale)}
           </p>
         ) : null}
         {needsCompassPermission ? (

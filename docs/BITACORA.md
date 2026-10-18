@@ -14,13 +14,12 @@ indicadas en cada versión.
 `docs/bitacora-notas.json` (clave `actual`, y el número de PR cuando exista),
 correr `pnpm bitacora` y subir el cambio en el mismo PR.
 
-## En preparación: v0.26 — Seguridad: el contacto de la importación va en una tabla privada
+## En preparación: v0.27 — Recorrido en vivo: a pie o en auto, ruta por calles, plan y manual
 
-Solución de PRIV-01: el nombre y el correo de quien inscribió el comercio ya no se guardan en places.import_snapshot sino en place_import_private (solo personal). La importación compara con la tabla privada y sigue leyendo filas antiguas. Incluye scripts de respaldo, verificación, limpieza y restauración (a mano, con autorización), probados sobre una base desechable.
+El recorrido en vivo ofrece ir a pie o en auto, con el auto sugerido cuando la parada está lejos, y ahora traza el camino por las calles reales (OpenStreetMap / FOSSGIS): distancia y tiempo reales de cada modo, lo ya recorrido en gris, recálculo si la persona se desvía, y la flecha de la cámara a pie orienta por la calle. Pide permiso una vez antes de enviar la ubicación al servicio de rutas, que pasa por un servidor propio con tope de uso, caché y sin registrar coordenadas; sin servicio, sigue la guía aproximada. Incluye el plan por fases (docs/PLAN-RUTAS-AUTO-Y-A-PIE.md, con el resultado de la prueba de motores) y el manual de administración (docs/MANUAL-ADMINISTRACION.md). También el diseño técnico de ABUSE-01/02 (docs/DISENO-ABUSE-01-02.md): comentarios y archivos con prueba firmada (HMAC), topes que no dependen del visitante y limpieza de subidas abandonadas; con aviso de comentarios nuevos en el panel; solo diseño, sin implementar.
 
-- **Migraciones por correr en Supabase:** 0026
-- **Estado:** en revisión, [PR #29](https://github.com/Matichoc/city_tour/pull/29) (aún no está en `develop`).
-- **Última actualización de esta bitácora:** 2026-10-17 16:45
+- **Estado:** en revisión, [PR #31](https://github.com/Matichoc/city_tour/pull/31) (aún no está en `develop`).
+- **Última actualización de esta bitácora:** 2026-10-17 22:56
 
 ## Avance por día
 
@@ -29,7 +28,7 @@ trabajadas: hay pausas y trabajo sin registrar).
 
 | Día | Ventana de actividad | Registros | Versiones entregadas |
 | --- | --- | ---: | --- |
-| Sábado, 17 de octubre de 2026 | 00:01 – 16:41 | 25 | v0.16, v0.17, v0.18, v0.19, v0.20, v0.21, v0.22, v0.23, v0.24, v0.25 |
+| Sábado, 17 de octubre de 2026 | 00:01 – 22:30 | 31 | v0.16, v0.17, v0.18, v0.19, v0.20, v0.21, v0.22, v0.23, v0.24, v0.25, v0.26 |
 | Viernes, 16 de octubre de 2026 | 00:04 – 23:51 | 15 | v0.9, v0.10, v0.11, v0.12, v0.13, v0.14, v0.15 |
 | Jueves, 15 de octubre de 2026 | 00:05 – 23:52 | 10 | v0.7, v0.8 |
 | Miércoles, 14 de octubre de 2026 | 23:50 – 23:50 | 1 | — |
@@ -37,6 +36,17 @@ trabajadas: hay pausas y trabajo sin registrar).
 | Lunes, 12 de octubre de 2026 | 15:43 – 17:53 | 10 | v0.1, v0.2, v0.3, v0.4 |
 
 ## Versiones
+
+### v0.26 — PR #29
+Sábado, 17 de octubre de 2026, 16:48 · [PR #29](https://github.com/Matichoc/city_tour/pull/29)
+
+Registros:
+
+- 10-17 16:18 — Seguridad (PRIV-01): el contacto de la importación va en una tabla privada (`d6389f4`)
+- 10-17 16:36 — Fusiona #28 y develop; ordena las notas de la bitácora (`75757b9`)
+- 10-17 16:41 — Merge remote-tracking branch 'origin/develop' into fix/seguridad-priv01-definitivo (`07af5af`)
+- 10-17 16:41 — Ordena las notas de la bitácora tras fusionar #28 (`267f928`)
+- 10-17 16:45 — Fusiona develop (#26) y ordena las notas de la bitácora (`866b114`)
 
 ### v0.25 — Marca: Papudo en tu Mano, sub-app de Turismo en tu Mano
 Sábado, 17 de octubre de 2026, 16:44 · [PR #26](https://github.com/Matichoc/city_tour/pull/26)

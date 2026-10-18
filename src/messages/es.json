@@ -179,7 +179,7 @@
     "sharedLoad": "Cargar el recorrido compartido",
     "sharedKeep": "Mantener el mío",
     "startLive": "Iniciar recorrido",
-    "startLiveNote": "Usa tu ubicación para guiarte parada por parada. Tu ubicación no sale de tu teléfono.",
+    "startLiveNote": "Usa tu ubicación para guiarte parada por parada. Se queda en tu teléfono; solo si aceptas la ruta por calles, se envía para calcularla y no se guarda.",
     "startDemo": "¿No estás en Papudo? Probar con ubicación simulada"
   },
   "map": {
@@ -323,7 +323,7 @@
     "skip": "Saltar parada",
     "openMaps": "Abrir en Google Maps",
     "cameraOpen": "Guíame con la cámara",
-    "straightLineNote": "Distancia en línea recta: el camino real puede ser más largo. Para ir por calles, abre Google Maps.",
+    "straightLineNote": "Tiempos y distancias estimados: el camino real por calles puede variar. Para ir por calles, abre Google Maps.",
     "done": "¡Recorrido completado!",
     "backToTrip": "Volver a mi recorrido",
     "cameraKicker": "Guía a pie",
@@ -355,7 +355,22 @@
     "cameraFar": "Ver la dirección con la cámara",
     "nearestHint": "Estás más cerca de {name} ({distance}). ¿Quieres empezar por ahí?",
     "nearestGo": "Ir a {name}",
-    "cameraOffHint": "Si abriste el enlace desde WhatsApp o Instagram, ábrelo en Chrome o Safari y acepta el permiso de cámara."
+    "cameraOffHint": "Si abriste el enlace desde WhatsApp o Instagram, ábrelo en Chrome o Safari y acepta el permiso de cámara.",
+    "distanceStraight": "A {distance} en línea recta",
+    "modeLabel": "¿Cómo vas a ir?",
+    "modeWalk": "A pie",
+    "modeCar": "En auto",
+    "modeEstimate": "≈ {time} · {distance}",
+    "routeConsentTitle": "Ruta por las calles",
+    "routeConsentText": "Para trazar el camino por las calles enviamos tu ubicación y el destino a un servicio de mapas abierto (OpenStreetMap). No la guardamos ni la registramos.",
+    "routeConsentAccept": "Calcular ruta por calles",
+    "routeConsentDecline": "Ahora no",
+    "routeLoading": "Trazando el camino por las calles…",
+    "routeFailed": "No pudimos trazar la ruta por las calles; mostramos una guía aproximada.",
+    "routeCredit": "Rutas: © colaboradores de OpenStreetMap y FOSSGIS.",
+    "routeFix": "Corregir el mapa",
+    "remaining": "Te quedan {distance} · {time}",
+    "modeReal": "{time} · {distance}"
   },
   "saved": {
     "save": "Guardar",
