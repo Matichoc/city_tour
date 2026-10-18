@@ -76,11 +76,15 @@ const site = (request: NextRequest) =>
 
 /**
  * Con `SHARE_LINK_SECRET` el sitio (y el panel) se ve únicamente con un enlace
- * vigente (src/lib/share-link.ts). Sin esa variable, como siempre.
+ * vigente (src/lib/share-link.ts). Sin esa variable, como siempre, salvo en
+ * una vista previa de Vercel: ahí falla cerrado, para que una vista previa sin
+ * clave no quede abierta por descuido.
  */
 export default async function proxy(request: NextRequest) {
   const secret = process.env.SHARE_LINK_SECRET;
-  if (!secret) return site(request);
+  if (!secret) {
+    return process.env.VERCEL_ENV === "preview" ? expiredPage() : site(request);
+  }
 
   const fromUrl = request.nextUrl.searchParams.get(ACCESS_PARAM);
   if (fromUrl !== null) {
