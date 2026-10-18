@@ -77,6 +77,10 @@ beforeEach(() => {
   vi.stubEnv("NEXT_PUBLIC_SUPABASE_URL", "https://demo.supabase.co");
   vi.stubEnv("NEXT_PUBLIC_SUPABASE_ANON_KEY", "clave-publica");
   vi.stubEnv("REVIEWS_SALT", "sal");
+  vi.stubEnv(
+    "REVIEW_GATE_SECRET",
+    "secreto-de-pruebas-0123456789abcdef-0123456789",
+  );
 });
 afterEach(() => {
   vi.unstubAllEnvs();
@@ -113,7 +117,7 @@ describe("submitReview", () => {
     expect(calls).toHaveLength(0);
   });
 
-  it("publica con submit_review, sin enviar la IP, y refresca el sitio", async () => {
+  it("publica con submit_review_v2, sin enviar la IP, y refresca el sitio", async () => {
     stubFetch(() => Response.json("id"));
     expect(await submitReview(idle, form(valid))).toEqual({
       status: "ok",
@@ -121,7 +125,7 @@ describe("submitReview", () => {
     });
     const body = JSON.parse(calls[0]!.init.body as string);
     expect(calls[0]!.url).toBe(
-      "https://demo.supabase.co/rest/v1/rpc/submit_review",
+      "https://demo.supabase.co/rest/v1/rpc/submit_review_v2",
     );
     expect(body).toMatchObject({
       p_entity: "place",
@@ -142,6 +146,13 @@ describe("submitReview", () => {
       form({ ...valid, nombre: "", anonimo: "Visitor" }),
     );
     expect(JSON.parse(calls[0]!.init.body as string).p_author).toBe("Visitor");
+  });
+
+  it("sin REVIEW_GATE_SECRET no envía nada (falla cerrado)", async () => {
+    vi.stubEnv("REVIEW_GATE_SECRET", "");
+    stubFetch(() => Response.json("id"));
+    expect(await submitReview(idle, form(valid))).toEqual({ status: "error" });
+    expect(calls).toHaveLength(0);
   });
 
   it("informa el límite de envíos", async () => {
