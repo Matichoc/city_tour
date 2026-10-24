@@ -19,8 +19,8 @@ correr `pnpm bitacora` y subir el cambio en el mismo PR.
 Se separan los dos productos: Turismo en tu Mano sigue como guía y panel para cada municipio («[Comuna] en tu Mano»), y se registra la idea de una app móvil nacional (nombre de trabajo «Chile en Ruta») que consume los datos verificados de cada comuna y arma rutas entre ciudades con paradas intermedias, modo mochilero y «ahora cerca de ti». Plan con piezas reutilizables de este repo, lo que falta (feed de datos, agregador, ruteo propio, mapas sin señal, app Expo), fuentes, modelo de negocio, fases y decisiones pendientes (docs/PLAN-CHILE-EN-RUTA.md). Solo documentación.
 
 - **Migraciones por correr en Supabase:** —
-- **Estado:** en desarrollo (aún no está en `develop`).
-- **Última actualización de esta bitácora:** 2026-10-24 12:06
+- **Estado:** en revisión, [PR #36](https://github.com/Matichoc/city_tour/pull/36) (aún no está en `develop`).
+- **Última actualización de esta bitácora:** 2026-10-24 12:07
 
 ## Avance por día
 
@@ -29,6 +29,7 @@ trabajadas: hay pausas y trabajo sin registrar).
 
 | Día | Ventana de actividad | Registros | Versiones entregadas |
 | --- | --- | ---: | --- |
+| Sábado, 24 de octubre de 2026 | 12:07 – 12:07 | 1 | — |
 | Domingo, 18 de octubre de 2026 | 00:09 – 00:39 | 7 | v0.29, v0.30, v0.31 |
 | Sábado, 17 de octubre de 2026 | 00:01 – 23:30 | 34 | v0.16, v0.17, v0.18, v0.19, v0.20, v0.21, v0.22, v0.23, v0.24, v0.25, v0.26, v0.27, v0.28 |
 | Viernes, 16 de octubre de 2026 | 00:04 – 23:51 | 15 | v0.9, v0.10, v0.11, v0.12, v0.13, v0.14, v0.15 |
