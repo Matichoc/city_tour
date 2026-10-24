@@ -378,17 +378,15 @@ Ver [`docs/FINANCIAMIENTO.md`](./FINANCIAMIENTO.md): dimensionamiento (500.000
 turistas, meta 10 %), herramientas reales, presupuesto, fuentes de
 financiamiento y escenarios de ingreso.
 
-## 13 bis. Segunda app: Chile en Ruta (idea registrada)
+## 13 bis. Otro producto: Chile en Ruta (idea registrada)
 
 Turismo en tu Mano sigue como producto para municipios («[Comuna] en tu
-Mano», una comuna por repo). Aparte, se registra la idea de una **app móvil
-nacional** (nombre de trabajo «Chile en Ruta») que consume los datos
-verificados de cada comuna y arma rutas entre ciudades con paradas
-intermedias, modo mochilero y «ahora cerca de ti». Plan, piezas reutilizables,
-fases y decisiones pendientes en
-[`docs/PLAN-CHILE-EN-RUTA.md`](./PLAN-CHILE-EN-RUTA.md). No se construye en
-este repo, salvo el **feed público de datos** (su fase 1), que también sirve a
-las municipalidades como datos abiertos.
+Mano», una comuna por repo). Aparte, y **totalmente independiente**, se
+registra la idea de **Chile en Ruta** (nombre de trabajo): una app móvil
+abierta y nacional que se puebla con los propios lugares turísticos y
+emprendedores de todo Chile, y arma rutas entre ciudades con paradas
+intermedias. Tendrá su propio repo. El plan está en
+[`docs/PLAN-CHILE-EN-RUTA.md`](./PLAN-CHILE-EN-RUTA.md).
 
 ## 14. Próximo paso
 

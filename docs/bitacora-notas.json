@@ -129,8 +129,8 @@
   },
   "actual": {
     "pr": 36,
-    "titulo": "Plan de la segunda app: Chile en Ruta",
-    "resumen": "Se separan los dos productos: Turismo en tu Mano sigue como guía y panel para cada municipio («[Comuna] en tu Mano»), y se registra la idea de una app móvil nacional (nombre de trabajo «Chile en Ruta») que consume los datos verificados de cada comuna y arma rutas entre ciudades con paradas intermedias, modo mochilero y «ahora cerca de ti». Plan con piezas reutilizables de este repo, lo que falta (feed de datos, agregador, ruteo propio, mapas sin señal, app Expo), fuentes, modelo de negocio, fases y decisiones pendientes (docs/PLAN-CHILE-EN-RUTA.md). Solo documentación.",
+    "titulo": "Plan de otro producto: Chile en Ruta",
+    "resumen": "Se registra la idea de Chile en Ruta (nombre de trabajo), un producto totalmente independiente de Turismo en tu Mano: app móvil abierta y nacional que se puebla con los propios lugares turísticos, emprendedores y viajeros de todo Chile, y arma rutas entre ciudades con paradas intermedias, modo mochilero y «ahora cerca de ti». El plan (docs/PLAN-CHILE-EN-RUTA.md) incluye las reglas de contenido y verificación, lo que hay que construir, cómo se puebla, piezas de este repo reutilizables como referencia, el modelo de negocio, las fases y las decisiones pendientes. Tendrá su propio repo. Solo documentación.",
     "migraciones": "—"
   }
 }
