@@ -302,9 +302,11 @@ export default async function ExplorePage({
                   <span className="bg-sea-soft text-sea-deep grid size-10 shrink-0 place-items-center rounded-full">
                     <CategoryIcon category={g.slug} className="size-5" />
                   </span>
-                  <span className="font-display min-w-0 flex-1 text-lg font-extrabold">
+                  {/* h2: las fichas de adentro son h3, y así el lector de
+                      pantalla puede saltar de categoría en categoría. */}
+                  <h2 className="font-display min-w-0 flex-1 text-lg font-extrabold">
                     {g.name}
-                  </span>
+                  </h2>
                   <span className="text-muted text-sm font-semibold">
                     {t("groupCount", { count: g.items.length })}
                   </span>

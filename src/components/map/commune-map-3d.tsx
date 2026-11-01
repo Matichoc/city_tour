@@ -12,6 +12,7 @@ import Map, {
 import "maplibre-gl/dist/maplibre-gl.css";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
+import { labelMarker, useMapLocale } from "@/components/map/map-locale";
 import type { CategorySlug } from "@/content/types";
 import {
   CATEGORY_PIN_COLOR,
@@ -62,6 +63,7 @@ export function CommuneMap3D({
   className?: string;
 }) {
   const t = useTranslations("map");
+  const mapLocale = useMapLocale();
   const mapRef = useRef<MapRef>(null);
   const loaded = useRef(false);
   const [failed, setFailed] = useState(false);
@@ -130,6 +132,7 @@ export function CommuneMap3D({
     >
       <Map
         ref={mapRef}
+        locale={mapLocale}
         mapStyle={getMapStyleUrl()}
         initialViewState={{
           latitude: MAP_CENTER.latitude,
@@ -204,6 +207,7 @@ export function CommuneMap3D({
         {places.map((p) => (
           <Marker
             key={p.slug}
+            ref={labelMarker(p.name)}
             latitude={p.latitude}
             longitude={p.longitude}
             anchor="center"
@@ -223,6 +227,7 @@ export function CommuneMap3D({
         {localities.map((l) => (
           <Marker
             key={l.slug}
+            ref={labelMarker(l.name)}
             latitude={l.latitude}
             longitude={l.longitude}
             anchor="bottom"

@@ -6,7 +6,7 @@ export default function NotFound() {
   const t = useTranslations("errors");
   return (
     <main className="flex flex-1 flex-col gap-4 px-4 py-10">
-      <EmptyState title={t("notFoundTitle")}>
+      <EmptyState as="h1" title={t("notFoundTitle")}>
         <p>{t("notFoundBody")}</p>
         <div className="mt-4 flex flex-wrap justify-center gap-2">
           <Link

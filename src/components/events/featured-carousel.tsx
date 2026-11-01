@@ -76,7 +76,7 @@ export function FeaturedCarousel({ slides }: { slides: FeaturedSlide[] }) {
         className="flex snap-x snap-mandatory [scrollbar-width:none] overflow-x-auto rounded-3xl [&::-webkit-scrollbar]:hidden"
       >
         {slides.map((s, i) => (
-          <article
+          <div
             key={s.slug}
             role="group"
             aria-roledescription="slide"
@@ -166,7 +166,7 @@ export function FeaturedCarousel({ slides }: { slides: FeaturedSlide[] }) {
                 </div>
               </div>
             </div>
-          </article>
+          </div>
         ))}
       </div>
 

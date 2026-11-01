@@ -133,3 +133,77 @@ for (const path of [
     ).toEqual([]);
   });
 }
+
+test("el primer Tab ofrece saltar al contenido y lo enfoca", async ({
+  page,
+}) => {
+  await page.goto("/es/lugares/playa-chica-papudo");
+  await page.keyboard.press("Tab");
+  const skip = page.getByRole("link", { name: "Saltar al contenido" });
+  await expect(skip).toBeFocused();
+  await page.keyboard.press("Enter");
+  await expect(page.locator("#contenido")).toBeFocused();
+});
+
+test("Escuchar lee la ficha en orden con voz en español, pausa y sigue", async ({
+  page,
+}) => {
+  // Voz falsa: registra lo que se lee y termina cada trozo al instante.
+  await page.addInitScript(() => {
+    const said: { text: string; lang: string }[] = [];
+    (window as unknown as { __said: typeof said }).__said = said;
+    class FakeUtterance {
+      text: string;
+      lang = "";
+      rate = 1;
+      voice: unknown = null;
+      onend: (() => void) | null = null;
+      onerror: (() => void) | null = null;
+      constructor(text: string) {
+        this.text = text;
+      }
+    }
+    let pending: ReturnType<typeof setTimeout> | null = null;
+    const synth = {
+      speaking: false,
+      getVoices: () => [{ lang: "es-MX", name: "Paulina" }],
+      addEventListener: () => {},
+      removeEventListener: () => {},
+      cancel: () => {
+        if (pending) clearTimeout(pending);
+        synth.speaking = false;
+      },
+      speak: (u: FakeUtterance) => {
+        said.push({ text: u.text, lang: u.lang });
+        synth.speaking = true;
+        pending = setTimeout(() => u.onend?.(), 150);
+      },
+    };
+    Object.defineProperty(window, "speechSynthesis", { value: synth });
+    Object.defineProperty(window, "SpeechSynthesisUtterance", {
+      value: FakeUtterance,
+    });
+  });
+  await page.goto("/es/lugares/playa-chica-papudo");
+  const listen = page.getByRole("button", {
+    name: /Escuchar la ficha de Playa Chica/,
+  });
+  await listen.click();
+  await expect(page.getByRole("button", { name: "Pausar" })).toBeVisible();
+  await page.getByRole("button", { name: "Pausar" }).click();
+  await expect(page.getByRole("button", { name: "Continuar" })).toBeVisible();
+  await page.getByRole("button", { name: "Continuar" }).click();
+  await expect(
+    page.getByRole("button", { name: /Escuchar la ficha/ }),
+  ).toBeVisible({ timeout: 15_000 });
+  const said = await page.evaluate(
+    () =>
+      (window as unknown as { __said: { text: string; lang: string }[] })
+        .__said,
+  );
+  expect(said[0]).toEqual({ text: "Playa Chica.", lang: "es-MX" });
+  expect(said.map((s) => s.text).join(" ")).toContain("Playa Chica");
+  await expect(page.locator("#resumen [aria-live=polite]")).toHaveText(
+    "Lectura terminada",
+  );
+});

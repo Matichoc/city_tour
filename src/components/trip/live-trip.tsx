@@ -27,6 +27,7 @@ import {
 import { readRouteConsent, saveRouteConsent } from "@/lib/routing/client";
 import { useStreetRoutes } from "@/components/trip/use-street-routes";
 import { track } from "@/lib/analytics";
+import { labelMarker, useMapLocale } from "@/components/map/map-locale";
 import { WalkCamera, type LivePosition } from "@/components/trip/walk-camera";
 
 const routeTotalOf = (line: LngLat[]) => polylineLength(line);
@@ -67,6 +68,7 @@ export function LiveTrip({
   onClose: () => void;
 }) {
   const t = useTranslations("live");
+  const mapLocale = useMapLocale();
   const locale = useLocale();
   const mapRef = useRef<MapRef>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
@@ -389,6 +391,7 @@ export function LiveTrip({
         ) : (
           <Map
             ref={mapRef}
+            locale={mapLocale}
             mapStyle={getMapStyleUrl()}
             initialViewState={{
               latitude: stops[0]?.latitude ?? 0,
@@ -474,6 +477,7 @@ export function LiveTrip({
             {stops.map((s, i) => (
               <Marker
                 key={s.slug}
+                ref={labelMarker(s.name)}
                 latitude={s.latitude}
                 longitude={s.longitude}
                 anchor="bottom"

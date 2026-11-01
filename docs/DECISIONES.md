@@ -33,8 +33,9 @@ opcional: si falta la traducción de un lugar, se muestra el español y se avisa
 Vercel Web Analytics (sin cookies, sin datos personales). Eventos propios en
 `src/lib/analytics.ts`: `add_to_trip`, `add_route`, `navigate_click`, `share`,
 `qr_visit` (con el `origen` del QR), `save_place`, `live_start` (recorrido en
-vivo), `camera_start` (guía con cámara) y `cta_click` (botón de acción de un
-comercio, con su `slug` y tipo). Nunca se envía la ubicación del
+vivo), `camera_start` (guía con cámara), `cta_click` (botón de acción de un
+comercio, con su `slug` y tipo) y `listen_play` (primera vez que se toca
+«Escuchar» en una ficha, con su `slug`). Nunca se envía la ubicación del
 usuario: el GPS y la cámara se usan solo dentro del teléfono. Se activa en
 Vercel → Analytics; sin activar, no envía nada.
 
