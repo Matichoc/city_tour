@@ -149,7 +149,14 @@
     "address": "Address: {address}.",
     "demo": "Note: this is a sample listing. This place does not exist.",
     "pending": "This information has not been verified on site yet.",
-    "outdated": "This information may be out of date."
+    "outdated": "This information may be out of date.",
+    "playRouteLabel": "Listen to the {name} route as an audio guide",
+    "routeIntro": "About this route",
+    "stopLabel": "Stop {n} of {total}: {name}",
+    "previous": "Previous",
+    "next": "Next",
+    "previousLabel": "Go back to the previous part",
+    "nextLabel": "Skip to the next part"
   },
   "routes": {
     "title": "Routes",

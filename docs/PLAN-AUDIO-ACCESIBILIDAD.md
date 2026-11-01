@@ -28,7 +28,8 @@ evaluar que todo el sitio se pueda escuchar en orden.
 | 1. Accesibilidad de base | Saltar al contenido; mapas en el idioma del sitio y con nombre en cada pin; h1 en el 404; títulos de categoría en Explorar; carrusel sin rol inválido. Auditoría axe WCAG 2.1 A/AA + buenas prácticas: 0 fallas en 18 páginas. | Hecha (PR #37) |
 | 2. «Escuchar» en las fichas de lugar | Voz del dispositivo (Web Speech API), gratis y sin servidor. | Hecha (PR #37) |
 | 3. Voz natural pregrabada | Audio por ficha con una voz neural (p. ej. voces chilenas de Azure), guardado en Supabase Storage y regenerado al editar el texto en `/admin`; si falta, se usa la voz del dispositivo. | Pendiente: decidir voz sintética o narración humana local |
-| 4. Escuchar páginas y audioguía de rutas | El mismo reproductor en eventos, pueblos y rutas; en una ruta, las paradas en orden y con la pantalla bloqueada (Media Session). | Pendiente |
+| 4a. Audioguía de rutas | En la ficha de una ruta: presentación y cada parada en orden, con «Anterior» y «Siguiente» para saltar entre paradas y la parada que suena resaltada en la lista. | Hecha (PR #39) |
+| 4b. Escuchar eventos y pueblos; pantalla bloqueada | El mismo reproductor en eventos y pueblos. Seguir sonando con la pantalla bloqueada exige audio pregrabado (fase 3): la voz del dispositivo se corta al bloquear en iPhone. | Pendiente |
 
 Pendiente de la fase 1 que no se resuelve con código: **probar con lector de
 pantalla real** (TalkBack en Android y VoiceOver en iPhone) y, si es posible,
@@ -54,8 +55,22 @@ automática encuentra cerca de un tercio de los problemas.
 - Velocidad 1×, 1,25× y 0,8×. Los cambios de estado se anuncian al lector de
   pantalla con una región `aria-live`.
 - Si el navegador no tiene Web Speech, el botón no aparece.
-- Medición: evento anónimo `listen_play` (primera vez por ficha), para decidir
-  con datos si vale la pena la fase 3.
+- Medición: evento anónimo `listen_play` (primera vez por ficha o ruta, con
+  `kind`), para decidir con datos si vale la pena la fase 3.
+
+## Audioguía de rutas (fase 4a)
+
+- El mismo componente, con **partes** (`ListenSection` en `src/lib/speech.ts`):
+  la presentación (nombre, número de paradas y duración, descripción y aviso
+  de verificación) y una parte por parada («Parada 2 de 3: Playa de Papudo»,
+  su descripción completa y la nota de la ruta).
+- «Siguiente» salta al comienzo de la próxima parada; «Anterior» vuelve al
+  comienzo de la parada en curso y, si ya estaba ahí, a la anterior (como un
+  reproductor de música).
+- Mientras suena, la parada se resalta en la lista con `aria-current="step"`
+  (un lector de pantalla lo anuncia como «paso actual») y su nombre se
+  muestra bajo los controles. Al saltar, el lector anuncia la nueva parada.
+- No se mueve la página sola: quien está leyendo otra parte no pierde su lugar.
 
 ## Límites conocidos (honestos)
 
