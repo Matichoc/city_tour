@@ -14,7 +14,8 @@
     "business": "Para negocios",
     "events": "Eventos",
     "tripShort": "Recorrido",
-    "infoShort": "Info"
+    "infoShort": "Info",
+    "skipToContent": "Saltar al contenido"
   },
   "common": {
     "share": "Compartir",
@@ -130,6 +131,26 @@
     "galleryPrev": "Foto anterior",
     "galleryNext": "Foto siguiente"
   },
+  "listen": {
+    "play": "Escuchar",
+    "playLabel": "Escuchar la ficha de {name}",
+    "pause": "Pausar",
+    "resume": "Continuar",
+    "stop": "Detener",
+    "speedLabel": "Velocidad de lectura: {rate}. Tocar para cambiar",
+    "deviceVoice": "Con la voz de tu teléfono",
+    "noVoice": "Tu dispositivo no tiene una voz en este idioma.",
+    "playing": "Leyendo en voz alta",
+    "paused": "Lectura en pausa",
+    "stopped": "Lectura detenida",
+    "done": "Lectura terminada",
+    "categoryIn": "{category}, en {locality}.",
+    "hours": "Horarios: {text}.",
+    "address": "Dirección: {address}.",
+    "demo": "Atención: esta es una ficha de ejemplo. Este lugar no existe.",
+    "pending": "Estos datos todavía no están verificados en terreno.",
+    "outdated": "Estos datos pueden estar desactualizados."
+  },
   "routes": {
     "title": "Rutas",
     "subtitle": "Recorridos listos para armar tu día.",
@@ -187,7 +208,29 @@
     "communeBadge": "Comuna de Papudo · 3D",
     "view2d": "Ver en 2D",
     "view3d": "Ver en 3D",
-    "recenter": "Volver a la comuna"
+    "recenter": "Volver a la comuna",
+    "controls": {
+      "map": "Mapa",
+      "marker": "Punto en el mapa",
+      "zoomIn": "Acercar",
+      "zoomOut": "Alejar",
+      "resetBearing": "Arrastra para girar el mapa; toca para volver al norte",
+      "attribution": "Mostrar u ocultar los créditos del mapa",
+      "feedback": "Reportar un error del mapa",
+      "fullscreenEnter": "Ver el mapa en pantalla completa",
+      "fullscreenExit": "Salir de pantalla completa",
+      "findMe": "Mostrar mi ubicación",
+      "locationUnavailable": "Ubicación no disponible",
+      "globeEnable": "Ver como globo",
+      "globeDisable": "Ver como mapa plano",
+      "logo": "Logo de MapLibre",
+      "close": "Cerrar",
+      "terrainEnable": "Mostrar relieve",
+      "terrainDisable": "Ocultar relieve",
+      "helpWindows": "Usa Ctrl + rueda del mouse para acercar el mapa",
+      "helpMac": "Usa ⌘ + rueda del mouse para acercar el mapa",
+      "helpMobile": "Usa dos dedos para mover el mapa"
+    }
   },
   "info": {
     "title": "Información",

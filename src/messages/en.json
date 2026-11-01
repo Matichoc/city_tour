@@ -14,7 +14,8 @@
     "business": "For business",
     "events": "Events",
     "tripShort": "My trip",
-    "infoShort": "Info"
+    "infoShort": "Info",
+    "skipToContent": "Skip to content"
   },
   "common": {
     "share": "Share",
@@ -130,6 +131,26 @@
     "galleryPrev": "Previous photo",
     "galleryNext": "Next photo"
   },
+  "listen": {
+    "play": "Listen",
+    "playLabel": "Listen to the page about {name}",
+    "pause": "Pause",
+    "resume": "Resume",
+    "stop": "Stop",
+    "speedLabel": "Reading speed: {rate}. Tap to change",
+    "deviceVoice": "Uses your phone's voice",
+    "noVoice": "Your device has no voice for this language.",
+    "playing": "Reading aloud",
+    "paused": "Reading paused",
+    "stopped": "Reading stopped",
+    "done": "Finished reading",
+    "categoryIn": "{category}, in {locality}.",
+    "hours": "Opening hours: {text}.",
+    "address": "Address: {address}.",
+    "demo": "Note: this is a sample listing. This place does not exist.",
+    "pending": "This information has not been verified on site yet.",
+    "outdated": "This information may be out of date."
+  },
   "routes": {
     "title": "Routes",
     "subtitle": "Ready-made itineraries for your day.",
@@ -187,7 +208,29 @@
     "communeBadge": "Papudo commune · 3D",
     "view2d": "View in 2D",
     "view3d": "View in 3D",
-    "recenter": "Back to the commune"
+    "recenter": "Back to the commune",
+    "controls": {
+      "map": "Map",
+      "marker": "Map marker",
+      "zoomIn": "Zoom in",
+      "zoomOut": "Zoom out",
+      "resetBearing": "Drag to rotate the map; tap to reset north",
+      "attribution": "Show or hide map credits",
+      "feedback": "Report a map error",
+      "fullscreenEnter": "View the map full screen",
+      "fullscreenExit": "Exit full screen",
+      "findMe": "Show my location",
+      "locationUnavailable": "Location not available",
+      "globeEnable": "View as globe",
+      "globeDisable": "View as flat map",
+      "logo": "MapLibre logo",
+      "close": "Close",
+      "terrainEnable": "Show terrain",
+      "terrainDisable": "Hide terrain",
+      "helpWindows": "Use Ctrl + scroll to zoom the map",
+      "helpMac": "Use ⌘ + scroll to zoom the map",
+      "helpMobile": "Use two fingers to move the map"
+    }
   },
   "info": {
     "title": "Info",

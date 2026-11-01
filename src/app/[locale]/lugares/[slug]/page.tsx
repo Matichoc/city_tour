@@ -35,6 +35,8 @@ import { listNotices } from "@/lib/business";
 import { freshness } from "@/lib/freshness";
 import { formatHours } from "@/lib/hours";
 import { isPastDay } from "@/lib/freshness";
+import { ListenButton } from "@/components/listen/listen-button";
+import { SPEECH_LANG } from "@/lib/speech";
 
 export async function generateStaticParams() {
   const data = await getData();
@@ -78,6 +80,7 @@ export default async function PlacePage({
   if (!place) notFound();
   const t = await getTranslations("place");
   const tr = await getTranslations("reviews");
+  const tl = await getTranslations("listen");
   const [reviews, notices] = place.demo
     ? [[], []]
     : await Promise.all([
@@ -117,6 +120,33 @@ export default async function PlacePage({
     ["opiniones", t("tabReviews")],
     ["datos", t("tabDetails")],
   ] as const;
+  // Lo que lee el botón "Escuchar", en el orden en que se lee.
+  const hoursSpoken = place.demo
+    ? null
+    : place.hours.length > 0
+      ? place.hours
+          .map((h) => {
+            const f = formatHours(h, locale, hoursWords);
+            return `${f.season}: ${f.days}, ${f.time}`;
+          })
+          .join("; ")
+      : place.hoursText;
+  const listenSegments = [
+    `${place.name}.`,
+    place.localityName
+      ? tl("categoryIn", {
+          category: place.categoryName,
+          locality: place.localityName,
+        })
+      : `${place.categoryName}.`,
+    place.demo ? tl("demo") : null,
+    place.description,
+    hoursSpoken ? tl("hours", { text: hoursSpoken }) : null,
+    place.address ? tl("address", { address: place.address }) : null,
+    !place.demo && place.verification !== "verified"
+      ? tl(place.verification)
+      : null,
+  ].filter((s): s is string => Boolean(s));
   const sernatur = place.sernatur
     ? {
         ...place.sernatur,
@@ -313,8 +343,14 @@ export default async function PlacePage({
           </ul>
         </nav>
 
-        <section id="resumen" className="scroll-mt-32">
+        <section id="resumen" className="flex scroll-mt-32 flex-col gap-3">
           <h2 className="sr-only">{t("tabOverview")}</h2>
+          <ListenButton
+            segments={listenSegments}
+            lang={SPEECH_LANG[locale]}
+            name={place.name}
+            slug={place.slug}
+          />
           <p className="text-base leading-relaxed">{place.description}</p>
         </section>
 

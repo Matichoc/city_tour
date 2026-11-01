@@ -123,10 +123,14 @@
     "titulo": "Inicio y Explorar sin repeticiones",
     "resumen": "La portada deja de repetir lo mismo que Explorar: bienvenida nueva («Papudo te espera»), buscador que explica qué se puede buscar con ejemplos que devuelven resultados, fila compacta de accesos por categoría y «Destacados del mes» (5: fiestas de hoy a 30 días más y, para completar, lugares publicados). Se quita la lista «Para empezar» y solo se muestra la ruta destacada. Explorar queda para navegar: sin buscador ni el filtro repetido de categorías, con los grupos desplegables cerrados y el filtro por pueblo. Sin datos nuevos; sin migraciones."
   },
-  "actual": {
-    "pr": 35,
+  "35": {
     "titulo": "Cierra las vistas previas antiguas y las nuevas",
-    "resumen": "Solo se construyen develop, demo y main (vercel.json omite el resto), y una vista previa que llegue sin SHARE_LINK_SECRET responde «Este enlace venció» en vez de abrirse. Las versiones anteriores a este cierre conservan su dirección en Vercel: se documenta cómo borrarlas y cómo hacer que se borren solas. Sin cambios visibles ni migraciones.",
+    "resumen": "Solo se construyen develop, demo y main (vercel.json omite el resto), y una vista previa que llegue sin SHARE_LINK_SECRET responde «Este enlace venció» en vez de abrirse. Las versiones anteriores a este cierre conservan su dirección en Vercel: se documenta cómo borrarlas y cómo hacer que se borren solas. Sin cambios visibles ni migraciones."
+  },
+  "actual": {
+    "pr": 37,
+    "titulo": "Accesibilidad y botón «Escuchar» en las fichas",
+    "resumen": "Cada ficha de lugar tiene un botón «Escuchar» que la lee en voz alta con la voz del teléfono (nombre, categoría, descripción, horarios, dirección y si está pendiente de verificación), con pausa, detener y velocidad; nunca suena sola. Accesibilidad: enlace «Saltar al contenido», mapas que le hablan al lector de pantalla en el idioma del sitio y con el nombre de cada pin, título principal en la página 404, títulos de categoría en Explorar y el carrusel de eventos sin rol inválido. Auditoría axe WCAG 2.1 AA sin fallas en 18 páginas. Plan completo en docs/PLAN-AUDIO-ACCESIBILIDAD.md. Sin migraciones.",
     "migraciones": "—"
   }
 }

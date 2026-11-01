@@ -12,6 +12,7 @@ import Map, {
 import "maplibre-gl/dist/maplibre-gl.css";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
+import { labelMarker, useMapLocale } from "@/components/map/map-locale";
 import type { CategorySlug } from "@/content/types";
 import {
   CATEGORY_PIN_COLOR,
@@ -42,6 +43,7 @@ export function PlacesMap({
   className?: string;
 }) {
   const t = useTranslations("map");
+  const mapLocale = useMapLocale();
   const mapRef = useRef<MapRef>(null);
   const [selected, setSelected] = useState<MapMarker | null>(null);
   const [failed, setFailed] = useState(false);
@@ -92,6 +94,7 @@ export function PlacesMap({
     >
       <Map
         ref={mapRef}
+        locale={mapLocale}
         mapStyle={getMapStyleUrl()}
         initialViewState={{
           latitude: single?.latitude ?? MAP_CENTER.latitude,
@@ -137,6 +140,7 @@ export function PlacesMap({
         {markers.map((m, i) => (
           <Marker
             key={m.slug}
+            ref={labelMarker(m.name)}
             latitude={m.latitude}
             longitude={m.longitude}
             anchor="bottom"

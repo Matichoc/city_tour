@@ -16,7 +16,8 @@ export type AnalyticsEvent =
   | "save_place"
   | "live_start"
   | "camera_start"
-  | "cta_click";
+  | "cta_click"
+  | "listen_play";
 
 export function track(
   name: AnalyticsEvent,
