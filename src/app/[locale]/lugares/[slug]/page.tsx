@@ -346,10 +346,11 @@ export default async function PlacePage({
         <section id="resumen" className="flex scroll-mt-32 flex-col gap-3">
           <h2 className="sr-only">{t("tabOverview")}</h2>
           <ListenButton
-            segments={listenSegments}
+            sections={[{ segments: listenSegments }]}
             lang={SPEECH_LANG[locale]}
-            name={place.name}
+            playLabel={tl("playLabel", { name: place.name })}
             slug={place.slug}
+            kind="place"
           />
           <p className="text-base leading-relaxed">{place.description}</p>
         </section>

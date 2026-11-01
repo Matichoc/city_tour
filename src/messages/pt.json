@@ -149,7 +149,14 @@
     "address": "Endereço: {address}.",
     "demo": "Atenção: esta é uma página de exemplo. Este lugar não existe.",
     "pending": "Estes dados ainda não foram verificados no local.",
-    "outdated": "Estes dados podem estar desatualizados."
+    "outdated": "Estes dados podem estar desatualizados.",
+    "playRouteLabel": "Ouvir a rota {name} como audioguia",
+    "routeIntro": "Apresentação da rota",
+    "stopLabel": "Parada {n} de {total}: {name}",
+    "previous": "Anterior",
+    "next": "Próxima",
+    "previousLabel": "Voltar à parte anterior",
+    "nextLabel": "Pular para a próxima parte"
   },
   "routes": {
     "title": "Roteiros",

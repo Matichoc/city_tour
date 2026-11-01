@@ -149,7 +149,14 @@
     "address": "Dirección: {address}.",
     "demo": "Atención: esta es una ficha de ejemplo. Este lugar no existe.",
     "pending": "Estos datos todavía no están verificados en terreno.",
-    "outdated": "Estos datos pueden estar desactualizados."
+    "outdated": "Estos datos pueden estar desactualizados.",
+    "playRouteLabel": "Escuchar la ruta {name} como audioguía",
+    "routeIntro": "Presentación de la ruta",
+    "stopLabel": "Parada {n} de {total}: {name}",
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "previousLabel": "Volver a la parte anterior",
+    "nextLabel": "Saltar a la parte siguiente"
   },
   "routes": {
     "title": "Rutas",

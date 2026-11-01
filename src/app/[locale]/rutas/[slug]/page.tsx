@@ -16,6 +16,8 @@ import { ShareButton } from "@/components/place/share-button";
 import { CategoryIcon } from "@/components/ui/category-icon";
 import { PrintButton } from "@/components/ui/print-button";
 import { QrVisit } from "@/components/analytics/qr-visit";
+import { ListenButton } from "@/components/listen/listen-button";
+import { SPEECH_LANG, type ListenSection } from "@/lib/speech";
 
 export async function generateStaticParams() {
   const data = await getData();
@@ -54,6 +56,41 @@ export default async function RoutePage({
   const route = data.getRoute(slug, locale);
   if (!route) notFound();
   const t = await getTranslations("routes");
+  const tl = await getTranslations("listen");
+  const total = route.stops.length;
+  // Audioguía: la presentación de la ruta y después cada parada, en orden.
+  const listenSections: ListenSection[] = [
+    {
+      label: tl("routeIntro"),
+      segments: [
+        `${route.name}.`,
+        `${t("stops", { count: total })}${
+          route.durationMinutes
+            ? `, ${formatDuration(route.durationMinutes)}`
+            : ""
+        }.`,
+        route.description,
+        t("pendingNote"),
+      ],
+    },
+    ...route.stops.map((s, i) => {
+      const label = tl("stopLabel", {
+        n: i + 1,
+        total,
+        name: s.place.name,
+      });
+      return {
+        label,
+        targetId: `parada-${i + 1}`,
+        segments: [
+          `${label}.`,
+          s.place.demo ? tl("demo") : null,
+          s.place.description,
+          s.notes,
+        ].filter((x): x is string => Boolean(x)),
+      };
+    }),
+  ];
   const routeUrl = localizedUrl(locale, {
     pathname: "/rutas/[slug]",
     params: { slug: route.slug },
@@ -116,6 +153,16 @@ export default async function RoutePage({
           <ShareButton title={route.name} />
         </div>
 
+        <div className="print:hidden">
+          <ListenButton
+            sections={listenSections}
+            lang={SPEECH_LANG[locale]}
+            playLabel={tl("playRouteLabel", { name: route.name })}
+            slug={route.slug}
+            kind="route"
+          />
+        </div>
+
         <PlacesMap
           connect
           className="h-72 print:hidden"
@@ -136,7 +183,9 @@ export default async function RoutePage({
           {route.stops.map((s, i) => (
             <li
               key={s.place.slug}
-              className="rise-in"
+              id={`parada-${i + 1}`}
+              // La parada que está sonando en la audioguía (aria-current="step").
+              className="rise-in aria-[current=step]:ring-sea rounded-2xl aria-[current=step]:ring-4"
               style={{ "--i": i } as React.CSSProperties}
             >
               <Link
