@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { getPathname } from "@/i18n/navigation";
 import { routing, type Locale } from "@/i18n/routing";
 
-export const SITE_NAME = "Papudo en tu mano";
+export const SITE_NAME = "Papudo en tu Mano";
 
 export function getSiteUrl(): string {
   return (process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000").replace(

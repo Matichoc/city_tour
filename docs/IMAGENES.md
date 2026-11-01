@@ -65,7 +65,7 @@
 `public/og/portada.png`
 > Composición horizontal con el sol bajo sobre el mar, olas en capas turquesa,
 > una playa y lomas de campo en la parte inferior. Gran espacio libre arriba a la
-> izquierda para superponer el nombre "Papudo en tu mano" desde el sitio.
+> izquierda para superponer el nombre "Papudo en tu Mano" desde el sitio.
 
 ### 8. Íconos de categoría (6 piezas, 512×512, fondo transparente)
 `public/ilustraciones/cat-<slug>.webp` — repetir con cada tema:
@@ -105,7 +105,7 @@
 | 7 | Imagen para compartir 1200×630 | Pendiente (hoy se usa la portada de la ruta) | |
 | 8 | Íconos de categoría | Pendiente (hoy íconos SVG propios) | |
 | 9b, 9c | Estados vacíos "recorrido vacío" y "mapa no disponible" | Pendiente | |
-| 10 | Ícono de la app (PWA) | Pendiente (hoy `src/app/icon.svg`) | |
+| 10 | Ícono de la app (PWA) | Entregado | La «P» de Papudo en tu Mano en `src/app/icon.png`, `src/app/apple-icon.png` y `public/icons/` |
 
 ### Escenas SVG generadas por código (octubre 2026)
 
@@ -118,3 +118,21 @@ en la caleta, la Fiesta de San Pedro, el Combate Naval, la FIP y las Fiestas Pat
 
 Cada ilustración se muestra con el rótulo discreto "Ilustración IA". Las fotos reales
 de cada lugar, cuando existan, reemplazan a la ilustración de su ficha.
+
+## Marca
+
+Dos logos de marca, creados por Cristóbal Roco y recortados con fondo
+transparente para usarlos sobre cualquier color:
+
+| Archivo | Qué es | Dónde se usa |
+| ------- | ------ | ------------ |
+| `public/brand/turismo-en-tu-mano.webp` | Turismo en tu Mano, logo completo (marca madre) | Página de Información |
+| `public/brand/turismo-simbolo.webp` | Solo el símbolo de la mano | Pie de página («sub-app de Turismo en tu Mano») |
+| `public/brand/papudo-en-tu-mano.webp` | Papudo en tu Mano, logo completo | Disponible para portadas e impresos |
+| `public/brand/papudo-simbolo.webp` | Solo la «P» | Barra superior, quiosco e ícono de la app |
+
+**Turismo en tu Mano** es la plataforma que se ofrece a cualquier comuna o
+destino. **Papudo en tu Mano** es su sub-app para Papudo, Las Salinas y
+Pullally. La «M» de «Mano» va en mayúscula cuando se escribe el nombre de la
+marca; la palabra suelta «mano» no cambia. Falta revisar en INAPI que el nombre
+Turismo en tu Mano esté disponible para registrarse.

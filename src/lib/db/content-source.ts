@@ -7,13 +7,16 @@
 import { STATIC_CONTENT, type SiteContent } from "@/content";
 import { CATEGORY_DEFS } from "@/content/catalog";
 import { ILLUSTRATIONS, type IllustrationKey } from "@/content/images";
+import { groupHours } from "@/lib/hours";
 import type {
   CategorySlug,
   EventContent,
   LocalityContent,
   PlaceContent,
+  CtaKind,
   RouteContent,
   Source,
+  Verification,
 } from "@/content/types";
 
 /** Segundos que una página puede mostrar datos de la base sin volver a pedirlos. */
@@ -44,6 +47,30 @@ export type PlaceRow = {
   address: string | null;
   is_demo: boolean;
   is_business: boolean;
+  verification_status: Verification;
+  cta_kind: CtaKind | null;
+  cta_value: string | null;
+  last_verified_at?: string | null;
+  info_updated_at?: string | null;
+  instagram?: string | null;
+  website?: string | null;
+  maps_url?: string | null;
+  hours?: HoursRow[];
+  hours_text?: string | null;
+  owner_validated?: boolean;
+  sernatur_number?: string | null;
+  sernatur_valid_until?: string | null;
+  images?: {
+    storage_path: string;
+    kind: "photo" | "menu" | "promo" | "logo" | "video";
+    width: number | null;
+    height: number | null;
+    alt_text: string;
+    alt_text_en: string | null;
+    alt_text_pt: string | null;
+    credit: string | null;
+    position: number;
+  }[];
   category: SlugRef;
   locality: SlugRef;
   translations: Tr<{
@@ -54,6 +81,8 @@ export type PlaceRow = {
   sources: SourceRow[];
 };
 
+type HoursRow = Parameters<typeof groupHours>[0][number];
+
 export type EventRow = {
   slug: string;
   recurrence_month: number | null;
@@ -61,6 +90,7 @@ export type EventRow = {
   season: string | null;
   featured: boolean;
   is_demo: boolean;
+  verification_status: Verification;
   illustration: string | null;
   category: SlugRef;
   locality: SlugRef;
@@ -107,12 +137,16 @@ export const QUERIES: Record<keyof ContentRows, string> = {
     "localities?select=slug,latitude,longitude,source_url,source_label," +
     "translations:locality_translations(locale,name,summary)&order=sort_order,slug",
   places:
-    "places?select=slug,latitude,longitude,address,is_demo,is_business," +
+    "places?select=slug,latitude,longitude,address,is_demo,is_business,verification_status,cta_kind,cta_value," +
+    "last_verified_at,info_updated_at,instagram,maps_url," +
+    "hours:place_hours(day_of_week,opens_at,closes_at,closed,from_month,to_month,holidays)," +
+    "sernatur_number,sernatur_valid_until,hours_text,website,owner_validated," +
+    "images:place_images(storage_path,kind,width,height,alt_text,alt_text_en,alt_text_pt,credit,position)," +
     "category:categories(slug),locality:localities(slug)," +
     `translations:place_translations(locale,name,short_description,full_description),${SOURCES}` +
     "&publication_status=eq.published&order=sort_order,slug&sources.order=sort_order",
   events:
-    "events?select=slug,recurrence_month,recurrence_day,season,featured,is_demo,illustration," +
+    "events?select=slug,recurrence_month,recurrence_day,season,featured,is_demo,verification_status,illustration," +
     "category:categories(slug),locality:localities(slug)," +
     `translations:event_translations(locale,name,description),${SOURCES}` +
     "&publication_status=eq.published&order=sort_order,slug&sources.order=sort_order",
@@ -138,6 +172,53 @@ const categoryOf = (ref: SlugRef): CategorySlug | null =>
 
 const isIllustration = (k: string | null): k is IllustrationKey =>
   k !== null && k in ILLUSTRATIONS;
+
+/**
+ * Imágenes de la base → logo y galería. Rutas del sitio («/lugares/...») o
+ * enlaces públicos del bucket place-images (las que se suben en el panel).
+ */
+function toImages(rows: NonNullable<PlaceRow["images"]>) {
+  const usable = [...rows]
+    .filter(
+      (i) =>
+        (i.storage_path.startsWith("/") ||
+          i.storage_path.startsWith("https://")) &&
+        i.width &&
+        i.height,
+    )
+    .sort((a, b) => a.position - b.position);
+  const logo = usable.find((i) => i.kind === "logo");
+  const gallery = usable.flatMap((i) =>
+    i.kind === "logo"
+      ? []
+      : [
+          {
+            src: i.storage_path,
+            width: i.width!,
+            height: i.height!,
+            kind: i.kind,
+            alt: {
+              es: i.alt_text,
+              en: i.alt_text_en ?? i.alt_text,
+              pt: i.alt_text_pt ?? i.alt_text,
+            },
+            credit: i.credit ?? "",
+          },
+        ],
+  );
+  return {
+    ...(logo
+      ? {
+          logo: {
+            src: logo.storage_path,
+            width: logo.width!,
+            height: logo.height!,
+          },
+        }
+      : {}),
+    ...(gallery.length ? { gallery } : {}),
+  };
+}
 
 function toPlace(r: PlaceRow): PlaceContent | null {
   const categorySlug = categoryOf(r.category);
@@ -166,6 +247,29 @@ function toPlace(r: PlaceRow): PlaceContent | null {
     ...(text("en") ? { en: text("en") } : {}),
     ...(text("pt") ? { pt: text("pt") } : {}),
     ...(r.is_demo ? { demo: true } : {}),
+    ...(r.verification_status && r.verification_status !== "pending"
+      ? { verification: r.verification_status }
+      : {}),
+    ...(r.cta_kind && r.cta_value
+      ? { cta: { kind: r.cta_kind, value: r.cta_value } }
+      : {}),
+    ...(r.last_verified_at ? { lastVerifiedAt: r.last_verified_at } : {}),
+    ...(r.info_updated_at ? { infoUpdatedAt: r.info_updated_at } : {}),
+    ...(r.instagram ? { instagram: r.instagram } : {}),
+    ...(r.maps_url ? { mapsUrl: r.maps_url } : {}),
+    ...(r.hours?.length ? { hours: groupHours(r.hours) } : {}),
+    ...(r.hours_text ? { hoursText: r.hours_text } : {}),
+    ...(r.website ? { website: r.website } : {}),
+    ...(r.owner_validated ? { ownerValidated: true } : {}),
+    ...toImages(r.images ?? []),
+    ...(r.sernatur_number && r.sernatur_valid_until
+      ? {
+          sernatur: {
+            number: r.sernatur_number,
+            validUntil: r.sernatur_valid_until,
+          },
+        }
+      : {}),
     ...(source ? { source } : {}),
     ...(extraSources.length ? { extraSources } : {}),
   };
@@ -190,6 +294,9 @@ function toEvent(r: EventRow): EventContent | null {
     ...(r.featured ? { featured: true } : {}),
     ...(isIllustration(r.illustration) ? { illustration: r.illustration } : {}),
     ...(r.is_demo ? { demo: true } : {}),
+    ...(r.verification_status && r.verification_status !== "pending"
+      ? { verification: r.verification_status }
+      : {}),
     es,
     ...(text("en") ? { en: text("en") } : {}),
     ...(text("pt") ? { pt: text("pt") } : {}),

@@ -2,6 +2,13 @@ import type { IllustrationKey } from "@/content/images";
 
 export type Source = { url: string; label: string };
 
+export type Verification = "pending" | "verified" | "outdated";
+
+/** Botón de acción de un comercio (se edita en /admin/comercios). */
+export type CtaKind =
+  "whatsapp" | "phone" | "website" | "menu" | "booking" | "instagram";
+export type PlaceCta = { kind: CtaKind; value: string };
+
 export type LocalityContent = {
   slug: string;
   es: string;
@@ -15,6 +22,35 @@ export type LocalityContent = {
 };
 
 export type PlaceText = { name: string; short: string; description: string };
+
+/** Imagen entregada por el comercio (archivo en public/lugares/<slug>/). */
+export type PlaceImage = {
+  src: string;
+  width: number;
+  height: number;
+  /**
+   * photo: foto del lugar · menu: carta · promo: publicidad del local ·
+   * video: video del local (src es el archivo de video).
+   */
+  kind: "photo" | "menu" | "promo" | "video";
+  alt: { es: string; en: string; pt: string };
+  credit: string;
+};
+
+/**
+ * Horario de una temporada que se repite cada año. Los meses van de 1 a 12
+ * (pueden dar la vuelta: 12 → 2); los días, 0 = domingo … 6 = sábado.
+ */
+export type PlaceHours = {
+  fromMonth: number;
+  toMonth: number;
+  days: number[];
+  /** También abre los festivos con este horario. */
+  holidays?: boolean;
+  /** "HH:MM", hora de Chile. */
+  opens: string;
+  closes: string;
+};
 
 export type PlaceContent = {
   slug: string;
@@ -34,6 +70,32 @@ export type PlaceContent = {
   pt?: PlaceText;
   /** Ficha de EJEMPLO (ficticia): se rotula y no se indexa (demo-content.ts). */
   demo?: boolean;
+  /** Estado de verificación en terreno (de la base); sin dato, `pending`. */
+  verification?: Verification;
+  /** Botón de acción del comercio (de la base). */
+  cta?: PlaceCta;
+  /** Última verificación en terreno (de la base, ISO). */
+  lastVerifiedAt?: string;
+  /** Última vez que el comercio confirmó sus datos (ISO). */
+  infoUpdatedAt?: string;
+  /** Instagram del local (enlace completo). */
+  instagram?: string;
+  /** Sitio web o Facebook del local (https). */
+  website?: string;
+  /** Enlace de Google Maps que compartió el local. */
+  mapsUrl?: string;
+  /** Horarios por temporada, como los informó el local. */
+  hours?: PlaceHours[];
+  /** Horario tal como lo escribió el local (si no hay horario por temporada). */
+  hoursText?: string;
+  /** Logo del comercio (cuadrado). */
+  logo?: { src: string; width: number; height: number };
+  /** Fotos, carta y promociones que entregó el comercio. */
+  gallery?: PlaceImage[];
+  /** El representante del local confirmó los datos de la ficha. */
+  ownerValidated?: boolean;
+  /** Registro SERNATUR que informó el local (número y vigencia, ISO). */
+  sernatur?: { number: string; validUntil: string };
   source?: Source;
   tvSource?: Source;
   extraSources?: Source[];
@@ -58,6 +120,8 @@ export type EventContent = {
   illustration?: IllustrationKey;
   /** Evento de EJEMPLO (ficticio): se rotula y no se indexa. */
   demo?: boolean;
+  /** Estado de verificación en terreno (de la base); sin dato, `pending`. */
+  verification?: Verification;
   es: EventText;
   en?: EventText;
   pt?: EventText;

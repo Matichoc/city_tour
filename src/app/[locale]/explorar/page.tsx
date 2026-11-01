@@ -11,6 +11,7 @@ import {
 import { buildPageMetadata } from "@/lib/seo";
 import { EmptyState } from "@/components/ui/empty-state";
 import { PageHero } from "@/components/ui/page-hero";
+import { BusinessInvite } from "@/components/business/business-invite";
 import { PlaceCard } from "@/components/place/place-card";
 import { PlacesMap } from "@/components/map/places-map";
 import { CategoryIcon } from "@/components/ui/category-icon";
@@ -95,22 +96,6 @@ export default async function ExplorePage({
     .filter((g) => g.items.length > 0);
 
   const all = data.listPlaces(locale);
-  const catItems: FilterItem[] = [
-    {
-      key: "all",
-      label: t("all"),
-      href: { pathname: "/explorar", query: q({ categoria: undefined }) },
-      active: !category,
-      count: all.length,
-    },
-    ...categories.map((c) => ({
-      key: c.slug,
-      label: c.name,
-      href: { pathname: "/explorar" as const, query: q({ categoria: c.slug }) },
-      active: category === c.slug,
-      count: c.count,
-    })),
-  ];
   const locItems: FilterItem[] = [
     {
       key: "all",
@@ -166,73 +151,7 @@ export default async function ExplorePage({
     <main className="flex flex-col">
       <PageHero title={t("title")} subtitle={t("subtitle")} />
       <div className="mx-auto flex w-full max-w-3xl flex-col gap-4 px-4 pb-10">
-        <form role="search" className="flex gap-2">
-          {category ? (
-            <input type="hidden" name="categoria" value={category} />
-          ) : null}
-          {locality ? (
-            <input type="hidden" name="pueblo" value={locality} />
-          ) : null}
-          {view === "map" ? (
-            <input type="hidden" name="vista" value="mapa" />
-          ) : null}
-          <label className="sr-only" htmlFor="q">
-            {t("search")}
-          </label>
-          <div className="relative min-w-0 flex-1">
-            <svg
-              viewBox="0 0 24 24"
-              className="text-sea pointer-events-none absolute top-1/2 left-4 size-5 -translate-y-1/2"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              aria-hidden="true"
-            >
-              <circle cx="11" cy="11" r="7" />
-              <path d="m20 20-3.5-3.5" />
-            </svg>
-            <input
-              id="q"
-              name="q"
-              type="search"
-              defaultValue={query}
-              placeholder={t("search")}
-              className="border-border bg-surface min-h-12 w-full min-w-0 rounded-full border-2 pr-4 pl-11 shadow-sm"
-            />
-          </div>
-          <button
-            type="submit"
-            className="bg-sea min-h-12 shrink-0 rounded-full px-5 font-bold text-white active:scale-95"
-          >
-            {t("searchGo")}
-          </button>
-        </form>
-
         <div className="flex flex-col gap-3 sm:flex-row">
-          <FilterMenu
-            label={t("categories")}
-            valueLabel={categoryLabel ?? t("all")}
-            items={catItems}
-            active={Boolean(category)}
-            icon={
-              category ? (
-                <CategoryIcon category={category} className="size-5" />
-              ) : (
-                <svg
-                  viewBox="0 0 24 24"
-                  className="size-5"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.8"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z" />
-                </svg>
-              )
-            }
-          />
           <FilterMenu
             label={t("localities")}
             valueLabel={localityLabel ?? t("allLocalities")}
@@ -383,9 +302,11 @@ export default async function ExplorePage({
                   <span className="bg-sea-soft text-sea-deep grid size-10 shrink-0 place-items-center rounded-full">
                     <CategoryIcon category={g.slug} className="size-5" />
                   </span>
-                  <span className="font-display min-w-0 flex-1 text-lg font-extrabold">
+                  {/* h2: las fichas de adentro son h3, y así el lector de
+                      pantalla puede saltar de categoría en categoría. */}
+                  <h2 className="font-display min-w-0 flex-1 text-lg font-extrabold">
                     {g.name}
-                  </span>
+                  </h2>
                   <span className="text-muted text-sm font-semibold">
                     {t("groupCount", { count: g.items.length })}
                   </span>
@@ -413,6 +334,7 @@ export default async function ExplorePage({
             ))}
           </div>
         )}
+        <BusinessInvite />
       </div>
     </main>
   );

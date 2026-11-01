@@ -15,7 +15,7 @@ const qr = (url: string) =>
     type: "svg",
     margin: 1,
     errorCorrectionLevel: "M",
-    color: { dark: "#07495a", light: "#ffffff" },
+    color: { dark: "#155656", light: "#ffffff" },
   });
 
 export default async function KioskPage({

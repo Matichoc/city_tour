@@ -257,7 +257,7 @@ export function TripView({
             type="checkbox"
             checked={trip.returnToStart}
             onChange={(e) => update({ returnToStart: e.target.checked })}
-            className="size-5 accent-[#0b7285]"
+            className="size-5 accent-[#1b7070]"
           />
           {t("returnToStart")}
         </label>

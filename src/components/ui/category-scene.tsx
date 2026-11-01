@@ -2,13 +2,13 @@ import type { CategorySlug } from "@/content/types";
 import { CategoryIcon } from "@/components/ui/category-icon";
 
 const GRADIENT: Record<CategorySlug, string> = {
-  balneario: "from-[#8fd8ea] via-[#cdeff2] to-[#f2dfb0]",
-  recreacion: "from-[#a6dbe6] via-[#6fc8b8] to-[#4a7a37]",
-  deportes: "from-[#c6d4f5] via-[#9db4ec] to-[#5b4b9a]",
-  patrimonio: "from-[#f6dca6] via-[#e7b878] to-[#b4651f]",
-  gastronomia: "from-[#ffd29a] via-[#ffa87a] to-[#ff7a59]",
-  ruralidad: "from-[#bfe3a8] via-[#8fc27a] to-[#4a7a37]",
-  alojamiento: "from-[#d8f1f4] via-[#a6dbe6] to-[#5bb7c9]",
+  balneario: "from-[#a9dedd] via-[#e0f5f4] to-[#f6e6a8]",
+  recreacion: "from-[#f8d9e8] via-[#eeb0cf] to-[#b0447c]",
+  deportes: "from-[#d6e4f6] via-[#a9c8ee] to-[#3f6fb5]",
+  patrimonio: "from-[#f8dcda] via-[#f2aaa6] to-[#b8423f]",
+  gastronomia: "from-[#fbe3c8] via-[#f7c79a] to-[#e3925a]",
+  ruralidad: "from-[#d4f1f0] via-[#9fe0de] to-[#2a8584]",
+  alojamiento: "from-[#ebe1f8] via-[#cdb6ef] to-[#6d52b0]",
 };
 
 /** Cabecera ilustrada de tarjeta: degradado + motivo de la categoría. */

@@ -53,11 +53,10 @@ select tests.logout();
 
 -- ── Analítica anónima ────────────────────────────────────────────────────
 select tests.login('anon');
-insert into public.analytics_events (name, properties) values ('place_view', '{"slug":"x"}');
-select tests.raises('analítica: evento no permitido',
-  $$insert into public.analytics_events (name) values ('hackeo')$$, '23514');
-select tests.raises('analítica: propiedades enormes',
-  $$insert into public.analytics_events (name, properties) values ('share', jsonb_build_object('x', repeat('a', 3000)))$$, '23514');
+-- Desde 0029 nadie inserta analítica desde afuera: la aplicación no usa esa
+-- tabla (la analítica va a Vercel) y la política abierta se quitó (DB-01).
+select tests.raises('anon no inserta analítica',
+  $$insert into public.analytics_events (name, properties) values ('place_view', '{"slug":"x"}')$$, '42501');
 select tests.eq('anon no lee analítica', (select count(*)::int from public.analytics_events), 0);
 select tests.raises('anon no modifica analítica',
   $$update public.analytics_events set name = 'share'$$, '42501');

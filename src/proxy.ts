@@ -1,6 +1,14 @@
 import createMiddleware from "next-intl/middleware";
 import { NextResponse, type NextRequest } from "next/server";
 import { routing } from "@/i18n/routing";
+import {
+  ACCESS_COOKIE as ADMIN_ACCESS_COOKIE,
+  REFRESH_COOKIE,
+  REFRESH_MAX_AGE,
+  cookieOptions,
+  needsRefresh,
+  refreshTokens,
+} from "@/lib/admin/auth";
 import { ACCESS_COOKIE, ACCESS_PARAM, verifyAccess } from "@/lib/share-link";
 import { escapeHtml } from "@/lib/html";
 import es from "@/messages/es.json";
@@ -11,7 +19,7 @@ function expiredPage() {
   const html = `<!doctype html><html lang="es"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex"><title>${escapeHtml(es.share.expiredTitle)}</title>
-<style>body{font-family:system-ui,sans-serif;max-width:32rem;margin:15vh auto;padding:0 1rem;color:#0f3b4c;background:#fdf8ef}h1{font-size:1.5rem}</style>
+<style>body{font-family:system-ui,sans-serif;max-width:32rem;margin:15vh auto;padding:0 1rem;color:#22234a;background:#fdf8ef}h1{font-size:1.5rem}</style>
 </head><body><h1>${escapeHtml(es.share.expiredTitle)}</h1><p>${escapeHtml(es.share.expiredBody)}</p></body></html>`;
   return new NextResponse(html, {
     status: 403,
@@ -22,13 +30,61 @@ function expiredPage() {
   });
 }
 
+const isAdmin = (request: NextRequest) =>
+  request.nextUrl.pathname === "/admin" ||
+  request.nextUrl.pathname.startsWith("/admin/");
+
 /**
- * Con `SHARE_LINK_SECRET` (solo en vistas previas) el sitio se ve únicamente
- * con un enlace vigente (src/lib/share-link.ts). Sin esa variable, como siempre.
+ * El panel /admin va sin prefijo de idioma. Si el token de acceso está por
+ * vencer, se renueva aquí (los componentes de servidor no pueden escribir
+ * cookies) y se pasa el nuevo a la misma petición.
+ */
+async function admin(request: NextRequest) {
+  const refreshToken = request.cookies.get(REFRESH_COOKIE)?.value;
+  if (
+    !refreshToken ||
+    !needsRefresh(request.cookies.get(ADMIN_ACCESS_COOKIE)?.value)
+  ) {
+    return NextResponse.next();
+  }
+  const tokens = await refreshTokens(refreshToken);
+  if (!tokens) {
+    request.cookies.delete(ADMIN_ACCESS_COOKIE);
+    const response = NextResponse.next({ request });
+    response.cookies.delete({ name: ADMIN_ACCESS_COOKIE, path: "/admin" });
+    response.cookies.delete({ name: REFRESH_COOKIE, path: "/admin" });
+    return response;
+  }
+  request.cookies.set(ADMIN_ACCESS_COOKIE, tokens.access_token);
+  const response = NextResponse.next({ request });
+  response.cookies.set(
+    ADMIN_ACCESS_COOKIE,
+    tokens.access_token,
+    cookieOptions(tokens.expires_in),
+  );
+  response.cookies.set(
+    REFRESH_COOKIE,
+    tokens.refresh_token,
+    cookieOptions(REFRESH_MAX_AGE),
+  );
+  return response;
+}
+
+/** Sitio público (con idioma) o panel. */
+const site = (request: NextRequest) =>
+  isAdmin(request) ? admin(request) : intl(request);
+
+/**
+ * Con `SHARE_LINK_SECRET` el sitio (y el panel) se ve únicamente con un enlace
+ * vigente (src/lib/share-link.ts). Sin esa variable, como siempre, salvo en
+ * una vista previa de Vercel: ahí falla cerrado, para que una vista previa sin
+ * clave no quede abierta por descuido.
  */
 export default async function proxy(request: NextRequest) {
   const secret = process.env.SHARE_LINK_SECRET;
-  if (!secret) return intl(request);
+  if (!secret) {
+    return process.env.VERCEL_ENV === "preview" ? expiredPage() : site(request);
+  }
 
   const fromUrl = request.nextUrl.searchParams.get(ACCESS_PARAM);
   if (fromUrl !== null) {
@@ -53,7 +109,7 @@ export default async function proxy(request: NextRequest) {
   }
 
   if (await verifyAccess(secret, request.cookies.get(ACCESS_COOKIE)?.value)) {
-    return intl(request);
+    return site(request);
   }
   return expiredPage();
 }

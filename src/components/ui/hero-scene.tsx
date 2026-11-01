@@ -36,10 +36,10 @@ function Gull({ className, top }: { className: string; top: string }) {
  */
 export function HeroScene({ children }: { children: ReactNode }) {
   return (
-    <section className="relative isolate overflow-hidden bg-[linear-gradient(180deg,#07495a_0%,#0b7285_46%,#f0a368_88%)] px-4 pt-9 pb-24 text-white">
+    <section className="relative isolate overflow-hidden bg-[linear-gradient(180deg,#155656_0%,#1b7070_46%,#e9a3c6_88%)] px-4 pt-9 pb-24 text-white">
       {/* Sol */}
       <div
-        className="sun-glow absolute -top-6 right-[8%] size-36 rounded-full bg-[radial-gradient(circle,#fff3c4_0%,#ffb454_38%,rgb(255_122_89_/_0)_72%)]"
+        className="sun-glow absolute -top-6 right-[8%] size-36 rounded-full bg-[radial-gradient(circle,#fff3c4_0%,#f4d36e_38%,rgb(233_139_189_/_0)_72%)]"
         aria-hidden="true"
       />
       <Gull className="gull" top="3%" />
@@ -65,8 +65,8 @@ export function HeroScene({ children }: { children: ReactNode }) {
         />
       </svg>
 
-      <Wave className="wave-c" fill="#1fb6c9" opacity={0.55} height={92} />
-      <Wave className="wave-b" fill="#0b7285" opacity={0.85} height={74} />
+      <Wave className="wave-c" fill="#6fcbca" opacity={0.55} height={92} />
+      <Wave className="wave-b" fill="#1b7070" opacity={0.85} height={74} />
       <Wave className="wave-a" fill="#fdf8ee" height={52} />
 
       {GLINTS.map((g, i) => (

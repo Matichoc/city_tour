@@ -92,6 +92,20 @@ describe("proxy", () => {
     expect(res.status).toBe(200);
   });
 
+  it("una vista previa de Vercel sin clave no se abre: falla cerrado", async () => {
+    vi.stubEnv("SHARE_LINK_SECRET", "");
+    vi.stubEnv("VERCEL_ENV", "preview");
+    const res = await proxy(req("https://x.vercel.app/es"));
+    expect(res.status).toBe(403);
+  });
+
+  it("la producción de Vercel sin clave sigue abierta (el día que se abra el sitio)", async () => {
+    vi.stubEnv("SHARE_LINK_SECRET", "");
+    vi.stubEnv("VERCEL_ENV", "production");
+    const res = await proxy(req("https://x.vercel.app/es"));
+    expect(res.status).toBe(200);
+  });
+
   it("con clave y sin enlace muestra «enlace vencido»", async () => {
     vi.stubEnv("SHARE_LINK_SECRET", SECRET);
     const res = await proxy(req("https://x.vercel.app/es"));

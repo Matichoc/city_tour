@@ -5,6 +5,7 @@ import { buildPageMetadata } from "@/lib/seo";
 import { PageHero } from "@/components/ui/page-hero";
 import { IllustratedImage } from "@/components/ui/illustrated-image";
 import { illustrationFor } from "@/lib/data";
+import { getSiteSettings } from "@/lib/business";
 
 export async function generateMetadata({
   params,
@@ -39,6 +40,8 @@ export default async function BusinessPage({
   const locale = resolveLocale((await params).locale);
   setRequestLocale(locale);
   const t = await getTranslations("business");
+  const tInvite = await getTranslations("businessInvite");
+  const { businessFormUrl } = await getSiteSettings();
 
   return (
     <main className="flex flex-col">
@@ -103,12 +106,23 @@ export default async function BusinessPage({
           </ol>
         </section>
 
-        <p
-          role="note"
-          className="bg-earth-soft text-earth rounded-2xl p-4 text-sm"
-        >
-          {t("notOpen")}
-        </p>
+        {businessFormUrl ? (
+          <a
+            href={businessFormUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-coral text-coral-ink inline-flex min-h-12 items-center self-start rounded-full px-6 font-extrabold shadow-sm active:scale-95"
+          >
+            {tInvite("cta")}
+          </a>
+        ) : (
+          <p
+            role="note"
+            className="bg-earth-soft text-earth rounded-2xl p-4 text-sm"
+          >
+            {t("notOpen")}
+          </p>
+        )}
 
         <section aria-labelledby="muni" className="bg-sea-soft rounded-2xl p-4">
           <h2

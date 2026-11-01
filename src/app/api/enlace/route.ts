@@ -61,7 +61,7 @@ export async function GET(request: NextRequest) {
   const html = `<!doctype html><html lang="es"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex"><title>${escapeHtml(es.share.linkTitle)}</title>
-<style>body{font-family:system-ui,sans-serif;max-width:40rem;margin:10vh auto;padding:0 1rem;color:#0f3b4c;background:#fdf8ef}code{display:block;word-break:break-all;background:#fff;padding:.75rem;border-radius:.5rem;font-size:1rem}</style>
+<style>body{font-family:system-ui,sans-serif;max-width:40rem;margin:10vh auto;padding:0 1rem;color:#22234a;background:#fdf8ef}code{display:block;word-break:break-all;background:#fff;padding:.75rem;border-radius:.5rem;font-size:1rem}</style>
 </head><body><h1>${escapeHtml(es.share.linkTitle)}</h1>
 <code>${escapeHtml(url.toString())}</code>
 <p>${escapeHtml(body)}</p></body></html>`;

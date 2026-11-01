@@ -14,7 +14,16 @@ import {
   type IllustrationKey,
 } from "@/content/images";
 import { DEMO_REVIEWS } from "@/content/demo-content";
-import type { CategorySlug, EventContent, Source } from "@/content/types";
+import type {
+  CategorySlug,
+  CtaKind,
+  EventContent,
+  PlaceCta,
+  PlaceContent,
+  PlaceHours,
+  PlaceImage,
+  Source,
+} from "@/content/types";
 import type { Locale } from "@/i18n/routing";
 import { loadContent } from "@/lib/db/content-source";
 
@@ -65,7 +74,46 @@ export type Place = {
   /** Opiniones simuladas (solo fichas de ejemplo). */
   ratingAverage: number | null;
   ratingCount: number;
+  /** Botón de acción del comercio, listo para enlazar. */
+  cta: { kind: CtaKind; href: string } | null;
+  /** Última verificación en terreno (ISO), si la hubo. */
+  lastVerifiedAt: string | null;
+  /** Última vez que el comercio confirmó sus datos (ISO), si la hubo. */
+  infoUpdatedAt: string | null;
+  instagram: string | null;
+  website: string | null;
+  mapsUrl: string | null;
+  hours: PlaceHours[];
+  hoursText: string | null;
+  logo: { src: string; width: number; height: number } | null;
+  /** Fotos, carta y promociones del local, con el texto en el idioma pedido. */
+  gallery: {
+    src: string;
+    width: number;
+    height: number;
+    kind: PlaceImage["kind"];
+    alt: string;
+    credit: string;
+  }[];
+  sernatur: { number: string; validUntil: string } | null;
+  /** El representante del local confirmó los datos de la ficha. */
+  ownerValidated: boolean;
 };
+
+/** Enlace del botón de acción: WhatsApp y teléfono se arman desde el número. */
+export function ctaHref(cta: PlaceCta): string | null {
+  const digits = cta.value.replace(/[^\d+]/g, "");
+  switch (cta.kind) {
+    case "whatsapp": {
+      const n = digits.replace(/^\+/, "");
+      return /^\d{8,15}$/.test(n) ? `https://wa.me/${n}` : null;
+    }
+    case "phone":
+      return /^\+?\d{8,15}$/.test(digits) ? `tel:${digits}` : null;
+    default:
+      return /^https?:\/\//.test(cta.value) ? cta.value : null;
+  }
+}
 
 export type Locality = {
   slug: string;
@@ -96,6 +144,11 @@ export type Picture = {
   width: number;
   height: number;
   alt: string;
+  /**
+   * photo: foto real del lugar · logo: logo del comercio (se muestra entero).
+   * Sin valor: ilustración hecha con IA (lleva su rótulo).
+   */
+  kind?: "photo" | "logo";
 };
 
 function picture(key: IllustrationKey, locale: Locale): Picture {
@@ -106,6 +159,33 @@ function picture(key: IllustrationKey, locale: Locale): Picture {
     height: i.height,
     alt: locale === "en" ? i.alt.en : i.alt.es,
   };
+}
+
+/**
+ * Portada real de una ficha: la primera foto del lugar o, si no hay, el logo
+ * del comercio. Solo sin imágenes reales se usa la ilustración con IA.
+ */
+function realPicture(
+  p: PlaceContent,
+  name: string,
+  locale: Locale,
+): Picture | null {
+  const photo = p.gallery?.find((g) => g.kind === "photo");
+  if (photo)
+    return {
+      src: photo.src,
+      width: photo.width,
+      height: photo.height,
+      alt: photo.alt[locale],
+      kind: "photo",
+    };
+  if (p.logo)
+    return {
+      ...p.logo,
+      alt: pick(locale, `Logo de ${name}`, `${name} logo`, `Logo de ${name}`),
+      kind: "logo",
+    };
+  return null;
 }
 
 export const illustrationFor = (key: IllustrationKey, locale: Locale) =>
@@ -217,16 +297,33 @@ export function createData(content: SiteContent, showDemo = SHOW_DEMO) {
       sources: [p.source, p.tvSource, ...(p.extraSources ?? [])].filter(
         (s): s is Source => Boolean(s),
       ),
-      verification: "pending",
+      verification: p.verification ?? "pending",
       fallbackToSpanish:
         (locale === "en" && !p.en) || (locale === "pt" && !p.pt),
-      picture: picture(
-        PLACE_ILLUSTRATION[p.slug] ?? CATEGORY_ILLUSTRATION[p.categorySlug],
-        locale,
-      ),
+      picture:
+        realPicture(p, text.name, locale) ??
+        picture(
+          PLACE_ILLUSTRATION[p.slug] ?? CATEGORY_ILLUSTRATION[p.categorySlug],
+          locale,
+        ),
       demo: p.demo === true,
       ratingAverage: rating.average,
       ratingCount: rating.count,
+      cta: (() => {
+        const href = p.cta ? ctaHref(p.cta) : null;
+        return p.cta && href ? { kind: p.cta.kind, href } : null;
+      })(),
+      lastVerifiedAt: p.lastVerifiedAt ?? null,
+      infoUpdatedAt: p.infoUpdatedAt ?? null,
+      instagram: p.instagram ?? null,
+      website: p.website ?? null,
+      mapsUrl: p.mapsUrl ?? null,
+      hours: p.hours ?? [],
+      hoursText: p.hoursText ?? null,
+      logo: p.logo ?? null,
+      gallery: (p.gallery ?? []).map((g) => ({ ...g, alt: g.alt[locale] })),
+      sernatur: p.sernatur ?? null,
+      ownerValidated: p.ownerValidated === true,
     };
   }
 
@@ -240,7 +337,7 @@ export function createData(content: SiteContent, showDemo = SHOW_DEMO) {
         (p) =>
           !q ||
           normalize(
-            `${p.name} ${p.shortDescription} ${p.localityName ?? ""}`,
+            `${p.name} ${p.shortDescription} ${p.categoryName} ${p.localityName ?? ""}`,
           ).includes(q),
       );
   }
@@ -266,7 +363,7 @@ export function createData(content: SiteContent, showDemo = SHOW_DEMO) {
       sources: [e.source, ...(e.extraSources ?? [])].filter((s): s is Source =>
         Boolean(s),
       ),
-      verification: "pending",
+      verification: e.verification ?? "pending",
       fallbackToSpanish:
         (locale === "en" && !e.en) || (locale === "pt" && !e.pt),
       featured: e.featured === true,

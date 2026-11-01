@@ -8,6 +8,8 @@ Next.js 16 · TypeScript · Tailwind 4 · next-intl · Supabase
 - Plan de trabajo: [`docs/PLAN.md`](docs/PLAN.md)
 - Financiamiento y herramientas: [`docs/FINANCIAMIENTO.md`](docs/FINANCIAMIENTO.md)
 - Ambientes (`main`, `develop`, `demo`) y enlaces para compartir: [`docs/COMPARTIR-VISTA-PREVIA.md`](docs/COMPARTIR-VISTA-PREVIA.md)
+- Bitácora de avances (versiones, días y horas): [`docs/BITACORA.md`](docs/BITACORA.md)
+- Audio e inclusión (botón «Escuchar», accesibilidad): [`docs/PLAN-AUDIO-ACCESIBILIDAD.md`](docs/PLAN-AUDIO-ACCESIBILIDAD.md)
 
 ## Ver el sitio
 
@@ -26,6 +28,9 @@ herramientas de dispositivo del navegador.
 > el sitio lo lee de la base; sin ellas, del repo
 > ([`docs/SETUP-SUPABASE.md`](docs/SETUP-SUPABASE.md)).
 
+Panel municipal: `/admin` (iniciar sesión con un usuario que tenga perfil en
+`profiles`; ver [`docs/DECISIONES.md`](docs/DECISIONES.md)).
+
 ## Scripts
 
 | Comando                        | Descripción                                         |
@@ -40,5 +45,6 @@ herramientas de dispositivo del navegador.
 
 ## Ramas
 
-`main` (producción) ← `develop` (pruebas, equipo) ← `feat/*`. Los PR van a `develop`.
+`main` ← `develop` ← `feat/*`. Los PR van a `develop`. Por ahora `develop` es
+la producción de Vercel (cerrada, solo equipo) y `main` está en espera.
 `demo` es una copia de `develop` para mostrar por horas.

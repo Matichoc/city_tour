@@ -1,29 +1,30 @@
 @import "tailwindcss";
 
 /*
- * Paleta "Papudo": playa y campo. Mar turquesa, arena, sol de atardecer,
- * dunas, tierra y verdes de campo. Única fuente de color del sitio
- * (docs/DESIGN.md): no hardcodear colores en componentes.
+ * Paleta "Papudo": los colores del logo municipal (turquesa, amarillo,
+ * magenta, rojo y azul noche) en versión pálida, más arena y verdes de campo.
+ * El logo no se usa; solo sus colores (docs/MARCA-REFERENCIA.md).
+ * Única fuente de color del sitio: no hardcodear colores en componentes.
  */
 :root {
   --background: #fdf8ee; /* arena clara */
   --surface: #ffffff;
-  --foreground: #0b2b36; /* mar profundo */
-  --muted: #4d6a74;
-  --border: #eadfc8;
+  --foreground: #22234a; /* azul noche del logo, suavizado */
+  --muted: #56587a;
+  --border: #e8e0d2;
 
-  --sea: #0b7285; /* turquesa oscuro: botones y texto sobre blanco */
-  --sea-bright: #1fb6c9; /* turquesa vivo: decoración */
-  --sea-deep: #07495a;
-  --sea-soft: #d8f1f4;
-  --sky: #8fd8ea;
+  --sea: #1b7070; /* turquesa del logo, oscurecido: botones y texto */
+  --sea-bright: #6fcbca; /* turquesa del logo, pálido: decoración */
+  --sea-deep: #155656;
+  --sea-soft: #e0f5f4;
+  --sky: #a9dedd;
 
-  --sun: #ffb454;
-  --coral: #ff7a59; /* acción principal */
-  --coral-ink: #3a1305; /* texto sobre coral */
-  --dune: #ecd29a;
-  --earth: #94500f;
-  --earth-soft: #f8e8d2;
+  --sun: #f4d36e; /* amarillo del logo, pálido */
+  --coral: #e98bbd; /* magenta del logo, pálido: acción principal */
+  --coral-ink: #3b0a26; /* texto sobre coral */
+  --dune: #f2e2b3;
+  --earth: #a8403c; /* rojo del logo, como tinta */
+  --earth-soft: #f8e3e1;
 
   --field: #4a7a37; /* campo */
   --field-deep: #2f5233;
@@ -168,7 +169,7 @@ body {
 }
 
 .shimmer-title {
-  background: linear-gradient(100deg, #ffffff 20%, #ffe3a8 45%, #ffffff 70%);
+  background: linear-gradient(100deg, #ffffff 20%, #fbeab0 45%, #ffffff 70%);
   background-size: 200% auto;
   -webkit-background-clip: text;
   background-clip: text;

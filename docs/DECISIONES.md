@@ -33,7 +33,9 @@ opcional: si falta la traducción de un lugar, se muestra el español y se avisa
 Vercel Web Analytics (sin cookies, sin datos personales). Eventos propios en
 `src/lib/analytics.ts`: `add_to_trip`, `add_route`, `navigate_click`, `share`,
 `qr_visit` (con el `origen` del QR), `save_place`, `live_start` (recorrido en
-vivo) y `camera_start` (guía con cámara). Nunca se envía la ubicación del
+vivo), `camera_start` (guía con cámara), `cta_click` (botón de acción de un
+comercio, con su `slug` y tipo) y `listen_play` (primera vez que se toca
+«Escuchar» en una ficha, con su `slug`). Nunca se envía la ubicación del
 usuario: el GPS y la cámara se usan solo dentro del teléfono. Se activa en
 Vercel → Analytics; sin activar, no envía nada.
 
@@ -108,15 +110,216 @@ Fuente: PLADETUR de Papudo 2023–2027, iD (`docs/investigacion/`).
 
 ## Enlaces temporales para las vistas previas
 
-- Tres ambientes: `main` (público), `develop` (equipo) y `demo` (para
-  compartir por horas). Las vistas previas se cierran con `SHARE_LINK_SECRET`
+- Ambientes: `develop` (equipo; por ahora es la rama de producción en Vercel,
+  cerrada), `demo` (para compartir por horas) y `main` (en espera hasta abrir
+  el sitio al público). Las vistas previas se cierran con `SHARE_LINK_SECRET`
   (solo en Preview) y se abren con enlaces firmados: el del equipo es
   permanente (`?para=equipo`) y los demás vencen solos (4 h por defecto, máx.
   30 días). Se comparten por `papudo-dev.vercel.app` y
   `papudo-demo.vercel.app`, para que la dirección no lleve el nombre de la
-  rama. `demo` tiene su propia clave (variable por rama en Vercel) para
-  cortarlo sin tocar el enlace del equipo. Guía: [`COMPARTIR-VISTA-PREVIA.md`](COMPARTIR-VISTA-PREVIA.md).
+  rama. El equipo usa la clave de Production (`develop`) y el `demo` la de
+  Preview, así el `demo` se corta sin tocar el enlace del equipo. Guía: [`COMPARTIR-VISTA-PREVIA.md`](COMPARTIR-VISTA-PREVIA.md).
 - Se hizo en el proxy y no con los *Shareable Links* de Vercel porque esos no
   vencen solos. La clave para crear enlaces se pide con la ventana de usuario y
   contraseña del navegador (HTTP Basic) para que no quede en la URL ni en los
   registros.
+
+## Panel `/admin` (primera parte: ver y verificar)
+
+- `/admin/ingresar`: correo y contraseña de Supabase Auth. Solo entra quien
+  tiene perfil activo en `profiles` (admin, editor o verificador); los tokens
+  van en cookies httpOnly limitadas a `/admin` y el proxy renueva el de acceso
+  antes de que venza. Se usa la API REST con `fetch`, sin librerías.
+- `/admin`: lugares, eventos y rutas con su estado de publicación y
+  verificación (incluye borradores, por RLS de personal). `/admin/<tipo>/<id>`:
+  fuentes, historial y formulario que llama a `verify_entity()` (solo admin y
+  verificador; deja registro en `verification_logs`). Al guardar se invalida
+  la caché del contenido (`revalidateTag("content", "max")`).
+- El sitio público muestra el estado de verificación que viene de la base.
+- `/admin` va sin prefijo de idioma (solo español) y queda detrás de la misma
+  puerta de enlaces que el resto del sitio.
+- Pestaña **Localidades** (pueblos y sectores, con cuántos lugares tiene cada
+  uno, si tiene ubicación y su fuente), enlace «Ver en el sitio» en cada fila
+  publicada y «Abrir el sitio» en la cabecera.
+- **Vista previa**: la ficha publicada se ve dentro del panel en formato
+  teléfono (un `iframe` del mismo sitio, que pasa por la misma puerta de
+  enlaces). Los borradores no tienen vista previa porque el sitio público no
+  los muestra.
+- Pendiente (Fase 2): editar fichas, crear borradores, fotos, usuarios y roles.
+
+## Comentarios de visitantes (reales)
+
+- Se publican al enviarlos (sin cuenta), con nombre opcional, 1–5 estrellas y
+  hasta 500 caracteres. Solo en fichas y eventos reales publicados; las de
+  ejemplo siguen con la demostración local.
+- Freno automático: filtro de groserías (`src/lib/profanity.ts`), campo
+  trampa para robots y límite en la base (3 por hora y 10 por día por
+  remitente; 30 por hora por ficha). El remitente se identifica con un hash
+  con sal de IP y navegador (`REVIEWS_SALT`, o la clave de enlaces): nunca se
+  guarda la IP y la huella no es legible por la API.
+- La única entrada es `submit_review()`; la tabla no admite inserciones
+  directas. En `/admin/comentarios` el personal oculta o vuelve a mostrar
+  (admin y editor) y borra (solo admin); todo queda en `audit_log`. Los
+  cambios se ven al instante en el sitio (`updateTag("reviews")`).
+- Pendiente: respuesta del comercio a una opinión (cuando existan cuentas de
+  negocio).
+
+## Comercios: botón de acción, avisos e invitación (`/admin/comercios`)
+
+- **Botón de acción** por local (WhatsApp, llamar, web, carta, reservas,
+  Instagram): columnas `places.cta_kind`/`cta_value`, editables por admin y
+  editor. WhatsApp y teléfono se arman desde el número (`ctaHref`); el resto
+  exige `https://`. `content.sql` no toca estas columnas. Cada clic se mide
+  con el evento anónimo `cta_click`.
+- **Avisos destacados** (`notices`): título, texto, enlace y fecha de término
+  (fin del día, hora de Chile). De un local, salen en su ficha; generales, en
+  la portada. Se pausan, activan o borran; vencen solos (RLS y un segundo
+  filtro por si la página quedó en caché).
+- **Invitación a comercios** (`site_settings`, solo admin): se enciende o apaga
+  y, con el enlace del formulario, el botón «Sumar mi comercio» va directo a
+  él (explorador, fichas de negocios y `/negocios`).
+- Los cambios se ven al instante (`updateTag` de `content`, `notices`,
+  `settings`).
+
+## Datos de comercios al día (cada 6 meses)
+
+- `places.info_updated_at` (migración 0019): última vez que el comercio
+  confirmó o actualizó sus datos. La registra el personal (admin, editor) con
+  «Marcar actualizada hoy» en `/admin/comercios#actualizacion`; `content.sql`
+  no la toca.
+- Vence a los 6 meses y se avisa 30 días antes (`src/lib/freshness.ts`). El
+  panel ordena primero los sin fecha y los vencidos, muestra un aviso en
+  `/admin` con cuántos faltan y trae el mensaje listo para el comercio (con
+  botón de WhatsApp si el local tiene ese botón de acción).
+- La ficha pública muestra la fecha de la última verificación y, en los
+  comercios, la de confirmación de datos; si pasaron más de 6 meses, avisa al
+  visitante que revise horarios y precios antes de ir.
+- Mientras el sitio esté cerrado, el enlace a la ficha que va en el mensaje
+  solo abre con un enlace de acceso.
+
+## Fotos y videos en los comentarios (migración 0020)
+
+- Hasta 4 archivos por comentario (un solo video, de máx. 1 minuto), 25 MB
+  cada uno; JPG, PNG, WebP, MP4, WebM o MOV.
+- **Detector gratuito en el navegador**: NSFW.js (modelo MobileNetV2), sin
+  cuenta ni costo y sin enviar nada a terceros. Se carga solo al elegir un
+  archivo; en los videos revisa 8 cuadros y usa el peor. Bloquea el desnudo
+  explícito (`Porn`/`Hentai`); «Sexy» no bloquea (trajes de baño en una guía
+  de playas), pero marca el archivo como «Revisar con cuidado».
+  Reglas en `src/lib/media-policy.ts`.
+- Como el detector del navegador se puede saltar, **nada se publica solo**:
+  los archivos van a un bucket privado (`review-media`) y quedan «por
+  revisar» hasta que el personal los aprueba en `/admin/comentarios`
+  (filtro «Fotos por revisar»). Rechazar o borrar el comentario borra el
+  archivo. El sitio los muestra con enlaces firmados que solo se pueden crear
+  para lo aprobado de comentarios visibles.
+- Los visitantes solo suben a rutas que registró `attach_review_media()`
+  (mismo remitente que el comentario, dentro de 15 minutos) y antes de 30
+  minutos; `finish_review_media()` deja en revisión solo lo que llegó.
+- Más adelante, con tráfico: un servicio en el servidor (Sightengine, Google
+  Vision o AWS Rekognition) podría aprobar solo lo que pase su revisión.
+
+## Datos de los comercios que se suman (migración 0021)
+
+- El formulario «Suma tu comercio» (Google Forms → planilla) es la fuente de
+  los comercios adheridos. Se cargan con la marca «Validada por el
+  representante del local» (ver más abajo) y su fecha de confirmación, y quedan
+  `pending` hasta verificarlos en terreno. El nombre y el correo de quien responde **no** se publican ni se
+  guardan en el repo.
+- Horarios por temporada que se repiten cada año (`place_hours.from_month`,
+  `to_month`, `holidays`; día 0 = domingo). La ficha los muestra como
+  «Enero a febrero · Todos los días · 09:00–22:00» y aclara «Informado por el
+  local». Sin horarios, sigue «Por confirmar».
+- Instagram y enlace de Google Maps del local (`places.maps_url`): «Cómo
+  llegar» usa la coordenada si existe; si no, el enlace de Maps; si no, una
+  búsqueda por nombre y dirección.
+- El botón de WhatsApp y la fecha de confirmación entran por `content.sql`
+  solo si están vacíos; después mandan los cambios del panel.
+- Primer comercio: Roots Salinas (17-10-2026).
+
+## Comercios desde el panel e importación de la planilla (migración 0023)
+
+- **Crear y editar** (`/admin/comercios/nuevo` y `/admin/comercios/<id>`): un
+  editor crea la ficha en borrador; solo un administrador publica o vuelve a
+  borrador (la base lo exige). Sin traducciones inventadas: el texto va en
+  español y en inglés y portugués se muestra el español con aviso.
+- **Fotos, carta y logo** desde la ficha: el navegador achica la foto, el
+  servidor la vuelve a codificar a WebP sin metadatos (con `sharp`) y la guarda
+  en el bucket público `place-images`. Máx. 4 MB por pedido (Vercel acepta
+  4,5 MB). La primera foto es la portada; sin fotos, el logo. Quitar una
+  imagen borra también el archivo.
+- **Contacto interno** (`place_contacts`): nombre y correo de quien inscribió el
+  negocio; solo lo ve el personal.
+- **Panel manda sobre el repo:** una ficha creada o editada en el panel queda
+  `managed_in_panel` y `content.sql` ya no la toca (hay una prueba en
+  `tests/db/managed.check.sql`).
+- **Importar la planilla** (`/admin/comercios/importar`, detalle en
+  [`FORMULARIO-COMERCIOS.md`](FORMULARIO-COMERCIOS.md)): primero se revisa (no
+  guarda nada) y luego se importa lo seleccionado; el plan se recalcula al
+  importar, no se confía en lo que mostró la pantalla. Se compara campo por
+  campo con lo importado la vez anterior (`import_snapshot`), así lo que se
+  editó a mano en otros campos se conserva. Una ficha que ya existía se
+  vincula sin pisar sus datos. La planilla debe estar compartida con «cualquier
+  persona con el enlace»; si no, se sube el CSV. Los comercios nuevos entran en
+  borrador salvo que un administrador marque publicar.
+- **Bitácora** (`docs/BITACORA.md`, `pnpm bitacora`): versiones, días y horas
+  de avance, generada desde git y de `docs/bitacora-notas.json`.
+
+## «Validada por el representante del local» y edición completa por local (migración 0024)
+
+- **La fuente de un comercio que respondió el formulario se muestra simple:**
+  «Validada por el representante del local» (en la ficha, enlazada a su
+  Instagram si lo tiene), sin hablar del formulario. Es la casilla
+  `places.owner_validated`; se marca sola al importar de la planilla (el
+  formulario exige la autorización del dueño o encargado) y a mano en la ficha
+  del panel, solo si de verdad confirmó los datos. Las fuentes con enlace
+  (por ejemplo, Google Maps para la ubicación) se siguen mostrando debajo. Ya no
+  se guarda una «fuente» sin enlace por cada comercio importado.
+- **Cada local se edita completo desde `/admin/comercios/<id>`** (botón «Editar
+  ficha, fotos y videos» en la lista de comercios): datos, horarios por
+  temporada, y logo, carta, fotos, promociones y videos. Sobre cada imagen o
+  video: orden (↑ ↓), «hacer portada», editar texto alternativo y crédito, y
+  quitar. Si cambia el texto en español se borran sus traducciones viejas (la
+  ficha muestra el español hasta que alguien las revise).
+- **Accesos:** además del menú «Comercios», la lista de Fichas → Lugares tiene
+  los botones «Nuevo comercio» e «Importar planilla» y, en cada fila, «Editar
+  ficha, fotos y videos» (solo admin y editor; no en los ejemplos ficticios).
+- **Horarios por temporada editables** (meses, días, hora, festivos): antes solo
+  se podían cargar desde el repo. Con horarios por temporada la ficha no
+  muestra el texto libre «Días y horarios».
+- **Videos de comercios:** MP4, WebM o MOV de hasta 50 MB (el máximo del plan
+  gratuito de Supabase) en el bucket público `place-videos`. Un video pesa más
+  de lo que Vercel acepta por pedido (4,5 MB), así que el servidor solo
+  autoriza la subida (enlace firmado con el permiso del personal) y el navegador
+  la hace directo a Storage; después se registra en la ficha comprobando que el
+  archivo exista. Sin recompresión: si el video pesa más, se comprime antes.
+  Se ven en «Fotos y carta» de la ficha. Quitarlo borra también el archivo. Al
+  ser videos del propio local subidos por el personal no pasan por el filtro de
+  contenido de los comentarios.
+- **Un botón con `formAction` en un componente de cliente no envía su propio
+  nombre y valor:** los datos extra van como argumento de la acción
+  (`action.bind(null, valor)`) o en campos ocultos. Lo detectó la prueba en
+  navegador, no las unitarias.
+
+## Paleta desde el logo municipal
+
+Los tokens de color del sitio pasaron a los colores del logo en versión
+pálida (detalle y contrastes en [`MARCA-REFERENCIA.md`](MARCA-REFERENCIA.md)).
+El logo no se usa.
+
+## Imágenes de los comercios (migración 0022)
+
+- Logo, carta, fotos y promociones que entrega el local (autorizadas en el
+  formulario) van, por ahora, en `public/lugares/<slug>/` como WebP
+  re-codificado (sin metadatos: las fotos de celular traen la ubicación GPS).
+  `content.sql` las registra en `place_images` con tipo, tamaño, texto
+  alternativo en es/en/pt y crédito; solo reemplaza las rutas del repo
+  («/...»), así las que se suban después desde el panel no se pisan.
+- La ficha muestra el logo junto al nombre y una sección «Fotos y carta». Las
+  promociones se rotulan «Publicidad del local» y los precios de la carta se
+  advierten como sujetos a cambio. La ilustración de portada se mantiene hasta
+  tener fotos del lugar.
+- Registro SERNATUR: número y vigencia que informa el local, como texto (no se
+  reproduce el sello oficial); avisa si venció. Se confirma al verificar.
+- No se copian fotos de Google Maps: pertenecen a quien las subió. Solo se
+  usan las que el local entregue.

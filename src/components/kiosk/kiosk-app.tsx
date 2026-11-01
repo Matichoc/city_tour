@@ -165,11 +165,21 @@ export function KioskApp({
         <button
           type="button"
           onClick={() => go({ kind: "home" })}
-          className="font-display text-sea-deep min-h-14 text-left text-2xl font-extrabold"
+          className="font-display text-sea-deep flex min-h-14 items-center gap-3 text-left text-2xl font-extrabold"
         >
-          Papudo en tu mano
-          <span className="text-muted block text-sm font-semibold">
-            {t("subtitle")}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/brand/papudo-simbolo.webp"
+            alt=""
+            width={43}
+            height={50}
+            className="h-12 w-auto"
+          />
+          <span>
+            Papudo en tu Mano
+            <span className="text-muted block text-sm font-semibold">
+              {t("subtitle")}
+            </span>
           </span>
         </button>
         <div className="flex items-center gap-3">
@@ -188,12 +198,12 @@ export function KioskApp({
       <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-6 px-6 py-8">
         {view.kind === "home" ? (
           <>
-            <section className="relative isolate overflow-hidden rounded-[2rem] bg-[linear-gradient(135deg,#07495a_0%,#0b7285_55%,#f0a368_130%)] p-8 text-white shadow-lg">
+            <section className="relative isolate overflow-hidden rounded-[2rem] bg-[linear-gradient(135deg,#155656_0%,#1b7070_55%,#e9a3c6_130%)] p-8 text-white shadow-lg">
               <span
                 aria-hidden="true"
-                className="sun-glow absolute -top-10 -right-8 -z-10 size-52 rounded-full bg-[radial-gradient(circle,#fff3c4_0%,#ffb454_40%,rgb(255_122_89_/_0)_72%)]"
+                className="sun-glow absolute -top-10 -right-8 -z-10 size-52 rounded-full bg-[radial-gradient(circle,#fff3c4_0%,#f4d36e_40%,rgb(233_139_189_/_0)_72%)]"
               />
-              <p className="font-script text-3xl text-[#ffe3a8]">
+              <p className="font-script text-3xl text-[#fbeab0]">
                 {t("kicker")}
               </p>
               <h1 className="font-display mt-1 text-5xl leading-[1.05] font-extrabold">

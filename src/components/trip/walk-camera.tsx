@@ -39,10 +39,16 @@ const CARDINALS = ["n", "ne", "e", "se", "s", "sw", "w", "nw"] as const;
 export function WalkCamera({
   target,
   position,
+  aim,
+  remaining,
   onClose,
 }: {
   target: { name: string; latitude: number; longitude: number };
   position: LivePosition | null;
+  /** Punto de la calle hacia donde apuntar (con ruta por calles); sin él, el destino. */
+  aim?: { latitude: number; longitude: number };
+  /** Metros que faltan por la calle; sin ellos, la distancia en línea recta. */
+  remaining?: number | null;
   onClose: () => void;
 }) {
   const t = useTranslations("live");
@@ -125,7 +131,7 @@ export function WalkCamera({
   }
 
   const distance = position ? distanceMeters(position, target) : null;
-  const bearing = position ? bearingDegrees(position, target) : null;
+  const bearing = position ? bearingDegrees(position, aim ?? target) : null;
   const heading = compass ?? position?.course ?? null;
   const rotation =
     bearing !== null && heading !== null
@@ -141,7 +147,7 @@ export function WalkCamera({
       role="dialog"
       aria-modal="true"
       aria-labelledby="walk-camera-title"
-      className="fixed inset-0 z-[70] flex flex-col bg-[#062a33] text-white"
+      className="fixed inset-0 z-[70] flex flex-col bg-[#1b1c40] text-white"
     >
       <video
         ref={videoRef}
@@ -170,7 +176,7 @@ export function WalkCamera({
           ref={closeRef}
           type="button"
           onClick={onClose}
-          className="min-h-11 shrink-0 rounded-full bg-white px-4 text-sm font-extrabold text-[#062a33]"
+          className="min-h-11 shrink-0 rounded-full bg-white px-4 text-sm font-extrabold text-[#1b1c40]"
         >
           {t("cameraClose")}
         </button>
@@ -178,7 +184,7 @@ export function WalkCamera({
 
       <div className="relative flex flex-1 flex-col items-center justify-center gap-4 px-6 text-center">
         {arrived ? (
-          <p className="font-display rounded-3xl bg-white/95 px-6 py-4 text-2xl font-extrabold text-[#062a33] shadow-xl">
+          <p className="font-display rounded-3xl bg-white/95 px-6 py-4 text-2xl font-extrabold text-[#1b1c40] shadow-xl">
             🎉 {t("arrived", { name: target.name })}
           </p>
         ) : rotation !== null ? (
@@ -200,7 +206,7 @@ export function WalkCamera({
         )}
         {distance !== null && !arrived ? (
           <p className="font-display text-5xl font-extrabold drop-shadow-lg">
-            {formatMeters(distance, locale)}
+            {formatMeters(remaining ?? distance, locale)}
           </p>
         ) : null}
         {needsCompassPermission ? (

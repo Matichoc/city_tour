@@ -15,7 +15,7 @@ export function PageHero({
   image?: { src: string; alt: string };
 }) {
   return (
-    <header className="relative isolate overflow-hidden bg-[linear-gradient(180deg,#07495a_0%,#0b7285_100%)] px-4 pt-7 pb-14 text-white">
+    <header className="relative isolate overflow-hidden bg-[linear-gradient(180deg,#155656_0%,#1b7070_100%)] px-4 pt-7 pb-14 text-white">
       {image ? (
         <>
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -35,10 +35,10 @@ export function PageHero({
         </>
       ) : null}
       <div
-        className="sun-glow absolute -top-8 right-4 size-24 rounded-full bg-[radial-gradient(circle,#ffe3a8_0%,rgb(255_180_84_/_0.55)_45%,transparent_72%)]"
+        className="sun-glow absolute -top-8 right-4 size-24 rounded-full bg-[radial-gradient(circle,#fbeab0_0%,rgb(244_211_110_/_0.55)_45%,transparent_72%)]"
         aria-hidden="true"
       />
-      <Wave className="wave-b" fill="#1fb6c9" opacity={0.5} height={52} />
+      <Wave className="wave-b" fill="#6fcbca" opacity={0.5} height={52} />
       <Wave className="wave-a" fill="#fdf8ee" height={34} />
       <div className="relative mx-auto max-w-3xl">
         <h1 className="font-display text-3xl leading-tight font-extrabold">
