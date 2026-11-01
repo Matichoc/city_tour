@@ -85,5 +85,50 @@ export function pickVoice<V extends VoiceLike>(
   return best;
 }
 
+/**
+ * Una parte de lo que se lee: una ficha entera, o la introducción y cada
+ * parada de una ruta. `label` se muestra mientras suena y `targetId` es el
+ * elemento de la página que se marca como la parte en curso.
+ */
+export type ListenSection = {
+  segments: string[];
+  label?: string;
+  targetId?: string;
+};
+
+export type QueueItem = { text: string; section: number };
+
+/** Cola de trozos a leer, cada uno con la parte a la que pertenece. */
+export function buildQueue(
+  sections: readonly ListenSection[],
+  max = 200,
+): QueueItem[] {
+  return sections.flatMap((s, section) =>
+    s.segments.flatMap((seg) =>
+      splitIntoChunks(seg, max).map((text) => ({ text, section })),
+    ),
+  );
+}
+
+/**
+ * Posición en la cola donde empieza la parte anterior (`-1`) o siguiente
+ * (`+1`) a la del trozo `at`; `-1` si no hay. Hacia atrás, si ya se avanzó
+ * dentro de la parte en curso, vuelve a su comienzo (como un reproductor).
+ */
+export function jumpSection(
+  queue: readonly QueueItem[],
+  at: number,
+  dir: -1 | 1,
+): number {
+  const current = queue[at]?.section;
+  if (current === undefined) return -1;
+  if (dir === 1)
+    return queue.findIndex((q, i) => i > at && q.section > current);
+  const start = queue.findIndex((q) => q.section === current);
+  if (start < at) return start;
+  const prev = queue.findLast((q, i) => i < start && q.section < current);
+  return prev ? queue.findIndex((q) => q.section === prev.section) : -1;
+}
+
 /** Velocidades que ofrece el botón, en orden de rotación. */
 export const SPEECH_RATES = [1, 1.25, 0.8] as const;

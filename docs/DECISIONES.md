@@ -35,7 +35,8 @@ Vercel Web Analytics (sin cookies, sin datos personales). Eventos propios en
 `qr_visit` (con el `origen` del QR), `save_place`, `live_start` (recorrido en
 vivo), `camera_start` (guía con cámara), `cta_click` (botón de acción de un
 comercio, con su `slug` y tipo) y `listen_play` (primera vez que se toca
-«Escuchar» en una ficha, con su `slug`). Nunca se envía la ubicación del
+«Escuchar» en una ficha o una ruta, con su `slug` y `kind`: `place` o
+`route`). Nunca se envía la ubicación del
 usuario: el GPS y la cámara se usan solo dentro del teléfono. Se activa en
 Vercel → Analytics; sin activar, no envía nada.
 

@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { pickVoice, splitIntoChunks } from "@/lib/speech";
+import {
+  buildQueue,
+  jumpSection,
+  pickVoice,
+  splitIntoChunks,
+} from "@/lib/speech";
 
 describe("trozos de lectura en voz alta", () => {
   it("separa por oraciones y limpia espacios", () => {
@@ -66,5 +71,37 @@ describe("elección de voz", () => {
     expect(pickVoice([{ lang: "en-US", name: "Samantha" }], "es-CL")).toBe(
       null,
     );
+  });
+});
+
+describe("audioguía por partes", () => {
+  const queue = buildQueue([
+    { label: "Presentación", segments: ["Ruta costera.", "Tres paradas."] },
+    { label: "Parada 1", segments: ["Playa Chica. Arena fina."] },
+    { label: "Parada 2", segments: [] },
+    { label: "Parada 3", segments: ["Plaza."] },
+  ]);
+
+  it("arma la cola en orden, con la parte de cada trozo", () => {
+    expect(queue).toEqual([
+      { text: "Ruta costera.", section: 0 },
+      { text: "Tres paradas.", section: 0 },
+      { text: "Playa Chica.", section: 1 },
+      { text: "Arena fina.", section: 1 },
+      { text: "Plaza.", section: 3 },
+    ]);
+  });
+
+  it("Siguiente salta al comienzo de la próxima parte con texto", () => {
+    expect(jumpSection(queue, 0, 1)).toBe(2);
+    expect(jumpSection(queue, 3, 1)).toBe(4);
+    expect(jumpSection(queue, 4, 1)).toBe(-1);
+  });
+
+  it("Anterior vuelve al comienzo de la parte en curso y, desde ahí, a la anterior", () => {
+    expect(jumpSection(queue, 3, -1)).toBe(2);
+    expect(jumpSection(queue, 2, -1)).toBe(0);
+    expect(jumpSection(queue, 4, -1)).toBe(2);
+    expect(jumpSection(queue, 0, -1)).toBe(-1);
   });
 });

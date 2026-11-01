@@ -1,5 +1,5 @@
 import AxeBuilder from "@axe-core/playwright";
-import { expect, test } from "@playwright/test";
+import { expect, test, type Page } from "@playwright/test";
 
 const KEY = "papudo-en-tu-mano:trip:v1";
 
@@ -145,11 +145,9 @@ test("el primer Tab ofrece saltar al contenido y lo enfoca", async ({
   await expect(page.locator("#contenido")).toBeFocused();
 });
 
-test("Escuchar lee la ficha en orden con voz en español, pausa y sigue", async ({
-  page,
-}) => {
-  // Voz falsa: registra lo que se lee y termina cada trozo al instante.
-  await page.addInitScript(() => {
+/** Voz falsa: registra lo que se lee y termina cada trozo en `ms`. */
+async function fakeVoice(page: Page, ms = 150) {
+  await page.addInitScript((ms) => {
     const said: { text: string; lang: string }[] = [];
     (window as unknown as { __said: typeof said }).__said = said;
     class FakeUtterance {
@@ -176,14 +174,27 @@ test("Escuchar lee la ficha en orden con voz en español, pausa y sigue", async 
       speak: (u: FakeUtterance) => {
         said.push({ text: u.text, lang: u.lang });
         synth.speaking = true;
-        pending = setTimeout(() => u.onend?.(), 150);
+        pending = setTimeout(() => u.onend?.(), ms);
       },
     };
     Object.defineProperty(window, "speechSynthesis", { value: synth });
     Object.defineProperty(window, "SpeechSynthesisUtterance", {
       value: FakeUtterance,
     });
-  });
+  }, ms);
+}
+
+const spoken = (page: Page) =>
+  page.evaluate(
+    () =>
+      (window as unknown as { __said: { text: string; lang: string }[] })
+        .__said,
+  );
+
+test("Escuchar lee la ficha en orden con voz en español, pausa y sigue", async ({
+  page,
+}) => {
+  await fakeVoice(page);
   await page.goto("/es/lugares/playa-chica-papudo");
   const listen = page.getByRole("button", {
     name: /Escuchar la ficha de Playa Chica/,
@@ -196,14 +207,46 @@ test("Escuchar lee la ficha en orden con voz en español, pausa y sigue", async 
   await expect(
     page.getByRole("button", { name: /Escuchar la ficha/ }),
   ).toBeVisible({ timeout: 15_000 });
-  const said = await page.evaluate(
-    () =>
-      (window as unknown as { __said: { text: string; lang: string }[] })
-        .__said,
-  );
+  const said = await spoken(page);
   expect(said[0]).toEqual({ text: "Playa Chica.", lang: "es-MX" });
   expect(said.map((s) => s.text).join(" ")).toContain("Playa Chica");
   await expect(page.locator("#resumen [aria-live=polite]")).toHaveText(
     "Lectura terminada",
   );
+});
+
+test("audioguía de ruta: presenta la ruta, salta entre paradas y marca la que suena", async ({
+  page,
+}) => {
+  // Trozos lentos: la lectura no termina sola mientras se prueba.
+  await fakeVoice(page, 5_000);
+  await page.goto("/es/rutas/ruta-costera-papudo");
+  await page
+    .getByRole("button", { name: /Escuchar la ruta .* como audioguía/ })
+    .click();
+  // La etiqueta visible de la parte en curso (el aviso sr-only repite el texto).
+  const now = page.locator("p", { hasText: "♪" });
+  await expect(now).toHaveText(/Presentación de la ruta/);
+  await page
+    .getByRole("button", { name: "Saltar a la parte siguiente" })
+    .click();
+  await expect(now).toHaveText(/Parada 1 de 3:/);
+  await expect(page.locator("#parada-1")).toHaveAttribute(
+    "aria-current",
+    "step",
+  );
+  await page
+    .getByRole("button", { name: "Saltar a la parte siguiente" })
+    .click();
+  await expect(page.locator("#parada-2")).toHaveAttribute(
+    "aria-current",
+    "step",
+  );
+  await expect(page.locator("#parada-1")).not.toHaveAttribute("aria-current");
+  await page.getByRole("button", { name: "Detener" }).click();
+  await expect(page.locator("[aria-current=step]")).toHaveCount(0);
+  const said = (await spoken(page)).map((s) => s.text);
+  expect(said[0]).toBe("Ruta costera de Papudo.");
+  expect(said).toContain("Parada 1 de 3: Salinas de Pullally.");
+  expect(said).toContain("Parada 2 de 3: Playa de Papudo.");
 });

@@ -14,13 +14,13 @@ indicadas en cada versión.
 `docs/bitacora-notas.json` (clave `actual`, y el número de PR cuando exista),
 correr `pnpm bitacora` y subir el cambio en el mismo PR.
 
-## En preparación: v0.32 — Accesibilidad y botón «Escuchar» en las fichas
+## En preparación: v0.33 — Audioguía en las rutas
 
-Cada ficha de lugar tiene un botón «Escuchar» que la lee en voz alta con la voz del teléfono (nombre, categoría, descripción, horarios, dirección y si está pendiente de verificación), con pausa, detener y velocidad; nunca suena sola. Accesibilidad: enlace «Saltar al contenido», mapas que le hablan al lector de pantalla en el idioma del sitio y con el nombre de cada pin, título principal en la página 404, títulos de categoría en Explorar y el carrusel de eventos sin rol inválido. Auditoría axe WCAG 2.1 AA sin fallas en 18 páginas. Plan completo en docs/PLAN-AUDIO-ACCESIBILIDAD.md. Sin migraciones.
+Cada ruta se puede escuchar como audioguía: primero su presentación (paradas, duración, descripción y aviso de verificación) y después cada parada en orden con su descripción completa. «Anterior» y «Siguiente» saltan entre paradas, y la que suena se resalta en la lista y se anuncia al lector de pantalla. Mismo reproductor que las fichas, ahora por partes. Sin migraciones.
 
 - **Migraciones por correr en Supabase:** —
-- **Estado:** en revisión, [PR #37](https://github.com/Matichoc/city_tour/pull/37) (aún no está en `develop`).
-- **Última actualización de esta bitácora:** 2026-11-01 01:51
+- **Estado:** en revisión, [PR #39](https://github.com/Matichoc/city_tour/pull/39) (aún no está en `develop`).
+- **Última actualización de esta bitácora:** 2026-11-01 02:37
 
 ## Avance por día
 
@@ -29,7 +29,7 @@ trabajadas: hay pausas y trabajo sin registrar).
 
 | Día | Ventana de actividad | Registros | Versiones entregadas |
 | --- | --- | ---: | --- |
-| Domingo, 1 de noviembre de 2026 | 01:51 – 01:51 | 1 | — |
+| Domingo, 1 de noviembre de 2026 | 01:52 – 02:36 | 3 | v0.32 |
 | Domingo, 18 de octubre de 2026 | 00:09 – 00:39 | 7 | v0.29, v0.30, v0.31 |
 | Sábado, 17 de octubre de 2026 | 00:01 – 23:30 | 34 | v0.16, v0.17, v0.18, v0.19, v0.20, v0.21, v0.22, v0.23, v0.24, v0.25, v0.26, v0.27, v0.28 |
 | Viernes, 16 de octubre de 2026 | 00:04 – 23:51 | 15 | v0.9, v0.10, v0.11, v0.12, v0.13, v0.14, v0.15 |
@@ -39,6 +39,16 @@ trabajadas: hay pausas y trabajo sin registrar).
 | Lunes, 12 de octubre de 2026 | 15:43 – 17:53 | 10 | v0.1, v0.2, v0.3, v0.4 |
 
 ## Versiones
+
+### v0.32 — Accesibilidad y botón «Escuchar» en las fichas
+Domingo, 1 de noviembre de 2026, 01:54 · [PR #37](https://github.com/Matichoc/city_tour/pull/37)
+
+Cada ficha de lugar tiene un botón «Escuchar» que la lee en voz alta con la voz del teléfono (nombre, categoría, descripción, horarios, dirección y si está pendiente de verificación), con pausa, detener y velocidad; nunca suena sola. Accesibilidad: enlace «Saltar al contenido», mapas que le hablan al lector de pantalla en el idioma del sitio y con el nombre de cada pin, título principal en la página 404, títulos de categoría en Explorar y el carrusel de eventos sin rol inválido. Auditoría axe WCAG 2.1 AA sin fallas en 18 páginas. Plan completo en docs/PLAN-AUDIO-ACCESIBILIDAD.md. Sin migraciones.
+
+Registros:
+
+- 11-01 01:52 — Accesibilidad y botón «Escuchar» en las fichas de lugar (`fa5fdcb`)
+- 11-01 01:52 — Bitácora: v0.32 en preparación (PR #37) (`a6c12df`)
 
 ### v0.31 — Cierra las vistas previas antiguas y las nuevas
 Domingo, 18 de octubre de 2026, 00:43 · [PR #35](https://github.com/Matichoc/city_tour/pull/35)
