@@ -14,13 +14,13 @@ indicadas en cada versión.
 `docs/bitacora-notas.json` (clave `actual`, y el número de PR cuando exista),
 correr `pnpm bitacora` y subir el cambio en el mismo PR.
 
-## En preparación: v0.35 — Refresh, paso 2: portada con los cuatro cuadros
+## En preparación: v0.36 — Refresh, paso 3: Explorar con lista y mapa
 
-La portada usa todo el ancho en computador: a la izquierda el saludo y el buscador, a la derecha los cuatro cuadros del logo como puertas (mar y sol, campo y humedal, patrimonio, paseos y deporte), cada uno con su cantidad de lugares y, debajo, comer y dormir. Explorar entiende la puerta (?puerta=paseos junta recreación y deportes). Nuevos «Se viene» (las próximas fiestas con cuenta regresiva) y «Ruta para hoy» (con sus paradas en orden). Se mantienen «Destacados del mes» y la comuna en 3D. Sin migraciones.
+Explorar usa todo el ancho: en computador la lista y el mapa van lado a lado (el mapa queda fijo al recorrer la lista); en el celular se elige Lista o Mapa. Filtros por puerta (los cuatro cuadros del logo) y por comer y dormir, más el pueblo. Cada lugar va en una fila con su miniatura enmarcada en el color de su puerta, su estado y la marca IA cuando es ilustración. El mapa de lugares pasa a un estilo claro teñido con los colores de Papudo, con los pines del color de cada puerta; al tocar uno aparece su tarjeta con Ver ficha y Cómo llegar. Reemplaza los grupos desplegables por categoría. Sin migraciones.
 
 - **Migraciones por correr en Supabase:** —
-- **Estado:** en revisión, [PR #42](https://github.com/Matichoc/city_tour/pull/42) (aún no está en `develop`).
-- **Última actualización de esta bitácora:** 2026-11-04 09:57
+- **Estado:** en revisión, [PR #43](https://github.com/Matichoc/city_tour/pull/43) (aún no está en `develop`).
+- **Última actualización de esta bitácora:** 2026-11-04 10:22
 
 ## Avance por día
 
@@ -29,7 +29,7 @@ trabajadas: hay pausas y trabajo sin registrar).
 
 | Día | Ventana de actividad | Registros | Versiones entregadas |
 | --- | --- | ---: | --- |
-| Miércoles, 4 de noviembre de 2026 | 08:48 – 09:57 | 3 | v0.34 |
+| Miércoles, 4 de noviembre de 2026 | 08:48 – 10:22 | 5 | v0.34, v0.35 |
 | Domingo, 1 de noviembre de 2026 | 01:52 – 02:37 | 4 | v0.32, v0.33 |
 | Domingo, 18 de octubre de 2026 | 00:09 – 00:39 | 7 | v0.29, v0.30, v0.31 |
 | Sábado, 17 de octubre de 2026 | 00:01 – 23:30 | 34 | v0.16, v0.17, v0.18, v0.19, v0.20, v0.21, v0.22, v0.23, v0.24, v0.25, v0.26, v0.27, v0.28 |
@@ -40,6 +40,16 @@ trabajadas: hay pausas y trabajo sin registrar).
 | Lunes, 12 de octubre de 2026 | 15:43 – 17:53 | 10 | v0.1, v0.2, v0.3, v0.4 |
 
 ## Versiones
+
+### v0.35 — Refresh, paso 2: portada con los cuatro cuadros
+Miércoles, 4 de noviembre de 2026, 10:05 · [PR #42](https://github.com/Matichoc/city_tour/pull/42)
+
+La portada usa todo el ancho en computador: a la izquierda el saludo y el buscador, a la derecha los cuatro cuadros del logo como puertas (mar y sol, campo y humedal, patrimonio, paseos y deporte), cada uno con su cantidad de lugares y, debajo, comer y dormir. Explorar entiende la puerta (?puerta=paseos junta recreación y deportes). Nuevos «Se viene» (las próximas fiestas con cuenta regresiva) y «Ruta para hoy» (con sus paradas en orden). Se mantienen «Destacados del mes» y la comuna en 3D. Sin migraciones.
+
+Registros:
+
+- 11-04 09:57 — Refresh, paso 2: portada con los cuatro cuadros (`c68c2e0`)
+- 11-04 09:57 — Bitácora: v0.35 en preparación (PR #42) (`eb49193`)
 
 ### v0.34 — Refresh, paso 1: base visual
 Miércoles, 4 de noviembre de 2026, 09:44 · [PR #41](https://github.com/Matichoc/city_tour/pull/41)
