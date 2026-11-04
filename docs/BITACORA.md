@@ -14,13 +14,13 @@ indicadas en cada versión.
 `docs/bitacora-notas.json` (clave `actual`, y el número de PR cuando exista),
 correr `pnpm bitacora` y subir el cambio en el mismo PR.
 
-## En preparación: v0.40 — Voz de «Escuchar»: Catalina pausada
+## En preparación: v0.41 — Rutas ya no desborda en el celular
 
-Elegida de oído entre cinco muestras: Catalina (es-CL) un 7 % más lenta y con una pausa breve entre frases, para que no suene a lectura de corrido. El estilo entra en el nombre de cada audio, así que todos se regeneran solos con la voz nueva la próxima vez que alguien los escuche. Sin migraciones.
+En el celular la página de Rutas medía 422 px en una pantalla de 375: los nombres de las paradas ensanchaban la grilla. La vista quedaba desplazada y, al entrar a una ruta, la barra inferior se escondía hasta mover la página. La grilla ahora tiene una columna que se ajusta a la pantalla. Nueva prueba e2e: diez páginas no pueden ser más anchas que la pantalla del celular. Sin migraciones.
 
 - **Migraciones por correr en Supabase:** —
-- **Estado:** en revisión, [PR #47](https://github.com/Matichoc/city_tour/pull/47) (aún no está en `develop`).
-- **Última actualización de esta bitácora:** 2026-11-04 13:00
+- **Estado:** en revisión, [PR #49](https://github.com/Matichoc/city_tour/pull/49) (aún no está en `develop`).
+- **Última actualización de esta bitácora:** 2026-11-04 13:39
 
 ## Avance por día
 
@@ -29,7 +29,7 @@ trabajadas: hay pausas y trabajo sin registrar).
 
 | Día | Ventana de actividad | Registros | Versiones entregadas |
 | --- | --- | ---: | --- |
-| Miércoles, 4 de noviembre de 2026 | 08:48 – 13:00 | 13 | v0.34, v0.35, v0.36, v0.37, v0.38, v0.39 |
+| Miércoles, 4 de noviembre de 2026 | 08:48 – 13:39 | 15 | v0.34, v0.35, v0.36, v0.37, v0.38, v0.39, v0.40 |
 | Domingo, 1 de noviembre de 2026 | 01:52 – 02:37 | 4 | v0.32, v0.33 |
 | Domingo, 18 de octubre de 2026 | 00:09 – 00:39 | 7 | v0.29, v0.30, v0.31 |
 | Sábado, 17 de octubre de 2026 | 00:01 – 23:30 | 34 | v0.16, v0.17, v0.18, v0.19, v0.20, v0.21, v0.22, v0.23, v0.24, v0.25, v0.26, v0.27, v0.28 |
@@ -40,6 +40,16 @@ trabajadas: hay pausas y trabajo sin registrar).
 | Lunes, 12 de octubre de 2026 | 15:43 – 17:53 | 10 | v0.1, v0.2, v0.3, v0.4 |
 
 ## Versiones
+
+### v0.40 — Voz de «Escuchar»: Catalina pausada
+Miércoles, 4 de noviembre de 2026, 13:23 · [PR #47](https://github.com/Matichoc/city_tour/pull/47)
+
+Elegida de oído entre cinco muestras: Catalina (es-CL) un 7 % más lenta y con una pausa breve entre frases, para que no suene a lectura de corrido. El estilo entra en el nombre de cada audio, así que todos se regeneran solos con la voz nueva la próxima vez que alguien los escuche. Sin migraciones.
+
+Registros:
+
+- 11-04 13:00 — Voz de «Escuchar»: Catalina pausada (`eba4523`)
+- 11-04 13:00 — Bitácora: v0.40 en preparación (PR #47) (`6cbd792`)
 
 ### v0.39 — «Escuchar» con voz natural (Catalina, es-CL)
 Miércoles, 4 de noviembre de 2026, 12:43 · [PR #46](https://github.com/Matichoc/city_tour/pull/46)

@@ -160,10 +160,14 @@
     "resumen": "«Escuchar» deja la voz del teléfono y pasa a voz natural de Azure: Catalina en español de Chile, y voces neurales en inglés y portugués. El servidor arma el texto, genera cada audio una sola vez y lo guarda en Supabase Storage, firmado con el secreto de los comentarios (sin clave de servicio en Vercel). Si el texto cambia, se genera otro. Con audio real, la audioguía sigue sonando con la pantalla bloqueada y se controla desde ahí. Sin audio disponible, el botón lo avisa: nunca usa voz robótica. Requiere AZURE_SPEECH_KEY y AZURE_SPEECH_REGION en Vercel.",
     "migraciones": "0030"
   },
-  "actual": {
-    "pr": 47,
+  "47": {
     "titulo": "Voz de «Escuchar»: Catalina pausada",
-    "resumen": "Elegida de oído entre cinco muestras: Catalina (es-CL) un 7 % más lenta y con una pausa breve entre frases, para que no suene a lectura de corrido. El estilo entra en el nombre de cada audio, así que todos se regeneran solos con la voz nueva la próxima vez que alguien los escuche. Sin migraciones.",
+    "resumen": "Elegida de oído entre cinco muestras: Catalina (es-CL) un 7 % más lenta y con una pausa breve entre frases, para que no suene a lectura de corrido. El estilo entra en el nombre de cada audio, así que todos se regeneran solos con la voz nueva la próxima vez que alguien los escuche. Sin migraciones."
+  },
+  "actual": {
+    "pr": 49,
+    "titulo": "Rutas ya no desborda en el celular",
+    "resumen": "En el celular la página de Rutas medía 422 px en una pantalla de 375: los nombres de las paradas ensanchaban la grilla. La vista quedaba desplazada y, al entrar a una ruta, la barra inferior se escondía hasta mover la página. La grilla ahora tiene una columna que se ajusta a la pantalla. Nueva prueba e2e: diez páginas no pueden ser más anchas que la pantalla del celular. Sin migraciones.",
     "migraciones": "—"
   }
 }
