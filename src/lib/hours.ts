@@ -57,6 +57,80 @@ export function formatHours(
   return { season, days, time: `${h.opens}–${h.closes}` };
 }
 
+/** Estado del local ahora, según su horario por temporada (hora de Chile). */
+export type HoursStatus =
+  | { kind: "open"; closes: string }
+  | { kind: "later"; opens: string }
+  | {
+      kind: "closed";
+      next: { inDays: number; weekday: number; opens: string } | null;
+    };
+
+const minutes = (hhmm: string) => {
+  const [h, m] = hhmm.split(":").map(Number);
+  return h * 60 + m;
+};
+
+const inSeason = (h: PlaceHours, month: number) =>
+  h.fromMonth <= h.toMonth
+    ? month >= h.fromMonth && month <= h.toMonth
+    : month >= h.fromMonth || month <= h.toMonth;
+
+/** Mes, día de la semana (0 = domingo) y minuto del día en Chile. */
+function chileParts(date: Date) {
+  const p = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/Santiago",
+    month: "numeric",
+    weekday: "short",
+    hour: "numeric",
+    minute: "numeric",
+    hourCycle: "h23",
+  }).formatToParts(date);
+  const get = (t: string) => p.find((x) => x.type === t)!.value;
+  return {
+    month: Number(get("month")),
+    weekday: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].indexOf(
+      get("weekday"),
+    ),
+    minute: Number(get("hour")) * 60 + Number(get("minute")),
+  };
+}
+
+/**
+ * ¿Abierto ahora? Si no, ¿abre más tarde hoy o cuándo vuelve a abrir (hasta
+ * una semana)? Los festivos no se consideran: no se sabe cuáles son. `null`
+ * si el local no tiene horario por temporada.
+ */
+export function hoursStatus(
+  hours: PlaceHours[],
+  now: Date = new Date(),
+): HoursStatus | null {
+  if (hours.length === 0) return null;
+  const today = chileParts(now);
+  const rowsOn = (month: number, weekday: number) =>
+    hours
+      .filter((h) => inSeason(h, month) && h.days.includes(weekday))
+      .sort((a, b) => minutes(a.opens) - minutes(b.opens));
+  for (const h of rowsOn(today.month, today.weekday)) {
+    // "00:00" como cierre es medianoche: el final del día.
+    const closes = minutes(h.closes) || 24 * 60;
+    if (today.minute >= minutes(h.opens) && today.minute < closes)
+      return { kind: "open", closes: h.closes };
+    if (today.minute < minutes(h.opens))
+      return { kind: "later", opens: h.opens };
+  }
+  for (let d = 1; d <= 7; d++) {
+    const day = chileParts(new Date(now.getTime() + d * 86_400_000));
+    const first = rowsOn(day.month, day.weekday)[0];
+    if (first)
+      return {
+        kind: "closed",
+        next: { inDays: d, weekday: day.weekday, opens: first.opens },
+      };
+  }
+  return { kind: "closed", next: null };
+}
+
 /** Filas de place_hours (una por día) → temporadas agrupadas. */
 export function groupHours(
   rows: {

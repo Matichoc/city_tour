@@ -7,9 +7,12 @@ import { track } from "@/lib/analytics";
 export function SaveButton({
   slug,
   className = "",
+  variant = "pill",
 }: {
   slug: string;
   className?: string;
+  /** "tile": ícono con el texto debajo (fila de acciones de la ficha). */
+  variant?: "pill" | "tile";
 }) {
   const t = useTranslations("saved");
   const saved = useSaved().includes(slug);
@@ -20,10 +23,14 @@ export function SaveButton({
       onClick={() => {
         if (toggleSaved(slug)) track("save_place", { slug });
       }}
-      className={`inline-flex min-h-11 items-center gap-2 rounded-full border-2 px-5 text-sm font-bold transition active:scale-95 ${
-        saved
-          ? "border-coral bg-coral/15 text-coral-ink"
-          : "border-sea text-sea-deep hover:bg-sea-soft"
+      className={`${
+        variant === "tile"
+          ? "bg-soft hover:bg-border flex min-h-16 flex-col items-center justify-center gap-1 rounded-2xl px-1 text-xs font-semibold transition active:scale-95"
+          : `inline-flex min-h-11 items-center gap-2 rounded-full border-2 px-5 text-sm font-bold transition active:scale-95 ${
+              saved
+                ? "border-coral bg-coral/15 text-coral-ink"
+                : "border-sea text-sea-deep hover:bg-sea-soft"
+            }`
       } ${className}`}
     >
       <svg

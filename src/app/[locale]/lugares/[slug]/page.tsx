@@ -36,6 +36,8 @@ import { freshness } from "@/lib/freshness";
 import { formatHours } from "@/lib/hours";
 import { isPastDay } from "@/lib/freshness";
 import { ListenButton } from "@/components/listen/listen-button";
+import { HoursToday } from "@/components/place/hours-today";
+import { styleOf } from "@/lib/doors";
 import { SPEECH_LANG } from "@/lib/speech";
 
 export async function generateStaticParams() {
@@ -158,8 +160,23 @@ export default async function PlacePage({
       }
     : null;
 
+  const tone = styleOf(place.categorySlug);
+  const navigateHref =
+    place.latitude !== null && place.longitude !== null
+      ? directionsUrl(place.latitude, place.longitude)
+      : place.mapsUrl
+        ? place.mapsUrl
+        : searchUrl(`${place.name}, ${place.address ?? "Papudo"}, Chile`);
+  // Una sola acción principal: la del comercio o, si no tiene, «Cómo llegar».
+  // El resto va en una fila de íconos.
+  const mainIsCta = Boolean(place.cta);
+  const tile =
+    "bg-soft hover:bg-border flex min-h-16 flex-col items-center justify-center gap-1 rounded-2xl px-1 text-xs font-semibold transition active:scale-95";
+  const tileCount =
+    (mainIsCta && !place.demo ? 1 : 0) + 2 + (place.hasLocation ? 1 : 0);
+
   return (
-    <main className="mx-auto flex w-full max-w-3xl flex-col gap-5 pb-10">
+    <main className="mx-auto flex w-full max-w-5xl flex-col gap-6 px-4 pt-4 pb-10 sm:px-6">
       <QrVisit />
       {place.demo ? null : (
         <JsonLd
@@ -197,133 +214,177 @@ export default async function PlacePage({
           }}
         />
       )}
-      <div className="relative">
-        <IllustratedImage picture={place.picture} className="h-56" priority />
-        <Link
-          href="/explorar"
-          className="text-sea-deep absolute top-3 left-3 rounded-full bg-white/90 px-4 py-2 text-sm font-bold shadow"
-        >
-          ← {t("back")}
-        </Link>
-      </div>
+      <Link
+        href="/explorar"
+        className="text-foreground inline-flex min-h-11 items-center gap-1 self-start text-sm font-semibold hover:underline"
+      >
+        <span aria-hidden="true">←</span> {t("back")}
+      </Link>
 
-      <div className="flex flex-col gap-5 px-4">
-        {place.demo ? (
-          <p
-            role="note"
-            className="bg-sun/30 text-earth rounded-xl p-3 text-sm font-bold"
-          >
-            {t("demoBanner")}
-          </p>
-        ) : null}
-        <header>
-          <p className="text-field text-xs font-bold tracking-wide uppercase">
-            {place.categoryName}
-            {place.localitySlug ? (
-              <>
-                {" · "}
-                <Link
-                  href={{
-                    pathname: "/pueblos/[slug]",
-                    params: { slug: place.localitySlug },
-                  }}
-                  className="underline"
-                >
-                  {place.localityName}
-                </Link>
-              </>
-            ) : null}
-          </p>
-          <div className="mt-1 flex items-center gap-3">
-            {place.logo ? (
-              // eslint-disable-next-line @next/next/no-img-element -- archivo local pequeño
-              <img
-                src={place.logo.src}
-                width={place.logo.width}
-                height={place.logo.height}
-                alt={t("logoAlt", { name: place.name })}
-                className="border-border size-14 shrink-0 rounded-full border bg-white object-cover"
+      {/* Imagen con el doble marco del color de su puerta (los cuadros del
+          logo) y, en computador, el encabezado y las acciones al lado. */}
+      <div className="grid items-start gap-6 lg:grid-cols-[1.15fr_1fr] lg:gap-10">
+        <div className="relative">
+          <div className={`rounded-[1.8rem] p-1.5 ${tone.frame}`}>
+            <div className="overflow-hidden rounded-[1.45rem] border-[3px] border-white/90">
+              <IllustratedImage
+                picture={place.picture}
+                className="h-60 sm:h-80"
+                priority
               />
-            ) : null}
-            <h1 className="font-display text-3xl leading-tight font-extrabold">
+            </div>
+          </div>
+          {/* El logo encima solo si la imagen grande no es ya el logo. */}
+          {place.logo && place.picture.kind !== "logo" ? (
+            // eslint-disable-next-line @next/next/no-img-element -- archivo local pequeño
+            <img
+              src={place.logo.src}
+              width={place.logo.width}
+              height={place.logo.height}
+              alt={t("logoAlt", { name: place.name })}
+              className="absolute -bottom-5 left-5 size-16 rounded-2xl border-[3px] border-white bg-white object-cover shadow-md"
+            />
+          ) : null}
+        </div>
+
+        <div
+          className={`flex flex-col gap-4 ${place.logo && place.picture.kind !== "logo" ? "pt-3 lg:pt-0" : ""}`}
+        >
+          {place.demo ? (
+            <p
+              role="note"
+              className="bg-sun/30 text-earth rounded-xl p-3 text-sm font-bold"
+            >
+              {t("demoBanner")}
+            </p>
+          ) : null}
+          <header className="flex flex-col gap-2">
+            <p className={`text-sm font-semibold ${tone.ink}`}>
+              {place.localitySlug && place.localityName
+                ? t.rich("inLocality", {
+                    category: place.categoryName,
+                    locality: place.localityName,
+                    pueblo: (chunks) => (
+                      <Link
+                        href={{
+                          pathname: "/pueblos/[slug]",
+                          params: { slug: place.localitySlug! },
+                        }}
+                        className="underline"
+                      >
+                        {chunks}
+                      </Link>
+                    ),
+                  })
+                : place.categoryName}
+            </p>
+            <h1 className="font-display text-4xl leading-[1.05] font-extrabold sm:text-5xl">
               {place.name}
             </h1>
-          </div>
-          {place.demo ? (
-            <RatingSummary
-              slug={place.slug}
-              seededRatings={seeded.map((r) => r.rating)}
-            />
-          ) : (
-            <a
-              href="#opiniones"
-              className="text-muted mt-2 inline-flex items-center gap-2 text-sm hover:underline"
-            >
-              <Stars value={rating.average ?? 0} className="size-4" />
-              {rating.average !== null ? (
-                <span>
-                  <b className="text-foreground">{rating.average.toFixed(1)}</b>{" "}
-                  · {tr("count", { count: rating.count })}
+            {place.demo ? (
+              <RatingSummary
+                slug={place.slug}
+                seededRatings={seeded.map((r) => r.rating)}
+              />
+            ) : (
+              <a
+                href="#opiniones"
+                className="text-muted inline-flex items-center gap-2 self-start text-sm hover:underline"
+              >
+                <Stars value={rating.average ?? 0} className="size-4" />
+                {rating.average !== null ? (
+                  <span>
+                    <b className="text-foreground">
+                      {rating.average.toFixed(1)}
+                    </b>{" "}
+                    · {tr("count", { count: rating.count })}
+                  </span>
+                ) : (
+                  tr("count", { count: 0 })
+                )}
+              </a>
+            )}
+            <div className="flex flex-wrap items-center gap-2">
+              {place.demo ? (
+                <span className="bg-sun text-coral-ink inline-block rounded-full px-2.5 py-1 text-xs font-extrabold">
+                  {t("demoBadge")}
                 </span>
               ) : (
-                tr("count", { count: 0 })
+                <StatusBadge verification={place.verification} />
               )}
-            </a>
-          )}
-          <div className="mt-3 flex flex-wrap items-center gap-2">
-            {place.demo ? (
-              <span className="bg-sun text-coral-ink inline-block rounded-full px-2.5 py-1 text-xs font-extrabold">
-                {t("demoBadge")}
-              </span>
-            ) : (
-              <StatusBadge verification={place.verification} />
-            )}
-            {sernatur ? (
-              <span
-                title={t("sernaturNote")}
-                className="border-sea text-sea-deep inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs font-bold"
+              {sernatur ? (
+                <span
+                  title={t("sernaturNote")}
+                  className="border-sea text-sea-deep inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs font-bold"
+                >
+                  <span aria-hidden="true">®</span>
+                  {t("sernatur", { number: sernatur.number })} ·{" "}
+                  {sernatur.expired
+                    ? t("sernaturExpired", { date: sernatur.date })
+                    : t("sernaturUntil", { date: sernatur.date })}
+                </span>
+              ) : null}
+              {place.fallbackToSpanish ? (
+                <span className="text-muted text-xs">{t("onlySpanish")}</span>
+              ) : null}
+            </div>
+          </header>
+
+          {place.demo ? null : <HoursToday hours={place.hours} />}
+
+          <div className="flex flex-col gap-2">
+            {place.cta ? (
+              <PlaceCta slug={place.slug} cta={place.cta} className="w-full" />
+            ) : place.demo ? null : (
+              <TrackedAnchor
+                event="navigate_click"
+                eventProps={{ slug: place.slug }}
+                href={navigateHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-coral inline-flex min-h-12 w-full items-center justify-center rounded-full px-6 font-extrabold text-white"
               >
-                <span aria-hidden="true">®</span>
-                {t("sernatur", { number: sernatur.number })} ·{" "}
-                {sernatur.expired
-                  ? t("sernaturExpired", { date: sernatur.date })
-                  : t("sernaturUntil", { date: sernatur.date })}
-              </span>
-            ) : null}
-            {place.fallbackToSpanish ? (
-              <span className="text-muted text-xs">{t("onlySpanish")}</span>
-            ) : null}
-          </div>
-        </header>
-
-        <NoticeList notices={notices} />
-
-        <div className="flex flex-wrap gap-2">
-          {place.cta ? <PlaceCta slug={place.slug} cta={place.cta} /> : null}
-          {place.hasLocation ? <AddToTripButton slug={place.slug} /> : null}
-          {place.demo ? null : (
-            <TrackedAnchor
-              event="navigate_click"
-              eventProps={{ slug: place.slug }}
-              href={
-                place.latitude !== null && place.longitude !== null
-                  ? directionsUrl(place.latitude, place.longitude)
-                  : place.mapsUrl
-                    ? place.mapsUrl
-                    : searchUrl(
-                        `${place.name}, ${place.address ?? "Papudo"}, Chile`,
-                      )
-              }
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-sea inline-flex min-h-11 items-center rounded-full px-5 text-sm font-bold text-white"
+                {t("navigate")}
+              </TrackedAnchor>
+            )}
+            <div
+              className={`grid gap-2 ${tileCount >= 4 ? "grid-cols-4" : tileCount === 3 ? "grid-cols-3" : "grid-cols-2"}`}
             >
-              {t("navigate")}
-            </TrackedAnchor>
-          )}
-          <SaveButton slug={place.slug} />
-          <ShareButton title={place.name} />
+              {mainIsCta && !place.demo ? (
+                <TrackedAnchor
+                  event="navigate_click"
+                  eventProps={{ slug: place.slug }}
+                  href={navigateHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={tile}
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    className="size-5"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M3 11 21 3l-8 18-2-8-8-2z" />
+                  </svg>
+                  {t("navigate")}
+                </TrackedAnchor>
+              ) : null}
+              <SaveButton slug={place.slug} variant="tile" />
+              {place.hasLocation ? (
+                <AddToTripButton slug={place.slug} variant="tile" />
+              ) : null}
+              <ShareButton title={place.name} variant="tile" />
+            </div>
+          </div>
         </div>
+      </div>
+
+      <div className="mx-auto flex w-full max-w-3xl flex-col gap-5">
+        <NoticeList notices={notices} />
 
         <nav
           aria-label={t("sections")}
@@ -334,7 +395,7 @@ export default async function PlacePage({
               <li key={id}>
                 <a
                   href={`#${id}`}
-                  className="border-border bg-surface hover:border-sea inline-flex min-h-11 items-center rounded-full border px-4 text-sm font-bold whitespace-nowrap"
+                  className="border-border bg-surface hover:border-foreground inline-flex min-h-11 items-center rounded-full border-2 px-4 text-sm font-bold whitespace-nowrap"
                 >
                   {label}
                 </a>
