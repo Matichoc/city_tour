@@ -302,7 +302,7 @@ export function TripView({
           setLive(true);
           track("live_start", { stops: ordered.length });
         }}
-        className="bg-coral text-coral-ink flex min-h-14 items-center justify-center gap-2 rounded-full px-6 text-lg font-extrabold shadow-lg transition hover:brightness-105 active:scale-95"
+        className="bg-coral flex min-h-14 items-center justify-center gap-2 rounded-full px-6 text-lg font-extrabold text-white shadow-lg transition hover:brightness-105 active:scale-95"
       >
         <span aria-hidden="true">▶</span> {t("startLive")}
       </button>
@@ -374,7 +374,7 @@ export function TripView({
                       }
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="bg-coral text-coral-ink inline-flex min-h-11 items-center rounded-full px-4 text-sm font-bold"
+                      className="bg-coral inline-flex min-h-11 items-center rounded-full px-4 text-sm font-bold text-white"
                     >
                       {t("directions")}
                     </a>

@@ -39,7 +39,7 @@ export function PageHero({
         aria-hidden="true"
       />
       <Wave className="wave-b" fill="#6fcbca" opacity={0.5} height={52} />
-      <Wave className="wave-a" fill="#fdf8ee" height={34} />
+      <Wave className="wave-a" fill="var(--background)" height={34} />
       <div className="relative mx-auto max-w-3xl">
         <h1 className="font-display text-3xl leading-tight font-extrabold">
           {title}

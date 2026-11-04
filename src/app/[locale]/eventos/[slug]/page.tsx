@@ -72,7 +72,7 @@ export default async function EventPage({
     : [];
 
   return (
-    <main className="flex flex-col gap-5 pb-10">
+    <main className="mx-auto flex w-full max-w-3xl flex-col gap-5 pb-10">
       <div className="relative isolate h-72 overflow-hidden text-white">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img

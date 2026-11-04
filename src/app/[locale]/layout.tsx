@@ -37,7 +37,9 @@ export default async function LocaleLayout({
         <div
           id="contenido"
           tabIndex={-1}
-          className="mx-auto flex w-full max-w-3xl flex-1 flex-col outline-none"
+          // Sin ancho máximo: cada página fija el suyo (las rediseñadas usan
+          // todo el ancho en computador; el resto, una columna de 768 px).
+          className="flex w-full flex-1 flex-col outline-none"
         >
           {children}
         </div>

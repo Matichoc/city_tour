@@ -67,7 +67,7 @@ export function HeroScene({ children }: { children: ReactNode }) {
 
       <Wave className="wave-c" fill="#6fcbca" opacity={0.55} height={92} />
       <Wave className="wave-b" fill="#1b7070" opacity={0.85} height={74} />
-      <Wave className="wave-a" fill="#fdf8ee" height={52} />
+      <Wave className="wave-a" fill="var(--background)" height={52} />
 
       {GLINTS.map((g, i) => (
         <span

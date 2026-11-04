@@ -18,7 +18,7 @@ export async function PlaceCta({
       eventProps={{ slug, kind: cta.kind }}
       href={cta.href}
       {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-      className="bg-coral text-coral-ink inline-flex min-h-12 items-center rounded-full px-6 font-extrabold shadow-sm active:scale-95"
+      className="bg-coral inline-flex min-h-12 items-center rounded-full px-6 font-extrabold text-white shadow-sm active:scale-95"
     >
       {t(cta.kind)}
     </TrackedAnchor>

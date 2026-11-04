@@ -77,7 +77,7 @@ export default async function KioskPage({
   }));
 
   return (
-    <main>
+    <main className="mx-auto w-full max-w-3xl">
       <KioskApp
         categories={data.listCategories(locale)}
         places={places}

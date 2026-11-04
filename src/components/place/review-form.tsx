@@ -305,7 +305,7 @@ export function ReviewForm({
       <button
         type="submit"
         disabled={pending || checking}
-        className="bg-coral text-coral-ink min-h-12 self-start rounded-full px-6 font-extrabold shadow-sm active:scale-95 disabled:opacity-60"
+        className="bg-coral min-h-12 self-start rounded-full px-6 font-extrabold text-white shadow-sm active:scale-95 disabled:opacity-60"
       >
         {pending
           ? files.length

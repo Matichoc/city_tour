@@ -1,12 +1,20 @@
 import { getTranslations } from "next-intl/server";
+import { Link } from "@/i18n/navigation";
 import { SPONSOR } from "@/content/catalog";
 import type { Locale } from "@/i18n/routing";
 
-/** Crédito discreto al pie: "Desarrollado por Matichoc". */
+/** Pie: Información (en celular no está en la barra) y "Desarrollado por Matichoc". */
 export async function PoweredBy({ locale }: { locale: Locale }) {
   const t = await getTranslations({ locale, namespace: "common" });
+  const n = await getTranslations({ locale, namespace: "nav" });
   return (
     <footer className="text-muted px-4 pt-6 pb-4 text-center text-xs print:hidden">
+      <Link
+        href="/informacion"
+        className="text-foreground mb-2 inline-flex min-h-11 items-center px-3 text-sm font-semibold underline sm:hidden"
+      >
+        {n("info")}
+      </Link>
       <p className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1">
         {t("subApp")}
         {/* eslint-disable-next-line @next/next/no-img-element */}

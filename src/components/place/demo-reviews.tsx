@@ -214,7 +214,7 @@ export function DemoReviews({
         ) : null}
         <button
           type="submit"
-          className="bg-coral text-coral-ink min-h-12 self-start rounded-full px-6 font-extrabold shadow-sm active:scale-95"
+          className="bg-coral min-h-12 self-start rounded-full px-6 font-extrabold text-white shadow-sm active:scale-95"
         >
           {t("submit")}
         </button>

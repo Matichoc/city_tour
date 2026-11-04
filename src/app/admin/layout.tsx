@@ -42,7 +42,7 @@ export default async function AdminLayout({
                 {notices > 0 && (
                   <span
                     aria-label={t("nav.reviewsBadge", { count: notices })}
-                    className="bg-coral text-coral-ink ml-1.5 rounded-full px-2 py-0.5 text-xs font-extrabold"
+                    className="bg-coral ml-1.5 rounded-full px-2 py-0.5 text-xs font-extrabold text-white"
                   >
                     {notices >= 100 ? "99+" : notices}
                   </span>

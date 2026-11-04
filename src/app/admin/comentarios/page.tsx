@@ -135,7 +135,7 @@ export default async function ReviewsAdmin({
                 <b>{r.author}</b>
                 <span className="text-muted">{formatDate(r.createdAt)}</span>
                 {r.reviewedAt === null && (
-                  <span className="bg-coral text-coral-ink rounded-full px-2 py-0.5 text-xs font-extrabold">
+                  <span className="bg-coral rounded-full px-2 py-0.5 text-xs font-extrabold text-white">
                     {t("reviews.newBadge")}
                   </span>
                 )}

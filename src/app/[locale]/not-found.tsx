@@ -5,7 +5,7 @@ import { EmptyState } from "@/components/ui/empty-state";
 export default function NotFound() {
   const t = useTranslations("errors");
   return (
-    <main className="flex flex-1 flex-col gap-4 px-4 py-10">
+    <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-4 px-4 py-10">
       <EmptyState as="h1" title={t("notFoundTitle")}>
         <p>{t("notFoundBody")}</p>
         <div className="mt-4 flex flex-wrap justify-center gap-2">

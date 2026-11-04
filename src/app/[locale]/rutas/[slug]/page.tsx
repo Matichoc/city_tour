@@ -106,7 +106,7 @@ export default async function RoutePage({
   );
 
   return (
-    <main className="flex flex-col">
+    <main className="mx-auto flex w-full max-w-3xl flex-col">
       <QrVisit />
       <JsonLd
         data={{

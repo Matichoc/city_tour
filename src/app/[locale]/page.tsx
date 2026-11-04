@@ -98,7 +98,7 @@ export default async function HomePage({
   const examples = [1, 2, 3, 4].map((n) => ts(`example${n}`));
 
   return (
-    <main className="flex flex-col">
+    <main className="mx-auto flex w-full max-w-3xl flex-col">
       <QrVisit />
       <JsonLd
         data={{
@@ -143,7 +143,7 @@ export default async function HomePage({
           />
           <button
             type="submit"
-            className="bg-coral text-coral-ink min-h-12 shrink-0 rounded-full px-5 font-bold shadow-lg active:scale-95"
+            className="bg-coral min-h-12 shrink-0 rounded-full px-5 font-bold text-white shadow-lg active:scale-95"
           >
             {t("searchGo")}
           </button>

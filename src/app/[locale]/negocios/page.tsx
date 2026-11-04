@@ -44,7 +44,7 @@ export default async function BusinessPage({
   const { businessFormUrl } = await getSiteSettings();
 
   return (
-    <main className="flex flex-col">
+    <main className="mx-auto flex w-full max-w-3xl flex-col">
       <PageHero title={t("title")} subtitle={t("subtitle")} />
       <div className="mx-auto flex w-full max-w-3xl flex-col gap-6 px-4 pb-10">
         <div className="border-border bg-surface overflow-hidden rounded-3xl border shadow-sm">
@@ -111,7 +111,7 @@ export default async function BusinessPage({
             href={businessFormUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="bg-coral text-coral-ink inline-flex min-h-12 items-center self-start rounded-full px-6 font-extrabold shadow-sm active:scale-95"
+            className="bg-coral inline-flex min-h-12 items-center self-start rounded-full px-6 font-extrabold text-white shadow-sm active:scale-95"
           >
             {tInvite("cta")}
           </a>
