@@ -153,7 +153,14 @@
     "website": "Website",
     "ownerValidated": "Validated by the business representative",
     "galleryPrev": "Previous photo",
-    "galleryNext": "Next photo"
+    "galleryNext": "Next photo",
+    "inLocality": "{category} in <pueblo>{locality}</pueblo>",
+    "todayOpen": "Open now, until {time}",
+    "todayLater": "Opens today at {time}",
+    "todayTomorrow": "Closed now. Opens tomorrow at {time}",
+    "todayOn": "Closed now. Opens on {day} at {time}",
+    "todayClosed": "Closed for now",
+    "todayNote": "Based on the hours provided; holidays may differ."
   },
   "listen": {
     "play": "Listen",
@@ -230,7 +237,9 @@
     "sharedKeep": "Keep mine",
     "startLive": "Start trip",
     "startLiveNote": "Uses your location to guide you stop by stop. It stays on your phone; only if you accept the street route is it sent to calculate it, and it is not stored.",
-    "startDemo": "Not in Papudo? Try it with a simulated location"
+    "startDemo": "Not in Papudo? Try it with a simulated location",
+    "addShort": "Add to my trip",
+    "addedShort": "In my trip"
   },
   "map": {
     "unavailable": "The map is unavailable right now. You can keep using the list.",

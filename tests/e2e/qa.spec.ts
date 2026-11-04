@@ -85,7 +85,7 @@ test("un local sin coordenada muestra dirección y 'Cómo llegar' por búsqueda"
     .getAttribute("href");
   expect(href).toContain("google.com/maps/search");
   await expect(
-    page.getByRole("button", { name: /Agregar a mi recorrido/ }),
+    page.getByRole("button", { name: /(Agregar )?[Aa] mi recorrido/ }),
   ).toHaveCount(0);
 });
 
@@ -249,4 +249,22 @@ test("audioguía de ruta: presenta la ruta, salta entre paradas y marca la que s
   expect(said[0]).toBe("Ruta costera de Papudo.");
   expect(said).toContain("Parada 1 de 3: Salinas de Pullally.");
   expect(said).toContain("Parada 2 de 3: Playa de Papudo.");
+});
+
+test("ficha: una sola acción principal y el resto en íconos", async ({
+  page,
+}) => {
+  await page.goto("/es/lugares/playa-chica-papudo");
+  await expect(
+    page.getByRole("heading", { name: "Playa Chica", level: 1 }),
+  ).toBeVisible();
+  // Sin botón de comercio, «Cómo llegar» es la acción principal (una vez).
+  await expect(page.getByRole("link", { name: "Cómo llegar" })).toHaveCount(1);
+  for (const name of ["Guardar", "A mi recorrido", "Compartir"]) {
+    await expect(page.getByRole("button", { name })).toBeVisible();
+  }
+  // «Balneario en Papudo»: el pueblo enlaza a su página.
+  await expect(
+    page.getByRole("link", { name: "Papudo", exact: true }),
+  ).toHaveAttribute("href", /\/es\/pueblos\//);
 });

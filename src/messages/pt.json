@@ -153,7 +153,14 @@
     "website": "Site",
     "ownerValidated": "Validada pelo representante do local",
     "galleryPrev": "Foto anterior",
-    "galleryNext": "Próxima foto"
+    "galleryNext": "Próxima foto",
+    "inLocality": "{category} em <pueblo>{locality}</pueblo>",
+    "todayOpen": "Aberto agora, até as {time}",
+    "todayLater": "Hoje abre às {time}",
+    "todayTomorrow": "Fechado agora. Abre amanhã às {time}",
+    "todayOn": "Fechado agora. Abre {day} às {time}",
+    "todayClosed": "Fechado por enquanto",
+    "todayNote": "Conforme o horário informado; feriados podem mudar."
   },
   "listen": {
     "play": "Ouvir",
@@ -230,7 +237,9 @@
     "sharedKeep": "Manter o meu",
     "startLive": "Iniciar roteiro",
     "startLiveNote": "Usa a sua localização para guiá-lo parada por parada. Ela fica no seu celular; só se você aceitar a rota pelas ruas, ela é enviada para calculá-la e não é guardada.",
-    "startDemo": "Não está em Papudo? Testar com localização simulada"
+    "startDemo": "Não está em Papudo? Testar com localização simulada",
+    "addShort": "Ao meu roteiro",
+    "addedShort": "No meu roteiro"
   },
   "map": {
     "unavailable": "O mapa não está disponível no momento. Você pode continuar usando a lista.",
