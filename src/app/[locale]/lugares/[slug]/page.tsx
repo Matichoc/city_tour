@@ -38,7 +38,6 @@ import { isPastDay } from "@/lib/freshness";
 import { ListenButton } from "@/components/listen/listen-button";
 import { HoursToday } from "@/components/place/hours-today";
 import { styleOf } from "@/lib/doors";
-import { SPEECH_LANG } from "@/lib/speech";
 
 export async function generateStaticParams() {
   const data = await getData();
@@ -122,33 +121,6 @@ export default async function PlacePage({
     ["opiniones", t("tabReviews")],
     ["datos", t("tabDetails")],
   ] as const;
-  // Lo que lee el botón "Escuchar", en el orden en que se lee.
-  const hoursSpoken = place.demo
-    ? null
-    : place.hours.length > 0
-      ? place.hours
-          .map((h) => {
-            const f = formatHours(h, locale, hoursWords);
-            return `${f.season}: ${f.days}, ${f.time}`;
-          })
-          .join("; ")
-      : place.hoursText;
-  const listenSegments = [
-    `${place.name}.`,
-    place.localityName
-      ? tl("categoryIn", {
-          category: place.categoryName,
-          locality: place.localityName,
-        })
-      : `${place.categoryName}.`,
-    place.demo ? tl("demo") : null,
-    place.description,
-    hoursSpoken ? tl("hours", { text: hoursSpoken }) : null,
-    place.address ? tl("address", { address: place.address }) : null,
-    !place.demo && place.verification !== "verified"
-      ? tl(place.verification)
-      : null,
-  ].filter((s): s is string => Boolean(s));
   const sernatur = place.sernatur
     ? {
         ...place.sernatur,
@@ -407,8 +379,8 @@ export default async function PlacePage({
         <section id="resumen" className="flex scroll-mt-32 flex-col gap-3">
           <h2 className="sr-only">{t("tabOverview")}</h2>
           <ListenButton
-            sections={[{ segments: listenSegments }]}
-            lang={SPEECH_LANG[locale]}
+            parts={[{}]}
+            title={place.name}
             playLabel={tl("playLabel", { name: place.name })}
             slug={place.slug}
             kind="place"

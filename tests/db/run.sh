@@ -35,6 +35,7 @@ echo "→ contenido del sitio (dos veces: debe ser idempotente)"
 "${PSQL[@]}" -o /dev/null -f tests/db/business.check.sql
 "${PSQL[@]}" -o /dev/null -f tests/db/media.check.sql
 "${PSQL[@]}" -o /dev/null -f tests/db/gate.check.sql
+"${PSQL[@]}" -o /dev/null -f tests/db/listen.check.sql
 "${PSQL[@]}" -o /dev/null -f tests/db/panel.check.sql
 "${PSQL[@]}" -o /dev/null -f tests/db/privacy.check.sql
 echo "→ PRIV-01: respaldo, limpieza y restauración"

@@ -169,8 +169,6 @@
     "resume": "Continuar",
     "stop": "Detener",
     "speedLabel": "Velocidad de lectura: {rate}. Tocar para cambiar",
-    "deviceVoice": "Con la voz de tu teléfono",
-    "noVoice": "Tu dispositivo no tiene una voz en este idioma.",
     "playing": "Leyendo en voz alta",
     "paused": "Lectura en pausa",
     "stopped": "Lectura detenida",
@@ -187,7 +185,11 @@
     "previous": "Anterior",
     "next": "Siguiente",
     "previousLabel": "Volver a la parte anterior",
-    "nextLabel": "Saltar a la parte siguiente"
+    "nextLabel": "Saltar a la parte siguiente",
+    "loading": "Preparando el audio…",
+    "unavailable": "El audio con voz natural todavía no está disponible.",
+    "error": "No se pudo cargar el audio. Intenta de nuevo.",
+    "naturalVoice": "Voz natural"
   },
   "routes": {
     "title": "Rutas",
