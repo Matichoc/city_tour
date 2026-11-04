@@ -343,21 +343,45 @@ test("una ficha real no tiene formulario de opiniones ni opiniones inventadas", 
   expect(await sitemap.text()).not.toContain("demo-");
 });
 
-test("portada: accesos por categoría de «¿Qué quieres hacer?» y selector de idioma desplegable", async ({
+test("portada: los cuatro cuadros como puertas y selector de idioma desplegable", async ({
   page,
 }) => {
   await page.goto("/es");
   await expect(
     page.getByRole("heading", { name: "Papudo te espera", level: 1 }),
   ).toBeVisible();
-  const tarjetas = page
-    .getByRole("region", { name: "¿Qué quieres hacer?" })
-    .or(page.locator("#que-hacer").locator(".."));
-  await expect(tarjetas.getByRole("link", { name: /Balneario/ })).toBeVisible();
-  await expect(tarjetas.getByRole("link", { name: /Deportes/ })).toBeVisible();
+  const puertas = page.getByRole("navigation", {
+    name: "Qué quieres conocer",
+  });
+  for (const name of [
+    /Mar y sol/,
+    /Campo y humedal/,
+    /Patrimonio/,
+    /Paseos y deporte/,
+  ]) {
+    await expect(puertas.getByRole("link", { name })).toBeVisible();
+  }
   await expect(
     page.getByRole("button", { name: "Idioma: Español" }),
   ).toBeVisible();
+});
+
+test("portada: «Paseos y deporte» abre Explorar con recreación y deportes juntos", async ({
+  page,
+}) => {
+  await page.goto("/es");
+  await page
+    .getByRole("navigation", { name: "Qué quieres conocer" })
+    .getByRole("link", { name: /Paseos y deporte/ })
+    .click();
+  await expect(page).toHaveURL(/\/es\/explorar\?puerta=paseos/);
+  await expect(
+    page.getByRole("link", { name: "Quitar filtro: Paseos y deporte" }),
+  ).toBeVisible();
+  const grupos = page.locator("details");
+  await expect(grupos.filter({ hasText: "Recreación" })).toHaveCount(1);
+  await expect(grupos.filter({ hasText: "Deportes" })).toHaveCount(1);
+  await expect(grupos.filter({ hasText: "Balneario" })).toHaveCount(0);
 });
 
 test("quiosco: se puede salir en la web y en la tablet de la oficina no", async ({
@@ -376,9 +400,13 @@ test("quiosco: se puede salir en la web y en la tablet de la oficina no", async 
   ).toHaveCount(0);
 });
 
-test("portada: acceso a la agenda de eventos", async ({ page }) => {
+test("portada: «Se viene» muestra las próximas fiestas y lleva a la agenda", async ({
+  page,
+}) => {
   await page.goto("/es");
-  await page.getByRole("link", { name: /Fiestas y celebraciones/ }).click();
+  const seViene = page.locator('section[aria-labelledby="se-viene"]');
+  await expect(seViene.getByRole("listitem").first()).toBeVisible();
+  await seViene.getByRole("link", { name: "Agenda", exact: true }).click();
   await expect(page).toHaveURL(/\/es\/eventos$/);
 });
 
@@ -481,7 +509,7 @@ test("explorar: llegar desde un acceso del inicio muestra solo ese grupo, abiert
   await expect(grupos.first()).toHaveAttribute("open", "");
 });
 
-test("portada: cinco destacados, accesos por categoría y sin lista repetida", async ({
+test("portada: cinco destacados, comer y dormir, y sin lista repetida", async ({
   page,
 }) => {
   await page.goto("/es");
@@ -491,11 +519,10 @@ test("portada: cinco destacados, accesos por categoría y sin lista repetida", a
   ).toBeVisible();
   await expect(destacados.getByRole("listitem")).toHaveCount(5);
   await expect(page.getByText("Para empezar")).toHaveCount(0);
-  // Una fila de accesos lleva a Explorar ya filtrado.
+  // Comer y dormir, bajo los cuadros, llevan a Explorar ya filtrado.
   await page
-    .locator("#que-hacer")
-    .locator("..")
-    .getByRole("link", { name: /Gastronomía/ })
+    .getByRole("navigation", { name: "Qué quieres conocer" })
+    .getByRole("link", { name: "Gastronomía" })
     .click();
   await expect(page).toHaveURL(/\/es\/explorar\?categoria=gastronomia/);
 });

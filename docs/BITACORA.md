@@ -14,13 +14,13 @@ indicadas en cada versión.
 `docs/bitacora-notas.json` (clave `actual`, y el número de PR cuando exista),
 correr `pnpm bitacora` y subir el cambio en el mismo PR.
 
-## En preparación: v0.34 — Refresh, paso 1: base visual
+## En preparación: v0.35 — Refresh, paso 2: portada con los cuatro cuadros
 
-Primer paso del refresh «los cuatro cuadros»: fondo blanco y azul noche en vez de arena y rosado, texto en Figtree (autoalojada), acción principal en azul noche y los cuatro colores del logo como tokens nuevos (--cuadro-*), con contrastes AA documentados en docs/MARCA-REFERENCIA.md. Barra inferior de cinco pestañas (Inicio, Explorar, Rutas, Agenda, Recorrido; Información pasa al pie). El encabezado ya usa el ancho de computador; cada página fija su propio ancho para poder ensancharse al rediseñarla. Sin migraciones.
+La portada usa todo el ancho en computador: a la izquierda el saludo y el buscador, a la derecha los cuatro cuadros del logo como puertas (mar y sol, campo y humedal, patrimonio, paseos y deporte), cada uno con su cantidad de lugares y, debajo, comer y dormir. Explorar entiende la puerta (?puerta=paseos junta recreación y deportes). Nuevos «Se viene» (las próximas fiestas con cuenta regresiva) y «Ruta para hoy» (con sus paradas en orden). Se mantienen «Destacados del mes» y la comuna en 3D. Sin migraciones.
 
 - **Migraciones por correr en Supabase:** —
-- **Estado:** en revisión, [PR #41](https://github.com/Matichoc/city_tour/pull/41) (aún no está en `develop`).
-- **Última actualización de esta bitácora:** 2026-11-04 08:48
+- **Estado:** en revisión, [PR #42](https://github.com/Matichoc/city_tour/pull/42) (aún no está en `develop`).
+- **Última actualización de esta bitácora:** 2026-11-04 09:57
 
 ## Avance por día
 
@@ -29,7 +29,7 @@ trabajadas: hay pausas y trabajo sin registrar).
 
 | Día | Ventana de actividad | Registros | Versiones entregadas |
 | --- | --- | ---: | --- |
-| Miércoles, 4 de noviembre de 2026 | 08:48 – 08:48 | 1 | — |
+| Miércoles, 4 de noviembre de 2026 | 08:48 – 09:57 | 3 | v0.34 |
 | Domingo, 1 de noviembre de 2026 | 01:52 – 02:37 | 4 | v0.32, v0.33 |
 | Domingo, 18 de octubre de 2026 | 00:09 – 00:39 | 7 | v0.29, v0.30, v0.31 |
 | Sábado, 17 de octubre de 2026 | 00:01 – 23:30 | 34 | v0.16, v0.17, v0.18, v0.19, v0.20, v0.21, v0.22, v0.23, v0.24, v0.25, v0.26, v0.27, v0.28 |
@@ -40,6 +40,16 @@ trabajadas: hay pausas y trabajo sin registrar).
 | Lunes, 12 de octubre de 2026 | 15:43 – 17:53 | 10 | v0.1, v0.2, v0.3, v0.4 |
 
 ## Versiones
+
+### v0.34 — Refresh, paso 1: base visual
+Miércoles, 4 de noviembre de 2026, 09:44 · [PR #41](https://github.com/Matichoc/city_tour/pull/41)
+
+Primer paso del refresh «los cuatro cuadros»: fondo blanco y azul noche en vez de arena y rosado, texto en Figtree (autoalojada), acción principal en azul noche y los cuatro colores del logo como tokens nuevos (--cuadro-*), con contrastes AA documentados en docs/MARCA-REFERENCIA.md. Barra inferior de cinco pestañas (Inicio, Explorar, Rutas, Agenda, Recorrido; Información pasa al pie). El encabezado ya usa el ancho de computador; cada página fija su propio ancho para poder ensancharse al rediseñarla. Sin migraciones.
+
+Registros:
+
+- 11-04 08:48 — Refresh, paso 1: base visual de los cuatro cuadros (`7204bbd`)
+- 11-04 08:48 — Bitácora: v0.34 en preparación (PR #41) (`b16b67e`)
 
 ### v0.33 — Audioguía en las rutas
 Domingo, 1 de noviembre de 2026, 02:40 · [PR #39](https://github.com/Matichoc/city_tour/pull/39)

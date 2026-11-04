@@ -45,7 +45,30 @@
     "mapVillages": "Localidades da comuna",
     "kioskLink": "Ver o modo quiosque (para tablets)",
     "featuredHint": "O melhor para começar este mês.",
-    "moreRoutes": "Ver os {count} roteiros"
+    "moreRoutes": "Ver os {count} roteiros",
+    "doorsTitle": "O que você quer conhecer",
+    "doorCount": "{count, plural, =0 {Em breve} one {# lugar} other {# lugares}}",
+    "services": "Também: comer e dormir",
+    "upcoming": "Vem aí",
+    "agenda": "Agenda",
+    "inDays": "{count, plural, =0 {Hoje} one {Amanhã} other {Em # dias}}",
+    "routeToday": "Rota para hoje",
+    "allRoutes": "{count, plural, one {# rota} other {# rotas}}",
+    "routeMeta": "{count, plural, one {# parada} other {# paradas}}, com audioguia"
+  },
+  "doors": {
+    "mar": {
+      "name": "Mar e sol"
+    },
+    "campo": {
+      "name": "Campo e áreas úmidas"
+    },
+    "patrimonio": {
+      "name": "Patrimônio"
+    },
+    "paseos": {
+      "name": "Passeios e esporte"
+    }
   },
   "explore": {
     "title": "Explorar Papudo",
