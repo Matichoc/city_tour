@@ -17,6 +17,22 @@ const DAY_MS = 86_400_000;
 const utcDay = (year: number, month: number, day: number) =>
   Math.floor(Date.UTC(year, month - 1, day) / DAY_MS);
 
+/**
+ * Días que faltan para la próxima vez que se celebra un evento con día fijo
+ * (0 = hoy). `null` si solo tiene mes o no tiene fecha.
+ */
+export function daysUntil(
+  event: { month: number | null; day: number | null },
+  today: CalendarDay,
+): number | null {
+  if (!event.month || !event.day) return null;
+  const start = utcDay(today.year, today.month, today.day);
+  const thisYear = utcDay(today.year, event.month, event.day);
+  return thisYear >= start
+    ? thisYear - start
+    : utcDay(today.year + 1, event.month, event.day) - start;
+}
+
 /** Días que abarca «lo del mes»: desde hoy hasta 30 días hacia adelante. */
 export const FEATURED_WINDOW_DAYS = 30;
 

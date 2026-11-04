@@ -135,10 +135,14 @@
     "titulo": "Audioguía en las rutas",
     "resumen": "Cada ruta se puede escuchar como audioguía: primero su presentación (paradas, duración, descripción y aviso de verificación) y después cada parada en orden con su descripción completa. «Anterior» y «Siguiente» saltan entre paradas, y la que suena se resalta en la lista y se anuncia al lector de pantalla. Mismo reproductor que las fichas, ahora por partes. Sin migraciones."
   },
-  "actual": {
-    "pr": 41,
+  "41": {
     "titulo": "Refresh, paso 1: base visual",
-    "resumen": "Primer paso del refresh «los cuatro cuadros»: fondo blanco y azul noche en vez de arena y rosado, texto en Figtree (autoalojada), acción principal en azul noche y los cuatro colores del logo como tokens nuevos (--cuadro-*), con contrastes AA documentados en docs/MARCA-REFERENCIA.md. Barra inferior de cinco pestañas (Inicio, Explorar, Rutas, Agenda, Recorrido; Información pasa al pie). El encabezado ya usa el ancho de computador; cada página fija su propio ancho para poder ensancharse al rediseñarla. Sin migraciones.",
+    "resumen": "Primer paso del refresh «los cuatro cuadros»: fondo blanco y azul noche en vez de arena y rosado, texto en Figtree (autoalojada), acción principal en azul noche y los cuatro colores del logo como tokens nuevos (--cuadro-*), con contrastes AA documentados en docs/MARCA-REFERENCIA.md. Barra inferior de cinco pestañas (Inicio, Explorar, Rutas, Agenda, Recorrido; Información pasa al pie). El encabezado ya usa el ancho de computador; cada página fija su propio ancho para poder ensancharse al rediseñarla. Sin migraciones."
+  },
+  "actual": {
+    "pr": 42,
+    "titulo": "Refresh, paso 2: portada con los cuatro cuadros",
+    "resumen": "La portada usa todo el ancho en computador: a la izquierda el saludo y el buscador, a la derecha los cuatro cuadros del logo como puertas (mar y sol, campo y humedal, patrimonio, paseos y deporte), cada uno con su cantidad de lugares y, debajo, comer y dormir. Explorar entiende la puerta (?puerta=paseos junta recreación y deportes). Nuevos «Se viene» (las próximas fiestas con cuenta regresiva) y «Ruta para hoy» (con sus paradas en orden). Se mantienen «Destacados del mes» y la comuna en 3D. Sin migraciones.",
     "migraciones": "—"
   }
 }

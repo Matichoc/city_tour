@@ -45,7 +45,30 @@
     "mapVillages": "Villages in the commune",
     "kioskLink": "See the kiosk mode (for tablets)",
     "featuredHint": "The best places to start this month.",
-    "moreRoutes": "See all {count} routes"
+    "moreRoutes": "See all {count} routes",
+    "doorsTitle": "What do you want to see",
+    "doorCount": "{count, plural, =0 {Coming soon} one {# place} other {# places}}",
+    "services": "Also: food and stays",
+    "upcoming": "Coming up",
+    "agenda": "Calendar",
+    "inDays": "{count, plural, =0 {Today} one {Tomorrow} other {In # days}}",
+    "routeToday": "A route for today",
+    "allRoutes": "{count, plural, one {# route} other {# routes}}",
+    "routeMeta": "{count, plural, one {# stop} other {# stops}}, with audio guide"
+  },
+  "doors": {
+    "mar": {
+      "name": "Sea and sun"
+    },
+    "campo": {
+      "name": "Countryside and wetland"
+    },
+    "patrimonio": {
+      "name": "Heritage"
+    },
+    "paseos": {
+      "name": "Walks and sports"
+    }
   },
   "explore": {
     "title": "Explore Papudo",

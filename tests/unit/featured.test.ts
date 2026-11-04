@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { eventsInWindow, todayInChile } from "@/lib/featured";
+import { daysUntil, eventsInWindow, todayInChile } from "@/lib/featured";
 
 const ev = (name: string, month: number | null, day: number | null = null) => ({
   name,
@@ -54,5 +54,20 @@ describe("hoy en Chile", () => {
       month: 12,
       day: 31,
     });
+  });
+});
+
+describe("días que faltan para un evento", () => {
+  const today = { year: 2026, month: 11, day: 3 };
+  it("cuenta hasta la fecha de este año", () => {
+    expect(daysUntil({ month: 11, day: 26 }, today)).toBe(23);
+    expect(daysUntil({ month: 11, day: 3 }, today)).toBe(0);
+  });
+  it("si ya pasó, cuenta hasta el próximo año", () => {
+    expect(daysUntil({ month: 5, day: 21 }, today)).toBe(199);
+  });
+  it("sin día fijo no hay cuenta", () => {
+    expect(daysUntil({ month: 2, day: null }, today)).toBe(null);
+    expect(daysUntil({ month: null, day: null }, today)).toBe(null);
   });
 });

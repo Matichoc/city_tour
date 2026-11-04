@@ -16,9 +16,12 @@ import { PlaceCard } from "@/components/place/place-card";
 import { PlacesMap } from "@/components/map/places-map";
 import { CategoryIcon } from "@/components/ui/category-icon";
 import { FilterMenu, type FilterItem } from "@/components/ui/filter-menu";
+import { findDoor } from "@/lib/doors";
 
 type SearchParams = {
   categoria?: string;
+  /** Una de las cuatro puertas de la portada (`lib/doors.ts`). */
+  puerta?: string;
   pueblo?: string;
   q?: string;
   vista?: string;
@@ -71,11 +74,25 @@ export default async function ExplorePage({
     : undefined;
   const query = sp.q?.trim() || undefined;
   const view = sp.vista === "mapa" ? "map" : "list";
+  // Una puerta junta varias categorías; si viene, manda sobre la categoría.
+  const door = findDoor(sp.puerta);
+  const td = await getTranslations("doors");
 
-  const places = data.listPlaces(locale, { category, locality, query });
+  const places = door
+    ? data
+        .listPlaces(locale, { locality, query })
+        .filter((p) =>
+          (door.categories as readonly string[]).includes(p.categorySlug),
+        )
+    : data.listPlaces(locale, { category, locality, query });
   const categories = data.listCategories(locale);
 
-  const base = { categoria: category, pueblo: locality, q: query };
+  const base = {
+    categoria: door ? undefined : category,
+    puerta: door?.key,
+    pueblo: locality,
+    q: query,
+  };
   const q = (extra: Partial<SearchParams>) =>
     Object.fromEntries(
       Object.entries({
@@ -86,7 +103,7 @@ export default async function ExplorePage({
     );
 
   // Lista agrupada por categoría: cerrada hasta que se elige un filtro.
-  const narrowed = Boolean(category || locality || query);
+  const narrowed = Boolean(category || door || locality || query);
   const groups = categories
     .map((c) => ({
       slug: c.slug,
@@ -115,7 +132,17 @@ export default async function ExplorePage({
   const categoryLabel = categories.find((c) => c.slug === category)?.name;
   const localityLabel = localities.find((l) => l.slug === locality)?.name;
   const removable = [
-    category && categoryLabel
+    door
+      ? {
+          key: "puerta",
+          label: td(`${door.key}.name`),
+          href: {
+            pathname: "/explorar" as const,
+            query: q({ puerta: undefined }),
+          },
+        }
+      : null,
+    !door && category && categoryLabel
       ? {
           key: "categoria",
           label: categoryLabel,
