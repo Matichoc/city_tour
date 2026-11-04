@@ -33,6 +33,11 @@
   --cuadro-campo: #00b5b4;
   --cuadro-patri: #d71f19;
   --cuadro-paseo: #d4087e;
+  /* Tinta de cada cuadro para texto sobre blanco (≥ 6:1). */
+  --cuadro-mar-ink: #7a5c00;
+  --cuadro-campo-ink: #0f6d6c;
+  --cuadro-patri-ink: #b51d18;
+  --cuadro-paseo-ink: #a3066a;
   --dune: #f2e2b3;
   --earth: #a8403c; /* rojo del logo, como tinta */
   --earth-soft: #f8e3e1;
@@ -67,6 +72,10 @@
   --color-cuadro-campo: var(--cuadro-campo);
   --color-cuadro-patri: var(--cuadro-patri);
   --color-cuadro-paseo: var(--cuadro-paseo);
+  --color-cuadro-mar-ink: var(--cuadro-mar-ink);
+  --color-cuadro-campo-ink: var(--cuadro-campo-ink);
+  --color-cuadro-patri-ink: var(--cuadro-patri-ink);
+  --color-cuadro-paseo-ink: var(--cuadro-paseo-ink);
   /* Texto: Figtree, clara y cálida; los títulos siguen en Baloo 2. */
   --font-sans:
     "Figtree Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI",

@@ -376,12 +376,15 @@ test("portada: «Paseos y deporte» abre Explorar con recreación y deportes jun
     .click();
   await expect(page).toHaveURL(/\/es\/explorar\?puerta=paseos/);
   await expect(
-    page.getByRole("link", { name: "Quitar filtro: Paseos y deporte" }),
-  ).toBeVisible();
-  const grupos = page.locator("details");
-  await expect(grupos.filter({ hasText: "Recreación" })).toHaveCount(1);
-  await expect(grupos.filter({ hasText: "Deportes" })).toHaveCount(1);
-  await expect(grupos.filter({ hasText: "Balneario" })).toHaveCount(0);
+    page
+      .getByRole("navigation", { name: "Qué buscas" })
+      .getByRole("link", { name: "Paseos y deporte" }),
+  ).toHaveAttribute("aria-current", "true");
+  const lugares = page.getByRole("list", { name: "Lugares" });
+  // Todas las filas son de la puerta: recreación y deportes, sin playas.
+  await expect(lugares.getByRole("listitem").first()).toBeVisible();
+  await expect(lugares.getByText("Mar y sol")).toHaveCount(0);
+  await expect(lugares.getByText("Paseos y deporte").first()).toBeVisible();
 });
 
 test("quiosco: se puede salir en la web y en la tablet de la oficina no", async ({
@@ -483,30 +486,38 @@ test("celular: la barra inferior tiene cinco pestañas, con Agenda", async ({
   await expect(page).toHaveURL(/\/es\/eventos$/);
 });
 
-test("explorar: las categorías son desplegables cerrados, sin filtro repetido", async ({
+test("explorar: filtros por puerta y comer y dormir, sin buscador", async ({
   page,
 }) => {
   await page.goto("/es/explorar");
-  // El filtro «Qué buscas» ya no existe: los grupos son la forma de elegir.
-  await expect(page.getByRole("button", { name: /Qué buscas/ })).toHaveCount(0);
   // El buscador vive solo en la portada: Explorar es para navegar.
   await expect(page.getByRole("searchbox")).toHaveCount(0);
-  const balneario = page.locator("details", { hasText: "Balneario" }).first();
-  await expect(balneario).not.toHaveAttribute("open", "");
-  await expect(page.getByRole("link", { name: /Playa Chica/ })).toBeHidden();
-  await balneario.locator("summary").click();
+  const filtros = page.getByRole("navigation", { name: "Qué buscas" });
+  // Todo, las cuatro puertas, Gastronomía y Alojamiento.
+  await expect(filtros.getByRole("link")).toHaveCount(7);
+  await expect(filtros.getByRole("link", { name: "Todo" })).toHaveAttribute(
+    "aria-current",
+    "true",
+  );
   await expect(
-    page.getByRole("link", { name: /Playa Chica/ }).first(),
+    page
+      .getByRole("list", { name: "Lugares" })
+      .getByRole("link", { name: /Playa Chica/ }),
   ).toBeVisible();
 });
 
-test("explorar: llegar desde un acceso del inicio muestra solo ese grupo, abierto", async ({
+test("explorar: llegar desde «comer» de la portada muestra solo gastronomía", async ({
   page,
 }) => {
   await page.goto("/es/explorar?categoria=gastronomia");
-  const grupos = page.locator("details");
-  await expect(grupos).toHaveCount(1);
-  await expect(grupos.first()).toHaveAttribute("open", "");
+  await expect(
+    page
+      .getByRole("navigation", { name: "Qué buscas" })
+      .getByRole("link", { name: "Gastronomía" }),
+  ).toHaveAttribute("aria-current", "true");
+  const lugares = page.getByRole("list", { name: "Lugares" });
+  await expect(lugares.getByRole("listitem").first()).toBeVisible();
+  await expect(lugares.getByText("Mar y sol")).toHaveCount(0);
 });
 
 test("portada: cinco destacados, comer y dormir, y sin lista repetida", async ({

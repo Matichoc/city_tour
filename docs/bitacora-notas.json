@@ -139,10 +139,14 @@
     "titulo": "Refresh, paso 1: base visual",
     "resumen": "Primer paso del refresh «los cuatro cuadros»: fondo blanco y azul noche en vez de arena y rosado, texto en Figtree (autoalojada), acción principal en azul noche y los cuatro colores del logo como tokens nuevos (--cuadro-*), con contrastes AA documentados en docs/MARCA-REFERENCIA.md. Barra inferior de cinco pestañas (Inicio, Explorar, Rutas, Agenda, Recorrido; Información pasa al pie). El encabezado ya usa el ancho de computador; cada página fija su propio ancho para poder ensancharse al rediseñarla. Sin migraciones."
   },
-  "actual": {
-    "pr": 42,
+  "42": {
     "titulo": "Refresh, paso 2: portada con los cuatro cuadros",
-    "resumen": "La portada usa todo el ancho en computador: a la izquierda el saludo y el buscador, a la derecha los cuatro cuadros del logo como puertas (mar y sol, campo y humedal, patrimonio, paseos y deporte), cada uno con su cantidad de lugares y, debajo, comer y dormir. Explorar entiende la puerta (?puerta=paseos junta recreación y deportes). Nuevos «Se viene» (las próximas fiestas con cuenta regresiva) y «Ruta para hoy» (con sus paradas en orden). Se mantienen «Destacados del mes» y la comuna en 3D. Sin migraciones.",
+    "resumen": "La portada usa todo el ancho en computador: a la izquierda el saludo y el buscador, a la derecha los cuatro cuadros del logo como puertas (mar y sol, campo y humedal, patrimonio, paseos y deporte), cada uno con su cantidad de lugares y, debajo, comer y dormir. Explorar entiende la puerta (?puerta=paseos junta recreación y deportes). Nuevos «Se viene» (las próximas fiestas con cuenta regresiva) y «Ruta para hoy» (con sus paradas en orden). Se mantienen «Destacados del mes» y la comuna en 3D. Sin migraciones."
+  },
+  "actual": {
+    "pr": 43,
+    "titulo": "Refresh, paso 3: Explorar con lista y mapa",
+    "resumen": "Explorar usa todo el ancho: en computador la lista y el mapa van lado a lado (el mapa queda fijo al recorrer la lista); en el celular se elige Lista o Mapa. Filtros por puerta (los cuatro cuadros del logo) y por comer y dormir, más el pueblo. Cada lugar va en una fila con su miniatura enmarcada en el color de su puerta, su estado y la marca IA cuando es ilustración. El mapa de lugares pasa a un estilo claro teñido con los colores de Papudo, con los pines del color de cada puerta; al tocar uno aparece su tarjeta con Ver ficha y Cómo llegar. Reemplaza los grupos desplegables por categoría. Sin migraciones.",
     "migraciones": "—"
   }
 }
