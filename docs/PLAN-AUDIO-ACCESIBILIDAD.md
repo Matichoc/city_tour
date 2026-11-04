@@ -53,7 +53,10 @@ reemplazó entera.
   tope de pedidos por minuto.
 - **Voz:** Azure AI Speech por REST (`src/lib/tts/azure.ts`): `es-CL-CatalinaNeural`,
   `en-US-JennyNeural` y `pt-BR-FranciscaNeural`; MP3 mono de 48 kb/s.
-  Variables `AZURE_SPEECH_KEY` y `AZURE_SPEECH_REGION` (solo servidor).
+  Estilo elegido de oído («Catalina pausada»): 7 % más lento y una pausa de
+  350 ms entre frases (`STYLE` en `azure.ts`; su versión entra en el nombre de
+  cada audio, así que cambiarlo los regenera todos). Variables
+  `AZURE_SPEECH_KEY` y `AZURE_SPEECH_REGION` (solo servidor).
 - **Guardado:** Supabase Storage, bucket público `listen-audio` (migración
   0030). Cada audio se llama `<idioma>/<hash>.<firma>.mp3`: el hash es del
   texto y la voz (un texto editado en `/admin` da un audio nuevo; el

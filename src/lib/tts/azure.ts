@@ -33,12 +33,31 @@ const escapeXml = (s: string) =>
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&apos;");
 
-/** SSML de un texto, con la voz del idioma. */
+/**
+ * Estilo de lectura elegido por oído (muestra «Catalina pausada»): un poco
+ * más lento y con una pausa entre frases, para que no suene a lectura de
+ * corrido. Cambiar el estilo exige subir `STYLE`, que entra en el nombre de
+ * cada audio: así se regeneran todos con el estilo nuevo.
+ */
+export const STYLE = { version: 2, rate: "-7%", pauseMs: 350 };
+
+/** Frases del texto: corta después de . ! ? o … seguidos de espacio. */
+export function sentences(text: string): string[] {
+  return text
+    .split(/(?<=[.!?…])\s+/)
+    .map((s) => s.trim())
+    .filter(Boolean);
+}
+
+/** SSML de un texto, con la voz del idioma y el estilo de lectura. */
 export function ssml(text: string, locale: Locale): string {
   const v = VOICES[locale];
+  const body = sentences(text)
+    .map(escapeXml)
+    .join(` <break time="${STYLE.pauseMs}ms"/> `);
   return (
     `<speak version="1.0" xml:lang="${v.lang}">` +
-    `<voice name="${v.voice}">${escapeXml(text)}</voice></speak>`
+    `<voice name="${v.voice}"><prosody rate="${STYLE.rate}">${body}</prosody></voice></speak>`
   );
 }
 
