@@ -1,7 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import type { EventItem } from "@/lib/data";
-import { CATEGORY_BG } from "@/components/ui/category-card";
+import { styleOf } from "@/lib/doors";
 import { Stars } from "@/components/ui/stars";
 
 /** Entrada de evento al estilo cartelera: talón de fecha, detalles y valoración. */
@@ -17,14 +17,15 @@ export async function EventTicket({
   index?: number;
 }) {
   const t = await getTranslations("events");
+  const tone = styleOf(event.categorySlug);
   return (
     <Link
       href={{ pathname: "/eventos/[slug]", params: { slug: event.slug } }}
       style={{ "--i": index } as React.CSSProperties}
-      className="card-lift rise-in border-border bg-surface group flex overflow-hidden rounded-2xl border shadow-sm"
+      className="rise-in border-border hover:border-foreground bg-surface group flex overflow-hidden rounded-[1.4rem] border-2 transition"
     >
       <span
-        className={`relative flex w-24 shrink-0 flex-col items-center justify-center bg-gradient-to-b p-2 text-center text-white ${CATEGORY_BG[event.categorySlug]}`}
+        className={`relative flex w-24 shrink-0 flex-col items-center justify-center p-2 text-center ${tone.frame} ${tone.on}`}
         aria-hidden="true"
       >
         {monthShort ? (
@@ -56,7 +57,7 @@ export async function EventTicket({
       </span>
       <span className="flex min-w-0 flex-1 flex-col gap-1 p-4">
         <span className="flex flex-wrap items-center gap-2">
-          <span className="text-field text-xs font-bold tracking-wide uppercase">
+          <span className={`text-sm font-semibold ${tone.ink}`}>
             {event.categoryName}
             {event.localityName ? ` · ${event.localityName}` : ""}
           </span>

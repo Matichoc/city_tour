@@ -1,59 +1,86 @@
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import type { Route } from "@/lib/data";
-import { formatDuration } from "@/lib/itinerary-format";
+import { styleOf } from "@/lib/doors";
 import { AiBadge } from "@/components/ui/ai-badge";
 
-/** Tarjeta de ruta con su ilustración de fondo (o degradado si no tiene). */
-export function RouteCard({
-  route,
-  index = 0,
-  kicker,
-}: {
-  route: Route;
-  index?: number;
-  kicker?: string;
-}) {
+/**
+ * Tarjeta de ruta: imagen, nombre, descripción y la línea de paradas, con un
+ * cuadrito numerado del color de la puerta de cada parada (la ruta es una
+ * secuencia: aquí el número sí informa).
+ */
+export function RouteCard({ route }: { route: Route }) {
   const t = useTranslations("routes");
+  const th = useTranslations("home");
+  const names = route.stops.length <= 4;
   return (
     <Link
       href={{ pathname: "/rutas/[slug]", params: { slug: route.slug } }}
-      style={{ "--i": index } as React.CSSProperties}
-      className="card-lift rise-in relative isolate block min-h-64 overflow-hidden rounded-3xl bg-[linear-gradient(120deg,#155656,#1b7070_60%,#4a7a37)] text-white shadow-md"
+      className="border-foreground hover:bg-soft flex h-full flex-col overflow-hidden rounded-[1.6rem] border-2 transition"
     >
       {route.cover ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={route.cover.src}
-          alt={route.cover.alt}
-          width={1448}
-          height={1086}
-          loading="lazy"
-          className="absolute inset-0 -z-10 size-full object-cover"
-        />
+        <span className="relative block h-44 sm:h-52">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={route.cover.src}
+            alt=""
+            width={1448}
+            height={1086}
+            loading="lazy"
+            className="size-full object-cover"
+          />
+          <AiBadge className="absolute top-2 right-3" />
+        </span>
       ) : null}
-      <div
-        className="absolute inset-0 -z-10 bg-[linear-gradient(0deg,rgb(7_73_90_/_0.92)_0%,rgb(7_73_90_/_0.55)_55%,rgb(7_73_90_/_0.05)_100%)]"
-        aria-hidden="true"
-      />
-      {route.cover ? <AiBadge className="absolute top-3 right-3" /> : null}
-      <div className="flex min-h-64 flex-col justify-end p-6">
-        {kicker ? (
-          <p className="text-xs font-bold tracking-widest text-[#fbeab0] uppercase">
-            {kicker}
-          </p>
+      <span className="flex flex-1 flex-col p-5">
+        <span className="font-display text-2xl leading-tight font-extrabold">
+          {route.name}
+        </span>
+        <span className="text-muted mt-1.5 text-sm">{route.description}</span>
+        <ol
+          aria-label={t("stops", { count: route.stops.length })}
+          className="mt-4 flex items-center"
+        >
+          {route.stops.map((s, i) => {
+            const tone = styleOf(s.place.categorySlug);
+            return (
+              <li
+                key={s.place.slug}
+                className={`flex items-center ${i < route.stops.length - 1 ? "flex-1" : ""}`}
+              >
+                <span
+                  className={`ring-foreground grid size-7 shrink-0 place-items-center rounded-lg border-2 border-white text-xs font-extrabold ring-2 ${tone.frame} ${tone.on}`}
+                  title={s.place.name}
+                >
+                  {i + 1}
+                  <span className="sr-only">{s.place.name}</span>
+                </span>
+                {i < route.stops.length - 1 ? (
+                  <span
+                    aria-hidden="true"
+                    className="bg-foreground h-0.5 flex-1"
+                  />
+                ) : null}
+              </li>
+            );
+          })}
+        </ol>
+        {names ? (
+          <span
+            aria-hidden="true"
+            className="text-muted mt-1.5 flex justify-between gap-2 text-xs font-semibold"
+          >
+            {route.stops.map((s) => (
+              <span key={s.place.slug} className="max-w-24 truncate">
+                {s.place.name}
+              </span>
+            ))}
+          </span>
         ) : null}
-        <h2 className="font-display text-2xl font-extrabold">{route.name}</h2>
-        <p className="mt-2 max-w-md text-sm text-white/90">
-          {route.description}
-        </p>
-        <p className="mt-3 text-sm font-bold text-[#fbeab0]">
-          {t("stops", { count: route.stops.length })}
-          {route.durationMinutes
-            ? ` · ${formatDuration(route.durationMinutes)}`
-            : ""}
-        </p>
-      </div>
+        <span className="mt-4 text-sm font-bold">
+          {th("routeMeta", { count: route.stops.length })}
+        </span>
+      </span>
     </Link>
   );
 }
