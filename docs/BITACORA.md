@@ -14,13 +14,13 @@ indicadas en cada versión.
 `docs/bitacora-notas.json` (clave `actual`, y el número de PR cuando exista),
 correr `pnpm bitacora` y subir el cambio en el mismo PR.
 
-## En preparación: v0.36 — Refresh, paso 3: Explorar con lista y mapa
+## En preparación: v0.37 — Refresh, paso 4: ficha de lugar
 
-Explorar usa todo el ancho: en computador la lista y el mapa van lado a lado (el mapa queda fijo al recorrer la lista); en el celular se elige Lista o Mapa. Filtros por puerta (los cuatro cuadros del logo) y por comer y dormir, más el pueblo. Cada lugar va en una fila con su miniatura enmarcada en el color de su puerta, su estado y la marca IA cuando es ilustración. El mapa de lugares pasa a un estilo claro teñido con los colores de Papudo, con los pines del color de cada puerta; al tocar uno aparece su tarjeta con Ver ficha y Cómo llegar. Reemplaza los grupos desplegables por categoría. Sin migraciones.
+La ficha de lugar se ordena: imagen con el doble marco del color de su puerta y, en computador, el encabezado al lado. «Categoría en pueblo» con el pueblo enlazado, una sola acción principal (la del comercio o, si no tiene, Cómo llegar) y el resto en una fila de íconos (Cómo llegar, Guardar, A mi recorrido, Compartir). Nuevo estado de hoy según el horario por temporada, calculado en el navegador con la hora de Chile: «Abierto ahora, hasta las 19:00» o «Cerrado ahora. Abre el sábado a las 10:00». Sin migraciones.
 
 - **Migraciones por correr en Supabase:** —
-- **Estado:** en revisión, [PR #43](https://github.com/Matichoc/city_tour/pull/43) (aún no está en `develop`).
-- **Última actualización de esta bitácora:** 2026-11-04 10:22
+- **Estado:** en revisión, [PR #44](https://github.com/Matichoc/city_tour/pull/44) (aún no está en `develop`).
+- **Última actualización de esta bitácora:** 2026-11-04 11:27
 
 ## Avance por día
 
@@ -29,7 +29,7 @@ trabajadas: hay pausas y trabajo sin registrar).
 
 | Día | Ventana de actividad | Registros | Versiones entregadas |
 | --- | --- | ---: | --- |
-| Miércoles, 4 de noviembre de 2026 | 08:48 – 10:22 | 5 | v0.34, v0.35 |
+| Miércoles, 4 de noviembre de 2026 | 08:48 – 11:27 | 7 | v0.34, v0.35, v0.36 |
 | Domingo, 1 de noviembre de 2026 | 01:52 – 02:37 | 4 | v0.32, v0.33 |
 | Domingo, 18 de octubre de 2026 | 00:09 – 00:39 | 7 | v0.29, v0.30, v0.31 |
 | Sábado, 17 de octubre de 2026 | 00:01 – 23:30 | 34 | v0.16, v0.17, v0.18, v0.19, v0.20, v0.21, v0.22, v0.23, v0.24, v0.25, v0.26, v0.27, v0.28 |
@@ -40,6 +40,16 @@ trabajadas: hay pausas y trabajo sin registrar).
 | Lunes, 12 de octubre de 2026 | 15:43 – 17:53 | 10 | v0.1, v0.2, v0.3, v0.4 |
 
 ## Versiones
+
+### v0.36 — Refresh, paso 3: Explorar con lista y mapa
+Miércoles, 4 de noviembre de 2026, 11:13 · [PR #43](https://github.com/Matichoc/city_tour/pull/43)
+
+Explorar usa todo el ancho: en computador la lista y el mapa van lado a lado (el mapa queda fijo al recorrer la lista); en el celular se elige Lista o Mapa. Filtros por puerta (los cuatro cuadros del logo) y por comer y dormir, más el pueblo. Cada lugar va en una fila con su miniatura enmarcada en el color de su puerta, su estado y la marca IA cuando es ilustración. El mapa de lugares pasa a un estilo claro teñido con los colores de Papudo, con los pines del color de cada puerta; al tocar uno aparece su tarjeta con Ver ficha y Cómo llegar. Reemplaza los grupos desplegables por categoría. Sin migraciones.
+
+Registros:
+
+- 11-04 10:22 — Refresh, paso 3: Explorar con lista y mapa (`60ca4ab`)
+- 11-04 10:22 — Bitácora: v0.36 en preparación (PR #43) (`5d49b3d`)
 
 ### v0.35 — Refresh, paso 2: portada con los cuatro cuadros
 Miércoles, 4 de noviembre de 2026, 10:05 · [PR #42](https://github.com/Matichoc/city_tour/pull/42)
