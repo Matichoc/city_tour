@@ -1,13 +1,21 @@
 import { describe, expect, it } from "vitest";
-import { azureConfig, ssml, VOICES } from "@/lib/tts/azure";
+import { azureConfig, sentences, ssml, STYLE, VOICES } from "@/lib/tts/azure";
 import { audioPath, publicAudioUrl } from "@/lib/tts/store";
 
 describe("voz natural de «Escuchar»", () => {
-  it("usa Catalina para el español de Chile", () => {
+  it("usa Catalina para el español de Chile, pausada y con pausas entre frases", () => {
     expect(VOICES.es.voice).toBe("es-CL-CatalinaNeural");
-    expect(ssml("Playa Chica.", "es")).toBe(
-      '<speak version="1.0" xml:lang="es-CL"><voice name="es-CL-CatalinaNeural">Playa Chica.</voice></speak>',
+    expect(ssml("Playa Chica. Arena fina.", "es")).toBe(
+      '<speak version="1.0" xml:lang="es-CL"><voice name="es-CL-CatalinaNeural">' +
+        `<prosody rate="${STYLE.rate}">Playa Chica. <break time="${STYLE.pauseMs}ms"/> Arena fina.</prosody>` +
+        "</voice></speak>",
     );
+  });
+
+  it("separa en frases sin perder texto", () => {
+    expect(
+      sentences("Roots Salinas. ¿Abre hoy? Sí… Churrasco salinero"),
+    ).toEqual(["Roots Salinas.", "¿Abre hoy?", "Sí…", "Churrasco salinero"]);
   });
 
   it("escapa el texto para que no rompa el SSML", () => {

@@ -155,10 +155,15 @@
     "titulo": "Refresh, paso 5: rutas, agenda y páginas internas",
     "resumen": "Cierra el refresh «los cuatro cuadros». El encabezado de las páginas internas (rutas, agenda, recorrido, información, negocios, pueblos) pasa de la franja verde con olas a título grande sobre blanco, con la imagen enmarcada cuando la hay. Rutas en tarjetas con la línea de paradas en el color de cada puerta. La ficha de ruta pone la audioguía y las paradas al lado del mapa fijo en computador, con miniaturas enmarcadas y la parada que suena resaltada. La agenda usa los chips nuevos y la fecha de cada evento en el color de su puerta. Sin migraciones."
   },
-  "actual": {
-    "pr": 46,
+  "46": {
     "titulo": "«Escuchar» con voz natural (Catalina, es-CL)",
     "resumen": "«Escuchar» deja la voz del teléfono y pasa a voz natural de Azure: Catalina en español de Chile, y voces neurales en inglés y portugués. El servidor arma el texto, genera cada audio una sola vez y lo guarda en Supabase Storage, firmado con el secreto de los comentarios (sin clave de servicio en Vercel). Si el texto cambia, se genera otro. Con audio real, la audioguía sigue sonando con la pantalla bloqueada y se controla desde ahí. Sin audio disponible, el botón lo avisa: nunca usa voz robótica. Requiere AZURE_SPEECH_KEY y AZURE_SPEECH_REGION en Vercel.",
     "migraciones": "0030"
+  },
+  "actual": {
+    "pr": 47,
+    "titulo": "Voz de «Escuchar»: Catalina pausada",
+    "resumen": "Elegida de oído entre cinco muestras: Catalina (es-CL) un 7 % más lenta y con una pausa breve entre frases, para que no suene a lectura de corrido. El estilo entra en el nombre de cada audio, así que todos se regeneran solos con la voz nueva la próxima vez que alguien los escuche. Sin migraciones.",
+    "migraciones": "—"
   }
 }

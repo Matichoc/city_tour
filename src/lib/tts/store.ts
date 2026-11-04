@@ -10,6 +10,7 @@ import { createHash, createHmac } from "node:crypto";
 import type { Locale } from "@/i18n/routing";
 import {
   AUDIO_FORMAT,
+  STYLE,
   VOICES,
   synthesize,
   type AzureConfig,
@@ -34,7 +35,7 @@ export function audioPath(
   secret: string,
 ): string {
   const hash = createHash("sha256")
-    .update(`${VOICES[locale].voice}|${AUDIO_FORMAT}|${text}`)
+    .update(`${VOICES[locale].voice}|${AUDIO_FORMAT}|${STYLE.version}|${text}`)
     .digest("hex")
     .slice(0, 32);
   const base = `${locale}/${hash}`;
