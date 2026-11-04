@@ -14,13 +14,13 @@ indicadas en cada versión.
 `docs/bitacora-notas.json` (clave `actual`, y el número de PR cuando exista),
 correr `pnpm bitacora` y subir el cambio en el mismo PR.
 
-## En preparación: v0.37 — Refresh, paso 4: ficha de lugar
+## En preparación: v0.38 — Refresh, paso 5: rutas, agenda y páginas internas
 
-La ficha de lugar se ordena: imagen con el doble marco del color de su puerta y, en computador, el encabezado al lado. «Categoría en pueblo» con el pueblo enlazado, una sola acción principal (la del comercio o, si no tiene, Cómo llegar) y el resto en una fila de íconos (Cómo llegar, Guardar, A mi recorrido, Compartir). Nuevo estado de hoy según el horario por temporada, calculado en el navegador con la hora de Chile: «Abierto ahora, hasta las 19:00» o «Cerrado ahora. Abre el sábado a las 10:00». Sin migraciones.
+Cierra el refresh «los cuatro cuadros». El encabezado de las páginas internas (rutas, agenda, recorrido, información, negocios, pueblos) pasa de la franja verde con olas a título grande sobre blanco, con la imagen enmarcada cuando la hay. Rutas en tarjetas con la línea de paradas en el color de cada puerta. La ficha de ruta pone la audioguía y las paradas al lado del mapa fijo en computador, con miniaturas enmarcadas y la parada que suena resaltada. La agenda usa los chips nuevos y la fecha de cada evento en el color de su puerta. Sin migraciones.
 
 - **Migraciones por correr en Supabase:** —
-- **Estado:** en revisión, [PR #44](https://github.com/Matichoc/city_tour/pull/44) (aún no está en `develop`).
-- **Última actualización de esta bitácora:** 2026-11-04 11:27
+- **Estado:** en revisión, [PR #45](https://github.com/Matichoc/city_tour/pull/45) (aún no está en `develop`).
+- **Última actualización de esta bitácora:** 2026-11-04 11:47
 
 ## Avance por día
 
@@ -29,7 +29,7 @@ trabajadas: hay pausas y trabajo sin registrar).
 
 | Día | Ventana de actividad | Registros | Versiones entregadas |
 | --- | --- | ---: | --- |
-| Miércoles, 4 de noviembre de 2026 | 08:48 – 11:27 | 7 | v0.34, v0.35, v0.36 |
+| Miércoles, 4 de noviembre de 2026 | 08:48 – 11:46 | 9 | v0.34, v0.35, v0.36, v0.37 |
 | Domingo, 1 de noviembre de 2026 | 01:52 – 02:37 | 4 | v0.32, v0.33 |
 | Domingo, 18 de octubre de 2026 | 00:09 – 00:39 | 7 | v0.29, v0.30, v0.31 |
 | Sábado, 17 de octubre de 2026 | 00:01 – 23:30 | 34 | v0.16, v0.17, v0.18, v0.19, v0.20, v0.21, v0.22, v0.23, v0.24, v0.25, v0.26, v0.27, v0.28 |
@@ -40,6 +40,16 @@ trabajadas: hay pausas y trabajo sin registrar).
 | Lunes, 12 de octubre de 2026 | 15:43 – 17:53 | 10 | v0.1, v0.2, v0.3, v0.4 |
 
 ## Versiones
+
+### v0.37 — Refresh, paso 4: ficha de lugar
+Miércoles, 4 de noviembre de 2026, 11:31 · [PR #44](https://github.com/Matichoc/city_tour/pull/44)
+
+La ficha de lugar se ordena: imagen con el doble marco del color de su puerta y, en computador, el encabezado al lado. «Categoría en pueblo» con el pueblo enlazado, una sola acción principal (la del comercio o, si no tiene, Cómo llegar) y el resto en una fila de íconos (Cómo llegar, Guardar, A mi recorrido, Compartir). Nuevo estado de hoy según el horario por temporada, calculado en el navegador con la hora de Chile: «Abierto ahora, hasta las 19:00» o «Cerrado ahora. Abre el sábado a las 10:00». Sin migraciones.
+
+Registros:
+
+- 11-04 11:27 — Refresh, paso 4: ficha de lugar con una acción principal (`35fbd0e`)
+- 11-04 11:27 — Bitácora: v0.37 en preparación (PR #44) (`0320d85`)
 
 ### v0.36 — Refresh, paso 3: Explorar con lista y mapa
 Miércoles, 4 de noviembre de 2026, 11:13 · [PR #43](https://github.com/Matichoc/city_tour/pull/43)
