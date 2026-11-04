@@ -31,19 +31,39 @@ export const SERVICE_CATEGORIES = [
 ] as const satisfies readonly CategorySlug[];
 
 /**
- * Clases de color de cada puerta: `frame` para el marco de las miniaturas y
- * `ink` para su nombre como texto sobre blanco. Comer y dormir ("servicio")
- * va en azul noche.
+ * Clases de color de cada puerta: `frame` para el marco de las miniaturas,
+ * `on` para texto encima del color (AA) e `ink` para su nombre como texto
+ * sobre blanco. Comer y dormir ("servicio") va en azul noche.
  */
 export const DOOR_STYLE: Record<
   DoorKey | "servicio",
-  { frame: string; ink: string }
+  { frame: string; on: string; ink: string }
 > = {
-  mar: { frame: "bg-cuadro-mar", ink: "text-cuadro-mar-ink" },
-  campo: { frame: "bg-cuadro-campo", ink: "text-cuadro-campo-ink" },
-  patrimonio: { frame: "bg-cuadro-patri", ink: "text-cuadro-patri-ink" },
-  paseos: { frame: "bg-cuadro-paseo", ink: "text-cuadro-paseo-ink" },
-  servicio: { frame: "bg-foreground", ink: "text-foreground" },
+  mar: {
+    frame: "bg-cuadro-mar",
+    on: "text-foreground",
+    ink: "text-cuadro-mar-ink",
+  },
+  campo: {
+    frame: "bg-cuadro-campo",
+    on: "text-foreground",
+    ink: "text-cuadro-campo-ink",
+  },
+  patrimonio: {
+    frame: "bg-cuadro-patri",
+    on: "text-white",
+    ink: "text-cuadro-patri-ink",
+  },
+  paseos: {
+    frame: "bg-cuadro-paseo",
+    on: "text-white",
+    ink: "text-cuadro-paseo-ink",
+  },
+  servicio: {
+    frame: "bg-foreground",
+    on: "text-white",
+    ink: "text-foreground",
+  },
 };
 
 /** Estilo de color de una categoría (el de su puerta o el de servicio). */

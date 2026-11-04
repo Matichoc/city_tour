@@ -147,10 +147,14 @@
     "titulo": "Refresh, paso 3: Explorar con lista y mapa",
     "resumen": "Explorar usa todo el ancho: en computador la lista y el mapa van lado a lado (el mapa queda fijo al recorrer la lista); en el celular se elige Lista o Mapa. Filtros por puerta (los cuatro cuadros del logo) y por comer y dormir, más el pueblo. Cada lugar va en una fila con su miniatura enmarcada en el color de su puerta, su estado y la marca IA cuando es ilustración. El mapa de lugares pasa a un estilo claro teñido con los colores de Papudo, con los pines del color de cada puerta; al tocar uno aparece su tarjeta con Ver ficha y Cómo llegar. Reemplaza los grupos desplegables por categoría. Sin migraciones."
   },
-  "actual": {
-    "pr": 44,
+  "44": {
     "titulo": "Refresh, paso 4: ficha de lugar",
-    "resumen": "La ficha de lugar se ordena: imagen con el doble marco del color de su puerta y, en computador, el encabezado al lado. «Categoría en pueblo» con el pueblo enlazado, una sola acción principal (la del comercio o, si no tiene, Cómo llegar) y el resto en una fila de íconos (Cómo llegar, Guardar, A mi recorrido, Compartir). Nuevo estado de hoy según el horario por temporada, calculado en el navegador con la hora de Chile: «Abierto ahora, hasta las 19:00» o «Cerrado ahora. Abre el sábado a las 10:00». Sin migraciones.",
+    "resumen": "La ficha de lugar se ordena: imagen con el doble marco del color de su puerta y, en computador, el encabezado al lado. «Categoría en pueblo» con el pueblo enlazado, una sola acción principal (la del comercio o, si no tiene, Cómo llegar) y el resto en una fila de íconos (Cómo llegar, Guardar, A mi recorrido, Compartir). Nuevo estado de hoy según el horario por temporada, calculado en el navegador con la hora de Chile: «Abierto ahora, hasta las 19:00» o «Cerrado ahora. Abre el sábado a las 10:00». Sin migraciones."
+  },
+  "actual": {
+    "pr": 45,
+    "titulo": "Refresh, paso 5: rutas, agenda y páginas internas",
+    "resumen": "Cierra el refresh «los cuatro cuadros». El encabezado de las páginas internas (rutas, agenda, recorrido, información, negocios, pueblos) pasa de la franja verde con olas a título grande sobre blanco, con la imagen enmarcada cuando la hay. Rutas en tarjetas con la línea de paradas en el color de cada puerta. La ficha de ruta pone la audioguía y las paradas al lado del mapa fijo en computador, con miniaturas enmarcadas y la parada que suena resaltada. La agenda usa los chips nuevos y la fecha de cada evento en el color de su puerta. Sin migraciones.",
     "migraciones": "—"
   }
 }
