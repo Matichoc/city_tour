@@ -131,10 +131,43 @@
     "titulo": "Accesibilidad y botón «Escuchar» en las fichas",
     "resumen": "Cada ficha de lugar tiene un botón «Escuchar» que la lee en voz alta con la voz del teléfono (nombre, categoría, descripción, horarios, dirección y si está pendiente de verificación), con pausa, detener y velocidad; nunca suena sola. Accesibilidad: enlace «Saltar al contenido», mapas que le hablan al lector de pantalla en el idioma del sitio y con el nombre de cada pin, título principal en la página 404, títulos de categoría en Explorar y el carrusel de eventos sin rol inválido. Auditoría axe WCAG 2.1 AA sin fallas en 18 páginas. Plan completo en docs/PLAN-AUDIO-ACCESIBILIDAD.md. Sin migraciones."
   },
-  "actual": {
-    "pr": 39,
+  "39": {
     "titulo": "Audioguía en las rutas",
-    "resumen": "Cada ruta se puede escuchar como audioguía: primero su presentación (paradas, duración, descripción y aviso de verificación) y después cada parada en orden con su descripción completa. «Anterior» y «Siguiente» saltan entre paradas, y la que suena se resalta en la lista y se anuncia al lector de pantalla. Mismo reproductor que las fichas, ahora por partes. Sin migraciones.",
+    "resumen": "Cada ruta se puede escuchar como audioguía: primero su presentación (paradas, duración, descripción y aviso de verificación) y después cada parada en orden con su descripción completa. «Anterior» y «Siguiente» saltan entre paradas, y la que suena se resalta en la lista y se anuncia al lector de pantalla. Mismo reproductor que las fichas, ahora por partes. Sin migraciones."
+  },
+  "41": {
+    "titulo": "Refresh, paso 1: base visual",
+    "resumen": "Primer paso del refresh «los cuatro cuadros»: fondo blanco y azul noche en vez de arena y rosado, texto en Figtree (autoalojada), acción principal en azul noche y los cuatro colores del logo como tokens nuevos (--cuadro-*), con contrastes AA documentados en docs/MARCA-REFERENCIA.md. Barra inferior de cinco pestañas (Inicio, Explorar, Rutas, Agenda, Recorrido; Información pasa al pie). El encabezado ya usa el ancho de computador; cada página fija su propio ancho para poder ensancharse al rediseñarla. Sin migraciones."
+  },
+  "42": {
+    "titulo": "Refresh, paso 2: portada con los cuatro cuadros",
+    "resumen": "La portada usa todo el ancho en computador: a la izquierda el saludo y el buscador, a la derecha los cuatro cuadros del logo como puertas (mar y sol, campo y humedal, patrimonio, paseos y deporte), cada uno con su cantidad de lugares y, debajo, comer y dormir. Explorar entiende la puerta (?puerta=paseos junta recreación y deportes). Nuevos «Se viene» (las próximas fiestas con cuenta regresiva) y «Ruta para hoy» (con sus paradas en orden). Se mantienen «Destacados del mes» y la comuna en 3D. Sin migraciones."
+  },
+  "43": {
+    "titulo": "Refresh, paso 3: Explorar con lista y mapa",
+    "resumen": "Explorar usa todo el ancho: en computador la lista y el mapa van lado a lado (el mapa queda fijo al recorrer la lista); en el celular se elige Lista o Mapa. Filtros por puerta (los cuatro cuadros del logo) y por comer y dormir, más el pueblo. Cada lugar va en una fila con su miniatura enmarcada en el color de su puerta, su estado y la marca IA cuando es ilustración. El mapa de lugares pasa a un estilo claro teñido con los colores de Papudo, con los pines del color de cada puerta; al tocar uno aparece su tarjeta con Ver ficha y Cómo llegar. Reemplaza los grupos desplegables por categoría. Sin migraciones."
+  },
+  "44": {
+    "titulo": "Refresh, paso 4: ficha de lugar",
+    "resumen": "La ficha de lugar se ordena: imagen con el doble marco del color de su puerta y, en computador, el encabezado al lado. «Categoría en pueblo» con el pueblo enlazado, una sola acción principal (la del comercio o, si no tiene, Cómo llegar) y el resto en una fila de íconos (Cómo llegar, Guardar, A mi recorrido, Compartir). Nuevo estado de hoy según el horario por temporada, calculado en el navegador con la hora de Chile: «Abierto ahora, hasta las 19:00» o «Cerrado ahora. Abre el sábado a las 10:00». Sin migraciones."
+  },
+  "45": {
+    "titulo": "Refresh, paso 5: rutas, agenda y páginas internas",
+    "resumen": "Cierra el refresh «los cuatro cuadros». El encabezado de las páginas internas (rutas, agenda, recorrido, información, negocios, pueblos) pasa de la franja verde con olas a título grande sobre blanco, con la imagen enmarcada cuando la hay. Rutas en tarjetas con la línea de paradas en el color de cada puerta. La ficha de ruta pone la audioguía y las paradas al lado del mapa fijo en computador, con miniaturas enmarcadas y la parada que suena resaltada. La agenda usa los chips nuevos y la fecha de cada evento en el color de su puerta. Sin migraciones."
+  },
+  "46": {
+    "titulo": "«Escuchar» con voz natural (Catalina, es-CL)",
+    "resumen": "«Escuchar» deja la voz del teléfono y pasa a voz natural de Azure: Catalina en español de Chile, y voces neurales en inglés y portugués. El servidor arma el texto, genera cada audio una sola vez y lo guarda en Supabase Storage, firmado con el secreto de los comentarios (sin clave de servicio en Vercel). Si el texto cambia, se genera otro. Con audio real, la audioguía sigue sonando con la pantalla bloqueada y se controla desde ahí. Sin audio disponible, el botón lo avisa: nunca usa voz robótica. Requiere AZURE_SPEECH_KEY y AZURE_SPEECH_REGION en Vercel.",
+    "migraciones": "0030"
+  },
+  "47": {
+    "titulo": "Voz de «Escuchar»: Catalina pausada",
+    "resumen": "Elegida de oído entre cinco muestras: Catalina (es-CL) un 7 % más lenta y con una pausa breve entre frases, para que no suene a lectura de corrido. El estilo entra en el nombre de cada audio, así que todos se regeneran solos con la voz nueva la próxima vez que alguien los escuche. Sin migraciones."
+  },
+  "actual": {
+    "pr": 49,
+    "titulo": "Rutas ya no desborda en el celular",
+    "resumen": "En el celular la página de Rutas medía 422 px en una pantalla de 375: los nombres de las paradas ensanchaban la grilla. La vista quedaba desplazada y, al entrar a una ruta, la barra inferior se escondía hasta mover la página. La grilla ahora tiene una columna que se ajusta a la pantalla. Nueva prueba e2e: diez páginas no pueden ser más anchas que la pantalla del celular. Sin migraciones.",
     "migraciones": "—"
   }
 }

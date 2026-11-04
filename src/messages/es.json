@@ -12,7 +12,7 @@
     "language": "Idioma",
     "main": "Navegación principal",
     "business": "Para negocios",
-    "events": "Eventos",
+    "events": "Agenda",
     "tripShort": "Recorrido",
     "infoShort": "Info",
     "skipToContent": "Saltar al contenido"
@@ -45,7 +45,30 @@
     "mapVillages": "Pueblos de la comuna",
     "kioskLink": "Ver el modo quiosco (para tablets)",
     "featuredHint": "Lo mejor para partir este mes.",
-    "moreRoutes": "Ver las {count} rutas"
+    "moreRoutes": "Ver las {count} rutas",
+    "doorsTitle": "Qué quieres conocer",
+    "doorCount": "{count, plural, =0 {Pronto} one {# lugar} other {# lugares}}",
+    "services": "También: comer y dormir",
+    "upcoming": "Se viene",
+    "agenda": "Agenda",
+    "inDays": "{count, plural, =0 {Hoy} one {Mañana} other {En # días}}",
+    "routeToday": "Ruta para hoy",
+    "allRoutes": "{count, plural, one {# ruta} other {# rutas}}",
+    "routeMeta": "{count, plural, one {# parada} other {# paradas}}, con audioguía"
+  },
+  "doors": {
+    "mar": {
+      "name": "Mar y sol"
+    },
+    "campo": {
+      "name": "Campo y humedal"
+    },
+    "patrimonio": {
+      "name": "Patrimonio"
+    },
+    "paseos": {
+      "name": "Paseos y deporte"
+    }
   },
   "explore": {
     "title": "Explorar Papudo",
@@ -64,7 +87,8 @@
     "clear": "Quitar filtros",
     "activeFilters": "Filtros activos",
     "groupCount": "{count, plural, one {# lugar} other {# lugares}}",
-    "removeFilter": "Quitar filtro: {name}"
+    "removeFilter": "Quitar filtro: {name}",
+    "placesList": "Lugares"
   },
   "place": {
     "back": "Explorar",
@@ -129,7 +153,14 @@
     "website": "Sitio web",
     "ownerValidated": "Validada por el representante del local",
     "galleryPrev": "Foto anterior",
-    "galleryNext": "Foto siguiente"
+    "galleryNext": "Foto siguiente",
+    "inLocality": "{category} en <pueblo>{locality}</pueblo>",
+    "todayOpen": "Abierto ahora, hasta las {time}",
+    "todayLater": "Hoy abre a las {time}",
+    "todayTomorrow": "Cerrado ahora. Abre mañana a las {time}",
+    "todayOn": "Cerrado ahora. Abre el {day} a las {time}",
+    "todayClosed": "Cerrado por ahora",
+    "todayNote": "Según el horario informado; los festivos pueden cambiar."
   },
   "listen": {
     "play": "Escuchar",
@@ -138,8 +169,6 @@
     "resume": "Continuar",
     "stop": "Detener",
     "speedLabel": "Velocidad de lectura: {rate}. Tocar para cambiar",
-    "deviceVoice": "Con la voz de tu teléfono",
-    "noVoice": "Tu dispositivo no tiene una voz en este idioma.",
     "playing": "Leyendo en voz alta",
     "paused": "Lectura en pausa",
     "stopped": "Lectura detenida",
@@ -156,7 +185,11 @@
     "previous": "Anterior",
     "next": "Siguiente",
     "previousLabel": "Volver a la parte anterior",
-    "nextLabel": "Saltar a la parte siguiente"
+    "nextLabel": "Saltar a la parte siguiente",
+    "loading": "Preparando el audio…",
+    "unavailable": "El audio con voz natural todavía no está disponible.",
+    "error": "No se pudo cargar el audio. Intenta de nuevo.",
+    "naturalVoice": "Voz natural"
   },
   "routes": {
     "title": "Rutas",
@@ -206,7 +239,9 @@
     "sharedKeep": "Mantener el mío",
     "startLive": "Iniciar recorrido",
     "startLiveNote": "Usa tu ubicación para guiarte parada por parada. Se queda en tu teléfono; solo si aceptas la ruta por calles, se envía para calcularla y no se guarda.",
-    "startDemo": "¿No estás en Papudo? Probar con ubicación simulada"
+    "startDemo": "¿No estás en Papudo? Probar con ubicación simulada",
+    "addShort": "A mi recorrido",
+    "addedShort": "En mi recorrido"
   },
   "map": {
     "unavailable": "El mapa no está disponible en este momento. Puedes seguir usando la lista.",

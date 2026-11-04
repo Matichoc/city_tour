@@ -74,10 +74,10 @@ export default async function EventsPage({
     }));
 
   const chip = (on: boolean) =>
-    `flex min-h-11 items-center rounded-full border px-4 text-sm font-bold transition ${on ? "border-sea bg-sea text-white" : "border-border bg-surface hover:border-sea"}`;
+    `flex min-h-11 items-center rounded-full border-2 px-4 text-sm font-semibold transition ${on ? "border-foreground bg-foreground text-white" : "border-border hover:border-foreground"}`;
 
   return (
-    <main className="flex flex-col">
+    <main className="mx-auto flex w-full max-w-3xl flex-col">
       <PageHero title={t("title")} subtitle={t("subtitle")} />
       <div className="mx-auto flex w-full max-w-3xl flex-col gap-5 px-4 pb-10">
         <FeaturedCarousel slides={slides} />

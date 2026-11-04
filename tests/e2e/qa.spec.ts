@@ -85,7 +85,7 @@ test("un local sin coordenada muestra dirección y 'Cómo llegar' por búsqueda"
     .getAttribute("href");
   expect(href).toContain("google.com/maps/search");
   await expect(
-    page.getByRole("button", { name: /Agregar a mi recorrido/ }),
+    page.getByRole("button", { name: /(Agregar )?[Aa] mi recorrido/ }),
   ).toHaveCount(0);
 });
 
@@ -145,81 +145,104 @@ test("el primer Tab ofrece saltar al contenido y lo enfoca", async ({
   await expect(page.locator("#contenido")).toBeFocused();
 });
 
-/** Voz falsa: registra lo que se lee y termina cada trozo en `ms`. */
-async function fakeVoice(page: Page, ms = 150) {
+/**
+ * Audio falso: el servidor de «Escuchar» responde con un audio por parte y el
+ * navegador «reproduce» cada uno en `ms` (registra qué sonó). También espía la
+ * voz del dispositivo, que nunca debe usarse.
+ */
+async function fakeAudio(page: Page, ms = 150, status = 200) {
+  await page.route("**/api/escuchar**", (route) => {
+    const url = new URL(route.request().url());
+    const n = url.searchParams.get("tipo") === "ruta" ? 4 : 1;
+    return route.fulfill(
+      status === 200
+        ? {
+            json: {
+              sections: Array.from({ length: n }, (_, i) => ({
+                url: `/audio-falso/${i}.mp3`,
+              })),
+            },
+          }
+        : { status, json: { error: "not-configured" } },
+    );
+  });
   await page.addInitScript((ms) => {
-    const said: { text: string; lang: string }[] = [];
-    (window as unknown as { __said: typeof said }).__said = said;
-    class FakeUtterance {
-      text: string;
-      lang = "";
-      rate = 1;
-      voice: unknown = null;
-      onend: (() => void) | null = null;
-      onerror: (() => void) | null = null;
-      constructor(text: string) {
-        this.text = text;
-      }
-    }
-    let pending: ReturnType<typeof setTimeout> | null = null;
-    const synth = {
-      speaking: false,
-      getVoices: () => [{ lang: "es-MX", name: "Paulina" }],
-      addEventListener: () => {},
-      removeEventListener: () => {},
-      cancel: () => {
-        if (pending) clearTimeout(pending);
-        synth.speaking = false;
-      },
-      speak: (u: FakeUtterance) => {
-        said.push({ text: u.text, lang: u.lang });
-        synth.speaking = true;
-        pending = setTimeout(() => u.onend?.(), ms);
-      },
+    const w = window as unknown as { __played: string[]; __robot: number };
+    w.__played = [];
+    w.__robot = 0;
+    const timers = new WeakMap<HTMLMediaElement, number>();
+    HTMLMediaElement.prototype.play = function () {
+      w.__played.push(new URL(this.src).pathname);
+      clearTimeout(timers.get(this));
+      timers.set(
+        this,
+        window.setTimeout(() => this.dispatchEvent(new Event("ended")), ms),
+      );
+      return Promise.resolve();
     };
-    Object.defineProperty(window, "speechSynthesis", { value: synth });
-    Object.defineProperty(window, "SpeechSynthesisUtterance", {
-      value: FakeUtterance,
-    });
+    HTMLMediaElement.prototype.pause = function () {
+      clearTimeout(timers.get(this));
+    };
+    if ("speechSynthesis" in window)
+      window.speechSynthesis.speak = () => {
+        w.__robot += 1;
+      };
   }, ms);
 }
 
-const spoken = (page: Page) =>
-  page.evaluate(
-    () =>
-      (window as unknown as { __said: { text: string; lang: string }[] })
-        .__said,
-  );
+const played = (page: Page) =>
+  page.evaluate(() => (window as unknown as { __played: string[] }).__played);
 
-test("Escuchar lee la ficha en orden con voz en español, pausa y sigue", async ({
+test("Escuchar reproduce la ficha con voz natural, pausa y sigue", async ({
   page,
 }) => {
-  await fakeVoice(page);
+  // Dos segundos por audio: alcanza a pausar antes de que termine.
+  await fakeAudio(page, 2_000);
+  const pedido = page.waitForRequest(/\/api\/escuchar\?/);
   await page.goto("/es/lugares/playa-chica-papudo");
-  const listen = page.getByRole("button", {
-    name: /Escuchar la ficha de Playa Chica/,
-  });
-  await listen.click();
-  await expect(page.getByRole("button", { name: "Pausar" })).toBeVisible();
+  await page
+    .getByRole("button", { name: /Escuchar la ficha de Playa Chica/ })
+    .click();
+  expect((await pedido).url()).toContain(
+    "tipo=lugar&slug=playa-chica-papudo&locale=es",
+  );
   await page.getByRole("button", { name: "Pausar" }).click();
-  await expect(page.getByRole("button", { name: "Continuar" })).toBeVisible();
   await page.getByRole("button", { name: "Continuar" }).click();
   await expect(
     page.getByRole("button", { name: /Escuchar la ficha/ }),
   ).toBeVisible({ timeout: 15_000 });
-  const said = await spoken(page);
-  expect(said[0]).toEqual({ text: "Playa Chica.", lang: "es-MX" });
-  expect(said.map((s) => s.text).join(" ")).toContain("Playa Chica");
+  expect(await played(page)).toContain("/audio-falso/0.mp3");
   await expect(page.locator("#resumen [aria-live=polite]")).toHaveText(
     "Lectura terminada",
   );
 });
 
+test("sin audio natural disponible, avisa y nunca usa la voz del dispositivo", async ({
+  page,
+}) => {
+  await fakeAudio(page, 150, 503);
+  await page.goto("/es/lugares/playa-chica-papudo");
+  await page
+    .getByRole("button", { name: /Escuchar la ficha de Playa Chica/ })
+    .click();
+  await expect(
+    page
+      .getByText("El audio con voz natural todavía no está disponible.")
+      .first(),
+  ).toBeVisible();
+  expect(await played(page)).toEqual([]);
+  expect(
+    await page.evaluate(
+      () => (window as unknown as { __robot: number }).__robot,
+    ),
+  ).toBe(0);
+});
+
 test("audioguía de ruta: presenta la ruta, salta entre paradas y marca la que suena", async ({
   page,
 }) => {
-  // Trozos lentos: la lectura no termina sola mientras se prueba.
-  await fakeVoice(page, 5_000);
+  // Audios lentos: no terminan solos mientras se prueba.
+  await fakeAudio(page, 5_000);
   await page.goto("/es/rutas/ruta-costera-papudo");
   await page
     .getByRole("button", { name: /Escuchar la ruta .* como audioguía/ })
@@ -245,8 +268,52 @@ test("audioguía de ruta: presenta la ruta, salta entre paradas y marca la que s
   await expect(page.locator("#parada-1")).not.toHaveAttribute("aria-current");
   await page.getByRole("button", { name: "Detener" }).click();
   await expect(page.locator("[aria-current=step]")).toHaveCount(0);
-  const said = (await spoken(page)).map((s) => s.text);
-  expect(said[0]).toBe("Ruta costera de Papudo.");
-  expect(said).toContain("Parada 1 de 3: Salinas de Pullally.");
-  expect(said).toContain("Parada 2 de 3: Playa de Papudo.");
+  expect(await played(page)).toEqual([
+    "/audio-falso/0.mp3",
+    "/audio-falso/1.mp3",
+    "/audio-falso/2.mp3",
+  ]);
 });
+
+test("ficha: una sola acción principal y el resto en íconos", async ({
+  page,
+}) => {
+  await page.goto("/es/lugares/playa-chica-papudo");
+  await expect(
+    page.getByRole("heading", { name: "Playa Chica", level: 1 }),
+  ).toBeVisible();
+  // Sin botón de comercio, «Cómo llegar» es la acción principal (una vez).
+  await expect(page.getByRole("link", { name: "Cómo llegar" })).toHaveCount(1);
+  for (const name of ["Guardar", "A mi recorrido", "Compartir"]) {
+    await expect(page.getByRole("button", { name })).toBeVisible();
+  }
+  // «Balneario en Papudo»: el pueblo enlaza a su página.
+  await expect(
+    page.getByRole("link", { name: "Papudo", exact: true }),
+  ).toHaveAttribute("href", /\/es\/pueblos\//);
+});
+
+// Una página más ancha que la pantalla desplaza la vista en el celular y deja
+// la barra inferior fuera de la pantalla (pasó en Rutas).
+for (const path of [
+  "/es",
+  "/es/explorar",
+  "/es/explorar?vista=mapa",
+  "/es/lugares/playa-chica-papudo",
+  "/es/rutas",
+  "/es/rutas/ruta-costera-papudo",
+  "/es/rutas/papudo-a-pie",
+  "/es/eventos",
+  "/es/informacion",
+  "/es/recorrido",
+]) {
+  test(`celular: ${path} no es más ancha que la pantalla`, async ({ page }) => {
+    await page.goto(path);
+    await page.waitForLoadState("networkidle");
+    const { width, scroll } = await page.evaluate(() => ({
+      width: document.documentElement.clientWidth,
+      scroll: document.documentElement.scrollWidth,
+    }));
+    expect(scroll).toBeLessThanOrEqual(width);
+  });
+}

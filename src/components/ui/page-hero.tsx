@@ -1,51 +1,50 @@
 import type { ReactNode } from "react";
 import { AiBadge } from "@/components/ui/ai-badge";
-import { Wave } from "@/components/ui/wave";
 
+/**
+ * Encabezado de las páginas internas: título grande en azul noche sobre
+ * blanco y, si hay, la imagen con el doble marco de los cuadros del logo
+ * (del color de la puerta, o azul noche por defecto).
+ */
 export function PageHero({
   title,
   subtitle,
   children,
   image,
+  frame = "bg-foreground",
 }: {
   title: string;
   subtitle?: string;
   children?: ReactNode;
-  /** Ilustración de fondo (se rotula como hecha con IA). */
+  /** Ilustración de la página (se rotula como hecha con IA). */
   image?: { src: string; alt: string };
+  /** Clase de color del marco de la imagen (`DOOR_STYLE[...].frame`). */
+  frame?: string;
 }) {
   return (
-    <header className="relative isolate overflow-hidden bg-[linear-gradient(180deg,#155656_0%,#1b7070_100%)] px-4 pt-7 pb-14 text-white">
+    <header className="flex flex-col gap-5 px-4 pt-6 pb-6">
       {image ? (
-        <>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={image.src}
-            alt={image.alt}
-            width={1448}
-            height={1086}
-            fetchPriority="high"
-            className="absolute inset-0 -z-10 size-full object-cover"
-          />
-          <div
-            className="absolute inset-0 -z-10 bg-[linear-gradient(180deg,rgb(7_73_90_/_0.86)_0%,rgb(7_73_90_/_0.62)_60%,rgb(7_73_90_/_0.3)_100%)]"
-            aria-hidden="true"
-          />
-          <AiBadge className="absolute right-3 bottom-1.5 z-10" />
-        </>
+        <div className={`rounded-[1.8rem] p-1.5 ${frame}`}>
+          <div className="relative overflow-hidden rounded-[1.45rem] border-[3px] border-white/90">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={image.src}
+              alt={image.alt}
+              width={1448}
+              height={1086}
+              fetchPriority="high"
+              className="h-48 w-full object-cover sm:h-72"
+            />
+            <AiBadge className="absolute right-3 bottom-1.5" />
+          </div>
+        </div>
       ) : null}
-      <div
-        className="sun-glow absolute -top-8 right-4 size-24 rounded-full bg-[radial-gradient(circle,#fbeab0_0%,rgb(244_211_110_/_0.55)_45%,transparent_72%)]"
-        aria-hidden="true"
-      />
-      <Wave className="wave-b" fill="#6fcbca" opacity={0.5} height={52} />
-      <Wave className="wave-a" fill="#fdf8ee" height={34} />
-      <div className="relative mx-auto max-w-3xl">
-        <h1 className="font-display text-3xl leading-tight font-extrabold">
+      <div>
+        <h1 className="font-display text-4xl leading-[1.05] font-extrabold sm:text-5xl">
           {title}
         </h1>
         {subtitle ? (
-          <p className="mt-2 max-w-xl text-white/90">{subtitle}</p>
+          <p className="text-muted mt-2 max-w-2xl text-lg">{subtitle}</p>
         ) : null}
         {children}
       </div>

@@ -45,7 +45,30 @@
     "mapVillages": "Villages in the commune",
     "kioskLink": "See the kiosk mode (for tablets)",
     "featuredHint": "The best places to start this month.",
-    "moreRoutes": "See all {count} routes"
+    "moreRoutes": "See all {count} routes",
+    "doorsTitle": "What do you want to see",
+    "doorCount": "{count, plural, =0 {Coming soon} one {# place} other {# places}}",
+    "services": "Also: food and stays",
+    "upcoming": "Coming up",
+    "agenda": "Calendar",
+    "inDays": "{count, plural, =0 {Today} one {Tomorrow} other {In # days}}",
+    "routeToday": "A route for today",
+    "allRoutes": "{count, plural, one {# route} other {# routes}}",
+    "routeMeta": "{count, plural, one {# stop} other {# stops}}, with audio guide"
+  },
+  "doors": {
+    "mar": {
+      "name": "Sea and sun"
+    },
+    "campo": {
+      "name": "Countryside and wetland"
+    },
+    "patrimonio": {
+      "name": "Heritage"
+    },
+    "paseos": {
+      "name": "Walks and sports"
+    }
   },
   "explore": {
     "title": "Explore Papudo",
@@ -64,7 +87,8 @@
     "clear": "Clear filters",
     "activeFilters": "Active filters",
     "groupCount": "{count, plural, one {# place} other {# places}}",
-    "removeFilter": "Remove filter: {name}"
+    "removeFilter": "Remove filter: {name}",
+    "placesList": "Places"
   },
   "place": {
     "back": "Explore",
@@ -129,7 +153,14 @@
     "website": "Website",
     "ownerValidated": "Validated by the business representative",
     "galleryPrev": "Previous photo",
-    "galleryNext": "Next photo"
+    "galleryNext": "Next photo",
+    "inLocality": "{category} in <pueblo>{locality}</pueblo>",
+    "todayOpen": "Open now, until {time}",
+    "todayLater": "Opens today at {time}",
+    "todayTomorrow": "Closed now. Opens tomorrow at {time}",
+    "todayOn": "Closed now. Opens on {day} at {time}",
+    "todayClosed": "Closed for now",
+    "todayNote": "Based on the hours provided; holidays may differ."
   },
   "listen": {
     "play": "Listen",
@@ -138,8 +169,6 @@
     "resume": "Resume",
     "stop": "Stop",
     "speedLabel": "Reading speed: {rate}. Tap to change",
-    "deviceVoice": "Uses your phone's voice",
-    "noVoice": "Your device has no voice for this language.",
     "playing": "Reading aloud",
     "paused": "Reading paused",
     "stopped": "Reading stopped",
@@ -156,7 +185,11 @@
     "previous": "Previous",
     "next": "Next",
     "previousLabel": "Go back to the previous part",
-    "nextLabel": "Skip to the next part"
+    "nextLabel": "Skip to the next part",
+    "loading": "Preparing the audio…",
+    "unavailable": "The natural-voice audio is not available yet.",
+    "error": "The audio could not be loaded. Please try again.",
+    "naturalVoice": "Natural voice"
   },
   "routes": {
     "title": "Routes",
@@ -206,7 +239,9 @@
     "sharedKeep": "Keep mine",
     "startLive": "Start trip",
     "startLiveNote": "Uses your location to guide you stop by stop. It stays on your phone; only if you accept the street route is it sent to calculate it, and it is not stored.",
-    "startDemo": "Not in Papudo? Try it with a simulated location"
+    "startDemo": "Not in Papudo? Try it with a simulated location",
+    "addShort": "Add to my trip",
+    "addedShort": "In my trip"
   },
   "map": {
     "unavailable": "The map is unavailable right now. You can keep using the list.",

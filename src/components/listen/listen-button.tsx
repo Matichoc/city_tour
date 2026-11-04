@@ -1,80 +1,65 @@
 "use client";
 
-import { useEffect, useRef, useState, useSyncExternalStore } from "react";
-import { useTranslations } from "next-intl";
+import { useEffect, useRef, useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import { track } from "@/lib/analytics";
-import {
-  SPEECH_RATES,
-  buildQueue,
-  jumpSection,
-  pickVoice,
-  type ListenSection,
-  type QueueItem,
-} from "@/lib/speech";
+import { SPEECH_RATES } from "@/lib/speech";
 
-type Status = "idle" | "playing" | "paused";
+type Status = "idle" | "loading" | "playing" | "paused";
 
-const noop = () => () => {};
-const isSupported = () =>
-  "speechSynthesis" in window && "SpeechSynthesisUtterance" in window;
+/** Una parte de lo que se lee: su etiqueta y el elemento que se marca. */
+export type ListenPart = { label?: string; targetId?: string };
+
+/** Tras unos segundos, «Anterior» vuelve al comienzo de la parte en curso. */
+const RESTART_AFTER_S = 3;
 
 /**
- * Lee en voz alta una ficha o una ruta con la voz del dispositivo. Nunca suena
- * sola: hay que tocar el botón (WCAG 1.4.2). No reemplaza al lector de
- * pantalla; es para quien prefiere escuchar (baja visión, adultos mayores,
- * dislexia, o con el teléfono en la mano caminando). Con varias partes (las
- * paradas de una ruta) se puede saltar de una a otra, y la parte en curso se
- * marca en la página con `aria-current="step"`. Sin soporte no se muestra.
+ * «Escuchar» con voz natural (Azure, Catalina es-CL): pide al servidor un
+ * audio por parte (`/api/escuchar`) y los reproduce en orden. Nunca usa la voz
+ * del dispositivo: si el audio no está disponible, lo dice. Nunca suena solo
+ * (WCAG 1.4.2). Con un elemento de audio real, sigue sonando con la pantalla
+ * bloqueada y se controla desde ahí (Media Session). Con varias partes (las
+ * paradas de una ruta) se salta de una a otra y la parte en curso se marca en
+ * la página con `aria-current="step"`.
  */
 export function ListenButton({
-  sections,
-  lang,
+  parts,
   playLabel,
+  title,
   slug,
   kind,
 }: {
-  /** Partes en el orden en que se leen (ver `ListenSection`). */
-  sections: ListenSection[];
-  /** BCP 47, p. ej. "es-CL" (ver `SPEECH_LANG`). */
-  lang: string;
+  parts: ListenPart[];
   /** Nombre accesible del botón antes de empezar ("Escuchar la ficha de…"). */
   playLabel: string;
+  /** Título para la pantalla de bloqueo (nombre del lugar o la ruta). */
+  title: string;
   slug: string;
   kind: "place" | "route";
 }) {
   const t = useTranslations("listen");
-  const supported = useSyncExternalStore(noop, isSupported, () => false);
+  const locale = useLocale();
   const [status, setStatus] = useState<Status>("idle");
   const [rate, setRate] = useState<number>(SPEECH_RATES[0]);
-  const [section, setSection] = useState(0);
-  const [noVoice, setNoVoice] = useState(false);
+  const [part, setPart] = useState(0);
+  const [problem, setProblem] = useState<string | null>(null);
   const [announce, setAnnounce] = useState("");
-  const queue = useRef<QueueItem[]>([]);
-  const index = useRef(0);
-  // Cada lectura tiene su número: los avisos de fin de una lectura cancelada
-  // (algunos navegadores los disparan al cancelar) se ignoran.
-  const session = useRef(0);
+  const audio = useRef<HTMLAudioElement | null>(null);
+  const urls = useRef<string[]>([]);
   const played = useRef(false);
-  const multi = sections.length > 1;
+  // El aviso de fin llega por un evento: lee la parte en curso desde un ref.
+  const partRef = useRef(0);
+  const multi = parts.length > 1;
 
   useEffect(() => {
-    if (!isSupported()) return;
-    const synth = window.speechSynthesis;
-    // Al salir de la página se corta la lectura, si este botón la empezó (se
-    // lee el número de lectura al desmontar, a propósito).
-    const started = session;
-    // Chrome entrega la lista de voces después: pedirla temprano la carga.
-    const load = () => synth.getVoices();
-    load();
-    synth.addEventListener("voiceschanged", load);
-    return () => {
-      synth.removeEventListener("voiceschanged", load);
-      if (started.current > 0) synth.cancel();
-    };
-  }, []);
+    partRef.current = part;
+  }, [part]);
+
+  // Al salir de la página se corta.
+  useEffect(() => () => audio.current?.pause(), []);
 
   // Marca en la página la parte que suena (p. ej. la parada de la ruta).
-  const targetId = status === "idle" ? undefined : sections[section]?.targetId;
+  const targetId = status === "idle" ? undefined : parts[part]?.targetId;
   useEffect(() => {
     if (!targetId) return;
     const el = document.getElementById(targetId);
@@ -82,81 +67,108 @@ export function ListenButton({
     return () => el?.removeAttribute("aria-current");
   }, [targetId]);
 
-  if (!supported) return null;
-
-  function speakFrom(i: number, speed: number) {
-    const synth = window.speechSynthesis;
-    const id = ++session.current;
-    synth.cancel();
-    const voices = synth.getVoices();
-    if (voices.length > 0 && !pickVoice(voices, lang)) {
-      setNoVoice(true);
-      setStatus("idle");
-      setAnnounce(t("noVoice"));
-      return;
-    }
-    const say = (n: number) => {
-      if (id !== session.current) return;
-      const item = queue.current[n];
-      if (!item) {
-        index.current = 0;
-        setSection(0);
+  function playPart(i: number) {
+    const el = audio.current;
+    const src = urls.current[i];
+    if (!el || !src) return;
+    setPart(i);
+    el.src = src;
+    el.playbackRate = rate;
+    void el.play().then(
+      () => setStatus("playing"),
+      () => {
         setStatus("idle");
-        setAnnounce(t("done"));
+        setProblem(t("error"));
+      },
+    );
+    if ("mediaSession" in navigator) {
+      navigator.mediaSession.metadata = new MediaMetadata({
+        title: parts[i]?.label ?? title,
+        artist: "Papudo en tu Mano",
+      });
+    }
+  }
+
+  async function start() {
+    // El elemento se crea con el toque: así iPhone deja reproducir.
+    if (!audio.current) {
+      const el = new Audio();
+      el.preload = "auto";
+      el.addEventListener("ended", () => {
+        const next = partRef.current + 1;
+        if (next < urls.current.length) playPart(next);
+        else {
+          setStatus("idle");
+          setPart(0);
+          setAnnounce(t("done"));
+        }
+      });
+      audio.current = el;
+    }
+    setProblem(null);
+    if (urls.current.length === 0) {
+      setStatus("loading");
+      setAnnounce(t("loading"));
+      const tipo = kind === "place" ? "lugar" : "ruta";
+      try {
+        const res = await fetch(
+          `/api/escuchar?tipo=${tipo}&slug=${encodeURIComponent(slug)}&locale=${locale}`,
+        );
+        if (!res.ok) {
+          setStatus("idle");
+          setProblem(res.status === 503 ? t("unavailable") : t("error"));
+          return;
+        }
+        const body = (await res.json()) as { sections: { url: string }[] };
+        urls.current = body.sections.map((s) => s.url);
+      } catch {
+        setStatus("idle");
+        setProblem(t("error"));
         return;
       }
-      index.current = n;
-      setSection(item.section);
-      // Se elige en cada trozo: la lista puede llegar con la lectura empezada.
-      const voice = pickVoice(synth.getVoices(), lang);
-      const u = new SpeechSynthesisUtterance(item.text);
-      u.lang = voice?.lang ?? lang;
-      if (voice) u.voice = voice;
-      u.rate = speed;
-      u.onend = () => say(n + 1);
-      u.onerror = (e) => {
-        if (e.error === "interrupted" || e.error === "canceled") return;
-        if (id === session.current) setStatus("idle");
-      };
-      synth.speak(u);
-    };
-    setStatus("playing");
-    say(i);
+    }
+    if (!played.current) {
+      played.current = true;
+      track("listen_play", { slug, kind });
+    }
+    setAnnounce(t("playing"));
+    playPart(0);
   }
 
   function toggle() {
-    if (status === "playing") {
-      session.current++;
-      window.speechSynthesis.cancel();
+    const el = audio.current;
+    if (status === "playing" && el) {
+      el.pause();
       setStatus("paused");
       setAnnounce(t("paused"));
-      return;
-    }
-    if (status === "idle") {
-      queue.current = buildQueue(sections);
-      index.current = 0;
-      if (!played.current) {
-        played.current = true;
-        track("listen_play", { slug, kind });
-      }
-    }
-    setAnnounce(t("playing"));
-    speakFrom(index.current, rate);
+    } else if (status === "paused" && el) {
+      void el.play();
+      setStatus("playing");
+      setAnnounce(t("playing"));
+    } else if (status === "idle") void start();
   }
 
   function jump(dir: -1 | 1) {
-    const to = jumpSection(queue.current, index.current, dir);
-    if (to < 0) return;
-    const label = sections[queue.current[to].section]?.label;
+    const el = audio.current;
+    if (!el) return;
+    if (dir === -1 && el.currentTime > RESTART_AFTER_S) {
+      el.currentTime = 0;
+      return;
+    }
+    const to = part + dir;
+    if (to < 0 || to >= urls.current.length) return;
+    const label = parts[to]?.label;
     if (label) setAnnounce(label);
-    speakFrom(to, rate);
+    playPart(to);
   }
 
   function stop() {
-    session.current++;
-    window.speechSynthesis.cancel();
-    index.current = 0;
-    setSection(0);
+    const el = audio.current;
+    if (el) {
+      el.pause();
+      el.currentTime = 0;
+    }
+    setPart(0);
     setStatus("idle");
     setAnnounce(t("stopped"));
   }
@@ -167,13 +179,34 @@ export function ListenButton({
         (SPEECH_RATES.indexOf(rate as never) + 1) % SPEECH_RATES.length
       ];
     setRate(next);
-    if (status === "playing") speakFrom(index.current, next);
+    if (audio.current) audio.current.playbackRate = next;
   }
+
+  // Controles de la pantalla de bloqueo y los audífonos.
+  const controls = useRef({ toggle, jump });
+  useEffect(() => {
+    controls.current = { toggle, jump };
+  });
+  useEffect(() => {
+    if (!("mediaSession" in navigator)) return;
+    const ms = navigator.mediaSession;
+    ms.setActionHandler("play", () => controls.current.toggle());
+    ms.setActionHandler("pause", () => controls.current.toggle());
+    if (multi) {
+      ms.setActionHandler("previoustrack", () => controls.current.jump(-1));
+      ms.setActionHandler("nexttrack", () => controls.current.jump(1));
+    }
+    return () => {
+      for (const a of ["play", "pause", "previoustrack", "nexttrack"] as const)
+        ms.setActionHandler(a, null);
+    };
+  }, [multi]);
 
   const rateText = `${String(rate).replace(".", ",")}×`;
   const ghost =
     "border-sea text-sea-deep hover:bg-sea-soft inline-flex min-h-11 items-center gap-1 rounded-full border-2 px-4 text-sm font-bold transition active:scale-95";
-  const current = status === "idle" ? null : sections[section]?.label;
+  const active = status === "playing" || status === "paused";
+  const current = active ? parts[part]?.label : null;
 
   return (
     <div className="bg-sea-soft/60 flex flex-col gap-2 rounded-2xl p-2">
@@ -181,8 +214,9 @@ export function ListenButton({
         <button
           type="button"
           onClick={toggle}
+          disabled={status === "loading"}
           aria-label={status === "idle" ? playLabel : undefined}
-          className="bg-sea inline-flex min-h-11 items-center gap-2 rounded-full px-5 text-sm font-bold text-white transition active:scale-95"
+          className="bg-sea inline-flex min-h-11 items-center gap-2 rounded-full px-5 text-sm font-bold text-white transition active:scale-95 disabled:opacity-70"
         >
           {status === "playing" ? (
             <svg
@@ -208,9 +242,11 @@ export function ListenButton({
             ? t("pause")
             : status === "paused"
               ? t("resume")
-              : t("play")}
+              : status === "loading"
+                ? t("loading")
+                : t("play")}
         </button>
-        {status !== "idle" && multi ? (
+        {active && multi ? (
           <>
             <button
               type="button"
@@ -232,7 +268,7 @@ export function ListenButton({
             </button>
           </>
         ) : null}
-        {status !== "idle" ? (
+        {active ? (
           <button type="button" onClick={stop} className={ghost}>
             {t("stop")}
           </button>
@@ -246,7 +282,7 @@ export function ListenButton({
           {rateText}
         </button>
         <span className="text-muted text-xs">
-          {noVoice ? t("noVoice") : t("deviceVoice")}
+          {problem ?? t("naturalVoice")}
         </span>
       </div>
       {multi && current ? (
@@ -257,7 +293,7 @@ export function ListenButton({
       ) : null}
       {/* aria-live y no role="status": no compite con los avisos de la página. */}
       <span aria-live="polite" className="sr-only">
-        {announce}
+        {problem ?? announce}
       </span>
     </div>
   );

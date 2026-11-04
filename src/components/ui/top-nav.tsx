@@ -14,10 +14,10 @@ export function TopNav() {
   ] as const;
   return (
     <header className="border-border bg-background/90 sticky top-0 z-30 border-b backdrop-blur print:hidden">
-      <div className="mx-auto flex w-full max-w-3xl items-center justify-between gap-3 px-4 py-2.5">
+      <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-3 px-4 py-2.5 sm:px-6">
         <Link
           href="/"
-          className="font-display text-sea-deep flex items-center gap-2 text-lg font-extrabold"
+          className="font-display text-foreground flex items-center gap-2 text-lg font-extrabold"
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
@@ -37,7 +37,7 @@ export function TopNav() {
             <Link
               key={key}
               href={href}
-              className="text-muted hover:bg-sea-soft hover:text-sea-deep rounded-full px-3 py-1.5 text-sm font-semibold"
+              className="text-muted hover:bg-soft hover:text-foreground rounded-full px-3 py-1.5 text-sm font-semibold"
             >
               {n(key)}
             </Link>

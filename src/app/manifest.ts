@@ -7,7 +7,7 @@ export default function manifest(): MetadataRoute.Manifest {
     description: "Guía turística de Papudo: balneario, campo y patrimonio.",
     start_url: "/es",
     display: "standalone",
-    background_color: "#fdf8ee",
+    background_color: "#ffffff",
     theme_color: "#1b7070",
     lang: "es",
     icons: [

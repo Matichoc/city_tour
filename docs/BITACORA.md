@@ -14,13 +14,13 @@ indicadas en cada versión.
 `docs/bitacora-notas.json` (clave `actual`, y el número de PR cuando exista),
 correr `pnpm bitacora` y subir el cambio en el mismo PR.
 
-## En preparación: v0.33 — Audioguía en las rutas
+## En preparación: v0.41 — Rutas ya no desborda en el celular
 
-Cada ruta se puede escuchar como audioguía: primero su presentación (paradas, duración, descripción y aviso de verificación) y después cada parada en orden con su descripción completa. «Anterior» y «Siguiente» saltan entre paradas, y la que suena se resalta en la lista y se anuncia al lector de pantalla. Mismo reproductor que las fichas, ahora por partes. Sin migraciones.
+En el celular la página de Rutas medía 422 px en una pantalla de 375: los nombres de las paradas ensanchaban la grilla. La vista quedaba desplazada y, al entrar a una ruta, la barra inferior se escondía hasta mover la página. La grilla ahora tiene una columna que se ajusta a la pantalla. Nueva prueba e2e: diez páginas no pueden ser más anchas que la pantalla del celular. Sin migraciones.
 
 - **Migraciones por correr en Supabase:** —
-- **Estado:** en revisión, [PR #39](https://github.com/Matichoc/city_tour/pull/39) (aún no está en `develop`).
-- **Última actualización de esta bitácora:** 2026-11-01 02:37
+- **Estado:** en revisión, [PR #49](https://github.com/Matichoc/city_tour/pull/49) (aún no está en `develop`).
+- **Última actualización de esta bitácora:** 2026-11-04 13:39
 
 ## Avance por día
 
@@ -29,7 +29,8 @@ trabajadas: hay pausas y trabajo sin registrar).
 
 | Día | Ventana de actividad | Registros | Versiones entregadas |
 | --- | --- | ---: | --- |
-| Domingo, 1 de noviembre de 2026 | 01:52 – 02:36 | 3 | v0.32 |
+| Miércoles, 4 de noviembre de 2026 | 08:48 – 13:39 | 15 | v0.34, v0.35, v0.36, v0.37, v0.38, v0.39, v0.40 |
+| Domingo, 1 de noviembre de 2026 | 01:52 – 02:37 | 4 | v0.32, v0.33 |
 | Domingo, 18 de octubre de 2026 | 00:09 – 00:39 | 7 | v0.29, v0.30, v0.31 |
 | Sábado, 17 de octubre de 2026 | 00:01 – 23:30 | 34 | v0.16, v0.17, v0.18, v0.19, v0.20, v0.21, v0.22, v0.23, v0.24, v0.25, v0.26, v0.27, v0.28 |
 | Viernes, 16 de octubre de 2026 | 00:04 – 23:51 | 15 | v0.9, v0.10, v0.11, v0.12, v0.13, v0.14, v0.15 |
@@ -39,6 +40,88 @@ trabajadas: hay pausas y trabajo sin registrar).
 | Lunes, 12 de octubre de 2026 | 15:43 – 17:53 | 10 | v0.1, v0.2, v0.3, v0.4 |
 
 ## Versiones
+
+### v0.40 — Voz de «Escuchar»: Catalina pausada
+Miércoles, 4 de noviembre de 2026, 13:23 · [PR #47](https://github.com/Matichoc/city_tour/pull/47)
+
+Elegida de oído entre cinco muestras: Catalina (es-CL) un 7 % más lenta y con una pausa breve entre frases, para que no suene a lectura de corrido. El estilo entra en el nombre de cada audio, así que todos se regeneran solos con la voz nueva la próxima vez que alguien los escuche. Sin migraciones.
+
+Registros:
+
+- 11-04 13:00 — Voz de «Escuchar»: Catalina pausada (`eba4523`)
+- 11-04 13:00 — Bitácora: v0.40 en preparación (PR #47) (`6cbd792`)
+
+### v0.39 — «Escuchar» con voz natural (Catalina, es-CL)
+Miércoles, 4 de noviembre de 2026, 12:43 · [PR #46](https://github.com/Matichoc/city_tour/pull/46)
+
+«Escuchar» deja la voz del teléfono y pasa a voz natural de Azure: Catalina en español de Chile, y voces neurales en inglés y portugués. El servidor arma el texto, genera cada audio una sola vez y lo guarda en Supabase Storage, firmado con el secreto de los comentarios (sin clave de servicio en Vercel). Si el texto cambia, se genera otro. Con audio real, la audioguía sigue sonando con la pantalla bloqueada y se controla desde ahí. Sin audio disponible, el botón lo avisa: nunca usa voz robótica. Requiere AZURE_SPEECH_KEY y AZURE_SPEECH_REGION en Vercel.
+
+**Migraciones en Supabase:** 0030
+
+Registros:
+
+- 11-04 12:14 — «Escuchar» con voz natural: Catalina (es-CL) con Azure (`2ed4512`)
+- 11-04 12:14 — Bitácora: v0.39 en preparación (PR #46) (`adb2e16`)
+
+### v0.38 — Refresh, paso 5: rutas, agenda y páginas internas
+Miércoles, 4 de noviembre de 2026, 11:52 · [PR #45](https://github.com/Matichoc/city_tour/pull/45)
+
+Cierra el refresh «los cuatro cuadros». El encabezado de las páginas internas (rutas, agenda, recorrido, información, negocios, pueblos) pasa de la franja verde con olas a título grande sobre blanco, con la imagen enmarcada cuando la hay. Rutas en tarjetas con la línea de paradas en el color de cada puerta. La ficha de ruta pone la audioguía y las paradas al lado del mapa fijo en computador, con miniaturas enmarcadas y la parada que suena resaltada. La agenda usa los chips nuevos y la fecha de cada evento en el color de su puerta. Sin migraciones.
+
+Registros:
+
+- 11-04 11:46 — Refresh, paso 5: rutas, agenda y páginas internas (`951c91e`)
+- 11-04 11:47 — Bitácora: v0.38 en preparación (PR #45) (`109c02f`)
+
+### v0.37 — Refresh, paso 4: ficha de lugar
+Miércoles, 4 de noviembre de 2026, 11:31 · [PR #44](https://github.com/Matichoc/city_tour/pull/44)
+
+La ficha de lugar se ordena: imagen con el doble marco del color de su puerta y, en computador, el encabezado al lado. «Categoría en pueblo» con el pueblo enlazado, una sola acción principal (la del comercio o, si no tiene, Cómo llegar) y el resto en una fila de íconos (Cómo llegar, Guardar, A mi recorrido, Compartir). Nuevo estado de hoy según el horario por temporada, calculado en el navegador con la hora de Chile: «Abierto ahora, hasta las 19:00» o «Cerrado ahora. Abre el sábado a las 10:00». Sin migraciones.
+
+Registros:
+
+- 11-04 11:27 — Refresh, paso 4: ficha de lugar con una acción principal (`35fbd0e`)
+- 11-04 11:27 — Bitácora: v0.37 en preparación (PR #44) (`0320d85`)
+
+### v0.36 — Refresh, paso 3: Explorar con lista y mapa
+Miércoles, 4 de noviembre de 2026, 11:13 · [PR #43](https://github.com/Matichoc/city_tour/pull/43)
+
+Explorar usa todo el ancho: en computador la lista y el mapa van lado a lado (el mapa queda fijo al recorrer la lista); en el celular se elige Lista o Mapa. Filtros por puerta (los cuatro cuadros del logo) y por comer y dormir, más el pueblo. Cada lugar va en una fila con su miniatura enmarcada en el color de su puerta, su estado y la marca IA cuando es ilustración. El mapa de lugares pasa a un estilo claro teñido con los colores de Papudo, con los pines del color de cada puerta; al tocar uno aparece su tarjeta con Ver ficha y Cómo llegar. Reemplaza los grupos desplegables por categoría. Sin migraciones.
+
+Registros:
+
+- 11-04 10:22 — Refresh, paso 3: Explorar con lista y mapa (`60ca4ab`)
+- 11-04 10:22 — Bitácora: v0.36 en preparación (PR #43) (`5d49b3d`)
+
+### v0.35 — Refresh, paso 2: portada con los cuatro cuadros
+Miércoles, 4 de noviembre de 2026, 10:05 · [PR #42](https://github.com/Matichoc/city_tour/pull/42)
+
+La portada usa todo el ancho en computador: a la izquierda el saludo y el buscador, a la derecha los cuatro cuadros del logo como puertas (mar y sol, campo y humedal, patrimonio, paseos y deporte), cada uno con su cantidad de lugares y, debajo, comer y dormir. Explorar entiende la puerta (?puerta=paseos junta recreación y deportes). Nuevos «Se viene» (las próximas fiestas con cuenta regresiva) y «Ruta para hoy» (con sus paradas en orden). Se mantienen «Destacados del mes» y la comuna en 3D. Sin migraciones.
+
+Registros:
+
+- 11-04 09:57 — Refresh, paso 2: portada con los cuatro cuadros (`c68c2e0`)
+- 11-04 09:57 — Bitácora: v0.35 en preparación (PR #42) (`eb49193`)
+
+### v0.34 — Refresh, paso 1: base visual
+Miércoles, 4 de noviembre de 2026, 09:44 · [PR #41](https://github.com/Matichoc/city_tour/pull/41)
+
+Primer paso del refresh «los cuatro cuadros»: fondo blanco y azul noche en vez de arena y rosado, texto en Figtree (autoalojada), acción principal en azul noche y los cuatro colores del logo como tokens nuevos (--cuadro-*), con contrastes AA documentados en docs/MARCA-REFERENCIA.md. Barra inferior de cinco pestañas (Inicio, Explorar, Rutas, Agenda, Recorrido; Información pasa al pie). El encabezado ya usa el ancho de computador; cada página fija su propio ancho para poder ensancharse al rediseñarla. Sin migraciones.
+
+Registros:
+
+- 11-04 08:48 — Refresh, paso 1: base visual de los cuatro cuadros (`7204bbd`)
+- 11-04 08:48 — Bitácora: v0.34 en preparación (PR #41) (`b16b67e`)
+
+### v0.33 — Audioguía en las rutas
+Domingo, 1 de noviembre de 2026, 02:40 · [PR #39](https://github.com/Matichoc/city_tour/pull/39)
+
+Cada ruta se puede escuchar como audioguía: primero su presentación (paradas, duración, descripción y aviso de verificación) y después cada parada en orden con su descripción completa. «Anterior» y «Siguiente» saltan entre paradas, y la que suena se resalta en la lista y se anuncia al lector de pantalla. Mismo reproductor que las fichas, ahora por partes. Sin migraciones.
+
+Registros:
+
+- 11-01 02:36 — Audioguía en las rutas: presentación y paradas en orden, con Anterior y Siguiente (`039d5c3`)
+- 11-01 02:37 — Bitácora: v0.33 en preparación (PR #39) (`e8eefba`)
 
 ### v0.32 — Accesibilidad y botón «Escuchar» en las fichas
 Domingo, 1 de noviembre de 2026, 01:54 · [PR #37](https://github.com/Matichoc/city_tour/pull/37)

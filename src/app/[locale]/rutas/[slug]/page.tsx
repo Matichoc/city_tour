@@ -13,11 +13,11 @@ import { PageHero } from "@/components/ui/page-hero";
 import { PlacesMap } from "@/components/map/places-map";
 import { AddRouteToTripButton } from "@/components/trip/add-route-to-trip-button";
 import { ShareButton } from "@/components/place/share-button";
-import { CategoryIcon } from "@/components/ui/category-icon";
 import { PrintButton } from "@/components/ui/print-button";
 import { QrVisit } from "@/components/analytics/qr-visit";
 import { ListenButton } from "@/components/listen/listen-button";
-import { SPEECH_LANG, type ListenSection } from "@/lib/speech";
+import { routeListen } from "@/lib/listen-text";
+import { styleOf } from "@/lib/doors";
 
 export async function generateStaticParams() {
   const data = await getData();
@@ -57,40 +57,11 @@ export default async function RoutePage({
   if (!route) notFound();
   const t = await getTranslations("routes");
   const tl = await getTranslations("listen");
-  const total = route.stops.length;
-  // Audioguía: la presentación de la ruta y después cada parada, en orden.
-  const listenSections: ListenSection[] = [
-    {
-      label: tl("routeIntro"),
-      segments: [
-        `${route.name}.`,
-        `${t("stops", { count: total })}${
-          route.durationMinutes
-            ? `, ${formatDuration(route.durationMinutes)}`
-            : ""
-        }.`,
-        route.description,
-        t("pendingNote"),
-      ],
-    },
-    ...route.stops.map((s, i) => {
-      const label = tl("stopLabel", {
-        n: i + 1,
-        total,
-        name: s.place.name,
-      });
-      return {
-        label,
-        targetId: `parada-${i + 1}`,
-        segments: [
-          `${label}.`,
-          s.place.demo ? tl("demo") : null,
-          s.place.description,
-          s.notes,
-        ].filter((x): x is string => Boolean(x)),
-      };
-    }),
-  ];
+  const th = await getTranslations("home");
+  // Etiquetas de cada parte de la audioguía (el texto lo arma el servidor).
+  const parts = (await routeListen(route, locale)).map(
+    ({ label, targetId }) => ({ label, targetId }),
+  );
   const routeUrl = localizedUrl(locale, {
     pathname: "/rutas/[slug]",
     params: { slug: route.slug },
@@ -101,12 +72,12 @@ export default async function RoutePage({
       type: "svg",
       margin: 1,
       errorCorrectionLevel: "M",
-      color: { dark: "#155656", light: "#ffffff" },
+      color: { dark: "#14164a", light: "#ffffff" },
     },
   );
 
   return (
-    <main className="flex flex-col">
+    <main className="mx-auto flex w-full max-w-5xl flex-col sm:px-2">
       <QrVisit />
       <JsonLd
         data={{
@@ -140,85 +111,107 @@ export default async function RoutePage({
         subtitle={route.description}
         image={route.cover ?? undefined}
       >
-        <p className="mt-3 text-sm font-bold text-[#fbeab0]">
-          {t("stops", { count: route.stops.length })}
+        <p className="mt-3 font-bold">
+          {th("routeMeta", { count: route.stops.length })}
           {route.durationMinutes
-            ? ` · ${formatDuration(route.durationMinutes)}`
+            ? `, ${formatDuration(route.durationMinutes)}`
             : ""}
         </p>
       </PageHero>
-      <div className="mx-auto flex w-full max-w-3xl flex-col gap-5 px-4 pb-10">
+      <div className="flex flex-col gap-6 px-4 pt-3 pb-10">
         <div className="flex flex-wrap gap-2 print:hidden">
           <AddRouteToTripButton slugs={route.stops.map((s) => s.place.slug)} />
           <ShareButton title={route.name} />
         </div>
 
-        <div className="print:hidden">
-          <ListenButton
-            sections={listenSections}
-            lang={SPEECH_LANG[locale]}
-            playLabel={tl("playRouteLabel", { name: route.name })}
-            slug={route.slug}
-            kind="route"
-          />
+        {/* En computador: la audioguía y las paradas a la izquierda, el mapa
+            fijo a la derecha. */}
+        <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+          <div className="flex flex-col gap-5">
+            <div className="print:hidden">
+              <ListenButton
+                parts={parts}
+                title={route.name}
+                playLabel={tl("playRouteLabel", { name: route.name })}
+                slug={route.slug}
+                kind="route"
+              />
+            </div>
+
+            <ol className="flex flex-col gap-2">
+              {route.stops.map((s, i) => {
+                const tone = styleOf(s.place.categorySlug);
+                const thumb = s.place.logo?.src ?? s.place.picture.src;
+                return (
+                  <li
+                    key={s.place.slug}
+                    id={`parada-${i + 1}`}
+                    // La parada que está sonando en la audioguía (aria-current="step").
+                    className="aria-[current=step]:bg-sun/40 rounded-2xl transition"
+                  >
+                    <Link
+                      href={{
+                        pathname: "/lugares/[slug]",
+                        params: { slug: s.place.slug },
+                      }}
+                      className="hover:bg-soft flex items-center gap-4 rounded-2xl p-2"
+                    >
+                      <span
+                        className={`relative size-16 shrink-0 rounded-[1rem] p-[3px] ${tone.frame}`}
+                      >
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={thumb}
+                          alt=""
+                          loading="lazy"
+                          className={`size-full rounded-[0.8rem] border-2 border-white/95 object-cover ${
+                            s.place.picture.kind || s.place.logo
+                              ? ""
+                              : "mix-blend-multiply saturate-[.3]"
+                          }`}
+                        />
+                        <span
+                          className={`absolute -top-2 -left-2 grid size-7 place-items-center rounded-full border-2 border-white text-xs font-extrabold ${tone.frame} ${tone.on}`}
+                        >
+                          {i + 1}
+                        </span>
+                      </span>
+                      <span className="min-w-0">
+                        <span className="block font-bold">{s.place.name}</span>
+                        <span className="text-muted line-clamp-2 text-sm">
+                          {s.place.shortDescription}
+                        </span>
+                        {s.notes ? (
+                          <span className="text-earth mt-0.5 block text-sm font-semibold">
+                            {s.notes}
+                          </span>
+                        ) : null}
+                      </span>
+                    </Link>
+                  </li>
+                );
+              })}
+            </ol>
+          </div>
+
+          <div className="lg:sticky lg:top-20 print:hidden">
+            <PlacesMap
+              connect
+              className="h-72 lg:h-[calc(100dvh-7rem)]"
+              markers={route.stops
+                .map((s) => s.place)
+                .filter(isLocated)
+                .map((place, i) => ({
+                  slug: place.slug,
+                  name: place.name,
+                  latitude: place.latitude,
+                  longitude: place.longitude,
+                  category: place.categorySlug,
+                  order: i + 1,
+                }))}
+            />
+          </div>
         </div>
-
-        <PlacesMap
-          connect
-          className="h-72 print:hidden"
-          markers={route.stops
-            .map((s) => s.place)
-            .filter(isLocated)
-            .map((place, i) => ({
-              slug: place.slug,
-              name: place.name,
-              latitude: place.latitude,
-              longitude: place.longitude,
-              category: place.categorySlug,
-              order: i + 1,
-            }))}
-        />
-
-        <ol className="flex flex-col gap-3">
-          {route.stops.map((s, i) => (
-            <li
-              key={s.place.slug}
-              id={`parada-${i + 1}`}
-              // La parada que está sonando en la audioguía (aria-current="step").
-              className="rise-in aria-[current=step]:ring-sea rounded-2xl aria-[current=step]:ring-4"
-              style={{ "--i": i } as React.CSSProperties}
-            >
-              <Link
-                href={{
-                  pathname: "/lugares/[slug]",
-                  params: { slug: s.place.slug },
-                }}
-                className="card-lift border-border bg-surface flex gap-3 rounded-2xl border p-4 shadow-sm"
-              >
-                <span className="bg-sea grid size-10 shrink-0 place-items-center rounded-full font-extrabold text-white">
-                  {i + 1}
-                </span>
-                <span className="min-w-0">
-                  <span className="font-display flex items-center gap-2 text-lg font-extrabold">
-                    {s.place.name}
-                    <CategoryIcon
-                      category={s.place.categorySlug}
-                      className="text-field size-4"
-                    />
-                  </span>
-                  <span className="text-muted mt-1 block text-sm">
-                    {s.place.shortDescription}
-                  </span>
-                  {s.notes ? (
-                    <span className="text-earth mt-1 block text-sm font-semibold">
-                      {s.notes}
-                    </span>
-                  ) : null}
-                </span>
-              </Link>
-            </li>
-          ))}
-        </ol>
 
         {route.source ? (
           <p className="text-muted text-sm">
@@ -239,7 +232,7 @@ export default async function RoutePage({
 
         <section
           aria-labelledby="llevatela"
-          className="border-border bg-surface flex flex-wrap items-center gap-5 rounded-2xl border p-4"
+          className="border-foreground flex flex-wrap items-center gap-5 rounded-[1.6rem] border-2 p-5"
         >
           <div
             className="w-36 shrink-0"
@@ -248,7 +241,7 @@ export default async function RoutePage({
             dangerouslySetInnerHTML={{ __html: qrSvg }}
           />
           <div className="min-w-0 flex-1">
-            <h2 id="llevatela" className="font-display text-xl font-extrabold">
+            <h2 id="llevatela" className="font-display text-2xl font-extrabold">
               {t("takeTitle")}
             </h2>
             <p className="text-muted mt-1 text-sm">{t("takeBody")}</p>

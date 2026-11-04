@@ -688,8 +688,8 @@ export function LiveTrip({
                       }}
                       className={
                         isShortWalk(distance)
-                          ? "bg-coral text-coral-ink min-h-12 rounded-full px-5 font-extrabold shadow-sm"
-                          : "border-coral text-coral-ink min-h-12 rounded-full border-2 px-5 font-bold"
+                          ? "bg-coral min-h-12 rounded-full px-5 font-extrabold text-white shadow-sm"
+                          : "border-coral text-foreground min-h-12 rounded-full border-2 px-5 font-bold"
                       }
                     >
                       📷{" "}

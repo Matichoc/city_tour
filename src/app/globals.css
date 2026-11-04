@@ -2,26 +2,42 @@
 
 /*
  * Paleta "Papudo": los colores del logo municipal (turquesa, amarillo,
- * magenta, rojo y azul noche) en versión pálida, más arena y verdes de campo.
+ * magenta, rojo y azul noche) sobre blanco, más verdes de campo.
  * El logo no se usa; solo sus colores (docs/MARCA-REFERENCIA.md).
  * Única fuente de color del sitio: no hardcodear colores en componentes.
+ *
+ * Los cuatro cuadros del logo (--cuadro-*) son las puertas de entrada del
+ * sitio: mar y sol, campo y humedal, patrimonio, paseos y deporte. Con
+ * texto: azul noche sobre amarillo y turquesa; blanco sobre rojo y magenta
+ * (contrastes en docs/MARCA-REFERENCIA.md).
  */
 :root {
-  --background: #fdf8ee; /* arena clara */
+  --background: #ffffff;
   --surface: #ffffff;
-  --foreground: #22234a; /* azul noche del logo, suavizado */
-  --muted: #56587a;
-  --border: #e8e0d2;
+  --soft: #f4f5f9; /* rellenos suaves: datos, íconos, filas */
+  --foreground: #14164a; /* azul noche del logo */
+  --muted: #4a4c6e;
+  --border: #e6e6ef;
 
-  --sea: #1b7070; /* turquesa del logo, oscurecido: botones y texto */
+  --sea: #0f6d6c; /* turquesa del logo, oscurecido: enlaces y botones */
   --sea-bright: #6fcbca; /* turquesa del logo, pálido: decoración */
-  --sea-deep: #155656;
+  --sea-deep: #0b5150;
   --sea-soft: #e0f5f4;
   --sky: #a9dedd;
 
   --sun: #f4d36e; /* amarillo del logo, pálido */
-  --coral: #e98bbd; /* magenta del logo, pálido: acción principal */
-  --coral-ink: #3b0a26; /* texto sobre coral */
+  --coral: #14164a; /* acción principal: azul noche, texto blanco */
+  --coral-ink: #3b0a26; /* tinta de avisos y errores; texto sobre --sun */
+
+  --cuadro-mar: #ffc400;
+  --cuadro-campo: #00b5b4;
+  --cuadro-patri: #d71f19;
+  --cuadro-paseo: #d4087e;
+  /* Tinta de cada cuadro para texto sobre blanco (≥ 6:1). */
+  --cuadro-mar-ink: #7a5c00;
+  --cuadro-campo-ink: #0f6d6c;
+  --cuadro-patri-ink: #b51d18;
+  --cuadro-paseo-ink: #a3066a;
   --dune: #f2e2b3;
   --earth: #a8403c; /* rojo del logo, como tinta */
   --earth-soft: #f8e3e1;
@@ -51,9 +67,19 @@
   --color-field: var(--field);
   --color-field-deep: var(--field-deep);
   --color-field-soft: var(--field-soft);
+  --color-soft: var(--soft);
+  --color-cuadro-mar: var(--cuadro-mar);
+  --color-cuadro-campo: var(--cuadro-campo);
+  --color-cuadro-patri: var(--cuadro-patri);
+  --color-cuadro-paseo: var(--cuadro-paseo);
+  --color-cuadro-mar-ink: var(--cuadro-mar-ink);
+  --color-cuadro-campo-ink: var(--cuadro-campo-ink);
+  --color-cuadro-patri-ink: var(--cuadro-patri-ink);
+  --color-cuadro-paseo-ink: var(--cuadro-paseo-ink);
+  /* Texto: Figtree, clara y cálida; los títulos siguen en Baloo 2. */
   --font-sans:
-    ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
-    "Helvetica Neue", Arial, sans-serif;
+    "Figtree Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+    Roboto, "Helvetica Neue", Arial, sans-serif;
   /* Títulos: Baloo 2, redondeada y de trazo gordo (surfera, juvenil). */
   --font-display:
     "Baloo 2", ui-rounded, "Avenir Next", "Trebuchet MS", ui-sans-serif,

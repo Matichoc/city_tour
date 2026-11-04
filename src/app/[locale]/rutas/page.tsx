@@ -33,12 +33,14 @@ export default async function RoutesPage({
   const routes = data.listRoutes(locale);
 
   return (
-    <main className="flex flex-col">
+    <main className="mx-auto flex w-full max-w-5xl flex-col sm:px-2">
       <PageHero title={t("title")} subtitle={t("subtitle")} />
-      <ul className="mx-auto flex w-full max-w-3xl flex-col gap-4 px-4 pb-10">
-        {routes.map((r, i) => (
+      {/* grid-cols-1 = minmax(0, 1fr): la columna no se ensancha por el
+          contenido (los nombres de las paradas) y no desborda en el celular. */}
+      <ul className="grid grid-cols-1 gap-5 px-4 pt-4 pb-10 md:grid-cols-2">
+        {routes.map((r) => (
           <li key={r.slug}>
-            <RouteCard route={r} index={i} />
+            <RouteCard route={r} />
           </li>
         ))}
       </ul>

@@ -2,21 +2,25 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { Metadata } from "next";
 import { Link, getPathname } from "@/i18n/navigation";
 import { resolveLocale } from "@/i18n/utils";
-import { getData, isLocated } from "@/lib/data";
+import { getData, illustrationFor, isLocated } from "@/lib/data";
 import { listNotices } from "@/lib/business";
 import { NoticeList } from "@/components/business/notice-list";
 import { CommuneMap3D } from "@/components/map/commune-map-3d";
 import { buildPageMetadata, getSiteUrl, localizedUrl } from "@/lib/seo";
-import { HeroScene } from "@/components/ui/hero-scene";
 import { SearchSuggestions } from "@/components/ui/search-suggestions";
-import { CategoryShortcuts } from "@/components/home/category-shortcuts";
+import { DoorTiles } from "@/components/home/door-tiles";
+import {
+  UpcomingEvents,
+  type UpcomingItem,
+} from "@/components/home/upcoming-events";
+import { RouteSpotlight } from "@/components/home/route-spotlight";
 import {
   FeaturedCard,
   type FeaturedItem,
 } from "@/components/home/featured-card";
 import { eventWhen } from "@/lib/event-format";
-import { eventsInWindow, todayInChile } from "@/lib/featured";
-import { RouteCard } from "@/components/route/route-card";
+import { daysUntil, eventsInWindow, todayInChile } from "@/lib/featured";
+import { DOORS, SERVICE_CATEGORIES } from "@/lib/doors";
 import { QrVisit } from "@/components/analytics/qr-visit";
 import { JsonLd } from "@/components/seo/json-ld";
 import { PAPUDO_CENTER } from "@/content/catalog";
@@ -37,6 +41,9 @@ export async function generateMetadata({
   });
 }
 
+/** Cuántas fiestas muestra «Se viene» (la primera, destacada). */
+const UPCOMING_COUNT = 3;
+
 export default async function HomePage({
   params,
 }: {
@@ -45,6 +52,7 @@ export default async function HomePage({
   const locale = resolveLocale((await params).locale);
   setRequestLocale(locale);
   const t = await getTranslations("home");
+  const td = await getTranslations("doors");
   const te = await getTranslations("events");
   const ts = await getTranslations("search");
   const tp = await getTranslations("place");
@@ -63,12 +71,49 @@ export default async function HomePage({
     }));
   const localities = data.listLocalities(locale);
   const allEvents = data.listEvents(locale);
-  const eventCount = allEvents.length;
+  const today = todayInChile();
+
+  // Las cuatro puertas: cuántos lugares junta cada una.
+  const countOf = (slugs: readonly string[]) =>
+    categories
+      .filter((c) => slugs.includes(c.slug))
+      .reduce((n, c) => n + c.count, 0);
+  const doors = DOORS.map((d) => ({
+    key: d.key,
+    name: td(`${d.key}.name`),
+    countLabel: t("doorCount", { count: countOf(d.categories) }),
+    picture: illustrationFor(d.illustration, locale),
+  }));
+  const services = categories.filter((c) =>
+    (SERVICE_CATEGORIES as readonly string[]).includes(c.slug),
+  );
+
+  // «Se viene»: las próximas fiestas con fecha, hasta un año hacia adelante.
+  const shortMonth = (m: number) =>
+    new Intl.DateTimeFormat(locale, { month: "short", timeZone: "UTC" })
+      .format(new Date(Date.UTC(2026, m - 1, 1)))
+      .replace(".", "");
+  const upcoming: UpcomingItem[] = eventsInWindow(allEvents, today, 365)
+    .slice(0, UPCOMING_COUNT)
+    .map((e) => {
+      const days = daysUntil(e, today);
+      return {
+        slug: e.slug,
+        name: e.name,
+        day: e.day,
+        month: e.month ? shortMonth(e.month) : "",
+        when:
+          days === null
+            ? eventWhen(te, locale, e)
+            : t("inDays", { count: days }),
+        demoLabel: e.demo ? te("demoBadge") : null,
+      };
+    });
 
   // «Destacados del mes»: las fiestas de hoy a 30 días más y, para completar
   // hasta 5, los primeros lugares (primero los reales, luego los de ejemplo).
   const FEATURED_COUNT = 5;
-  const featured: FeaturedItem[] = eventsInWindow(allEvents, todayInChile())
+  const featured: FeaturedItem[] = eventsInWindow(allEvents, today)
     .slice(0, FEATURED_COUNT)
     .map((e) => ({
       kind: "event" as const,
@@ -96,9 +141,13 @@ export default async function HomePage({
     });
   }
   const examples = [1, 2, 3, 4].map((n) => ts(`example${n}`));
+  const route = routes[0];
+
+  const heading = "font-display text-2xl font-extrabold sm:text-3xl";
+  const more = "text-sea shrink-0 text-sm font-bold";
 
   return (
-    <main className="flex flex-col">
+    <main className="mx-auto flex w-full max-w-6xl flex-col px-4 pb-10 sm:px-6">
       <QrVisit />
       <JsonLd
         data={{
@@ -118,213 +167,190 @@ export default async function HomePage({
           },
         }}
       />
-      <HeroScene>
-        <p className="font-script text-xl text-[#fbeab0] drop-shadow">
-          {t("kicker")}
-        </p>
-        <h1 className="shimmer-title font-display mt-2 text-4xl leading-[1.08] font-extrabold sm:text-5xl">
-          {t("title")}
-        </h1>
-        <p className="mt-3 max-w-md text-base text-white/90">{t("subtitle")}</p>
-        <form
-          action={getPathname({ locale, href: "/explorar" })}
-          className="mt-6 flex max-w-md gap-2"
-        >
-          <label className="sr-only" htmlFor="home-q">
-            {t("search")}
-          </label>
-          <input
-            id="home-q"
-            name="q"
-            type="search"
-            placeholder={t("search")}
-            aria-describedby="search-hint"
-            className="text-foreground placeholder:text-muted min-h-12 min-w-0 flex-1 rounded-full border-0 bg-white px-5 shadow-lg"
-          />
-          <button
-            type="submit"
-            className="bg-coral text-coral-ink min-h-12 shrink-0 rounded-full px-5 font-bold shadow-lg active:scale-95"
+
+      {/* Portada: a la izquierda el saludo y el buscador; a la derecha (o
+          debajo, en celular) los cuatro cuadros del logo como puertas. */}
+      <section className="grid items-center gap-8 pt-6 lg:grid-cols-[1fr_1.05fr] lg:gap-14 lg:pt-12">
+        <div>
+          <p className="font-script text-sea text-lg">{t("kicker")}</p>
+          <h1 className="font-display mt-2 text-5xl leading-[0.95] font-extrabold sm:text-6xl lg:text-7xl">
+            {t("title")}
+          </h1>
+          <p className="text-muted mt-4 max-w-md text-lg">{t("subtitle")}</p>
+          <form
+            action={getPathname({ locale, href: "/explorar" })}
+            className="border-foreground mt-6 flex max-w-lg items-center gap-2 rounded-full border-2 p-1.5 pl-5"
           >
-            {t("searchGo")}
-          </button>
-        </form>
-        <div className="mt-3">
-          <SearchSuggestions
-            tone="hero"
-            hint={ts("hint")}
-            tryLabel={ts("tryLabel")}
-            examples={examples}
-          />
+            <label className="sr-only" htmlFor="home-q">
+              {t("search")}
+            </label>
+            <input
+              id="home-q"
+              name="q"
+              type="search"
+              placeholder={t("search")}
+              aria-describedby="search-hint"
+              className="placeholder:text-muted min-h-11 min-w-0 flex-1 bg-transparent outline-none"
+            />
+            <button
+              type="submit"
+              className="bg-coral min-h-11 shrink-0 rounded-full px-5 font-bold text-white active:scale-95"
+            >
+              {t("searchGo")}
+            </button>
+          </form>
+          <div className="mt-3 max-w-lg">
+            <SearchSuggestions
+              hint={ts("hint")}
+              tryLabel={ts("tryLabel")}
+              examples={examples}
+            />
+          </div>
         </div>
-      </HeroScene>
+
+        <nav aria-labelledby="puertas">
+          <h2 id="puertas" className="sr-only">
+            {t("doorsTitle")}
+          </h2>
+          <DoorTiles doors={doors} />
+          {services.length > 0 ? (
+            <p className="mt-3 flex flex-wrap items-center gap-2 text-sm">
+              <span className="text-muted font-semibold">{t("services")}</span>
+              {services.map((c) => (
+                <Link
+                  key={c.slug}
+                  href={{ pathname: "/explorar", query: { categoria: c.slug } }}
+                  className="border-border hover:border-foreground inline-flex min-h-11 items-center rounded-full border-2 px-4 font-bold"
+                >
+                  {c.name}
+                </Link>
+              ))}
+            </p>
+          ) : null}
+        </nav>
+      </section>
+
       {notices.length > 0 ? (
-        <div className="mx-auto w-full max-w-3xl px-4 pt-5">
+        <div className="pt-6">
           <NoticeList notices={notices} />
         </div>
       ) : null}
 
-      <div className="mx-auto flex w-full max-w-3xl flex-col gap-9 px-4 pt-2 pb-10">
-        <section aria-labelledby="que-hacer">
-          <h2 id="que-hacer" className="font-display text-2xl font-extrabold">
-            {t("whatToDo")}
-          </h2>
-          <div className="mt-3">
-            <CategoryShortcuts categories={categories} />
-          </div>
-        </section>
-
-        <section aria-labelledby="destacados">
-          <div className="flex items-baseline justify-between gap-3">
-            <h2
-              id="destacados"
-              className="font-display text-2xl font-extrabold"
-            >
-              {t("featured")}
-            </h2>
-            <Link
-              href="/explorar"
-              className="text-sea shrink-0 text-sm font-bold"
-            >
-              {t("seeAll")}
-            </Link>
-          </div>
-          <p className="text-muted text-sm">{t("featuredHint")}</p>
-          <ul className="-mx-4 mt-3 flex snap-x snap-mandatory [scrollbar-width:none] gap-3 overflow-x-auto px-4 pb-3 sm:mx-0 sm:px-0 [&::-webkit-scrollbar]:hidden">
-            {featured.map((item, i) => (
-              <li
-                key={`${item.kind}-${item.slug}`}
-                className="w-64 shrink-0 snap-start sm:w-72"
-              >
-                <FeaturedCard item={item} index={i} />
-              </li>
-            ))}
-          </ul>
-        </section>
-
-        <section aria-labelledby="mapa-comuna" className="flex flex-col gap-3">
-          <div className="flex items-baseline justify-between gap-3">
-            <h2
-              id="mapa-comuna"
-              className="font-display text-2xl font-extrabold"
-            >
-              {t("mapTitle")}
-            </h2>
-            <Link
-              href={{ pathname: "/explorar", query: { vista: "mapa" } }}
-              className="text-sea shrink-0 text-sm font-bold"
-            >
-              {t("mapOpen")}
-            </Link>
-          </div>
-          <p className="text-muted -mt-2 text-sm">{t("mapSubtitle")}</p>
-          <CommuneMap3D
-            places={mapPlaces}
-            localities={localities.flatMap((l) =>
-              l.latitude !== null && l.longitude !== null
-                ? [
-                    {
-                      slug: l.slug,
-                      name: l.name,
-                      latitude: l.latitude,
-                      longitude: l.longitude,
-                    },
-                  ]
-                : [],
-            )}
-          />
-          <ul className="flex flex-wrap gap-2" aria-label={t("mapVillages")}>
-            {localities.map((l) => (
-              <li key={l.slug}>
-                <Link
-                  href={{
-                    pathname: "/pueblos/[slug]",
-                    params: { slug: l.slug },
-                  }}
-                  className="border-sea text-sea-deep hover:bg-sea-soft inline-flex min-h-11 items-center rounded-full border-2 px-4 text-sm font-bold"
-                >
-                  {l.name}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </section>
-
-        <section
-          aria-labelledby="rutas-destacadas"
-          className="flex flex-col gap-4"
-        >
-          <h2 id="rutas-destacadas" className="sr-only">
-            {t("featuredRoute")}
-          </h2>
-          {routes.slice(0, 1).map((r, i) => (
-            <RouteCard
-              key={r.slug}
-              route={r}
-              index={i}
-              kicker={t("featuredRoute")}
-            />
-          ))}
-          {routes.length > 1 ? (
-            <Link
-              href="/rutas"
-              className="text-sea self-start text-sm font-bold underline"
-            >
-              {t("moreRoutes", { count: routes.length })}
-            </Link>
-          ) : null}
-        </section>
-
-        <section aria-labelledby="eventos-home">
-          <Link
-            href="/eventos"
-            className="card-lift border-border bg-surface flex items-center gap-4 rounded-2xl border p-4 shadow-sm"
-          >
-            <span
-              aria-hidden="true"
-              className="bg-sea-soft text-sea-deep grid size-14 shrink-0 place-items-center rounded-2xl"
-            >
-              <svg
-                viewBox="0 0 24 24"
-                className="size-7"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.8"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M7 3v4m10-4v4M4 9h16M5 5h14a1 1 0 011 1v13a1 1 0 01-1 1H5a1 1 0 01-1-1V6a1 1 0 011-1z" />
-              </svg>
-            </span>
-            <span className="min-w-0 flex-1">
-              <h2
-                id="eventos-home"
-                className="font-display text-xl font-extrabold"
-              >
-                {te("homeTitle")}
+      <div className="grid gap-10 pt-12 lg:grid-cols-[1fr_1.5fr]">
+        {upcoming.length > 0 ? (
+          <section aria-labelledby="se-viene" className="flex flex-col gap-3">
+            <div className="flex items-baseline justify-between gap-3">
+              <h2 id="se-viene" className={heading}>
+                {t("upcoming")}
               </h2>
-              <span className="text-muted block text-sm">
-                {te("homeSubtitle")} {te("countLabel", { count: eventCount })}
-              </span>
-            </span>
-            <span className="text-sea shrink-0 text-sm font-bold">
-              {te("viewCalendar")}
-            </span>
-          </Link>
-        </section>
+              <Link href="/eventos" className={more}>
+                {t("agenda")}
+              </Link>
+            </div>
+            <UpcomingEvents items={upcoming} />
+          </section>
+        ) : null}
 
-        <p
-          role="note"
-          className="bg-earth-soft text-earth rounded-xl p-3 text-sm"
-        >
-          {t("demoNotice")}
-        </p>
-        <Link
-          href="/quiosco"
-          className="text-sea self-start text-sm font-bold underline"
-        >
-          {t("kioskLink")}
-        </Link>
+        {route ? (
+          <section aria-labelledby="ruta-hoy" className="flex flex-col gap-3">
+            <div className="flex items-baseline justify-between gap-3">
+              <h2 id="ruta-hoy" className={heading}>
+                {t("routeToday")}
+              </h2>
+              <Link href="/rutas" className={more}>
+                {t("allRoutes", { count: routes.length })}
+              </Link>
+            </div>
+            <RouteSpotlight
+              route={route}
+              meta={t("routeMeta", { count: route.stops.length })}
+            />
+          </section>
+        ) : null}
       </div>
+
+      <section aria-labelledby="destacados" className="pt-12">
+        <div className="flex items-baseline justify-between gap-3">
+          <h2 id="destacados" className={heading}>
+            {t("featured")}
+          </h2>
+          <Link href="/explorar" className={more}>
+            {t("seeAll")}
+          </Link>
+        </div>
+        <p className="text-muted text-sm">{t("featuredHint")}</p>
+        <ul className="-mx-4 mt-3 flex snap-x snap-mandatory [scrollbar-width:none] gap-3 overflow-x-auto px-4 pb-3 sm:mx-0 sm:px-0 [&::-webkit-scrollbar]:hidden">
+          {featured.map((item, i) => (
+            <li
+              key={`${item.kind}-${item.slug}`}
+              className="w-64 shrink-0 snap-start sm:w-72"
+            >
+              <FeaturedCard item={item} index={i} />
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section
+        aria-labelledby="mapa-comuna"
+        className="flex flex-col gap-3 pt-12"
+      >
+        <div className="flex items-baseline justify-between gap-3">
+          <h2 id="mapa-comuna" className={heading}>
+            {t("mapTitle")}
+          </h2>
+          <Link
+            href={{ pathname: "/explorar", query: { vista: "mapa" } }}
+            className={more}
+          >
+            {t("mapOpen")}
+          </Link>
+        </div>
+        <p className="text-muted -mt-2 text-sm">{t("mapSubtitle")}</p>
+        <CommuneMap3D
+          places={mapPlaces}
+          localities={localities.flatMap((l) =>
+            l.latitude !== null && l.longitude !== null
+              ? [
+                  {
+                    slug: l.slug,
+                    name: l.name,
+                    latitude: l.latitude,
+                    longitude: l.longitude,
+                  },
+                ]
+              : [],
+          )}
+        />
+        <ul className="flex flex-wrap gap-2" aria-label={t("mapVillages")}>
+          {localities.map((l) => (
+            <li key={l.slug}>
+              <Link
+                href={{
+                  pathname: "/pueblos/[slug]",
+                  params: { slug: l.slug },
+                }}
+                className="border-foreground hover:bg-soft inline-flex min-h-11 items-center rounded-full border-2 px-4 text-sm font-bold"
+              >
+                {l.name}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <p
+        role="note"
+        className="bg-earth-soft text-earth mt-12 rounded-xl p-3 text-sm"
+      >
+        {t("demoNotice")}
+      </p>
+      <Link
+        href="/quiosco"
+        className="text-sea mt-4 self-start text-sm font-bold underline"
+      >
+        {t("kioskLink")}
+      </Link>
     </main>
   );
 }

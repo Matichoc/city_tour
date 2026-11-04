@@ -36,7 +36,7 @@ export default async function InfoPage({
   const localities = data.listLocalities(locale).filter((l) => l.summary);
 
   return (
-    <main className="flex flex-col">
+    <main className="mx-auto flex w-full max-w-3xl flex-col">
       <PageHero title={t("title")} subtitle={t("subtitle")} />
       <div className="mx-auto flex w-full max-w-3xl flex-col gap-6 px-4 pb-10">
         <section aria-labelledby="pueblos" className="flex flex-col gap-3">
@@ -210,7 +210,7 @@ export default async function InfoPage({
           <p className="mt-1 text-sm">{t("kioskBody")}</p>
           <Link
             href="/quiosco"
-            className="bg-coral text-coral-ink mt-3 inline-flex min-h-12 items-center rounded-full px-6 font-extrabold shadow-sm"
+            className="bg-coral mt-3 inline-flex min-h-12 items-center rounded-full px-6 font-extrabold text-white shadow-sm"
           >
             {t("kioskOpen")}
           </Link>
