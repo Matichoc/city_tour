@@ -5,7 +5,7 @@ export function PrintButton({ label }: { label: string }) {
     <button
       type="button"
       onClick={() => window.print()}
-      className="bg-coral text-coral-ink min-h-12 rounded-full px-6 font-bold"
+      className="bg-coral min-h-12 rounded-full px-6 font-bold text-white"
     >
       {label}
     </button>

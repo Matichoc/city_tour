@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { getLocale } from "next-intl/server";
 import { Analytics } from "@vercel/analytics/next";
+import "@fontsource-variable/figtree/wght.css";
 import "@fontsource/baloo-2/latin-600.css";
 import "@fontsource/baloo-2/latin-700.css";
 import "@fontsource/baloo-2/latin-800.css";

@@ -33,7 +33,7 @@ export default async function RoutesPage({
   const routes = data.listRoutes(locale);
 
   return (
-    <main className="flex flex-col">
+    <main className="mx-auto flex w-full max-w-3xl flex-col">
       <PageHero title={t("title")} subtitle={t("subtitle")} />
       <ul className="mx-auto flex w-full max-w-3xl flex-col gap-4 px-4 pb-10">
         {routes.map((r, i) => (

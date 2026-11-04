@@ -213,7 +213,7 @@ export function WalkCamera({
           <button
             type="button"
             onClick={askCompass}
-            className="bg-coral text-coral-ink min-h-12 rounded-full px-6 font-extrabold shadow-lg"
+            className="bg-coral min-h-12 rounded-full px-6 font-extrabold text-white shadow-lg"
           >
             {t("enableCompass")}
           </button>

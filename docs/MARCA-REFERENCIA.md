@@ -29,23 +29,41 @@ rojo: patrimonio; turquesa: campo → ruralidad). Deportes (azul), gastronomía
 (naranja) y alojamiento (lila) son mezclas de esos colores. Los verdes de
 campo (`--field`) se mantienen para «Verificado».
 
+## Refresh 2026-11: los cuatro cuadros
+
+Desde noviembre de 2026 el sitio usa **fondo blanco y azul noche** (`#14164A`)
+en vez de arena y rosado, y los **cuatro cuadros del logo**, en su color
+pleno, son las puertas de entrada: mar y sol (`--cuadro-mar` `#FFC400`),
+campo y humedal (`--cuadro-campo` `#00B5B4`), patrimonio
+(`--cuadro-patri` `#D71F19`) y paseos y deporte (`--cuadro-paseo`
+`#D4087E`). El rojo y el magenta se oscurecieron un poco respecto del logo
+para que el texto blanco encima cumpla AA. La acción principal (`--coral`)
+pasa a ser azul noche con texto blanco; `--coral-ink` queda como tinta de
+avisos y errores.
+
 ## Accesibilidad (WCAG AA, texto normal ≥ 4,5:1)
 
-| Combinación                               | Contraste |
-| ----------------------------------------- | --------- |
-| Texto `#22234A` sobre arena `#FDF8EE`     | 14,1      |
-| Texto secundario `#56587A` sobre blanco   | 6,8       |
-| Blanco sobre turquesa `#1B7070`           | 5,6       |
-| `#3B0A26` sobre magenta pálido `#E98BBD`  | 7,1       |
-| Rojo tinta `#A8403C` sobre blanco         | 6,1       |
-| Blanco sobre el pie de cada tarjeta       | 5,1 a 9,2 |
+| Combinación                                   | Contraste |
+| --------------------------------------------- | --------- |
+| Texto `#14164A` sobre blanco                  | 16,9      |
+| Texto secundario `#4A4C6E` sobre blanco       | 8,2       |
+| Texto secundario `#4A4C6E` sobre `#F4F5F9`    | 7,6       |
+| Blanco sobre la acción principal `#14164A`    | 16,9      |
+| Blanco sobre turquesa `#0F6D6C` (y al revés)  | 6,1       |
+| Azul noche sobre el cuadro mar `#FFC400`      | 10,6      |
+| Azul noche sobre el cuadro campo `#00B5B4`    | 6,7       |
+| Blanco sobre el cuadro patrimonio `#D71F19`   | 5,1       |
+| Blanco sobre el cuadro paseos `#D4087E`       | 5,1       |
+| `#3B0A26` sobre amarillo pálido `#F4D36E`     | 11,4      |
 
 Los colores pálidos (y el amarillo y turquesa del logo) nunca van como texto
-sobre blanco: solo fondos, bordes o decoración.
+sobre blanco: solo fondos, bordes o decoración. Sobre el amarillo y el
+turquesa de los cuadros, el texto va siempre en azul noche.
 
 ## Tipografía
 
 El logo usa una sans geométrica redonda y gruesa para «MuniPapudo» y una
 cursiva para el lema. La guía mantiene **Baloo 2** (títulos, de la misma
 familia visual) y **Pacifico** (acentos sueltos, en lugar de la cursiva),
-autoalojadas con `@fontsource`.
+autoalojadas con `@fontsource`. Desde el refresh de noviembre de 2026 el
+texto corrido usa **Figtree** (`@fontsource-variable/figtree`).

@@ -60,7 +60,7 @@ export default async function TripPage({
   }));
 
   return (
-    <main className="flex flex-col">
+    <main className="mx-auto flex w-full max-w-3xl flex-col">
       <PageHero title={t("title")} subtitle={t("subtitle")} />
       <div className="mx-auto w-full max-w-3xl">
         <TripView places={places} routes={routes} initial={initial} />

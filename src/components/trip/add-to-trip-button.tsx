@@ -28,7 +28,7 @@ export function AddToTripButton({
       className={`min-h-11 rounded-full px-5 text-sm font-bold transition active:scale-95 ${
         inTrip
           ? "border-sea bg-sea-soft text-sea-deep border-2"
-          : "bg-coral text-coral-ink shadow-sm hover:brightness-105"
+          : "bg-coral text-white shadow-sm hover:brightness-105"
       } ${className}`}
     >
       {inTrip ? `✓ ${t("added")}` : `+ ${t("add")}`}

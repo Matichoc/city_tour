@@ -16,7 +16,7 @@ export function AddRouteToTripButton({ slugs }: { slugs: string[] }) {
         track("add_route", { stops: slugs.length });
         router.push("/recorrido");
       }}
-      className="bg-coral text-coral-ink min-h-12 rounded-full px-6 font-bold shadow-sm transition hover:brightness-105 active:scale-95"
+      className="bg-coral min-h-12 rounded-full px-6 font-bold text-white shadow-sm transition hover:brightness-105 active:scale-95"
     >
       {t("addRoute")}
     </button>

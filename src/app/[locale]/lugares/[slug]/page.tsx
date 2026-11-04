@@ -159,7 +159,7 @@ export default async function PlacePage({
     : null;
 
   return (
-    <main className="flex flex-col gap-5 pb-10">
+    <main className="mx-auto flex w-full max-w-3xl flex-col gap-5 pb-10">
       <QrVisit />
       {place.demo ? null : (
         <JsonLd

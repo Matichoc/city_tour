@@ -445,10 +445,13 @@ test("QR por hito: el afiche lleva a la ficha del lugar; la ruta trae su QR", as
   ).toBeVisible();
 });
 
-test("celular: la barra inferior incluye Eventos", async ({ page }) => {
+test("celular: la barra inferior tiene cinco pestañas, con Agenda", async ({
+  page,
+}) => {
   await page.goto("/es");
   const nav = page.getByRole("navigation", { name: /principal/i }).last();
-  await nav.getByRole("link", { name: "Eventos" }).click();
+  await expect(nav.getByRole("link")).toHaveCount(5);
+  await nav.getByRole("link", { name: "Agenda" }).click();
   await expect(page).toHaveURL(/\/es\/eventos$/);
 });
 

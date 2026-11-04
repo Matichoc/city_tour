@@ -148,7 +148,7 @@ export default async function ExplorePage({
     `flex min-h-11 items-center gap-1.5 px-4 text-sm font-extrabold transition ${on ? "bg-sea text-white" : "bg-surface text-muted hover:text-foreground"}`;
 
   return (
-    <main className="flex flex-col">
+    <main className="mx-auto flex w-full max-w-3xl flex-col">
       <PageHero title={t("title")} subtitle={t("subtitle")} />
       <div className="mx-auto flex w-full max-w-3xl flex-col gap-4 px-4 pb-10">
         <div className="flex flex-col gap-3 sm:flex-row">

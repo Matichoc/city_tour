@@ -50,7 +50,7 @@ export default async function VillagePage({
   const places = data.listPlaces(locale, { locality: slug });
 
   return (
-    <main className="flex flex-col">
+    <main className="mx-auto flex w-full max-w-3xl flex-col">
       <PageHero
         title={village.name}
         subtitle={village.summary ?? undefined}

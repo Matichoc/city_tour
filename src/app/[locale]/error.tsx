@@ -16,7 +16,7 @@ export default function ErrorPage({
     console.error(error);
   }, [error]);
   return (
-    <main className="flex flex-1 flex-col gap-4 px-4 py-10">
+    <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-4 px-4 py-10">
       <EmptyState title={t("errorTitle")}>
         <p>{t("errorBody")}</p>
         <button
