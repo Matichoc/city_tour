@@ -292,3 +292,28 @@ test("ficha: una sola acción principal y el resto en íconos", async ({
     page.getByRole("link", { name: "Papudo", exact: true }),
   ).toHaveAttribute("href", /\/es\/pueblos\//);
 });
+
+// Una página más ancha que la pantalla desplaza la vista en el celular y deja
+// la barra inferior fuera de la pantalla (pasó en Rutas).
+for (const path of [
+  "/es",
+  "/es/explorar",
+  "/es/explorar?vista=mapa",
+  "/es/lugares/playa-chica-papudo",
+  "/es/rutas",
+  "/es/rutas/ruta-costera-papudo",
+  "/es/rutas/papudo-a-pie",
+  "/es/eventos",
+  "/es/informacion",
+  "/es/recorrido",
+]) {
+  test(`celular: ${path} no es más ancha que la pantalla`, async ({ page }) => {
+    await page.goto(path);
+    await page.waitForLoadState("networkidle");
+    const { width, scroll } = await page.evaluate(() => ({
+      width: document.documentElement.clientWidth,
+      scroll: document.documentElement.scrollWidth,
+    }));
+    expect(scroll).toBeLessThanOrEqual(width);
+  });
+}
