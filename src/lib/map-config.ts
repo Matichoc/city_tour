@@ -30,14 +30,37 @@ export const MAP_CENTER = PAPUDO_CENTER;
 export const MAP_DEFAULT_ZOOM = 12;
 export const PLACE_ZOOM = 15;
 
+/**
+ * Mapas de lugares (Explorar, fichas, rutas): estilo claro "positron", que se
+ * tiñe al cargar con los colores de Papudo (`LIGHT_MAP_TINT`) para que los
+ * pines de colores sean lo que destaca. El mapa 3D y la navegación en vivo
+ * siguen con `getMapStyleUrl()` (más detalle de relieve y calles).
+ */
+export function getLightMapStyleUrl(): string {
+  return (
+    process.env.NEXT_PUBLIC_LIGHT_MAP_STYLE_URL ||
+    "https://tiles.openfreemap.org/styles/positron"
+  );
+}
+export const LIGHT_MAP_TINT = {
+  water: "#bfe9ea",
+  land: "#f7f3ea",
+  green: "#e3eccf",
+};
+
+/**
+ * Color del pin: el de la puerta de su categoría (los cuadros del logo, un
+ * poco más oscuros para que se vean sobre el mapa claro); comer y dormir, en
+ * azul noche.
+ */
 export const CATEGORY_PIN_COLOR: Record<string, string> = {
-  balneario: "#a8841f",
-  recreacion: "#b0447c",
-  deportes: "#3f6fb5",
-  patrimonio: "#b8423f",
-  gastronomia: "#b8692c",
-  ruralidad: "#2a8584",
-  alojamiento: "#6d52b0",
+  balneario: "#f5b800",
+  ruralidad: "#0f9493",
+  patrimonio: "#d71f19",
+  recreacion: "#d4087e",
+  deportes: "#d4087e",
+  gastronomia: "#14164a",
+  alojamiento: "#14164a",
 };
 
 export function directionsUrl(latitude: number, longitude: number): string {

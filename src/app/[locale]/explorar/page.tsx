@@ -9,14 +9,20 @@ import {
   isLocated,
 } from "@/lib/data";
 import { buildPageMetadata } from "@/lib/seo";
+import { directionsUrl } from "@/lib/map-config";
 import { EmptyState } from "@/components/ui/empty-state";
-import { PageHero } from "@/components/ui/page-hero";
 import { BusinessInvite } from "@/components/business/business-invite";
-import { PlaceCard } from "@/components/place/place-card";
+import { PlaceRow } from "@/components/place/place-row";
 import { PlacesMap } from "@/components/map/places-map";
-import { CategoryIcon } from "@/components/ui/category-icon";
 import { FilterMenu, type FilterItem } from "@/components/ui/filter-menu";
-import { findDoor } from "@/lib/doors";
+import {
+  DOORS,
+  DOOR_STYLE,
+  SERVICE_CATEGORIES,
+  doorOf,
+  findDoor,
+  styleOf,
+} from "@/lib/doors";
 
 type SearchParams = {
   categoria?: string;
@@ -42,6 +48,12 @@ export async function generateMetadata({
   });
 }
 
+/**
+ * Explorar: la lista de lugares y el mapa de la comuna. En computador van lado
+ * a lado (el mapa queda fijo mientras se recorre la lista); en el celular se
+ * elige Lista o Mapa. Se filtra por puerta (los cuadros del logo), por comer y
+ * dormir, por pueblo y por búsqueda.
+ */
 export default async function ExplorePage({
   params,
   searchParams,
@@ -53,6 +65,7 @@ export default async function ExplorePage({
   setRequestLocale(locale);
   const sp = await searchParams;
   const t = await getTranslations("explore");
+  const td = await getTranslations("doors");
 
   const category = canonicalCategory(sp.categoria) ?? undefined;
   // Enlaces anteriores (?categoria=playas) pasan a la categoría actual.
@@ -76,7 +89,6 @@ export default async function ExplorePage({
   const view = sp.vista === "mapa" ? "map" : "list";
   // Una puerta junta varias categorías; si viene, manda sobre la categoría.
   const door = findDoor(sp.puerta);
-  const td = await getTranslations("doors");
 
   const places = door
     ? data
@@ -86,6 +98,9 @@ export default async function ExplorePage({
         )
     : data.listPlaces(locale, { category, locality, query });
   const categories = data.listCategories(locale);
+  const services = categories.filter((c) =>
+    (SERVICE_CATEGORIES as readonly string[]).includes(c.slug),
+  );
 
   const base = {
     categoria: door ? undefined : category,
@@ -101,16 +116,6 @@ export default async function ExplorePage({
         ...extra,
       }).filter(([, v]) => v),
     );
-
-  // Lista agrupada por categoría: cerrada hasta que se elige un filtro.
-  const narrowed = Boolean(category || door || locality || query);
-  const groups = categories
-    .map((c) => ({
-      slug: c.slug,
-      name: c.name,
-      items: places.filter((p) => p.categorySlug === c.slug),
-    }))
-    .filter((g) => g.items.length > 0);
 
   const all = data.listPlaces(locale);
   const locItems: FilterItem[] = [
@@ -129,29 +134,8 @@ export default async function ExplorePage({
       count: all.filter((p) => p.localitySlug === l.slug).length,
     })),
   ];
-  const categoryLabel = categories.find((c) => c.slug === category)?.name;
   const localityLabel = localities.find((l) => l.slug === locality)?.name;
   const removable = [
-    door
-      ? {
-          key: "puerta",
-          label: td(`${door.key}.name`),
-          href: {
-            pathname: "/explorar" as const,
-            query: q({ puerta: undefined }),
-          },
-        }
-      : null,
-    !door && category && categoryLabel
-      ? {
-          key: "categoria",
-          label: categoryLabel,
-          href: {
-            pathname: "/explorar" as const,
-            query: q({ categoria: undefined }),
-          },
-        }
-      : null,
     locality && localityLabel
       ? {
           key: "pueblo",
@@ -171,14 +155,141 @@ export default async function ExplorePage({
       : null,
   ].filter((x): x is NonNullable<typeof x> => x !== null);
 
+  // Nombre de la puerta de cada lugar (o el de su categoría, si es servicio).
+  const doorName = (slug: (typeof places)[number]["categorySlug"]) => {
+    const d = doorOf(slug);
+    return d
+      ? td(`${d.key}.name`)
+      : (categories.find((c) => c.slug === slug)?.name ?? "");
+  };
+
+  // Filtros de arriba: Todo, las cuatro puertas y comer y dormir.
+  const chips = [
+    {
+      key: "todo",
+      label: t("all"),
+      frame: null,
+      href: q({ puerta: undefined, categoria: undefined }),
+      active: !door && !category,
+    },
+    ...DOORS.map((d) => ({
+      key: d.key,
+      label: td(`${d.key}.name`),
+      frame: DOOR_STYLE[d.key].frame,
+      href: q({ puerta: d.key, categoria: undefined }),
+      active: door?.key === d.key,
+    })),
+    ...services.map((c) => ({
+      key: c.slug,
+      label: c.name,
+      frame: DOOR_STYLE.servicio.frame,
+      href: q({ categoria: c.slug, puerta: undefined }),
+      active: !door && category === c.slug,
+    })),
+  ];
+  // Explorar recibe un filtro de categoría que no es puerta ni servicio
+  // (enlaces antiguos, p. ej. ?categoria=balneario): se muestra como chip.
+  const looseCategory =
+    !door && category && !chips.some((c) => c.active)
+      ? categories.find((c) => c.slug === category)
+      : undefined;
+
+  const markers = places.filter(isLocated).map((p) => ({
+    slug: p.slug,
+    name: p.name,
+    latitude: p.latitude,
+    longitude: p.longitude,
+    category: p.categorySlug,
+    detail: {
+      kicker: doorName(p.categorySlug),
+      text: p.shortDescription,
+      image: p.logo?.src ?? p.picture.src,
+      frame: styleOf(p.categorySlug).frame,
+      directions: directionsUrl(p.latitude, p.longitude),
+    },
+  }));
+
   const segment = (on: boolean) =>
-    `flex min-h-11 items-center gap-1.5 px-4 text-sm font-extrabold transition ${on ? "bg-sea text-white" : "bg-surface text-muted hover:text-foreground"}`;
+    `flex min-h-11 items-center gap-1.5 px-4 text-sm font-bold transition ${on ? "bg-foreground text-white" : "text-muted hover:text-foreground"}`;
 
   return (
-    <main className="mx-auto flex w-full max-w-3xl flex-col">
-      <PageHero title={t("title")} subtitle={t("subtitle")} />
-      <div className="mx-auto flex w-full max-w-3xl flex-col gap-4 px-4 pb-10">
-        <div className="flex flex-col gap-3 sm:flex-row">
+    <main className="mx-auto flex w-full max-w-6xl flex-col gap-4 px-4 pt-6 pb-10 sm:px-6">
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <h1 className="font-display text-4xl leading-none font-extrabold sm:text-5xl">
+            {t("title")}
+          </h1>
+          <p
+            className={`text-muted mt-2 ${view === "map" ? "hidden lg:block" : ""}`}
+          >
+            {t("subtitle")}
+          </p>
+        </div>
+        <div
+          role="group"
+          aria-label={t("view")}
+          className="border-foreground flex overflow-hidden rounded-full border-2 lg:hidden"
+        >
+          <Link
+            href={{ pathname: "/explorar", query: q({ vista: undefined }) }}
+            aria-current={view === "list" ? "true" : undefined}
+            className={segment(view === "list")}
+          >
+            {t("list")}
+          </Link>
+          <Link
+            href={{ pathname: "/explorar", query: q({ vista: "mapa" }) }}
+            aria-current={view === "map" ? "true" : undefined}
+            className={segment(view === "map")}
+          >
+            {t("map")}
+          </Link>
+        </div>
+      </div>
+
+      <nav aria-label={t("categories")}>
+        <ul className="-mx-4 flex [scrollbar-width:none] gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:flex-wrap sm:px-0 [&::-webkit-scrollbar]:hidden">
+          {chips.map((c) => (
+            <li key={c.key} className="shrink-0">
+              <Link
+                href={{ pathname: "/explorar", query: c.href }}
+                aria-current={c.active ? "true" : undefined}
+                className={`inline-flex min-h-11 items-center gap-2 rounded-full border-2 px-4 text-sm font-semibold transition ${
+                  c.active
+                    ? "border-foreground bg-foreground text-white"
+                    : "border-border hover:border-foreground"
+                }`}
+              >
+                {c.frame ? (
+                  <span
+                    aria-hidden="true"
+                    className={`size-4 rounded-[5px] ${c.frame} ${c.active ? "ring-2 ring-white" : ""}`}
+                  />
+                ) : null}
+                {c.label}
+              </Link>
+            </li>
+          ))}
+          {looseCategory ? (
+            <li className="shrink-0">
+              <Link
+                href={{
+                  pathname: "/explorar",
+                  query: q({ categoria: undefined }),
+                }}
+                aria-label={t("removeFilter", { name: looseCategory.name })}
+                className="border-foreground bg-foreground inline-flex min-h-11 items-center gap-2 rounded-full border-2 px-4 text-sm font-semibold text-white"
+              >
+                {looseCategory.name}
+                <span aria-hidden="true">×</span>
+              </Link>
+            </li>
+          ) : null}
+        </ul>
+      </nav>
+
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="w-full sm:w-auto sm:min-w-72">
           <FilterMenu
             label={t("localities")}
             valueLabel={localityLabel ?? t("allLocalities")}
@@ -199,170 +310,86 @@ export default async function ExplorePage({
             }
           />
         </div>
+        <p aria-live="polite" className="text-muted text-sm font-semibold">
+          {t("results", { count: places.length })}
+        </p>
+      </div>
 
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <p aria-live="polite" className="text-muted text-sm font-semibold">
-            {t("results", { count: places.length })}
-          </p>
-          <div
-            role="group"
-            aria-label={t("view")}
-            className="border-border flex overflow-hidden rounded-full border-2"
-          >
-            <Link
-              href={{
-                pathname: "/explorar",
-                query: { ...base, vista: undefined },
-              }}
-              aria-current={view === "list" ? "true" : undefined}
-              className={segment(view === "list")}
-            >
-              <svg
-                viewBox="0 0 24 24"
-                className="size-4"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.2"
-                strokeLinecap="round"
-                aria-hidden="true"
-              >
-                <path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01" />
-              </svg>
-              {t("list")}
-            </Link>
-            <Link
-              href={{
-                pathname: "/explorar",
-                query: { ...base, vista: "mapa" },
-              }}
-              aria-current={view === "map" ? "true" : undefined}
-              className={segment(view === "map")}
-            >
-              <svg
-                viewBox="0 0 24 24"
-                className="size-4"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden="true"
-              >
-                <path d="M12 21s-7-6.2-7-11a7 7 0 1114 0c0 4.8-7 11-7 11z" />
-                <circle cx="12" cy="10" r="2.5" />
-              </svg>
-              {t("map")}
-            </Link>
-          </div>
-        </div>
-
-        {removable.length > 0 ? (
-          <ul aria-label={t("activeFilters")} className="flex flex-wrap gap-2">
-            {removable.map((r) => (
-              <li key={r.key}>
-                <Link
-                  href={r.href}
-                  aria-label={t("removeFilter", { name: r.label })}
-                  className="bg-sea-soft text-sea-deep hover:bg-sea inline-flex min-h-11 items-center gap-2 rounded-full px-4 text-sm font-bold transition hover:text-white"
-                >
-                  {r.label}
-                  <span aria-hidden="true" className="text-base leading-none">
-                    ×
-                  </span>
-                </Link>
-              </li>
-            ))}
-            <li>
+      {removable.length > 0 ? (
+        <ul aria-label={t("activeFilters")} className="flex flex-wrap gap-2">
+          {removable.map((r) => (
+            <li key={r.key}>
               <Link
-                href="/explorar"
-                className="text-sea inline-flex min-h-11 items-center px-2 text-sm font-bold underline"
+                href={r.href}
+                aria-label={t("removeFilter", { name: r.label })}
+                className="bg-soft hover:bg-foreground inline-flex min-h-11 items-center gap-2 rounded-full px-4 text-sm font-bold transition hover:text-white"
               >
-                {t("clear")}
+                {r.label}
+                <span aria-hidden="true" className="text-base leading-none">
+                  ×
+                </span>
               </Link>
             </li>
-          </ul>
-        ) : null}
+          ))}
+          <li>
+            <Link
+              href="/explorar"
+              className="text-sea inline-flex min-h-11 items-center px-2 text-sm font-bold underline"
+            >
+              {t("clear")}
+            </Link>
+          </li>
+        </ul>
+      ) : null}
 
-        {places.length === 0 ? (
-          <EmptyState
-            title={t("empty")}
-            picture={
-              category === "alojamiento" || category === "gastronomia"
-                ? illustrationFor("hostales", locale)
-                : undefined
-            }
-          >
-            <p>
-              {category && !query && !locality
-                ? t("emptyComing")
-                : t("emptyHint")}
-            </p>
-            <div className="mt-3 flex flex-wrap justify-center gap-3">
-              <Link
-                href="/explorar"
-                className="text-sea inline-flex min-h-11 items-center font-bold"
-              >
-                {t("clear")}
-              </Link>
-            </div>
-          </EmptyState>
-        ) : view === "map" ? (
-          <PlacesMap
-            className="h-[28rem]"
-            markers={places.filter(isLocated).map((p) => ({
-              slug: p.slug,
-              name: p.name,
-              latitude: p.latitude,
-              longitude: p.longitude,
-              category: p.categorySlug,
-            }))}
-          />
-        ) : (
-          <div className="flex flex-col gap-3">
-            {groups.map((g) => (
-              <details
-                key={g.slug}
-                open={narrowed}
-                className="group border-border bg-surface rounded-2xl border shadow-sm"
-              >
-                <summary className="flex min-h-16 cursor-pointer list-none items-center gap-3 px-4 py-3 [&::-webkit-details-marker]:hidden">
-                  <span className="bg-sea-soft text-sea-deep grid size-10 shrink-0 place-items-center rounded-full">
-                    <CategoryIcon category={g.slug} className="size-5" />
-                  </span>
-                  {/* h2: las fichas de adentro son h3, y así el lector de
-                      pantalla puede saltar de categoría en categoría. */}
-                  <h2 className="font-display min-w-0 flex-1 text-lg font-extrabold">
-                    {g.name}
-                  </h2>
-                  <span className="text-muted text-sm font-semibold">
-                    {t("groupCount", { count: g.items.length })}
-                  </span>
-                  <svg
-                    viewBox="0 0 24 24"
-                    className="text-sea size-5 shrink-0 transition group-open:rotate-180"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2.4"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    aria-hidden="true"
-                  >
-                    <path d="m6 9 6 6 6-6" />
-                  </svg>
-                </summary>
-                <ul className="grid gap-4 px-4 pb-4 sm:grid-cols-2">
-                  {g.items.map((p, i) => (
-                    <li key={p.slug}>
-                      <PlaceCard place={p} index={i} />
-                    </li>
-                  ))}
-                </ul>
-              </details>
-            ))}
+      {places.length === 0 ? (
+        <EmptyState
+          title={t("empty")}
+          picture={
+            category === "alojamiento" || category === "gastronomia"
+              ? illustrationFor("hostales", locale)
+              : undefined
+          }
+        >
+          <p>
+            {(category || door) && !query && !locality
+              ? t("emptyComing")
+              : t("emptyHint")}
+          </p>
+          <div className="mt-3 flex flex-wrap justify-center gap-3">
+            <Link
+              href="/explorar"
+              className="text-sea inline-flex min-h-11 items-center font-bold"
+            >
+              {t("clear")}
+            </Link>
           </div>
-        )}
-        <BusinessInvite />
-      </div>
+        </EmptyState>
+      ) : (
+        <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)]">
+          <ul
+            aria-label={t("placesList")}
+            className={view === "map" ? "hidden lg:block" : ""}
+          >
+            {places.map((p) => (
+              <li key={p.slug}>
+                <PlaceRow place={p} doorName={doorName(p.categorySlug)} />
+              </li>
+            ))}
+          </ul>
+          {/* En computador el mapa acompaña a la lista; en el celular solo se
+              muestra al elegir «Mapa». */}
+          <div
+            className={`lg:sticky lg:top-20 ${view === "map" ? "" : "hidden lg:block"}`}
+          >
+            <PlacesMap
+              className="h-[70dvh] lg:h-[calc(100dvh-7rem)]"
+              markers={markers}
+            />
+          </div>
+        </div>
+      )}
+      <BusinessInvite />
     </main>
   );
 }

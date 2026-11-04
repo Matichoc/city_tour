@@ -87,7 +87,8 @@
     "clear": "Quitar filtros",
     "activeFilters": "Filtros activos",
     "groupCount": "{count, plural, one {# lugar} other {# lugares}}",
-    "removeFilter": "Quitar filtro: {name}"
+    "removeFilter": "Quitar filtro: {name}",
+    "placesList": "Lugares"
   },
   "place": {
     "back": "Explorar",
