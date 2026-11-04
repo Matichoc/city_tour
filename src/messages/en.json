@@ -169,8 +169,6 @@
     "resume": "Resume",
     "stop": "Stop",
     "speedLabel": "Reading speed: {rate}. Tap to change",
-    "deviceVoice": "Uses your phone's voice",
-    "noVoice": "Your device has no voice for this language.",
     "playing": "Reading aloud",
     "paused": "Reading paused",
     "stopped": "Reading stopped",
@@ -187,7 +185,11 @@
     "previous": "Previous",
     "next": "Next",
     "previousLabel": "Go back to the previous part",
-    "nextLabel": "Skip to the next part"
+    "nextLabel": "Skip to the next part",
+    "loading": "Preparing the audio…",
+    "unavailable": "The natural-voice audio is not available yet.",
+    "error": "The audio could not be loaded. Please try again.",
+    "naturalVoice": "Natural voice"
   },
   "routes": {
     "title": "Routes",

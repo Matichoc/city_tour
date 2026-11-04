@@ -16,7 +16,7 @@ import { ShareButton } from "@/components/place/share-button";
 import { PrintButton } from "@/components/ui/print-button";
 import { QrVisit } from "@/components/analytics/qr-visit";
 import { ListenButton } from "@/components/listen/listen-button";
-import { SPEECH_LANG, type ListenSection } from "@/lib/speech";
+import { routeListen } from "@/lib/listen-text";
 import { styleOf } from "@/lib/doors";
 
 export async function generateStaticParams() {
@@ -58,40 +58,10 @@ export default async function RoutePage({
   const t = await getTranslations("routes");
   const tl = await getTranslations("listen");
   const th = await getTranslations("home");
-  const total = route.stops.length;
-  // Audioguía: la presentación de la ruta y después cada parada, en orden.
-  const listenSections: ListenSection[] = [
-    {
-      label: tl("routeIntro"),
-      segments: [
-        `${route.name}.`,
-        `${t("stops", { count: total })}${
-          route.durationMinutes
-            ? `, ${formatDuration(route.durationMinutes)}`
-            : ""
-        }.`,
-        route.description,
-        t("pendingNote"),
-      ],
-    },
-    ...route.stops.map((s, i) => {
-      const label = tl("stopLabel", {
-        n: i + 1,
-        total,
-        name: s.place.name,
-      });
-      return {
-        label,
-        targetId: `parada-${i + 1}`,
-        segments: [
-          `${label}.`,
-          s.place.demo ? tl("demo") : null,
-          s.place.description,
-          s.notes,
-        ].filter((x): x is string => Boolean(x)),
-      };
-    }),
-  ];
+  // Etiquetas de cada parte de la audioguía (el texto lo arma el servidor).
+  const parts = (await routeListen(route, locale)).map(
+    ({ label, targetId }) => ({ label, targetId }),
+  );
   const routeUrl = localizedUrl(locale, {
     pathname: "/rutas/[slug]",
     params: { slug: route.slug },
@@ -160,8 +130,8 @@ export default async function RoutePage({
           <div className="flex flex-col gap-5">
             <div className="print:hidden">
               <ListenButton
-                sections={listenSections}
-                lang={SPEECH_LANG[locale]}
+                parts={parts}
+                title={route.name}
                 playLabel={tl("playRouteLabel", { name: route.name })}
                 slug={route.slug}
                 kind="route"
