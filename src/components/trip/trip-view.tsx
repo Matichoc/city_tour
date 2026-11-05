@@ -24,6 +24,7 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { PlacesMap } from "@/components/map/places-map";
 import { AddRouteToTripButton } from "@/components/trip/add-route-to-trip-button";
 import { LiveTrip } from "@/components/trip/live-trip";
+import { WhatsAppButton, usePageUrl } from "@/components/share/whatsapp-button";
 
 export type TripRouteOption = {
   slug: string;
@@ -151,20 +152,33 @@ export function TripView({
     setTrip({ ...trip, slugs: order, orderMode: "manual" });
   }
 
-  async function copyLink() {
-    const order = itinerary
-      ? itinerary.stops.map((s) => s.placeId)
-      : trip.slugs;
-    const url = new URL(window.location.href);
-    url.search = "";
+  // Enlace del recorrido (paradas en orden, hora de inicio y vuelta).
+  const pagePath = usePageUrl({ withQuery: false });
+  const order = useMemo(
+    () => (itinerary ? itinerary.stops.map((s) => s.placeId) : trip.slugs),
+    [itinerary, trip.slugs],
+  );
+  const tripLink = useMemo(() => {
+    if (!pagePath) return "";
+    const url = new URL(pagePath);
     url.searchParams.set("l", order.join(","));
     url.searchParams.set("h", trip.startTime);
     if (trip.returnToStart) url.searchParams.set("v", "1");
+    return url.toString();
+  }, [pagePath, order, trip.startTime, trip.returnToStart]);
+  const whatsappMessage = t("whatsappMessage", {
+    count: order.length,
+    stops: order
+      .map((slug, i) => `${i + 1}. ${bySlug.get(slug)?.name ?? slug}`)
+      .join(", "),
+  });
+
+  async function copyLink() {
     try {
       if (navigator.share)
-        await navigator.share({ title: t("shareTitle"), url: url.toString() });
+        await navigator.share({ title: t("shareTitle"), url: tripLink });
       else {
-        await navigator.clipboard.writeText(url.toString());
+        await navigator.clipboard.writeText(tripLink);
         setCopied(true);
         window.setTimeout(() => setCopied(false), 2000);
       }
@@ -439,13 +453,20 @@ export function TripView({
         />
       ) : null}
 
-      <button
-        type="button"
-        onClick={copyLink}
-        className="bg-sea min-h-12 rounded-full px-6 font-bold text-white transition hover:brightness-110 active:scale-95"
-      >
-        {copied ? t("copied") : t("shareTrip")}
-      </button>
+      <div className="grid gap-3 sm:grid-cols-2">
+        <button
+          type="button"
+          onClick={copyLink}
+          className="bg-sea min-h-12 rounded-full px-6 font-bold text-white transition hover:brightness-110 active:scale-95"
+        >
+          {copied ? t("copied") : t("shareTrip")}
+        </button>
+        <WhatsAppButton
+          message={whatsappMessage}
+          url={tripLink}
+          className="min-h-12 text-base"
+        />
+      </div>
     </div>
   );
 }

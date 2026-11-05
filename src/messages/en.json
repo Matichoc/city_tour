@@ -24,7 +24,8 @@
     "logoParent": "Turismo en tu Mano logo",
     "logoPapudo": "Papudo en tu Mano logo",
     "poweredBy": "Powered by",
-    "aiIllustration": "AI illustration"
+    "aiIllustration": "AI illustration",
+    "whatsapp": "Send on WhatsApp"
   },
   "home": {
     "metaTitle": "Papudo travel guide",
@@ -200,7 +201,8 @@
     "qrAlt": "QR code for this route",
     "takeTitle": "Take this route with you",
     "takeBody": "Scan with your camera to open the route on your phone, or print it.",
-    "print": "Print route"
+    "print": "Print route",
+    "whatsappMessage": "Here's “{name}”, a route with {count, plural, one {# stop} other {# stops}} in Papudo: {stops}. Open it in Papudo en tu Mano:"
   },
   "trip": {
     "title": "My trip",
@@ -241,7 +243,8 @@
     "startLiveNote": "Uses your location to guide you stop by stop. It stays on your phone; only if you accept the street route is it sent to calculate it, and it is not stored.",
     "startDemo": "Not in Papudo? Try it with a simulated location",
     "addShort": "Add to my trip",
-    "addedShort": "In my trip"
+    "addedShort": "In my trip",
+    "whatsappMessage": "Here's my trip around Papudo ({count, plural, one {# stop} other {# stops}}): {stops}. Open it in Papudo en tu Mano:"
   },
   "map": {
     "unavailable": "The map is unavailable right now. You can keep using the list.",

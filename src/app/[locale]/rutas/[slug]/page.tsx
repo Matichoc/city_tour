@@ -13,6 +13,7 @@ import { PageHero } from "@/components/ui/page-hero";
 import { PlacesMap } from "@/components/map/places-map";
 import { AddRouteToTripButton } from "@/components/trip/add-route-to-trip-button";
 import { ShareButton } from "@/components/place/share-button";
+import { WhatsAppButton } from "@/components/share/whatsapp-button";
 import { PrintButton } from "@/components/ui/print-button";
 import { QrVisit } from "@/components/analytics/qr-visit";
 import { ListenButton } from "@/components/listen/listen-button";
@@ -122,6 +123,15 @@ export default async function RoutePage({
         <div className="flex flex-wrap gap-2 print:hidden">
           <AddRouteToTripButton slugs={route.stops.map((s) => s.place.slug)} />
           <ShareButton title={route.name} />
+          <WhatsAppButton
+            message={t("whatsappMessage", {
+              name: route.name,
+              count: route.stops.length,
+              stops: route.stops
+                .map((s, i) => `${i + 1}. ${s.place.name}`)
+                .join(", "),
+            })}
+          />
         </div>
 
         {/* En computador: la audioguía y las paradas a la izquierda, el mapa
