@@ -152,7 +152,7 @@
     "sernaturExpired": "vencido el {date}",
     "sernaturNote": "Servicio turístico registrado en SERNATUR, según informa el local.",
     "website": "Sitio web",
-    "ownerValidated": "Validada por el representante del local",
+    "ownerValidated": "Datos confirmados por el local y validados por la Municipalidad",
     "galleryPrev": "Foto anterior",
     "galleryNext": "Foto siguiente",
     "inLocality": "{category} en <pueblo>{locality}</pueblo>",
@@ -670,7 +670,9 @@
       "entities": "Fichas",
       "reviews": "Comentarios",
       "business": "Comercios",
-      "reviewsBadge": "{count} por revisar"
+      "reviewsBadge": "{count} por revisar",
+      "proposals": "Propuestas",
+      "proposalsBadge": "{count} por revisar"
     },
     "reviews": {
       "title": "Comentarios de visitantes",
@@ -979,6 +981,64 @@
         "remove": "Quitar",
         "save": "Guardar horarios"
       }
+    },
+    "owner": {
+      "title": "Acceso del locatario",
+      "intro": "Genera un enlace personal para que el local proponga cambios a su ficha (textos, horario, contacto). Nada se publica sin que el personal lo apruebe en «Propuestas».",
+      "none": "Sin enlace vigente.",
+      "active": "Enlace vigente desde el {created}; vence el {expires}.",
+      "lastUsed": "Último uso: {date}.",
+      "neverUsed": "Todavía no lo abren.",
+      "generate": "Generar enlace",
+      "regenerate": "Generar uno nuevo (corta el anterior)",
+      "revoke": "Cortar acceso",
+      "revoked": "Acceso cortado: el enlace anterior ya no funciona.",
+      "linkTitle": "Enlace del local",
+      "linkOnce": "Cópialo ahora: por seguridad no se vuelve a mostrar. Si se pierde, genera otro.",
+      "copy": "Copiar enlace",
+      "copied": "¡Copiado!",
+      "whatsapp": "Enviar por WhatsApp",
+      "message": "Hola, te escribimos de la Municipalidad de Papudo, de la guía «Papudo en tu Mano». Con este enlace puedes actualizar la ficha de {name} (horario, contacto y descripción). La revisamos antes de publicarla: {link}",
+      "error": "No se pudo generar el enlace. Revisa que la migración 0031 esté aplicada en Supabase."
+    },
+    "proposals": {
+      "title": "Propuestas de los locales",
+      "intro": "Cambios que proponen los locatarios con su enlace. Al aprobar, se aplican a la ficha y queda validada por la Municipalidad.",
+      "empty": "No hay propuestas por revisar.",
+      "pending": "Por revisar",
+      "reviewed": "Revisadas hace poco",
+      "by": "Envía {name} · {date}",
+      "status": {
+        "pending": "Por revisar",
+        "approved": "Aprobada",
+        "rejected": "Rechazada"
+      },
+      "field": "Dato",
+      "current": "Ahora en la ficha",
+      "proposed": "Propuesto por el local",
+      "emptyValue": "(vacío)",
+      "fields": {
+        "short_description": "Descripción corta",
+        "full_description": "Descripción completa",
+        "hours_text": "Horario",
+        "address": "Dirección",
+        "cta_kind": "Botón principal de tu ficha",
+        "cta_value": "Número o enlace del botón",
+        "instagram": "Instagram",
+        "website": "Sitio web"
+      },
+      "localNote": "Nota del local: {note}",
+      "reviewNote": "Nota para el local (opcional; la verá en «Mi local»)",
+      "approve": "Aprobar y publicar",
+      "reject": "Rechazar",
+      "approved": "Aprobada: la ficha ya muestra los cambios.",
+      "rejected": "Rechazada. El local verá tu nota.",
+      "hoursReminder": "Cambió el horario: actualiza también las temporadas de la ficha, para que «Abierto ahora» sea correcto.",
+      "openPlace": "Abrir la ficha en el panel",
+      "notPending": "Esta propuesta ya no está pendiente.",
+      "error": "No se pudo guardar. Inténtalo de nuevo.",
+      "back": "← Propuestas",
+      "review": "Revisar"
     }
   },
   "notices": {
@@ -999,5 +1059,85 @@
     "example2": "Mariscos",
     "example3": "Dunas",
     "example4": "Restaurante"
+  },
+  "owner": {
+    "title": "Mi local",
+    "noAccessTitle": "Necesitas el enlace de tu local",
+    "noAccessBody": "La Municipalidad te envía un enlace personal para actualizar la ficha de tu local en la guía. Si no lo tienes o dejó de funcionar, pídelo a la oficina de turismo.",
+    "badLink": "Ese enlace no es válido o ya se cortó. Pide uno nuevo a la Municipalidad.",
+    "intro": "Aquí propones cambios a la ficha de {name}. La Municipalidad los revisa antes de publicarlos en la guía.",
+    "viewPublic": "Ver mi ficha en la guía",
+    "status": {
+      "pending": "Tu propuesta del {date} está en revisión. Si envías otra, reemplaza a esa.",
+      "approved": "Tu última propuesta se aprobó el {date} y ya está en la guía.",
+      "rejected": "Tu última propuesta no se aprobó ({date}).",
+      "note": "Nota de la Municipalidad: {note}"
+    },
+    "sent": "¡Listo! Enviamos tu propuesta. La Municipalidad la revisará antes de publicarla.",
+    "nothingChanged": "No cambiaste nada: la ficha ya tiene esos datos.",
+    "errors": {
+      "expired": "Tu enlace venció o se cortó. Pide uno nuevo a la Municipalidad.",
+      "invalid": "Algún dato no tiene el formato correcto. Revísalo y vuelve a enviar.",
+      "limit": "Enviaste muchas propuestas hoy. Inténtalo mañana.",
+      "error": "No pudimos enviar tu propuesta. Inténtalo de nuevo en un rato.",
+      "cta": "Elige un tipo de botón de la lista.",
+      "ctaValue": "El botón necesita su número (con código de país) o su enlace completo con https://.",
+      "website": "El sitio web debe ser un enlace completo con https://.",
+      "instagram": "Instagram debe ser un enlace completo con https://.",
+      "name": "Escribe tu nombre (entre 2 y 80 letras)."
+    },
+    "sectionAbout": "Tu local",
+    "sectionContact": "Contacto",
+    "sectionSend": "Enviar a revisión",
+    "fields": {
+      "short_description": {
+        "label": "Descripción corta",
+        "help": "Una o dos frases: lo que te distingue."
+      },
+      "full_description": {
+        "label": "Descripción completa",
+        "help": "Qué ofreces, servicios, cómo llegar, lo que un visitante debe saber."
+      },
+      "hours_text": {
+        "label": "Horario",
+        "help": "Por ejemplo: «Enero y febrero, todos los días de 12:00 a 22:00. Marzo a diciembre, fines de semana y festivos»."
+      },
+      "address": {
+        "label": "Dirección",
+        "help": ""
+      },
+      "cta_kind": {
+        "label": "Botón principal de tu ficha",
+        "help": "El botón destacado que verá el visitante."
+      },
+      "cta_value": {
+        "label": "Número o enlace del botón",
+        "help": "WhatsApp o teléfono con código de país (+56 9 …); los demás, el enlace completo con https://."
+      },
+      "instagram": {
+        "label": "Instagram",
+        "help": "El enlace completo, por ejemplo https://www.instagram.com/tulocal/"
+      },
+      "website": {
+        "label": "Sitio web",
+        "help": "El enlace completo con https://"
+      }
+    },
+    "cta": {
+      "none": "Sin botón",
+      "whatsapp": "WhatsApp",
+      "phone": "Llamar",
+      "website": "Sitio web",
+      "menu": "Carta",
+      "booking": "Reservas",
+      "instagram": "Instagram"
+    },
+    "name": "Tu nombre",
+    "nameHelp": "Solo lo ve la Municipalidad; no se publica.",
+    "note": "Nota para la Municipalidad (opcional)",
+    "submit": "Enviar a revisión",
+    "logout": "Salir en este dispositivo",
+    "loggedOut": "Saliste. Para volver a entrar, abre otra vez el enlace de tu local.",
+    "pendingDraft": "El formulario muestra tu propuesta en revisión, para que sigas desde ahí."
   }
 }

@@ -152,7 +152,7 @@
     "sernaturExpired": "expired on {date}",
     "sernaturNote": "Tourism service registered with SERNATUR (Chile’s National Tourism Service), as reported by the business.",
     "website": "Website",
-    "ownerValidated": "Validated by the business representative",
+    "ownerValidated": "Details confirmed by the business and validated by the Municipality",
     "galleryPrev": "Previous photo",
     "galleryNext": "Next photo",
     "inLocality": "{category} in <pueblo>{locality}</pueblo>",
@@ -670,7 +670,9 @@
       "entities": "Listings",
       "reviews": "Reviews",
       "business": "Businesses",
-      "reviewsBadge": "{count} to review"
+      "reviewsBadge": "{count} to review",
+      "proposals": "Proposals",
+      "proposalsBadge": "{count} to review"
     },
     "reviews": {
       "title": "Visitor reviews",
@@ -979,6 +981,64 @@
         "remove": "Remove",
         "save": "Save hours"
       }
+    },
+    "owner": {
+      "title": "Business owner access",
+      "intro": "Create a personal link so the business can propose changes to its listing (texts, hours, contact). Nothing is published until staff approves it in “Proposals”.",
+      "none": "No active link.",
+      "active": "Link active since {created}; expires {expires}.",
+      "lastUsed": "Last used: {date}.",
+      "neverUsed": "Not opened yet.",
+      "generate": "Create link",
+      "regenerate": "Create a new one (revokes the previous)",
+      "revoke": "Revoke access",
+      "revoked": "Access revoked: the previous link no longer works.",
+      "linkTitle": "Business link",
+      "linkOnce": "Copy it now: for security it won't be shown again. If it's lost, create another.",
+      "copy": "Copy link",
+      "copied": "Copied!",
+      "whatsapp": "Send on WhatsApp",
+      "message": "Hi, this is the Municipality of Papudo, from the “Papudo en tu Mano” guide. With this link you can update the listing of {name} (hours, contact and description). We review it before publishing: {link}",
+      "error": "The link couldn't be created. Check that migration 0031 is applied in Supabase."
+    },
+    "proposals": {
+      "title": "Business proposals",
+      "intro": "Changes proposed by business owners with their link. When approved, they're applied to the listing and it's marked as validated by the Municipality.",
+      "empty": "No proposals to review.",
+      "pending": "To review",
+      "reviewed": "Recently reviewed",
+      "by": "Sent by {name} · {date}",
+      "status": {
+        "pending": "To review",
+        "approved": "Approved",
+        "rejected": "Rejected"
+      },
+      "field": "Field",
+      "current": "Now on the listing",
+      "proposed": "Proposed by the business",
+      "emptyValue": "(empty)",
+      "fields": {
+        "short_description": "Short description",
+        "full_description": "Full description",
+        "hours_text": "Opening hours",
+        "address": "Address",
+        "cta_kind": "Main button on your listing",
+        "cta_value": "Button number or link",
+        "instagram": "Instagram",
+        "website": "Website"
+      },
+      "localNote": "Note from the business: {note}",
+      "reviewNote": "Note for the business (optional; shown in “My business”)",
+      "approve": "Approve and publish",
+      "reject": "Reject",
+      "approved": "Approved: the listing already shows the changes.",
+      "rejected": "Rejected. The business will see your note.",
+      "hoursReminder": "Hours changed: also update the listing's seasons so “Open now” is right.",
+      "openPlace": "Open the listing in the panel",
+      "notPending": "This proposal is no longer pending.",
+      "error": "Couldn't save. Try again.",
+      "back": "← Proposals",
+      "review": "Review"
     }
   },
   "notices": {
@@ -999,5 +1059,85 @@
     "example2": "Seafood",
     "example3": "Lagoon",
     "example4": "Restaurant"
+  },
+  "owner": {
+    "title": "My business",
+    "noAccessTitle": "You need your business link",
+    "noAccessBody": "The Municipality sends you a personal link to update your business listing in the guide. If you don't have it or it stopped working, ask the tourism office.",
+    "badLink": "That link isn't valid or was revoked. Ask the Municipality for a new one.",
+    "intro": "Here you propose changes to the listing of {name}. The Municipality reviews them before publishing them in the guide.",
+    "viewPublic": "See my listing in the guide",
+    "status": {
+      "pending": "Your proposal from {date} is under review. If you send another one, it replaces it.",
+      "approved": "Your last proposal was approved on {date} and is already in the guide.",
+      "rejected": "Your last proposal wasn't approved ({date}).",
+      "note": "Note from the Municipality: {note}"
+    },
+    "sent": "Done! We sent your proposal. The Municipality will review it before publishing it.",
+    "nothingChanged": "You didn't change anything: the listing already has that information.",
+    "errors": {
+      "expired": "Your link expired or was revoked. Ask the Municipality for a new one.",
+      "invalid": "Some information isn't in the right format. Check it and send it again.",
+      "limit": "You sent many proposals today. Try again tomorrow.",
+      "error": "We couldn't send your proposal. Try again in a while.",
+      "cta": "Choose a button type from the list.",
+      "ctaValue": "The button needs its number (with country code) or its full link with https://.",
+      "website": "The website must be a full link with https://.",
+      "instagram": "Instagram must be a full link with https://.",
+      "name": "Write your name (2 to 80 characters)."
+    },
+    "sectionAbout": "Your business",
+    "sectionContact": "Contact",
+    "sectionSend": "Send for review",
+    "fields": {
+      "short_description": {
+        "label": "Short description",
+        "help": "One or two sentences: what makes you stand out."
+      },
+      "full_description": {
+        "label": "Full description",
+        "help": "What you offer, services, how to get there, what a visitor should know."
+      },
+      "hours_text": {
+        "label": "Opening hours",
+        "help": "For example: “January and February, every day 12:00–22:00. March to December, weekends and holidays”."
+      },
+      "address": {
+        "label": "Address",
+        "help": ""
+      },
+      "cta_kind": {
+        "label": "Main button on your listing",
+        "help": "The highlighted button visitors will see."
+      },
+      "cta_value": {
+        "label": "Button number or link",
+        "help": "WhatsApp or phone with country code (+56 9 …); the others, the full link with https://."
+      },
+      "instagram": {
+        "label": "Instagram",
+        "help": "The full link, for example https://www.instagram.com/yourplace/"
+      },
+      "website": {
+        "label": "Website",
+        "help": "The full link with https://"
+      }
+    },
+    "cta": {
+      "none": "No button",
+      "whatsapp": "WhatsApp",
+      "phone": "Call",
+      "website": "Website",
+      "menu": "Menu",
+      "booking": "Bookings",
+      "instagram": "Instagram"
+    },
+    "name": "Your name",
+    "nameHelp": "Only the Municipality sees it; it isn't published.",
+    "note": "Note for the Municipality (optional)",
+    "submit": "Send for review",
+    "logout": "Sign out on this device",
+    "loggedOut": "You signed out. To come back, open your business link again.",
+    "pendingDraft": "The form shows your proposal under review, so you can continue from there."
   }
 }

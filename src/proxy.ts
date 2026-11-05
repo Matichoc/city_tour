@@ -34,6 +34,10 @@ const isAdmin = (request: NextRequest) =>
   request.nextUrl.pathname === "/admin" ||
   request.nextUrl.pathname.startsWith("/admin/");
 
+const isOwnerArea = (request: NextRequest) =>
+  request.nextUrl.pathname === "/local" ||
+  request.nextUrl.pathname.startsWith("/local/");
+
 /**
  * El panel /admin va sin prefijo de idioma. Si el token de acceso está por
  * vencer, se renueva aquí (los componentes de servidor no pueden escribir
@@ -81,6 +85,10 @@ const site = (request: NextRequest) =>
  * clave no quede abierta por descuido.
  */
 export default async function proxy(request: NextRequest) {
+  // «Mi local» va sin idioma y fuera del enlace del equipo: el locatario entra
+  // con el enlace personal de su local, que la página misma valida.
+  if (isOwnerArea(request)) return NextResponse.next();
+
   const secret = process.env.SHARE_LINK_SECRET;
   if (!secret) {
     return process.env.VERCEL_ENV === "preview" ? expiredPage() : site(request);

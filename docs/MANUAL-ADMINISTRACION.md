@@ -9,9 +9,9 @@ las rutas por calles en auto o a pie) está en `docs/PLAN-RUTAS-AUTO-Y-A-PIE.md`
 | Rol (como se ve en el panel) | Qué puede hacer |
 | --- | --- |
 | **Administración** | Todo: publicar y archivar, borrar comentarios, configurar la invitación a comercios y la planilla de importación. |
-| **Edición** | Crear y editar fichas, eventos y comercios **como borrador** (no publica ni archiva), ocultar o mostrar comentarios, y manejar avisos destacados. |
+| **Edición** | Crear y editar fichas, eventos y comercios **como borrador** (no publica ni archiva), ocultar o mostrar comentarios, manejar avisos destacados, y generar el enlace de un locatario y aprobar o rechazar sus propuestas (3.7). |
 | **Verificación** | Ver todo y cambiar el estado de verificación. No edita contenido. |
-| **Negocio** | No entra al panel. |
+| **Negocio** | No entra al panel. Los locatarios proponen cambios en **Mi local**, con el enlace de su local (3.7). |
 
 Los visitantes no tienen cuenta.
 
@@ -96,6 +96,32 @@ En **Comentarios**:
 - Las fotos y videos de visitantes **no se ven hasta que los apruebes**:
   **Aprobar** o **Rechazar**. Las marcadas «Revisar con cuidado» merecen una
   mirada atenta.
+
+### 3.7 Locatarios: enlace del local y propuestas
+
+Cada comercio puede proponer cambios a su ficha (descripción, horario,
+dirección, botón principal, Instagram y sitio web) sin cuenta ni contraseña,
+con un **enlace personal del local**. Nada se publica solo: el personal revisa
+cada propuesta.
+
+1. En **Comercios**, abre el local y baja a **Acceso del locatario**.
+2. **Generar enlace**. Aparece una sola vez: cópialo o usa **Enviar por
+   WhatsApp**, que deja el mensaje escrito. Si se pierde, genera otro (eso corta
+   el anterior). Vence al año.
+3. El locatario lo abre y llega a **Mi local** (`/local`), donde ve los datos
+   actuales de su ficha, propone cambios y deja su nombre. Si ya tenía una
+   propuesta pendiente, la nueva la reemplaza.
+4. En **Propuestas** (con un número cuando hay pendientes) se ve cada cambio con
+   lo que hay **ahora** y lo **propuesto**. **Aprobar y publicar** lo aplica a la
+   ficha, la marca como «Datos confirmados por el local y validados por la
+   Municipalidad» y registra la fecha de actualización. **Rechazar** no toca la
+   ficha; la nota que escribas la ve el locatario.
+5. Si cambió el horario, actualiza también las **temporadas** de la ficha: son
+   las que calculan «Abierto ahora».
+6. **Cortar acceso** deja sin efecto el enlace de inmediato (por ejemplo, si el
+   local cambió de dueño).
+
+Requiere la migración `0031_owner_access.sql` aplicada en Supabase.
 
 ## 4. Dar acceso a otra persona
 

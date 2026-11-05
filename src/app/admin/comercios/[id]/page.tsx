@@ -11,19 +11,27 @@ import { PlaceForm } from "@/components/admin/place-form";
 import { PhotoManager } from "@/components/admin/photo-manager";
 import { HoursEditor } from "@/components/admin/hours-editor";
 import { PublicationBadge } from "@/components/admin/badges";
+import { OwnerAccess } from "@/components/admin/owner-access";
+import { getOwnerKeyStatus } from "@/lib/admin/owner";
 
 export default async function EditPlace({
   params,
   searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ guardado?: string; creado?: string; error?: string }>;
+  searchParams: Promise<{
+    guardado?: string;
+    creado?: string;
+    error?: string;
+    accesoCortado?: string;
+  }>;
 }) {
   const session = await getSession();
   if (!session) redirect("/admin/ingresar");
   const { id } = await params;
   if (!/^[0-9a-f-]{36}$/.test(id)) notFound();
   const t = await getTranslations({ locale: "es", namespace: "admin.places" });
+  const to = await getTranslations({ locale: "es", namespace: "admin.owner" });
   const sp = await searchParams;
   const [place, localities] = await Promise.all([
     getPlaceForEdit(session.token, id).catch(() => null),
@@ -31,6 +39,7 @@ export default async function EditPlace({
   ]);
   if (!place) notFound();
   const editable = canModerate(session);
+  const ownerKey = editable ? await getOwnerKeyStatus(session, place.id) : null;
   const isAdmin = session.role === "admin";
 
   return (
@@ -71,6 +80,7 @@ export default async function EditPlace({
             ["datos", t("sectionData")],
             ["horarios", t("hours.title")],
             ["fotos", t("photos.title")],
+            ...(editable ? ([["acceso", to("title")]] as const) : []),
           ] as const
         ).map(([anchor, label]) => (
           <a
@@ -179,6 +189,23 @@ export default async function EditPlace({
           <p className="text-muted text-sm">{t("photos.errors.denied")}</p>
         )}
       </section>
+
+      {editable && (
+        <section
+          id="acceso"
+          className="border-border bg-surface scroll-mt-4 rounded-2xl border p-4"
+        >
+          <h2 className="font-display mb-3 text-lg font-extrabold">
+            {to("title")}
+          </h2>
+          <OwnerAccess
+            placeId={place.id}
+            placeName={place.name}
+            status={ownerKey}
+            revoked={Boolean(sp.accesoCortado)}
+          />
+        </section>
+      )}
     </div>
   );
 }

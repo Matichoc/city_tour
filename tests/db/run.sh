@@ -38,6 +38,7 @@ echo "→ contenido del sitio (dos veces: debe ser idempotente)"
 "${PSQL[@]}" -o /dev/null -f tests/db/listen.check.sql
 "${PSQL[@]}" -o /dev/null -f tests/db/panel.check.sql
 "${PSQL[@]}" -o /dev/null -f tests/db/privacy.check.sql
+"${PSQL[@]}" -o /dev/null -f tests/db/owner.check.sql
 echo "→ PRIV-01: respaldo, limpieza y restauración"
 if [[ -n "${DATABASE_URL:-}" ]]; then PRIV_URL="$DATABASE_URL"; else PRIV_URL="postgresql:///city_tour_test"; fi
 bash tests/db/priv01-limpieza-respaldo.sh "$PRIV_URL"

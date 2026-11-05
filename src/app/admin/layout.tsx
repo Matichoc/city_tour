@@ -4,6 +4,7 @@ import Link from "next/link";
 import { NextIntlClientProvider } from "next-intl";
 import { getTranslations } from "next-intl/server";
 import { countReviewNotices, getSession } from "@/lib/admin/api";
+import { countPendingProposals } from "@/lib/admin/owner";
 import { signOut } from "@/app/admin/actions";
 import es from "@/messages/es.json";
 
@@ -21,7 +22,12 @@ export default async function AdminLayout({
   const t = await getTranslations({ locale: "es", namespace: "admin" });
   const session = await getSession();
   // Comentarios nuevos por revisar: un número junto a «Comentarios».
-  const notices = session ? await countReviewNotices(session.token) : 0;
+  const [notices, proposals] = session
+    ? await Promise.all([
+        countReviewNotices(session.token),
+        countPendingProposals(session.token),
+      ])
+    : [0, 0];
   return (
     <div className="bg-background min-h-dvh">
       <header className="border-border bg-surface border-b">
@@ -50,6 +56,17 @@ export default async function AdminLayout({
               </Link>
               <Link href="/admin/comercios" className="text-sea-deep">
                 {t("nav.business")}
+              </Link>
+              <Link href="/admin/propuestas" className="text-sea-deep">
+                {t("nav.proposals")}
+                {proposals > 0 && (
+                  <span
+                    aria-label={t("nav.proposalsBadge", { count: proposals })}
+                    className="bg-coral ml-1.5 rounded-full px-2 py-0.5 text-xs font-extrabold text-white"
+                  >
+                    {proposals >= 100 ? "99+" : proposals}
+                  </span>
+                )}
               </Link>
               <a
                 href="/es"
