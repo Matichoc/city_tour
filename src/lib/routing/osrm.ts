@@ -38,11 +38,11 @@ export function osrmProvider(
   const userAgent = env.ROUTING_USER_AGENT || DEFAULT_USER_AGENT;
 
   return {
-    async route(from: GeoPoint, to: GeoPoint, mode: RouteMode) {
+    async route(points: GeoPoint[], mode: RouteMode) {
       // El perfil (a pie o auto) lo fija el servidor elegido; el de la ruta no importa.
       const url =
         `${base[mode]}/route/v1/driving/` +
-        `${from.longitude},${from.latitude};${to.longitude},${to.latitude}` +
+        points.map((p) => `${p.longitude},${p.latitude}`).join(";") +
         `?overview=full&geometries=geojson&steps=false&alternatives=false`;
       let response: Response;
       try {

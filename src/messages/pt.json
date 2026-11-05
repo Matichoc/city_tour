@@ -251,6 +251,14 @@
     "view2d": "Ver em 2D",
     "view3d": "Ver em 3D",
     "recenter": "Voltar à comuna",
+    "route": {
+      "modeLabel": "Como você vai",
+      "walk": "A pé",
+      "car": "De carro",
+      "loading": "Traçando o caminho pelas ruas…",
+      "summary": "{distance} · {duration}",
+      "failed": "Não conseguimos traçar o caminho pelas ruas. Siga a ordem dos números."
+    },
     "controls": {
       "map": "Mapa",
       "marker": "Ponto no mapa",
@@ -449,7 +457,7 @@
     "routeConsentAccept": "Calcular rota pelas ruas",
     "routeConsentDecline": "Agora não",
     "routeLoading": "Traçando o caminho pelas ruas…",
-    "routeFailed": "Não conseguimos traçar a rota pelas ruas; mostramos um guia aproximado.",
+    "routeFailed": "Não conseguimos traçar o caminho pelas ruas; siga a seta e a distância.",
     "routeCredit": "Rotas: © colaboradores do OpenStreetMap e FOSSGIS.",
     "routeFix": "Corrigir o mapa",
     "remaining": "Faltam {distance} · {time}",

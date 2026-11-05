@@ -317,3 +317,55 @@ for (const path of [
     expect(scroll).toBeLessThanOrEqual(width);
   });
 }
+
+// Ruta Costera: Salinas de Pullally → Playa de Papudo → Playa Chica, por calles.
+const STREET_PATH = {
+  mode: "walk",
+  distanceMeters: 9400,
+  durationSeconds: 7500,
+  coordinates: [
+    [-71.4253, -32.4419],
+    [-71.4301, -32.4602],
+    [-71.4402, -32.4873],
+    [-71.4486, -32.5052],
+    [-71.4478, -32.5075],
+  ],
+};
+
+test("ruta: el mapa traza el camino por calles (a pie o en auto), nunca una recta", async ({
+  page,
+}) => {
+  const asked: URL[] = [];
+  await page.route("**/api/ruta/paradas**", (route) => {
+    const url = new URL(route.request().url());
+    asked.push(url);
+    return route.fulfill({
+      json: { ...STREET_PATH, mode: url.searchParams.get("mode") },
+    });
+  });
+  await page.goto("/es/rutas/ruta-costera-papudo");
+  const status = page.getByTestId("route-status");
+  await expect(status).toHaveText("9,4 km · 2 h 5 min");
+  // Un solo camino que pasa por las tres paradas, en orden.
+  expect(asked[0]!.searchParams.get("mode")).toBe("walk");
+  expect(asked[0]!.searchParams.getAll("p")).toHaveLength(3);
+
+  await page.getByRole("button", { name: "En auto" }).click();
+  await expect(page.getByRole("button", { name: "En auto" })).toHaveAttribute(
+    "aria-pressed",
+    "true",
+  );
+  await expect.poll(() => asked.at(-1)?.searchParams.get("mode")).toBe("car");
+});
+
+test("ruta: si no se puede trazar por calles, avisa en vez de dibujar una recta", async ({
+  page,
+}) => {
+  await page.route("**/api/ruta/paradas**", (route) =>
+    route.fulfill({ status: 502, json: { error: "upstream" } }),
+  );
+  await page.goto("/es/rutas/ruta-costera-papudo");
+  await expect(page.getByTestId("route-status")).toHaveText(
+    "No pudimos trazar el camino por calle. Sigue el orden de los números.",
+  );
+});

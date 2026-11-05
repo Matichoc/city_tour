@@ -26,6 +26,7 @@ import {
 } from "@/lib/live-nav";
 import { readRouteConsent, saveRouteConsent } from "@/lib/routing/client";
 import { useStreetRoutes } from "@/components/trip/use-street-routes";
+import { useStreetPath } from "@/components/map/use-street-path";
 import { track } from "@/lib/analytics";
 import { labelMarker, useMapLocale } from "@/components/map/map-locale";
 import { WalkCamera, type LivePosition } from "@/components/trip/walk-camera";
@@ -298,33 +299,26 @@ export function LiveTrip({
     };
   }, [onClose, cameraOpen]);
 
-  const route = useMemo(
-    () => ({
-      type: "Feature" as const,
-      properties: {},
-      geometry: {
-        type: "LineString" as const,
-        coordinates: stops.map((s) => [s.longitude, s.latitude]),
-      },
-    }),
+  // El recorrido completo, por calles. Sin camino no hay línea: una recta
+  // cruzaría el mar o los cerros.
+  const stopPoints = useMemo(
+    () => stops.map((s) => ({ latitude: s.latitude, longitude: s.longitude })),
     [stops],
   );
-  const toNext = useMemo(
+  const overview = useStreetPath(stopPoints, mode);
+  const route = useMemo(
     () =>
-      position && next
+      overview.route
         ? {
             type: "Feature" as const,
             properties: {},
             geometry: {
               type: "LineString" as const,
-              coordinates: [
-                [position.longitude, position.latitude],
-                [next.longitude, next.latitude],
-              ],
+              coordinates: overview.route.coordinates,
             },
           }
         : null,
-    [position, next],
+    [overview.route],
   );
 
   // La ruta por calles, partida en lo ya recorrido (gris) y lo que falta.
@@ -409,18 +403,17 @@ export function LiveTrip({
             attributionControl={{ compact: true }}
             style={{ width: "100%", height: "100%" }}
           >
-            {stops.length > 1 && !street ? (
+            {route && !street ? (
               <Source id="live-route" type="geojson" data={route}>
                 <Layer
                   id="live-route-line"
                   type="line"
                   paint={{
                     "line-color": "#1b7070",
-                    "line-width": 3,
-                    "line-opacity": 0.45,
-                    "line-dasharray": [1.5, 1.5],
+                    "line-width": 4,
+                    "line-opacity": 0.6,
                   }}
-                  layout={{ "line-cap": "round" }}
+                  layout={{ "line-cap": "round", "line-join": "round" }}
                 />
               </Source>
             ) : null}
@@ -459,20 +452,6 @@ export function LiveTrip({
                   />
                 </Source>
               </>
-            ) : toNext ? (
-              // Sin ruta por calles: guía aproximada, en línea punteada.
-              <Source id="live-next" type="geojson" data={toNext}>
-                <Layer
-                  id="live-next-line"
-                  type="line"
-                  paint={{
-                    "line-color": "#e98bbd",
-                    "line-width": 4,
-                    "line-dasharray": [2, 2],
-                  }}
-                  layout={{ "line-cap": "round" }}
-                />
-              </Source>
             ) : null}
             {stops.map((s, i) => (
               <Marker

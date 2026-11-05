@@ -22,6 +22,8 @@ export const ORIGIN_BOX = {
 export const MAX_DISTANCE_M = 300_000;
 /** Largo máximo de la línea que se devuelve (puntos). */
 export const MAX_POINTS = 1500;
+/** Paradas máximas de un camino que une varias (rutas y recorridos). */
+export const MAX_STOPS = 25;
 
 export const inBox = (
   p: GeoPoint,

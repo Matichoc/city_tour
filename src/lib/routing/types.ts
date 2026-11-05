@@ -17,7 +17,10 @@ export class RoutingError extends Error {
   }
 }
 
-/** Motor de rutas intercambiable (OSRM, Valhalla, un servicio pago…). */
+/**
+ * Motor de rutas intercambiable (OSRM, Valhalla, un servicio pago…). Recibe
+ * dos o más puntos y devuelve un solo camino que pasa por todos, en orden.
+ */
 export interface RouteProvider {
-  route(from: GeoPoint, to: GeoPoint, mode: RouteMode): Promise<StreetRoute>;
+  route(points: GeoPoint[], mode: RouteMode): Promise<StreetRoute>;
 }

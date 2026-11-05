@@ -251,6 +251,14 @@
     "view2d": "View in 2D",
     "view3d": "View in 3D",
     "recenter": "Back to the commune",
+    "route": {
+      "modeLabel": "How you go",
+      "walk": "On foot",
+      "car": "By car",
+      "loading": "Drawing the street route…",
+      "summary": "{distance} · {duration}",
+      "failed": "We couldn't draw the street route. Follow the numbers in order."
+    },
     "controls": {
       "map": "Map",
       "marker": "Map marker",
@@ -449,7 +457,7 @@
     "routeConsentAccept": "Calculate route by streets",
     "routeConsentDecline": "Not now",
     "routeLoading": "Drawing the way along the streets…",
-    "routeFailed": "We couldn't draw the street route; showing an approximate guide.",
+    "routeFailed": "We couldn't draw the street route; follow the arrow and the distance.",
     "routeCredit": "Routes: © OpenStreetMap contributors and FOSSGIS.",
     "routeFix": "Fix the map",
     "remaining": "{distance} left · {time}",
