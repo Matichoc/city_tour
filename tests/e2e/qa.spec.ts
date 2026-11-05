@@ -369,3 +369,45 @@ test("ruta: si no se puede trazar por calles, avisa en vez de dibujar una recta"
     "No pudimos trazar el camino por calle. Sigue el orden de los números.",
   );
 });
+
+test("ruta: «Enviar por WhatsApp» abre WhatsApp con las paradas y el enlace", async ({
+  page,
+}) => {
+  await page.goto("/es/rutas/ruta-costera-papudo");
+  const link = page.getByRole("link", { name: "Enviar por WhatsApp" });
+  await expect(link).toHaveAttribute("target", "_blank");
+  await expect
+    .poll(async () => (await link.getAttribute("href")) ?? "")
+    .toContain(encodeURIComponent("/es/rutas/ruta-costera-papudo"));
+  const href = new URL((await link.getAttribute("href"))!);
+  expect(href.origin).toBe("https://wa.me");
+  const text = href.searchParams.get("text")!;
+  expect(text).toContain("«Ruta costera de Papudo»");
+  expect(text).toMatch(/1\. .+, 2\. .+, 3\. /);
+});
+
+test("recorrido: «Enviar por WhatsApp» lleva el recorrido en orden", async ({
+  page,
+}) => {
+  await page.goto("/es");
+  await page.evaluate((k) => {
+    localStorage.setItem(
+      k,
+      JSON.stringify({
+        slugs: ["papudo-plaza", "playa-chica-papudo"],
+        start: null,
+        returnToStart: false,
+        startTime: "10:00",
+        orderMode: "manual",
+      }),
+    );
+  }, KEY);
+  await page.goto("/es/recorrido");
+  const link = page.getByRole("link", { name: "Enviar por WhatsApp" });
+  const text = async () =>
+    new URL((await link.getAttribute("href"))!).searchParams.get("text") ?? "";
+  await expect.poll(text).toContain("/es/recorrido?l=");
+  const sent = await text();
+  expect(sent).toContain("Te comparto mi recorrido por Papudo (2 paradas)");
+  expect(sent).toContain("l=papudo-plaza%2Cplaya-chica-papudo&h=10%3A00");
+});

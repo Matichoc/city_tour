@@ -168,10 +168,14 @@
     "titulo": "Rutas ya no desborda en el celular",
     "resumen": "En el celular la página de Rutas medía 422 px en una pantalla de 375: los nombres de las paradas ensanchaban la grilla. La vista quedaba desplazada y, al entrar a una ruta, la barra inferior se escondía hasta mover la página. La grilla ahora tiene una columna que se ajusta a la pantalla. Nueva prueba e2e: diez páginas no pueden ser más anchas que la pantalla del celular. Sin migraciones."
   },
-  "actual": {
-    "pr": 50,
+  "50": {
     "titulo": "Rutas por calle, nunca en línea recta",
-    "resumen": "Los mapas de cada ruta y de «Mi recorrido» ya no unen las paradas con una recta (la Ruta Costera cruzaba la bahía por el mar): trazan el camino por calle, a pie o en auto, con un selector y el resumen de kilómetros y tiempo. Un solo pedido por ruta, con todas las paradas en orden, al mismo servicio de OpenStreetMap que ya usaba la navegación en vivo, con caché y límite por persona; solo acepta paradas dentro de la comuna. Si el servicio no responde, el mapa lo avisa y muestra solo los números: nunca una recta. La navegación en vivo tampoco dibuja ya la guía en línea recta. Sin migraciones.",
+    "resumen": "Los mapas de cada ruta y de «Mi recorrido» ya no unen las paradas con una recta (la Ruta Costera cruzaba la bahía por el mar): trazan el camino por calle, a pie o en auto, con un selector y el resumen de kilómetros y tiempo. Un solo pedido por ruta, con todas las paradas en orden, al mismo servicio de OpenStreetMap que ya usaba la navegación en vivo, con caché y límite por persona; solo acepta paradas dentro de la comuna. Si el servicio no responde, el mapa lo avisa y muestra solo los números: nunca una recta. La navegación en vivo tampoco dibuja ya la guía en línea recta. Sin migraciones."
+  },
+  "actual": {
+    "pr": 51,
+    "titulo": "«Enviar por WhatsApp» en rutas y recorrido",
+    "resumen": "Nuevo botón «Enviar por WhatsApp» en «Mi recorrido» y en cada ruta: abre WhatsApp con el mensaje ya escrito (las paradas en orden, numeradas) y el enlace; la persona elige a quién mandarlo. El enlace del recorrido lleva sus paradas, la hora de inicio y si vuelve al punto de partida, y quien lo abre puede cargarlo. Se mantiene «Compartir» (menú del celular o copiar enlace). En español, inglés y portugués. Sin migraciones.",
     "migraciones": "—"
   }
 }

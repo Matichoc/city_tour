@@ -24,7 +24,8 @@
     "logoParent": "Logo de Turismo en tu Mano",
     "logoPapudo": "Logo de Papudo en tu Mano",
     "poweredBy": "Desarrollado por",
-    "aiIllustration": "Ilustración IA"
+    "aiIllustration": "Ilustración IA",
+    "whatsapp": "Enviar por WhatsApp"
   },
   "home": {
     "metaTitle": "Guía turística de Papudo",
@@ -200,7 +201,8 @@
     "qrAlt": "Código QR de esta ruta",
     "takeTitle": "Llévate esta ruta",
     "takeBody": "Escanea con la cámara para abrir la ruta en tu celular, o imprímela.",
-    "print": "Imprimir ruta"
+    "print": "Imprimir ruta",
+    "whatsappMessage": "Te comparto «{name}», una ruta de {count, plural, one {# parada} other {# paradas}} en Papudo: {stops}. Ábrela en Papudo en tu Mano:"
   },
   "trip": {
     "title": "Mi recorrido",
@@ -241,7 +243,8 @@
     "startLiveNote": "Usa tu ubicación para guiarte parada por parada. Se queda en tu teléfono; solo si aceptas la ruta por calles, se envía para calcularla y no se guarda.",
     "startDemo": "¿No estás en Papudo? Probar con ubicación simulada",
     "addShort": "A mi recorrido",
-    "addedShort": "En mi recorrido"
+    "addedShort": "En mi recorrido",
+    "whatsappMessage": "Te comparto mi recorrido por Papudo ({count, plural, one {# parada} other {# paradas}}): {stops}. Ábrelo en Papudo en tu Mano:"
   },
   "map": {
     "unavailable": "El mapa no está disponible en este momento. Puedes seguir usando la lista.",

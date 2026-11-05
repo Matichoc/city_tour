@@ -14,13 +14,13 @@ indicadas en cada versión.
 `docs/bitacora-notas.json` (clave `actual`, y el número de PR cuando exista),
 correr `pnpm bitacora` y subir el cambio en el mismo PR.
 
-## En preparación: v0.42 — Rutas por calle, nunca en línea recta
+## En preparación: v0.43 — «Enviar por WhatsApp» en rutas y recorrido
 
-Los mapas de cada ruta y de «Mi recorrido» ya no unen las paradas con una recta (la Ruta Costera cruzaba la bahía por el mar): trazan el camino por calle, a pie o en auto, con un selector y el resumen de kilómetros y tiempo. Un solo pedido por ruta, con todas las paradas en orden, al mismo servicio de OpenStreetMap que ya usaba la navegación en vivo, con caché y límite por persona; solo acepta paradas dentro de la comuna. Si el servicio no responde, el mapa lo avisa y muestra solo los números: nunca una recta. La navegación en vivo tampoco dibuja ya la guía en línea recta. Sin migraciones.
+Nuevo botón «Enviar por WhatsApp» en «Mi recorrido» y en cada ruta: abre WhatsApp con el mensaje ya escrito (las paradas en orden, numeradas) y el enlace; la persona elige a quién mandarlo. El enlace del recorrido lleva sus paradas, la hora de inicio y si vuelve al punto de partida, y quien lo abre puede cargarlo. Se mantiene «Compartir» (menú del celular o copiar enlace). En español, inglés y portugués. Sin migraciones.
 
 - **Migraciones por correr en Supabase:** —
-- **Estado:** en revisión, [PR #50](https://github.com/Matichoc/city_tour/pull/50) (aún no está en `develop`).
-- **Última actualización de esta bitácora:** 2026-11-04 22:47
+- **Estado:** en revisión, [PR #51](https://github.com/Matichoc/city_tour/pull/51) (aún no está en `develop`).
+- **Última actualización de esta bitácora:** 2026-11-04 23:06
 
 ## Avance por día
 
@@ -29,7 +29,7 @@ trabajadas: hay pausas y trabajo sin registrar).
 
 | Día | Ventana de actividad | Registros | Versiones entregadas |
 | --- | --- | ---: | --- |
-| Miércoles, 4 de noviembre de 2026 | 08:48 – 13:39 | 16 | v0.34, v0.35, v0.36, v0.37, v0.38, v0.39, v0.40, v0.41 |
+| Miércoles, 4 de noviembre de 2026 | 08:48 – 22:47 | 17 | v0.34, v0.35, v0.36, v0.37, v0.38, v0.39, v0.40, v0.41, v0.42 |
 | Domingo, 1 de noviembre de 2026 | 01:52 – 02:37 | 4 | v0.32, v0.33 |
 | Domingo, 18 de octubre de 2026 | 00:09 – 00:39 | 7 | v0.29, v0.30, v0.31 |
 | Sábado, 17 de octubre de 2026 | 00:01 – 23:30 | 34 | v0.16, v0.17, v0.18, v0.19, v0.20, v0.21, v0.22, v0.23, v0.24, v0.25, v0.26, v0.27, v0.28 |
@@ -40,6 +40,15 @@ trabajadas: hay pausas y trabajo sin registrar).
 | Lunes, 12 de octubre de 2026 | 15:43 – 17:53 | 10 | v0.1, v0.2, v0.3, v0.4 |
 
 ## Versiones
+
+### v0.42 — Rutas por calle, nunca en línea recta
+Miércoles, 4 de noviembre de 2026, 22:52 · [PR #50](https://github.com/Matichoc/city_tour/pull/50)
+
+Los mapas de cada ruta y de «Mi recorrido» ya no unen las paradas con una recta (la Ruta Costera cruzaba la bahía por el mar): trazan el camino por calle, a pie o en auto, con un selector y el resumen de kilómetros y tiempo. Un solo pedido por ruta, con todas las paradas en orden, al mismo servicio de OpenStreetMap que ya usaba la navegación en vivo, con caché y límite por persona; solo acepta paradas dentro de la comuna. Si el servicio no responde, el mapa lo avisa y muestra solo los números: nunca una recta. La navegación en vivo tampoco dibuja ya la guía en línea recta. Sin migraciones.
+
+Registros:
+
+- 11-04 22:47 — Rutas por calle, nunca en línea recta (`44694ae`)
 
 ### v0.41 — Rutas ya no desborda en el celular
 Miércoles, 4 de noviembre de 2026, 13:41 · [PR #49](https://github.com/Matichoc/city_tour/pull/49)
