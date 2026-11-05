@@ -411,3 +411,25 @@ test("recorrido: «Enviar por WhatsApp» lleva el recorrido en orden", async ({
   expect(sent).toContain("Te comparto mi recorrido por Papudo (2 paradas)");
   expect(sent).toContain("l=papudo-plaza%2Cplaya-chica-papudo&h=10%3A00");
 });
+
+test("Mi local: sin enlace explica cómo pedirlo; uno inválido avisa", async ({
+  page,
+}) => {
+  await page.goto("/local");
+  await expect(
+    page.getByRole("heading", { name: "Necesitas el enlace de tu local" }),
+  ).toBeVisible();
+  await page.goto(`/local/entrar?llave=${"0".repeat(48)}`);
+  await expect(page).toHaveURL(/\/local\?error=enlace$/);
+  await expect(
+    page.getByRole("alert").filter({ hasText: "Ese enlace no es válido" }),
+  ).toBeVisible();
+  const results = await new AxeBuilder({ page })
+    .withTags(["wcag2a", "wcag2aa"])
+    .analyze();
+  expect(
+    results.violations.filter((v) =>
+      ["serious", "critical"].includes(v.impact ?? ""),
+    ),
+  ).toEqual([]);
+});

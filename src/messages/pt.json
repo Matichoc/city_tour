@@ -152,7 +152,7 @@
     "sernaturExpired": "vencido em {date}",
     "sernaturNote": "Serviço turístico registrado no SERNATUR (Serviço Nacional de Turismo do Chile), segundo informa o local.",
     "website": "Site",
-    "ownerValidated": "Validada pelo representante do local",
+    "ownerValidated": "Dados confirmados pelo negócio e validados pela Prefeitura",
     "galleryPrev": "Foto anterior",
     "galleryNext": "Próxima foto",
     "inLocality": "{category} em <pueblo>{locality}</pueblo>",
@@ -670,7 +670,9 @@
       "entities": "Fichas",
       "reviews": "Comentários",
       "business": "Negócios",
-      "reviewsBadge": "{count} para revisar"
+      "reviewsBadge": "{count} para revisar",
+      "proposals": "Propostas",
+      "proposalsBadge": "{count} para revisar"
     },
     "reviews": {
       "title": "Comentários de visitantes",
@@ -979,6 +981,64 @@
         "remove": "Remover",
         "save": "Salvar horários"
       }
+    },
+    "owner": {
+      "title": "Acesso do comerciante",
+      "intro": "Gere um link pessoal para que o negócio proponha mudanças na sua ficha (textos, horário, contato). Nada é publicado sem que a equipe aprove em «Propostas».",
+      "none": "Sem link vigente.",
+      "active": "Link vigente desde {created}; vence em {expires}.",
+      "lastUsed": "Último uso: {date}.",
+      "neverUsed": "Ainda não foi aberto.",
+      "generate": "Gerar link",
+      "regenerate": "Gerar um novo (corta o anterior)",
+      "revoke": "Cortar acesso",
+      "revoked": "Acesso cortado: o link anterior não funciona mais.",
+      "linkTitle": "Link do negócio",
+      "linkOnce": "Copie agora: por segurança não será mostrado de novo. Se perder, gere outro.",
+      "copy": "Copiar link",
+      "copied": "Copiado!",
+      "whatsapp": "Enviar pelo WhatsApp",
+      "message": "Olá, escrevemos da Prefeitura de Papudo, do guia «Papudo en tu Mano». Com este link você pode atualizar a ficha de {name} (horário, contato e descrição). Revisamos antes de publicar: {link}",
+      "error": "Não foi possível gerar o link. Verifique se a migração 0031 está aplicada no Supabase."
+    },
+    "proposals": {
+      "title": "Propostas dos negócios",
+      "intro": "Mudanças propostas pelos comerciantes com seu link. Ao aprovar, são aplicadas à ficha e ela fica validada pela Prefeitura.",
+      "empty": "Não há propostas para revisar.",
+      "pending": "Para revisar",
+      "reviewed": "Revisadas recentemente",
+      "by": "Enviada por {name} · {date}",
+      "status": {
+        "pending": "Para revisar",
+        "approved": "Aprovada",
+        "rejected": "Recusada"
+      },
+      "field": "Dado",
+      "current": "Agora na ficha",
+      "proposed": "Proposto pelo negócio",
+      "emptyValue": "(vazio)",
+      "fields": {
+        "short_description": "Descrição curta",
+        "full_description": "Descrição completa",
+        "hours_text": "Horário",
+        "address": "Endereço",
+        "cta_kind": "Botão principal da sua ficha",
+        "cta_value": "Número ou link do botão",
+        "instagram": "Instagram",
+        "website": "Site"
+      },
+      "localNote": "Nota do negócio: {note}",
+      "reviewNote": "Nota para o negócio (opcional; aparece em «Meu negócio»)",
+      "approve": "Aprovar e publicar",
+      "reject": "Recusar",
+      "approved": "Aprovada: a ficha já mostra as mudanças.",
+      "rejected": "Recusada. O negócio verá sua nota.",
+      "hoursReminder": "O horário mudou: atualize também as temporadas da ficha para que «Aberto agora» fique correto.",
+      "openPlace": "Abrir a ficha no painel",
+      "notPending": "Esta proposta não está mais pendente.",
+      "error": "Não foi possível salvar. Tente de novo.",
+      "back": "← Propostas",
+      "review": "Revisar"
     }
   },
   "notices": {
@@ -999,5 +1059,85 @@
     "example2": "Frutos do mar",
     "example3": "Dunas",
     "example4": "Restaurante"
+  },
+  "owner": {
+    "title": "Meu negócio",
+    "noAccessTitle": "Você precisa do link do seu negócio",
+    "noAccessBody": "A Prefeitura envia um link pessoal para atualizar a ficha do seu negócio no guia. Se você não o tem ou ele parou de funcionar, peça ao escritório de turismo.",
+    "badLink": "Esse link não é válido ou foi cortado. Peça um novo à Prefeitura.",
+    "intro": "Aqui você propõe mudanças na ficha de {name}. A Prefeitura as revisa antes de publicá-las no guia.",
+    "viewPublic": "Ver minha ficha no guia",
+    "status": {
+      "pending": "Sua proposta de {date} está em revisão. Se enviar outra, ela a substitui.",
+      "approved": "Sua última proposta foi aprovada em {date} e já está no guia.",
+      "rejected": "Sua última proposta não foi aprovada ({date}).",
+      "note": "Nota da Prefeitura: {note}"
+    },
+    "sent": "Pronto! Enviamos sua proposta. A Prefeitura vai revisá-la antes de publicá-la.",
+    "nothingChanged": "Você não mudou nada: a ficha já tem esses dados.",
+    "errors": {
+      "expired": "Seu link venceu ou foi cortado. Peça um novo à Prefeitura.",
+      "invalid": "Algum dado não está no formato correto. Revise e envie de novo.",
+      "limit": "Você enviou muitas propostas hoje. Tente amanhã.",
+      "error": "Não conseguimos enviar sua proposta. Tente de novo em instantes.",
+      "cta": "Escolha um tipo de botão da lista.",
+      "ctaValue": "O botão precisa do número (com código do país) ou do link completo com https://.",
+      "website": "O site deve ser um link completo com https://.",
+      "instagram": "O Instagram deve ser um link completo com https://.",
+      "name": "Escreva seu nome (entre 2 e 80 letras)."
+    },
+    "sectionAbout": "Seu negócio",
+    "sectionContact": "Contato",
+    "sectionSend": "Enviar para revisão",
+    "fields": {
+      "short_description": {
+        "label": "Descrição curta",
+        "help": "Uma ou duas frases: o que te diferencia."
+      },
+      "full_description": {
+        "label": "Descrição completa",
+        "help": "O que você oferece, serviços, como chegar, o que o visitante precisa saber."
+      },
+      "hours_text": {
+        "label": "Horário",
+        "help": "Por exemplo: «Janeiro e fevereiro, todos os dias das 12:00 às 22:00. Março a dezembro, fins de semana e feriados»."
+      },
+      "address": {
+        "label": "Endereço",
+        "help": ""
+      },
+      "cta_kind": {
+        "label": "Botão principal da sua ficha",
+        "help": "O botão em destaque que o visitante verá."
+      },
+      "cta_value": {
+        "label": "Número ou link do botão",
+        "help": "WhatsApp ou telefone com código do país (+56 9 …); os demais, o link completo com https://."
+      },
+      "instagram": {
+        "label": "Instagram",
+        "help": "O link completo, por exemplo https://www.instagram.com/seunegocio/"
+      },
+      "website": {
+        "label": "Site",
+        "help": "O link completo com https://"
+      }
+    },
+    "cta": {
+      "none": "Sem botão",
+      "whatsapp": "WhatsApp",
+      "phone": "Ligar",
+      "website": "Site",
+      "menu": "Cardápio",
+      "booking": "Reservas",
+      "instagram": "Instagram"
+    },
+    "name": "Seu nome",
+    "nameHelp": "Só a Prefeitura vê; não é publicado.",
+    "note": "Nota para a Prefeitura (opcional)",
+    "submit": "Enviar para revisão",
+    "logout": "Sair neste dispositivo",
+    "loggedOut": "Você saiu. Para voltar, abra de novo o link do seu negócio.",
+    "pendingDraft": "O formulário mostra sua proposta em revisão, para você continuar daí."
   }
 }
