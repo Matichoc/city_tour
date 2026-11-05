@@ -164,10 +164,14 @@
     "titulo": "Voz de «Escuchar»: Catalina pausada",
     "resumen": "Elegida de oído entre cinco muestras: Catalina (es-CL) un 7 % más lenta y con una pausa breve entre frases, para que no suene a lectura de corrido. El estilo entra en el nombre de cada audio, así que todos se regeneran solos con la voz nueva la próxima vez que alguien los escuche. Sin migraciones."
   },
-  "actual": {
-    "pr": 49,
+  "49": {
     "titulo": "Rutas ya no desborda en el celular",
-    "resumen": "En el celular la página de Rutas medía 422 px en una pantalla de 375: los nombres de las paradas ensanchaban la grilla. La vista quedaba desplazada y, al entrar a una ruta, la barra inferior se escondía hasta mover la página. La grilla ahora tiene una columna que se ajusta a la pantalla. Nueva prueba e2e: diez páginas no pueden ser más anchas que la pantalla del celular. Sin migraciones.",
+    "resumen": "En el celular la página de Rutas medía 422 px en una pantalla de 375: los nombres de las paradas ensanchaban la grilla. La vista quedaba desplazada y, al entrar a una ruta, la barra inferior se escondía hasta mover la página. La grilla ahora tiene una columna que se ajusta a la pantalla. Nueva prueba e2e: diez páginas no pueden ser más anchas que la pantalla del celular. Sin migraciones."
+  },
+  "actual": {
+    "pr": 50,
+    "titulo": "Rutas por calle, nunca en línea recta",
+    "resumen": "Los mapas de cada ruta y de «Mi recorrido» ya no unen las paradas con una recta (la Ruta Costera cruzaba la bahía por el mar): trazan el camino por calle, a pie o en auto, con un selector y el resumen de kilómetros y tiempo. Un solo pedido por ruta, con todas las paradas en orden, al mismo servicio de OpenStreetMap que ya usaba la navegación en vivo, con caché y límite por persona; solo acepta paradas dentro de la comuna. Si el servicio no responde, el mapa lo avisa y muestra solo los números: nunca una recta. La navegación en vivo tampoco dibuja ya la guía en línea recta. Sin migraciones.",
     "migraciones": "—"
   }
 }

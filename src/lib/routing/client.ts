@@ -24,6 +24,23 @@ export async function fetchStreetRoute(
   }
 }
 
+/** Camino por calles que une paradas en orden; null si no se pudo trazar. */
+export async function fetchStreetPath(
+  stops: GeoPoint[],
+  mode: RouteMode,
+  signal?: AbortSignal,
+): Promise<StreetRoute | null> {
+  const query = new URLSearchParams({ mode });
+  for (const s of stops) query.append("p", `${s.latitude},${s.longitude}`);
+  try {
+    const response = await fetch(`/api/ruta/paradas?${query}`, { signal });
+    if (!response.ok) return null;
+    return (await response.json()) as StreetRoute;
+  } catch {
+    return null;
+  }
+}
+
 const CONSENT_KEY = "papudo.route-consent";
 
 /** La persona aceptó que su ubicación se envíe para calcular la ruta por calles. */

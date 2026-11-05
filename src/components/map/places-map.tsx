@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Map, {
   Layer,
   Marker,
@@ -10,9 +10,12 @@ import Map, {
   type MapRef,
 } from "react-map-gl/maplibre";
 import "maplibre-gl/dist/maplibre-gl.css";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { labelMarker, useMapLocale } from "@/components/map/map-locale";
+import { useStreetPath } from "@/components/map/use-street-path";
+import { formatMeters } from "@/lib/live-nav";
+import type { RouteMode } from "@/lib/routing/types";
 import type { CategorySlug } from "@/content/types";
 import {
   CATEGORY_PIN_COLOR,
@@ -35,6 +38,9 @@ export type MarkerDetail = {
   directions: string;
 };
 
+/** Con camino, arriba queda espacio para «A pie / En auto» y el resumen. */
+const PATH_PADDING = { top: 104, bottom: 48, left: 48, right: 56 };
+
 /** Pines amarillos y turquesa llevan el número en azul noche (contraste). */
 const DARK_PIN_TEXT = new Set(["balneario", "ruralidad"]);
 
@@ -55,12 +61,13 @@ export function PlacesMap({
   className = "h-72",
 }: {
   markers: MapMarker[];
-  /** Une los puntos en orden con una línea. */
+  /** Une los puntos en orden con el camino por calles (a pie o en auto). */
   connect?: boolean;
   className?: string;
 }) {
   const t = useTranslations("map");
   const tp = useTranslations("place");
+  const locale = useLocale();
   const mapLocale = useMapLocale();
   const mapRef = useRef<MapRef>(null);
   const [selected, setSelected] = useState<MapMarker | null>(null);
@@ -77,21 +84,54 @@ export function PlacesMap({
         [Math.min(...lngs), Math.min(...lats)],
         [Math.max(...lngs), Math.max(...lats)],
       ],
-      { padding: 48, duration: 0, maxZoom: 15 },
-    );
-  }, [markers]);
-
-  const line = useMemo(
-    () => ({
-      type: "Feature" as const,
-      properties: {},
-      geometry: {
-        type: "LineString" as const,
-        coordinates: markers.map((m) => [m.longitude, m.latitude]),
+      {
+        padding: connect && markers.length > 1 ? PATH_PADDING : 48,
+        duration: 0,
+        maxZoom: 15,
       },
-    }),
-    [markers],
+    );
+  }, [markers, connect]);
+
+  // Camino por calles entre las paradas. Nunca una recta: cruzaría el mar.
+  const [mode, setMode] = useState<RouteMode>("walk");
+  const stops = useMemo(
+    () =>
+      connect && markers.length > 1
+        ? markers.map((m) => ({ latitude: m.latitude, longitude: m.longitude }))
+        : [],
+    [connect, markers],
   );
+  const path = useStreetPath(stops, mode);
+  const line = useMemo(
+    () =>
+      path.route
+        ? {
+            type: "Feature" as const,
+            properties: {},
+            geometry: {
+              type: "LineString" as const,
+              coordinates: path.route.coordinates,
+            },
+          }
+        : null,
+    [path.route],
+  );
+
+  // Al llegar el camino, el mapa lo encuadra entero (puede salirse de los pines).
+  useEffect(() => {
+    const map = mapRef.current;
+    const coords = path.route?.coordinates;
+    if (!map || !coords || coords.length < 2) return;
+    const lngs = coords.map((c) => c[0]);
+    const lats = coords.map((c) => c[1]);
+    map.fitBounds(
+      [
+        [Math.min(...lngs), Math.min(...lats)],
+        [Math.max(...lngs), Math.max(...lats)],
+      ],
+      { padding: PATH_PADDING, duration: 0, maxZoom: 15 },
+    );
+  }, [path.route]);
 
   if (failed) {
     return (
@@ -148,26 +188,22 @@ export function PlacesMap({
         style={{ width: "100%", height: "100%" }}
       >
         <NavigationControl showCompass={false} position="top-right" />
-        {connect && markers.length > 1 ? (
+        {line ? (
           <Source id="trip-line" type="geojson" data={line}>
             <Layer
               id="trip-line-casing"
               type="line"
               paint={{
                 "line-color": "#ffffff",
-                "line-width": 7,
-                "line-opacity": 0.85,
+                "line-width": 8,
+                "line-opacity": 0.9,
               }}
               layout={{ "line-cap": "round", "line-join": "round" }}
             />
             <Layer
               id="trip-line-core"
               type="line"
-              paint={{
-                "line-color": "#14164a",
-                "line-width": 3.5,
-                "line-dasharray": [1.5, 1.5],
-              }}
+              paint={{ "line-color": "#14164a", "line-width": 4.5 }}
               layout={{ "line-cap": "round", "line-join": "round" }}
             />
           </Source>
@@ -239,6 +275,42 @@ export function PlacesMap({
           </Popup>
         ) : null}
       </Map>
+      {stops.length > 1 ? (
+        <div className="pointer-events-none absolute top-2 left-2 flex max-w-[calc(100%-4rem)] flex-col items-start gap-1.5">
+          <div
+            role="group"
+            aria-label={t("route.modeLabel")}
+            className="bg-surface pointer-events-auto flex rounded-full p-1 shadow-md"
+          >
+            {(["walk", "car"] as const).map((m) => (
+              <button
+                key={m}
+                type="button"
+                aria-pressed={mode === m}
+                onClick={() => setMode(m)}
+                className="aria-pressed:bg-coral min-h-9 rounded-full px-3 text-sm font-bold aria-pressed:text-white"
+              >
+                {t(`route.${m}`)}
+              </button>
+            ))}
+          </div>
+          <p
+            role="status"
+            data-testid="route-status"
+            data-status={path.status}
+            className="bg-surface/95 text-foreground rounded-xl px-3 py-1.5 text-xs font-semibold shadow-md"
+          >
+            {path.status === "ready" && path.route
+              ? t("route.summary", {
+                  distance: formatMeters(path.route.distanceMeters, locale),
+                  duration: formatDuration(path.route.durationSeconds),
+                })
+              : path.status === "failed"
+                ? t("route.failed")
+                : t("route.loading")}
+          </p>
+        </div>
+      ) : null}
       {selected?.detail ? (
         <PlaceSheet
           marker={selected as MapMarker & { detail: MarkerDetail }}
@@ -252,6 +324,15 @@ export function PlacesMap({
       ) : null}
     </div>
   );
+}
+
+/** «25 min», «2 h», «1 h 20 min» (iguales en español, inglés y portugués). */
+export function formatDuration(seconds: number): string {
+  const total = Math.max(1, Math.round(seconds / 60));
+  if (total < 60) return `${total} min`;
+  const hours = Math.floor(total / 60);
+  const rest = total % 60;
+  return rest ? `${hours} h ${rest} min` : `${hours} h`;
 }
 
 /**
