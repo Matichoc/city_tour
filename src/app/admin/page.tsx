@@ -129,7 +129,7 @@ export default async function AdminHome() {
             {t("allClear")}
           </p>
         ) : (
-          <ul className="mt-3 grid gap-3 sm:grid-cols-2">
+          <ul className="mt-3 grid gap-3 lg:grid-cols-2">
             {pending.map((p) => (
               <li
                 key={p.key}

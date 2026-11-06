@@ -3,7 +3,6 @@ import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import {
   canModerate,
-  ENTITIES,
   getSession,
   isEntityKind,
   listBusinessPlaces,
@@ -21,6 +20,13 @@ import {
   VerificationBadge,
 } from "@/components/admin/badges";
 import { freshness } from "@/lib/freshness";
+
+const NAV_KEY = {
+  lugar: "places",
+  evento: "events",
+  ruta: "routes",
+  localidad: "localities",
+} as const;
 
 export default async function AdminFichas({
   searchParams,
@@ -68,6 +74,10 @@ export default async function AdminFichas({
 
   return (
     <>
+      {/* El tipo se elige en el menú lateral; el título usa el mismo nombre. */}
+      <h1 className="font-display text-sea-deep mb-4 text-3xl font-extrabold">
+        {t(`nav.${NAV_KEY[kind]}`)}
+      </h1>
       {reviewNotices > 0 && (
         <p
           role="status"
@@ -96,22 +106,6 @@ export default async function AdminFichas({
           </Link>
         </p>
       )}
-      <nav className="flex flex-wrap gap-2" aria-label={t("title")}>
-        {[...ENTITIES, "localidad" as const].map((k) => (
-          <Link
-            key={k}
-            href={`/admin/fichas?tipo=${k}`}
-            aria-current={k === kind ? "page" : undefined}
-            className={`rounded-full px-4 py-1.5 text-sm font-bold ${
-              k === kind
-                ? "bg-sea-deep text-white"
-                : "bg-sea-soft text-sea-deep"
-            }`}
-          >
-            {t(`tabs.${k}`)}
-          </Link>
-        ))}
-      </nav>
 
       {canEdit && (
         <div className="mt-4 flex flex-wrap gap-2">
