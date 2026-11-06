@@ -101,15 +101,8 @@ export const MUNICIPALITY = {
   ],
 } as const;
 
-/** Auspiciador permanente del sitio (como en directorio_turistico). */
-export const SPONSOR = {
-  slug: "matichoc",
-  name: "Matichoc",
-  logoPath: "/brand/matichoc-logo.webp",
-  websiteUrl: "https://www.matichoc.cl",
-  tagline: {
-    es: "Chocolate artesanal hecho en La Ligua",
-    en: "Artisanal chocolate made in La Ligua",
-    pt: "Chocolate artesanal feito em La Ligua",
-  },
+/** Quien desarrolla y opera la guía: aparece en el pie y en Información. */
+export const DEVELOPER = {
+  name: "Cristóbal Roco",
+  email: "c.roco.saavedra@gmail.com",
 } as const;

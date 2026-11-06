@@ -14,13 +14,13 @@ indicadas en cada versión.
 `docs/bitacora-notas.json` (clave `actual`, y el número de PR cuando exista),
 correr `pnpm bitacora` y subir el cambio en el mismo PR.
 
-## En preparación: v0.48 — Panel ordenado: menú lateral e inicio con lo pendiente
+## En preparación: v0.49 — Créditos: desarrollado por Cristóbal Roco
 
-El panel deja la barra de arriba por un menú lateral agrupado: Inicio; Contenido (Comercios, Lugares, Agenda, Rutas, Localidades); Locales (Propuestas, Enlaces de locatarios, Carga masiva); Visitantes (Comentarios) y Equipo (titulado «Superadmin» para el superadmin). En el celular se pliega bajo «Menú». El inicio muestra lo que hay por hacer, cada cosa con su botón: propuestas de locales, comentarios nuevos, comercios con datos vencidos o por vencer, fichas publicadas sin verificar e invitaciones sin usar; y accesos rápidos (nuevo comercio, invitar locatarios, carga masiva, invitar admin municipal). La lista de fichas pasa a /admin/fichas. Sin migraciones.
+El pie del sitio dice «Desarrollado por Cristóbal Roco» (sin el logo ni el enlace de Matichoc) y en Información el enlace pasa a «Escribir a Cristóbal Roco» (correo). Los textos del panel ya no nombran a Matichoc. Una prueba revisa que ningún texto de la app lo mencione. Sin migraciones.
 
 - **Migraciones por correr en Supabase:** —
-- **Estado:** en revisión, [PR #56](https://github.com/Matichoc/city_tour/pull/56) (aún no está en `develop`).
-- **Última actualización de esta bitácora:** 2026-11-06 13:15
+- **Estado:** en revisión, [PR #57](https://github.com/Matichoc/city_tour/pull/57) (aún no está en `develop`).
+- **Última actualización de esta bitácora:** 2026-11-06 20:04
 
 ## Avance por día
 
@@ -29,7 +29,7 @@ trabajadas: hay pausas y trabajo sin registrar).
 
 | Día | Ventana de actividad | Registros | Versiones entregadas |
 | --- | --- | ---: | --- |
-| Viernes, 6 de noviembre de 2026 | 11:15 – 13:01 | 8 | v0.45, v0.46, v0.47 |
+| Viernes, 6 de noviembre de 2026 | 11:15 – 13:01 | 8 | v0.45, v0.46, v0.47, v0.48 |
 | Miércoles, 4 de noviembre de 2026 | 08:48 – 23:47 | 20 | v0.34, v0.35, v0.36, v0.37, v0.38, v0.39, v0.40, v0.41, v0.42, v0.43 |
 | Domingo, 1 de noviembre de 2026 | 01:52 – 02:37 | 4 | v0.32, v0.33 |
 | Domingo, 18 de octubre de 2026 | 00:09 – 00:39 | 7 | v0.29, v0.30, v0.31 |
@@ -41,6 +41,19 @@ trabajadas: hay pausas y trabajo sin registrar).
 | Lunes, 12 de octubre de 2026 | 15:43 – 17:53 | 10 | v0.1, v0.2, v0.3, v0.4 |
 
 ## Versiones
+
+### v0.48 — Panel ordenado: menú lateral e inicio con lo pendiente
+Viernes, 6 de noviembre de 2026, 13:20 · [PR #56](https://github.com/Matichoc/city_tour/pull/56)
+
+El panel deja la barra de arriba por un menú lateral agrupado: Inicio; Contenido (Comercios, Lugares, Agenda, Rutas, Localidades); Locales (Propuestas, Enlaces de locatarios, Carga masiva); Visitantes (Comentarios) y Equipo (titulado «Superadmin» para el superadmin). En el celular se pliega bajo «Menú». El inicio muestra lo que hay por hacer, cada cosa con su botón: propuestas de locales, comentarios nuevos, comercios con datos vencidos o por vencer, fichas publicadas sin verificar e invitaciones sin usar; y accesos rápidos (nuevo comercio, invitar locatarios, carga masiva, invitar admin municipal). La lista de fichas pasa a /admin/fichas. Sin migraciones.
+
+**Migraciones en Supabase:** —
+
+Registros:
+
+- 11-06 12:55 — Panel ordenado: menú lateral agrupado e inicio con lo pendiente (`29da7d2`)
+- 11-06 13:01 — Fichas: título según el menú en lugar de pestañas repetidas; inicio en una columna en pantallas medianas (`ad1ef0c`)
+- 11-06 13:17 — Merge remote-tracking branch 'origin/develop' into feat/panel-ordenado (`3c8d01f`)
 
 ### v0.47 — Quien entra al panel también ve la vista previa
 Viernes, 6 de noviembre de 2026, 13:14 · [PR #55](https://github.com/Matichoc/city_tour/pull/55)

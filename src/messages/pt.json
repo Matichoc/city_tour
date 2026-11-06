@@ -300,7 +300,7 @@
     "authorTitle": "Quem desenvolve",
     "authorBody": "Este guia é desenvolvido por Cristóbal Roco, especialista em desenvolvimento e soluções de inteligência artificial para negócios.",
     "authorNote": "As ilustrações são feitas com IA e aparecem com a sua etiqueta. Os dados são sempre conferidos com fontes e com a comunidade.",
-    "authorLink": "Conheça a Matichoc",
+    "authorLink": "Escrever para Cristóbal Roco",
     "dataTitle": "Sobre estes dados",
     "dataBody": "Cada lugar mostra sua fonte e seu estado de verificação. Nada é dado como confirmado até que uma pessoa o revise: horários, preços e acessos podem mudar.",
     "emergencyTitle": "Números de emergência",
@@ -1095,7 +1095,7 @@
     },
     "team": {
       "title": "Equipe",
-      "intro": "Quem tem acesso ao painel. O superadmin (Matichoc) convida os admins municipais; eles administram o guia e convidam os comerciantes a partir de cada ficha.",
+      "intro": "Quem tem acesso ao painel. O superadmin convida os admins municipais; eles administram o guia e convidam os comerciantes a partir de cada ficha.",
       "members": "Pessoas com acesso",
       "since": "desde {date}",
       "inactive": "sem acesso",
@@ -1117,7 +1117,7 @@
       "noNote": "Sem nome",
       "expires": "vence em {date}",
       "revoke": "Revogar",
-      "onlySuper": "Os convites ao município são feitos pelo superadmin (Matichoc).",
+      "onlySuper": "Os convites ao município são feitos pelo superadmin.",
       "state": {
         "open": "sem usar",
         "claimed": "conta criada por {email}, falta confirmar e entrar",

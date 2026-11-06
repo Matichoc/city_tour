@@ -300,7 +300,7 @@
     "authorTitle": "Who builds it",
     "authorBody": "This guide is built by Cristóbal Roco, a specialist in development and artificial-intelligence solutions for businesses.",
     "authorNote": "Illustrations are made with AI and shown with their label. Data is always checked against sources and the community.",
-    "authorLink": "Meet Matichoc",
+    "authorLink": "Email Cristóbal Roco",
     "dataTitle": "About this data",
     "dataBody": "Every place shows its source and verification status. Nothing is treated as confirmed until a person reviews it: opening hours, prices and access may change.",
     "emergencyTitle": "Emergency numbers",
@@ -1095,7 +1095,7 @@
     },
     "team": {
       "title": "Team",
-      "intro": "Who has access to the panel. The superadmin (Matichoc) invites the municipal admins; they run the guide and invite business owners from each listing.",
+      "intro": "Who has access to the panel. The superadmin invites the municipal admins; they run the guide and invite business owners from each listing.",
       "members": "People with access",
       "since": "since {date}",
       "inactive": "no access",
@@ -1117,7 +1117,7 @@
       "noNote": "No name",
       "expires": "expires {date}",
       "revoke": "Revoke",
-      "onlySuper": "Invitations to the municipality are made by the superadmin (Matichoc).",
+      "onlySuper": "Invitations to the municipality are made by the superadmin.",
       "state": {
         "open": "unused",
         "claimed": "account created by {email}, waiting for confirmation and first sign-in",
