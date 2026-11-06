@@ -72,6 +72,29 @@ describe("/api/ruta/paradas: camino por calles entre paradas", () => {
     expect(body.coordinates.length).toBeGreaterThan(STOPS.length);
   });
 
+  it("entrega el tiempo de cada tramo entre paradas", async () => {
+    upstream.mockResolvedValueOnce(
+      Response.json({
+        code: "Ok",
+        routes: [
+          {
+            ...OSRM_OK.routes[0],
+            legs: [
+              { distance: 8100.4, duration: 6100.2 },
+              { distance: 1299.6, duration: 1099.8 },
+            ],
+          },
+        ],
+      }),
+    );
+    const GET = await load();
+    const body = await (await call(GET)).json();
+    expect(body.legs).toEqual([
+      { distanceMeters: 8100, durationSeconds: 6100 },
+      { distanceMeters: 1300, durationSeconds: 1100 },
+    ]);
+  });
+
   it("usa el servicio a pie o en auto según el modo", async () => {
     const GET = await load();
     await call(GET, "car");

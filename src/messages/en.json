@@ -244,7 +244,8 @@
     "startDemo": "Not in Papudo? Try it with a simulated location",
     "addShort": "Add to my trip",
     "addedShort": "In my trip",
-    "whatsappMessage": "Here's my trip around Papudo ({count, plural, one {# stop} other {# stops}}): {stops}. Open it in Papudo en tu Mano:"
+    "whatsappMessage": "Here's my trip around Papudo ({count, plural, one {# stop} other {# stops}}): {stops}. Open it in Papudo en tu Mano:",
+    "streetNote": "Street times, {mode, select, car {by car} other {on foot}}, plus the suggested visit time. Use it as a guide, not an exact schedule."
   },
   "map": {
     "unavailable": "The map is unavailable right now. You can keep using the list.",

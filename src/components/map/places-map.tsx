@@ -13,9 +13,12 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { labelMarker, useMapLocale } from "@/components/map/map-locale";
-import { useStreetPath } from "@/components/map/use-street-path";
+import {
+  useStreetPath,
+  type PathStatus,
+} from "@/components/map/use-street-path";
 import { formatMeters } from "@/lib/live-nav";
-import type { RouteMode } from "@/lib/routing/types";
+import type { RouteMode, StreetRoute } from "@/lib/routing/types";
 import type { CategorySlug } from "@/content/types";
 import {
   CATEGORY_PIN_COLOR,
@@ -59,11 +62,21 @@ export function PlacesMap({
   markers,
   connect = false,
   className = "h-72",
+  street,
 }: {
   markers: MapMarker[];
   /** Une los puntos en orden con el camino por calles (a pie o en auto). */
   connect?: boolean;
   className?: string;
+  /**
+   * Camino ya calculado afuera (Mi recorrido lo usa también para los tiempos).
+   * Sin él, el mapa lo pide solo.
+   */
+  street?: {
+    mode: RouteMode;
+    onModeChange: (mode: RouteMode) => void;
+    path: { route: StreetRoute | null; status: PathStatus };
+  };
 }) {
   const t = useTranslations("map");
   const tp = useTranslations("place");
@@ -93,7 +106,7 @@ export function PlacesMap({
   }, [markers, connect]);
 
   // Camino por calles entre las paradas. Nunca una recta: cruzaría el mar.
-  const [mode, setMode] = useState<RouteMode>("walk");
+  const [ownMode, setOwnMode] = useState<RouteMode>("walk");
   const stops = useMemo(
     () =>
       connect && markers.length > 1
@@ -101,7 +114,10 @@ export function PlacesMap({
         : [],
     [connect, markers],
   );
-  const path = useStreetPath(stops, mode);
+  const ownPath = useStreetPath(street ? [] : stops, ownMode);
+  const mode = street?.mode ?? ownMode;
+  const setMode = street?.onModeChange ?? setOwnMode;
+  const path = street?.path ?? ownPath;
   const line = useMemo(
     () =>
       path.route

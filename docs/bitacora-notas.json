@@ -176,10 +176,15 @@
     "titulo": "«Enviar por WhatsApp» en rutas y recorrido",
     "resumen": "Nuevo botón «Enviar por WhatsApp» en «Mi recorrido» y en cada ruta: abre WhatsApp con el mensaje ya escrito (las paradas en orden, numeradas) y el enlace; la persona elige a quién mandarlo. El enlace del recorrido lleva sus paradas, la hora de inicio y si vuelve al punto de partida, y quien lo abre puede cargarlo. Se mantiene «Compartir» (menú del celular o copiar enlace). En español, inglés y portugués. Sin migraciones."
   },
-  "actual": {
-    "pr": 52,
+  "52": {
     "titulo": "Locatarios: enlace personal del local y validación municipal",
     "resumen": "Los comercios ya pueden actualizar su ficha. El personal genera en el panel un enlace personal del local y se lo manda por WhatsApp o correo; con él, sin cuenta ni contraseña, el locatario entra a «Mi local» y propone cambios a la descripción, el horario, la dirección, el botón principal, Instagram y el sitio web. Nada se publica solo: en «Propuestas» el personal ve lo que hay ahora y lo propuesto, y al aprobar se aplica a la ficha, queda «confirmada por el local y validada por la Municipalidad» y con fecha de actualización; al rechazar, el locatario ve la nota. Del enlace solo se guarda su huella, vence al año y se puede cortar. Sin clave de servicio ni cambios en la configuración de Supabase.",
     "migraciones": "0031"
+  },
+  "actual": {
+    "pr": 53,
+    "titulo": "«Mi recorrido» con tiempos por calle",
+    "resumen": "«Mi recorrido» deja de estimar los traslados en línea recta a 40 km/h: usa el tiempo y la distancia reales de cada tramo por calle, a pie o en auto, según el selector del mapa (el mismo camino que dibuja). La duración total, la distancia, la hora de llegada a cada parada y la vuelta al inicio se recalculan. Si el servicio de rutas no responde, vuelve a la estimación y lo avisa. Sin migraciones.",
+    "migraciones": "—"
   }
 }

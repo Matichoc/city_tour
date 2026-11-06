@@ -227,3 +227,52 @@ describe("ItineraryEngine.buildInOrder", () => {
     );
   });
 });
+
+describe("ItineraryEngine.withLegTimes (tiempos por calle)", () => {
+  const visit = (id: string, lat: number) => ({
+    id,
+    name: id.toUpperCase(),
+    latitude: lat,
+    longitude: -71.45,
+    visitDurationMinutes: 30,
+  });
+  const three = [visit("a", -32.5), visit("b", -32.51), visit("c", -32.52)];
+
+  it("reemplaza la estimación en línea recta por los tramos reales", () => {
+    const straight = ItineraryEngine.buildInOrder(three);
+    const real = ItineraryEngine.withLegTimes(straight, [
+      { distanceKm: 1.6, minutes: 20 },
+      { distanceKm: 2.4, minutes: 31 },
+    ]);
+    expect(real.stops.map((s) => s.placeId)).toEqual(["a", "b", "c"]);
+    expect(real.stops[1]).toMatchObject({
+      travelFromPreviousMinutes: 20,
+      distanceFromPreviousKm: 1.6,
+      arrivalOffsetMinutes: 50,
+      departureOffsetMinutes: 80,
+    });
+    expect(real.stops[2]!.arrivalOffsetMinutes).toBe(111);
+    expect(real.totalDurationMinutes).toBe(141);
+    expect(real.totalDistanceKm).toBeCloseTo(4);
+  });
+
+  it("con vuelta al inicio, el último tramo es la vuelta", () => {
+    const straight = ItineraryEngine.buildInOrder(three, undefined, true);
+    const real = ItineraryEngine.withLegTimes(straight, [
+      { distanceKm: 1, minutes: 10 },
+      { distanceKm: 1, minutes: 10 },
+      { distanceKm: 3, minutes: 25 },
+    ]);
+    expect(real.returnLegDurationMinutes).toBe(25);
+    expect(real.returnLegDistanceKm).toBe(3);
+    expect(real.totalDurationMinutes).toBe(30 * 3 + 10 + 10 + 25);
+    expect(real.totalDistanceKm).toBe(5);
+  });
+
+  it("si los tramos no calzan con las paradas, deja la estimación", () => {
+    const straight = ItineraryEngine.buildInOrder(three);
+    expect(
+      ItineraryEngine.withLegTimes(straight, [{ distanceKm: 1, minutes: 9 }]),
+    ).toBe(straight);
+  });
+});

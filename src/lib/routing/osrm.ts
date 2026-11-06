@@ -25,6 +25,7 @@ type OsrmResponse = {
     distance: number;
     duration: number;
     geometry: { coordinates: [number, number][] };
+    legs?: { distance: number; duration: number }[];
   }[];
 };
 
@@ -68,6 +69,14 @@ export function osrmProvider(
         distanceMeters: Math.round(route.distance),
         durationSeconds: Math.round(route.duration),
         coordinates: route.geometry.coordinates,
+        ...(route.legs
+          ? {
+              legs: route.legs.map((l) => ({
+                distanceMeters: Math.round(l.distance),
+                durationSeconds: Math.round(l.duration),
+              })),
+            }
+          : {}),
       } satisfies StreetRoute;
     },
   };

@@ -8,6 +8,8 @@ export type StreetRoute = {
   distanceMeters: number;
   durationSeconds: number;
   coordinates: [number, number][];
+  /** Tramos entre puntos consecutivos (con varias paradas, uno por tramo). */
+  legs?: { distanceMeters: number; durationSeconds: number }[];
 };
 
 /** `no-route`: no hay camino entre los puntos. `upstream`: el servicio falló. */
