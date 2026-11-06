@@ -676,7 +676,53 @@
       "reviewsBadge": "{count} para revisar",
       "proposals": "Propostas",
       "proposalsBadge": "{count} para revisar",
-      "team": "Equipe"
+      "team": "Equipe",
+      "label": "Menu do painel",
+      "menu": "Menu",
+      "closeMenu": "Fechar menu",
+      "home": "Início",
+      "places": "Lugares",
+      "events": "Agenda",
+      "routes": "Roteiros",
+      "localities": "Localidades",
+      "ownerLinks": "Links dos lojistas",
+      "bulkImport": "Carga em massa",
+      "guide": "Guia de uso",
+      "groups": {
+        "content": "Conteúdo",
+        "owners": "Negócios",
+        "visitors": "Visitantes",
+        "team": "Equipe",
+        "superadmin": "Superadmin"
+      }
+    },
+    "home": {
+      "title": "Início",
+      "intro": "O que há para fazer hoje no guia.",
+      "pendingTitle": "Para revisar",
+      "allClear": "Tudo em dia: nada pendente.",
+      "pending": {
+        "proposals": "{count, plural, one {proposta de um negócio} other {propostas de negócios}}",
+        "reviews": "{count, plural, one {comentário novo} other {comentários novos}}",
+        "overdue": "{count, plural, one {negócio com dados vencidos ou sem data} other {negócios com dados vencidos ou sem data}}",
+        "soon": "{count, plural, one {negócio vencendo este mês} other {negócios vencendo este mês}}",
+        "unverified": "{count, plural, one {ficha publicada sem verificar} other {fichas publicadas sem verificar}}",
+        "invites": "{count, plural, one {convite não usado} other {convites não usados}}"
+      },
+      "action": {
+        "review": "Revisar",
+        "remind": "Avisar",
+        "open": "Ver"
+      },
+      "quickTitle": "Atalhos",
+      "quick": {
+        "newBusiness": "Novo negócio",
+        "ownerLinks": "Convidar lojistas",
+        "bulkImport": "Carga em massa",
+        "inviteAdmin": "Convidar admin municipal"
+      },
+      "help": "Dúvidas sobre como usar?",
+      "helpLink": "Ver o guia de uso"
     },
     "reviews": {
       "title": "Comentários de visitantes",

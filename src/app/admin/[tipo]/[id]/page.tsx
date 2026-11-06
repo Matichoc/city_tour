@@ -46,7 +46,7 @@ export default async function EntityPage({
   return (
     <>
       <Link
-        href={`/admin?tipo=${tipo}`}
+        href={`/admin/fichas?tipo=${tipo}`}
         className="text-sea-deep text-sm font-semibold"
       >
         ← {t("back")}

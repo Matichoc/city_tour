@@ -185,10 +185,15 @@
     "titulo": "«Mi recorrido» con tiempos por calle",
     "resumen": "«Mi recorrido» deja de estimar los traslados en línea recta a 40 km/h: usa el tiempo y la distancia reales de cada tramo por calle, a pie o en auto, según el selector del mapa (el mismo camino que dibuja). La duración total, la distancia, la hora de llegada a cada parada y la vuelta al inicio se recalculan. Si el servicio de rutas no responde, vuelve a la estimación y lo avisa. Sin migraciones."
   },
-  "actual": {
-    "pr": 54,
+  "54": {
     "titulo": "Equipo en tres niveles, invitaciones y enlaces en lote",
     "resumen": "El acceso queda en tres niveles, siempre por invitación: el superadmin (Matichoc) invita desde «Equipo» a hasta 2 admin municipales con un enlace que vence en 7 días; la persona crea su cuenta, confirma el correo y al entrar queda como admin. Los admin invitan a los locatarios uno por uno o en lote («Comercios → Enlaces en lote»: generar, enviar a su WhatsApp, copiar o descargar la planilla). La carga masiva suma una plantilla CSV con las columnas que el panel reconoce. Nueva página «Cómo usar la guía» para turistas (español, inglés y portugués) y ayuda dentro de «Mi local». Solo el superadmin cambia perfiles del equipo; el panel va fuera del enlace del equipo porque tiene su propio ingreso.",
     "migraciones": "0032, 0033"
+  },
+  "actual": {
+    "pr": 56,
+    "titulo": "Panel ordenado: menú lateral e inicio con lo pendiente",
+    "resumen": "El panel deja la barra de arriba por un menú lateral agrupado: Inicio; Contenido (Comercios, Lugares, Agenda, Rutas, Localidades); Locales (Propuestas, Enlaces de locatarios, Carga masiva); Visitantes (Comentarios) y Equipo (titulado «Superadmin» para el superadmin). En el celular se pliega bajo «Menú». El inicio muestra lo que hay por hacer, cada cosa con su botón: propuestas de locales, comentarios nuevos, comercios con datos vencidos o por vencer, fichas publicadas sin verificar e invitaciones sin usar; y accesos rápidos (nuevo comercio, invitar locatarios, carga masiva, invitar admin municipal). La lista de fichas pasa a /admin/fichas. Sin migraciones.",
+    "migraciones": "—"
   }
 }
