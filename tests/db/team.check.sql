@@ -48,6 +48,8 @@ select tests.eq('un admin municipal no es superadmin', public.is_superadmin(), f
 select tests.raises('un admin municipal no invita admins', $$select public.create_staff_invite(null)$$, '42501');
 select tests.eq('ve al equipo con correos',
   (select string_agg(email, ',' order by email) from public.team_members()), 'muni.uno@test,super@test');
+select tests.eq('un admin municipal no se cambia el rol (0 filas)',
+  tests.rowcount($$update public.profiles set role = 'superadmin' where user_id = auth.uid()$$), 0);
 select tests.raises('un admin no quita accesos', $$select public.set_member_active('00000000-0000-0000-0000-0000000005a1', false)$$, '42501');
 select tests.logout();
 select tests.eq('el nombre de la cuenta pasa al perfil',

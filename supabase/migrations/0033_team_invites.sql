@@ -44,6 +44,13 @@ as $$
 $$;
 grant execute on function public.is_superadmin() to anon, authenticated;
 
+-- Perfiles del equipo: solo el superadmin los cambia directo (un admin
+-- municipal no puede darse ni dar más permisos). Las invitaciones pasan por
+-- las funciones de abajo.
+drop policy if exists profiles_admin_write on public.profiles;
+create policy profiles_super_write on public.profiles for all
+  using (public.is_superadmin()) with check (public.is_superadmin());
+
 -- 2) Máximo de admin municipales activos.
 create or replace function public.max_municipal_admins()
 returns integer
