@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { parseCsv, sheetCsvUrl } from "@/lib/import/csv";
 import {
@@ -144,6 +145,25 @@ describe("lectura de la tabla", () => {
     expect(t.rows[0]).toMatchObject({
       name: "ROOTS SALINAS",
       locality: "Las Salinas",
+    });
+  });
+  it("la plantilla de carga masiva se lee completa, sin columnas sueltas", () => {
+    const csvText = readFileSync(
+      "public/plantillas/carga-masiva-comercios.csv",
+      "utf8",
+    );
+    const t = readTable(
+      parseCsv(`${csvText}"Casa Mar","Restaurante","Papudo","Irarrázaval 1","Pescado frito","Todos los días","+56 9 1111 2222","https://www.instagram.com/casamar","https://maps.app.goo.gl/x","Ana","ana@casamar.cl"
+`),
+    );
+    expect(t.unknown).toEqual([]);
+    expect(t.rows[0]).toMatchObject({
+      name: "Casa Mar",
+      offer: "Restaurante",
+      locality: "Papudo",
+      phone: "+56 9 1111 2222",
+      contactName: "Ana",
+      contactEmail: "ana@casamar.cl",
     });
   });
   it("no depende del orden de las columnas", () => {

@@ -8,10 +8,10 @@ las rutas por calles en auto o a pie) está en `docs/PLAN-RUTAS-AUTO-Y-A-PIE.md`
 
 | Rol (como se ve en el panel) | Qué puede hacer |
 | --- | --- |
-| **Administración** | Todo: publicar y archivar, borrar comentarios, configurar la invitación a comercios y la planilla de importación. |
-| **Edición** | Crear y editar fichas, eventos y comercios **como borrador** (no publica ni archiva), ocultar o mostrar comentarios, manejar avisos destacados, y generar el enlace de un locatario y aprobar o rechazar sus propuestas (3.7). |
-| **Verificación** | Ver todo y cambiar el estado de verificación. No edita contenido. |
-| **Negocio** | No entra al panel. Los locatarios proponen cambios en **Mi local**, con el enlace de su local (3.7). |
+| **Superadmin** | Todo lo de Administración, más invitar y quitar admins municipales en **Equipo** (sección 4). |
+| **Administración** (admin municipal, máximo 2) | Todo lo municipal: publicar y archivar, verificar, eventos y rutas, comentarios, carga masiva, invitar locatarios (uno por uno o en lote) y aprobar sus propuestas. |
+| **Edición** y **Verificación** | Roles antiguos: siguen funcionando para quien ya los tenía, pero ya no se invitan. |
+| **Locatario** | No entra al panel. Propone cambios en **Mi local** con el enlace de su local (3.7). |
 
 Los visitantes no tienen cuenta.
 
@@ -123,64 +123,67 @@ cada propuesta.
 
 Requiere la migración `0031_owner_access.sql` aplicada en Supabase.
 
-## 4. Dar acceso a otra persona
+## 4. Equipo: superadmin, admin municipal y locatarios
 
-El panel **no tiene** pantalla de usuarios: el acceso se da en Supabase. Lo
-hace una persona con acceso al proyecto **city_tour** de Supabase.
+El acceso funciona en tres niveles, siempre por **enlace de invitación**:
 
-### 4.1 Crear a la persona
-1. Entra a Supabase → proyecto **city_tour** → **Authentication → Users**.
-2. Pulsa **Add user → Create new user**. Escribe su **correo** y una
-   **contraseña temporal** y activa la opción de confirmar el correo
-   automáticamente (**Auto Confirm User**).
-3. Copia el **User UID** de la persona recién creada.
+| Nivel | Quién | Cómo entra | Qué hace |
+| --- | --- | --- | --- |
+| **Superadmin** | Matichoc (quien opera la plataforma) | Su cuenta en `/admin` | Todo lo del admin, más invitar y quitar admins municipales (**Equipo**). |
+| **Admin municipal** | 1 o 2 personas del municipio | Invitación del superadmin | Publica y verifica fichas, rutas y eventos; carga masiva; invita a los locatarios y aprueba sus propuestas. |
+| **Locatario** | El dueño o encargado de cada local | Enlace personal del local | Propone cambios a su ficha en **Mi local** (3.7). |
 
-### 4.2 Darle un rol
-Sin rol, la persona puede crear su cuenta pero **no entra al panel**. En **SQL
-Editor** pega esto, cambiando el UID, el rol y el nombre:
+### 4.1 Invitar a un admin municipal (superadmin)
+1. En el panel, **Equipo → Invitar a un admin municipal**. Escribe para quién es
+   (opcional) y pulsa **Generar invitación**.
+2. El enlace aparece **una sola vez**: cópialo o usa **Enviar por WhatsApp**.
+   Vence en 7 días. Hay cupo para **2** admin municipales (cada invitación
+   abierta ocupa uno hasta que se usa, vence o se revoca).
+3. La persona abre el enlace, escribe su nombre, correo y una contraseña
+   (mínimo 10 caracteres). Supabase le manda un correo para **confirmar** la
+   cuenta.
+4. Confirma el correo y entra a `/admin`: en ese **primer ingreso** queda como
+   admin municipal. En **Equipo** la verás con su correo.
+5. **Quitar acceso** la deja fuera de inmediato (y libera el cupo).
+
+### 4.2 Invitar a los locatarios (admin o superadmin)
+- **Uno por uno:** en cada comercio, **Acceso del locatario** (3.7).
+- **En lote:** **Comercios → Enlaces en lote**. Marca los locales (por defecto,
+  los que aún no tienen enlace), pulsa **Generar**, y envía cada enlace con
+  **Enviar a su WhatsApp** (usa el número del botón del local, si lo tiene),
+  **Copiar todos** o **Descargar planilla (CSV)**. Los enlaces se ven una sola
+  vez; generar uno nuevo corta el anterior de ese local.
+
+### 4.3 Carga masiva de comercios
+1. **Comercios → Importar planilla** → **Descargar plantilla (CSV)**: tiene las
+   columnas que el panel reconoce (nombre, rubro, localidad, dirección, frase,
+   horario, WhatsApp o teléfono, redes o web, Google Maps, nombre y correo de
+   contacto). Si la tabla del municipio tiene otros nombres de columna, cópialas
+   a la plantilla.
+2. Súbela (o pega el enlace de una planilla de Google compartida para ver) y
+   pulsa **Revisar**: el panel muestra qué crearía o cambiaría **antes** de
+   guardar. Las columnas que no reconoce aparecen aparte.
+3. **Importar lo seleccionado**. Los nuevos quedan como borrador; el admin
+   puede publicarlos en el mismo paso.
+4. Después, **Enlaces en lote** para invitar a todos esos locales.
+
+### 4.4 Configuración de Supabase (una vez, la hace el superadmin)
+- **Authentication → URL Configuration → Redirect URLs:** agrega la dirección
+  del sitio con `/**` (por ejemplo `https://papudo-dev.vercel.app/**` y, cuando
+  exista, el dominio del municipio). Así el correo de confirmación vuelve al
+  panel. No afecta a otros proyectos.
+- **Authentication → Sign In / Providers:** «Allow new users to sign up» debe
+  quedar **activado**: las invitaciones crean la cuenta así. Una cuenta sin
+  invitación no recibe ningún permiso.
+- Marcar al superadmin (una sola vez, en **SQL Editor**, con tu correo):
 
 ```sql
-insert into public.profiles (user_id, role, full_name)
-values ('PEGA-AQUÍ-EL-UID', 'editor', 'Nombre Apellido');
+update public.profiles set role = 'superadmin'
+where user_id = (select id from auth.users where email = 'TU-CORREO');
 ```
 
-Roles válidos: `admin`, `editor`, `verifier`. Usa siempre el **más bajo que
-alcance** para su trabajo.
-
-### 4.3 Entregar el acceso
-1. Envíale la dirección `…/admin`, su correo y la contraseña temporal **por un
-   canal privado** (no por un chat de grupo ni un correo compartido).
-2. Hoy el panel **no tiene** pantalla para cambiar la contraseña: si hay que
-   restablecerla, se hace desde **Authentication → Users** en Supabase (los
-   nombres exactos del menú pueden variar según la versión).
-3. Pídele que entre y revise que ve lo que corresponde a su rol (sección 1).
-
-### 4.4 Cambiar el rol o quitar el acceso
-```sql
--- Cambiar de rol
-update public.profiles set role = 'verifier' where user_id = 'UID';
-
--- Quitar el acceso sin borrar a la persona (se puede revertir con true)
-update public.profiles set active = false where user_id = 'UID';
-```
-Para eliminarla del todo: **Authentication → Users →** su fila **→ Delete user**.
-
-### 4.5 Ver quién tiene acceso hoy
-```sql
-select u.email, p.full_name, p.role, p.active
-from public.profiles p join auth.users u on u.id = p.user_id
-order by p.role, u.email;
-```
-
-### 4.6 Buenas prácticas
-- Que haya **al menos dos administradores**.
-- **Una cuenta por persona**, sin compartir contraseñas.
-- Quitar el acceso el mismo día que alguien deja el equipo.
-- En Supabase, **Authentication → Sign In / Providers**, mantener **desactivado**
-  «Allow new users to sign up»: nadie debería crear cuentas por su cuenta.
-- El panel pide solo correo y contraseña; no hay segundo factor. Usa
-  contraseñas largas y únicas.
-- Nunca pegues claves ni cadenas de conexión en un chat.
+Los roles antiguos de **Edición** y **Verificación** siguen funcionando para
+quien ya los tenía, pero ya no se invitan.
 
 ## 5. Si algo no funciona
 

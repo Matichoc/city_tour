@@ -125,6 +125,18 @@ export default async function OwnerPage({
         ) : null}
       </div>
 
+      <details className="border-border rounded-2xl border p-4">
+        <summary className="cursor-pointer font-semibold">
+          {t("helpTitle")}
+        </summary>
+        <ol className="mt-3 list-decimal space-y-1 pl-5">
+          {(t.raw("helpSteps") as string[]).map((s) => (
+            <li key={s}>{s}</li>
+          ))}
+        </ol>
+        <p className="text-muted mt-2 text-sm">{t("helpPhotos")}</p>
+      </details>
+
       {sp.enviado ? (
         <p role="status" className="bg-sea-soft rounded-xl p-3 font-semibold">
           {t("sent")}

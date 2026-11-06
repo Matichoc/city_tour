@@ -798,7 +798,8 @@
         "import": "Import spreadsheet",
         "edit": "Edit page",
         "counts": "{images, plural, =0 {No images} one {# image} other {# images}} · {videos, plural, =0 {no videos} one {# video} other {# videos}}",
-        "editFull": "Edit page, photos and videos"
+        "editFull": "Edit page, photos and videos",
+        "bulkLinks": "Links in bulk"
       },
       "back": "← Back to businesses",
       "newTitle": "New business",
@@ -968,7 +969,9 @@
           "source": "Could not read the spreadsheet again. Review it again."
         },
         "newFiles": "When you finish, open each new business to upload its logo, menu and photos.",
-        "open": "Open"
+        "open": "Open",
+        "templateHelp": "Template for the bulk upload:",
+        "template": "Download template (CSV)"
       },
       "sections": "Page sections",
       "sectionData": "Details",
@@ -1104,6 +1107,36 @@
         "limit": "Too many emails were sent in a short time. Try again in an hour.",
         "error": "The account couldn't be created. Try again in a while."
       }
+    },
+    "bulkLinks": {
+      "back": "← Businesses",
+      "title": "Business owner links in bulk",
+      "intro": "Choose the businesses, create all their personal links at once and send them on WhatsApp (to the business number, if it has one) or download them as a spreadsheet. Ideal after a bulk upload.",
+      "denied": "Only admin or superadmin can create links.",
+      "empty": "There are no businesses yet. Create them or upload them in bulk.",
+      "all": "All",
+      "withoutLink": "Only without a link",
+      "none": "None",
+      "noLink": "No link",
+      "activeUnused": "Has a link, not opened yet",
+      "activeUsed": "Has a link, already used",
+      "warning": "If a business already had a link, the new one revokes the previous.",
+      "generate": "Create {count, plural, one {# link} other {# links}}",
+      "generating": "Creating…",
+      "ready": "{count, plural, one {# link ready.} other {# links ready.}}",
+      "failed": "{count, plural, one {# couldn't be created.} other {# couldn't be created.}}",
+      "once": "Send them now or download the spreadsheet: for security they won't be shown again.",
+      "copyAll": "Copy all",
+      "copied": "Copied!",
+      "download": "Download spreadsheet (CSV)",
+      "sendTo": "Send to their WhatsApp",
+      "send": "Send on WhatsApp",
+      "csv": {
+        "name": "Business",
+        "link": "Link",
+        "whatsapp": "WhatsApp",
+        "message": "Message"
+      }
     }
   },
   "notices": {
@@ -1203,6 +1236,76 @@
     "submit": "Send for review",
     "logout": "Sign out on this device",
     "loggedOut": "You signed out. To come back, open your business link again.",
-    "pendingDraft": "The form shows your proposal under review, so you can continue from there."
+    "pendingDraft": "The form shows your proposal under review, so you can continue from there.",
+    "helpTitle": "How does it work?",
+    "helpSteps": [
+      "Check your business details and change whatever is needed.",
+      "Write your name and tap “Send for review”.",
+      "The Municipality reviews your proposal and publishes it in the guide. Here you'll see if it was approved, or the note if something needs fixing.",
+      "Come back whenever you want with the same link: save it in your bookmarks or in your WhatsApp."
+    ],
+    "helpPhotos": "New photos or your menu? Send them to the Municipality: they upload them to the panel with your permission."
+  },
+  "howTo": {
+    "title": "How to use the guide",
+    "subtitle": "All of Papudo on your phone, in eleven steps. Nothing to download, no account needed.",
+    "footer": "How to use the guide",
+    "steps": {
+      "open": {
+        "title": "Open it from the link",
+        "body": "The guide works in the browser of your phone or computer. To keep it handy, add it to your home screen from the browser menu.",
+        "cta": "Go home"
+      },
+      "doors": {
+        "title": "Choose your door",
+        "body": "The four squares of the municipal logo are the doors: sea and sun, countryside and wetland, heritage, and walks and sports. Further down are food and lodging.",
+        "cta": "See the doors"
+      },
+      "explore": {
+        "title": "Search or explore",
+        "body": "Type what you're looking for (a beach, seafood, a village) or open Explore: choose List or Map and filter by door and village. Each map pin has the color of its door.",
+        "cta": "Explore Papudo"
+      },
+      "place": {
+        "title": "Check each place",
+        "body": "Each listing tells you if it's open now and its seasonal hours, how to contact it, how to get there, its photos and reviews, and whether its details were verified. You can save it, add it to your trip or share it.",
+        "cta": "See the places"
+      },
+      "listen": {
+        "title": "Listen to it",
+        "body": "Tap “Listen” and a natural voice tells you about the place or the route. On routes it keeps playing with the screen locked, stop by stop.",
+        "cta": "Try it on a route"
+      },
+      "routes": {
+        "title": "Follow a route",
+        "body": "Routes follow the streets, on foot or by car, with their distance and time. Choose the mode above the map.",
+        "cta": "See the routes"
+      },
+      "trip": {
+        "title": "Plan your trip",
+        "body": "Add places, order them, choose your start time and see street times. Share it on WhatsApp with the stops in order.",
+        "cta": "My trip"
+      },
+      "camera": {
+        "title": "Get guided on the way",
+        "body": "With “Start trip” the guide follows your location and takes you to each stop. On short walks, the camera shows an arrow to the place and tells you when you arrive.",
+        "cta": "Try the trip"
+      },
+      "events": {
+        "title": "Check the events",
+        "body": "Festivities and celebrations in the commune, with a countdown and their source.",
+        "cta": "See the events"
+      },
+      "languages": {
+        "title": "Change the language",
+        "body": "Spanish, English or Portuguese: choose the language at the top, under “ES”.",
+        "cta": "Go home"
+      },
+      "privacy": {
+        "title": "Your privacy",
+        "body": "No account needed. Your location is used on your phone; only if you accept street routing is it sent, rounded, to calculate it, and it isn't stored.",
+        "cta": "Information"
+      }
+    }
   }
 }

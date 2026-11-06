@@ -48,6 +48,45 @@ export async function generateOwnerLinkAction(
   }
 }
 
+export type BulkLinksState = {
+  rows: { placeId: string; link: string }[];
+  failed: number;
+};
+
+/** Enlaces de varios locales de una vez (corta los anteriores de esos locales). */
+export async function generateOwnerLinksAction(
+  _prev: BulkLinksState,
+  formData: FormData,
+): Promise<BulkLinksState> {
+  const session = await moderator();
+  if (!canModerate(session)) return { rows: [], failed: 0 };
+  const ids = formData
+    .getAll("placeId")
+    .map((v) => text(v))
+    .filter((v) => UUID.test(v))
+    .slice(0, 200);
+  const h = await headers();
+  const host = h.get("x-forwarded-host") ?? h.get("host") ?? "localhost:3000";
+  const proto =
+    h.get("x-forwarded-proto") ??
+    (host.startsWith("localhost") ? "http" : "https");
+  const rows: BulkLinksState["rows"] = [];
+  let failed = 0;
+  for (const placeId of ids) {
+    try {
+      const token = await createOwnerKey(session, placeId);
+      rows.push({
+        placeId,
+        link: `${proto}://${host}/local/entrar?llave=${token}`,
+      });
+    } catch (error) {
+      failed += 1;
+      console.error("[admin] no se pudo generar un enlace en lote", error);
+    }
+  }
+  return { rows, failed };
+}
+
 export async function revokeOwnerLinkAction(formData: FormData) {
   const session = await moderator();
   const placeId = text(formData.get("placeId"));

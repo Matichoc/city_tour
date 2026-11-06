@@ -108,6 +108,7 @@ for (const path of [
   "/es/rutas/papudo-a-pie",
   "/es/recorrido",
   "/es/informacion",
+  "/es/como-usar",
   "/es/negocios",
   "/en",
   "/pt",
@@ -305,6 +306,7 @@ for (const path of [
   "/es/rutas/papudo-a-pie",
   "/es/eventos",
   "/es/informacion",
+  "/es/como-usar",
   "/es/recorrido",
 ]) {
   test(`celular: ${path} no es más ancha que la pantalla`, async ({ page }) => {
