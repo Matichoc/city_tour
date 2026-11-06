@@ -612,14 +612,16 @@
       "password": "Password",
       "submit": "Sign in",
       "error": "Wrong email or password, or your account has no access to the panel.",
-      "notConfigured": "The panel needs the database to be configured."
+      "notConfigured": "The panel needs the database to be configured.",
+      "confirmed": "Email confirmed. Sign in with your email and password."
     },
     "signOut": "Sign out",
     "role": {
       "admin": "Administration",
       "editor": "Editing",
       "verifier": "Verification",
-      "org_manager": "Business"
+      "org_manager": "Business",
+      "superadmin": "Superadmin"
     },
     "tabs": {
       "lugar": "Places",
@@ -673,7 +675,8 @@
       "business": "Businesses",
       "reviewsBadge": "{count} to review",
       "proposals": "Proposals",
-      "proposalsBadge": "{count} to review"
+      "proposalsBadge": "{count} to review",
+      "team": "Team"
     },
     "reviews": {
       "title": "Visitor reviews",
@@ -1040,6 +1043,67 @@
       "error": "Couldn't save. Try again.",
       "back": "← Proposals",
       "review": "Review"
+    },
+    "team": {
+      "title": "Team",
+      "intro": "Who has access to the panel. The superadmin (Matichoc) invites the municipal admins; they run the guide and invite business owners from each listing.",
+      "members": "People with access",
+      "since": "since {date}",
+      "inactive": "no access",
+      "deactivate": "Remove access",
+      "activate": "Restore access",
+      "saved": "Saved.",
+      "revoked": "Invitation revoked: the link no longer works.",
+      "inviteTitle": "Invite a municipal admin",
+      "inviteIntro": "{count} of {max} municipal admins are active. Each invitation takes a slot until it's used, expires (7 days) or is revoked.",
+      "note": "Who it's for (optional)",
+      "notePlaceholder": "E.g.: Tourism officer",
+      "invite": "Create invitation",
+      "linkTitle": "Invitation link",
+      "linkOnce": "Copy it now: for security it won't be shown again. Expires in 7 days.",
+      "copy": "Copy link",
+      "copied": "Copied!",
+      "whatsapp": "Send on WhatsApp",
+      "message": "Hi, I'm inviting you to manage “Papudo en tu Mano”, the commune's tourist guide. With this link you create your municipal panel account (expires in 7 days): {link}",
+      "noNote": "No name",
+      "expires": "expires {date}",
+      "revoke": "Revoke",
+      "onlySuper": "Invitations to the municipality are made by the superadmin (Matichoc).",
+      "state": {
+        "open": "unused",
+        "claimed": "account created by {email}, waiting for confirmation and first sign-in",
+        "used": "used",
+        "revoked": "revoked",
+        "expired": "expired"
+      },
+      "errors": {
+        "permiso": "That action is for the superadmin only.",
+        "save": "Couldn't save. Check that migrations 0032 and 0033 are applied.",
+        "limit": "There are already 2 municipal admins (counting open invitations). Revoke an invitation or remove an access."
+      }
+    },
+    "invite": {
+      "title": "Create your municipal panel account",
+      "intro": "You were invited as a municipal admin of “Papudo en tu Mano”. Create your account with your work email; then confirm the email and sign in to the panel.",
+      "name": "Your name",
+      "email": "Email",
+      "password": "Password",
+      "passwordHelp": "At least 10 characters. Use one you don't use anywhere else.",
+      "repeat": "Repeat the password",
+      "submit": "Create my account",
+      "sentTitle": "Check your email",
+      "sentBody": "We sent you an email to confirm your account. Open it, confirm, and sign in to the panel with your email and password: your municipal admin access is activated on that first sign-in. If you already had an account with that email, just sign in.",
+      "invalidTitle": "This invitation doesn't work",
+      "invalidBody": "The link isn't valid, was already used, expired (it lasts 7 days) or was revoked. Ask whoever invited you for a new one.",
+      "errors": {
+        "invalid": "The invitation no longer works. Ask for a new link.",
+        "name": "Write your name.",
+        "email": "Check the email.",
+        "weak": "The password must have at least 10 characters and not be too common.",
+        "repeat": "The passwords don't match.",
+        "limit": "Too many emails were sent in a short time. Try again in an hour.",
+        "error": "The account couldn't be created. Try again in a while."
+      }
     }
   },
   "notices": {

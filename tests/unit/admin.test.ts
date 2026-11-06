@@ -320,9 +320,16 @@ describe("proxy en /admin", () => {
     expect(res.cookies.get("adm_rt")?.value).toBe("");
   });
 
-  it("sigue detrás del enlace del equipo", async () => {
+  it("va fuera del enlace del equipo: tiene su propio ingreso (y el admin invitado entra)", async () => {
     vi.stubEnv("SHARE_LINK_SECRET", "clave");
+    stubFetch(() => new Response("", { status: 500 }));
     const res = await proxy(req());
+    expect(res.status).toBe(200);
+  });
+
+  it("el sitio público sigue detrás del enlace del equipo", async () => {
+    vi.stubEnv("SHARE_LINK_SECRET", "clave");
+    const res = await proxy(new NextRequest("https://x.vercel.app/es"));
     expect(res.status).toBe(403);
   });
 });

@@ -612,14 +612,16 @@
       "password": "Senha",
       "submit": "Entrar",
       "error": "E-mail ou senha incorretos, ou sua conta não tem acesso ao painel.",
-      "notConfigured": "O painel precisa do banco de dados configurado."
+      "notConfigured": "O painel precisa do banco de dados configurado.",
+      "confirmed": "E-mail confirmado. Entre com seu e-mail e senha."
     },
     "signOut": "Sair",
     "role": {
       "admin": "Administração",
       "editor": "Edição",
       "verifier": "Verificação",
-      "org_manager": "Negócio"
+      "org_manager": "Negócio",
+      "superadmin": "Superadmin"
     },
     "tabs": {
       "lugar": "Lugares",
@@ -673,7 +675,8 @@
       "business": "Negócios",
       "reviewsBadge": "{count} para revisar",
       "proposals": "Propostas",
-      "proposalsBadge": "{count} para revisar"
+      "proposalsBadge": "{count} para revisar",
+      "team": "Equipe"
     },
     "reviews": {
       "title": "Comentários de visitantes",
@@ -1040,6 +1043,67 @@
       "error": "Não foi possível salvar. Tente de novo.",
       "back": "← Propostas",
       "review": "Revisar"
+    },
+    "team": {
+      "title": "Equipe",
+      "intro": "Quem tem acesso ao painel. O superadmin (Matichoc) convida os admins municipais; eles administram o guia e convidam os comerciantes a partir de cada ficha.",
+      "members": "Pessoas com acesso",
+      "since": "desde {date}",
+      "inactive": "sem acesso",
+      "deactivate": "Tirar acesso",
+      "activate": "Devolver acesso",
+      "saved": "Salvo.",
+      "revoked": "Convite revogado: o link não funciona mais.",
+      "inviteTitle": "Convidar um admin municipal",
+      "inviteIntro": "Há {count} de {max} admins municipais ativos. Cada convite ocupa uma vaga até ser usado, vencer (7 dias) ou ser revogado.",
+      "note": "Para quem é (opcional)",
+      "notePlaceholder": "Ex.: Responsável pelo Turismo",
+      "invite": "Gerar convite",
+      "linkTitle": "Link do convite",
+      "linkOnce": "Copie agora: por segurança não será mostrado de novo. Vence em 7 dias.",
+      "copy": "Copiar link",
+      "copied": "Copiado!",
+      "whatsapp": "Enviar pelo WhatsApp",
+      "message": "Olá, convido você a administrar o «Papudo en tu Mano», o guia turístico da comuna. Com este link você cria sua conta do painel municipal (vence em 7 dias): {link}",
+      "noNote": "Sem nome",
+      "expires": "vence em {date}",
+      "revoke": "Revogar",
+      "onlySuper": "Os convites ao município são feitos pelo superadmin (Matichoc).",
+      "state": {
+        "open": "sem usar",
+        "claimed": "conta criada por {email}, falta confirmar e entrar",
+        "used": "usado",
+        "revoked": "revogado",
+        "expired": "vencido"
+      },
+      "errors": {
+        "permiso": "Essa ação é só do superadmin.",
+        "save": "Não foi possível salvar. Verifique se as migrações 0032 e 0033 estão aplicadas.",
+        "limit": "Já há 2 admins municipais (contando convites abertos). Revogue um convite ou tire um acesso."
+      }
+    },
+    "invite": {
+      "title": "Crie sua conta do painel municipal",
+      "intro": "Você foi convidado como admin municipal do «Papudo en tu Mano». Crie sua conta com seu e-mail de trabalho; depois confirme o e-mail e entre no painel.",
+      "name": "Seu nome",
+      "email": "E-mail",
+      "password": "Senha",
+      "passwordHelp": "Pelo menos 10 caracteres. Use uma que você não use em outro site.",
+      "repeat": "Repita a senha",
+      "submit": "Criar minha conta",
+      "sentTitle": "Confira seu e-mail",
+      "sentBody": "Enviamos um e-mail para confirmar sua conta. Abra, confirme e entre no painel com seu e-mail e senha: seu acesso de admin municipal é ativado nesse primeiro acesso. Se você já tinha conta com esse e-mail, é só entrar.",
+      "invalidTitle": "Este convite não serve",
+      "invalidBody": "O link não é válido, já foi usado, venceu (dura 7 dias) ou foi revogado. Peça um novo a quem te convidou.",
+      "errors": {
+        "invalid": "O convite não serve mais. Peça um link novo.",
+        "name": "Escreva seu nome.",
+        "email": "Confira o e-mail.",
+        "weak": "A senha deve ter pelo menos 10 caracteres e não ser muito comum.",
+        "repeat": "As senhas não coincidem.",
+        "limit": "Muitos e-mails foram enviados em pouco tempo. Tente de novo em uma hora.",
+        "error": "Não foi possível criar a conta. Tente de novo em instantes."
+      }
     }
   },
   "notices": {

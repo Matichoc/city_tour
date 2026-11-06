@@ -2,11 +2,11 @@
 begin;
 
 insert into auth.users (id, email, email_confirmed_at, raw_user_meta_data) values
-  ('00000000-0000-0000-0000-0000000005a1', 'super@test', now(), null),
-  ('00000000-0000-0000-0000-0000000005b1', 'muni.uno@test', now(), '{"full_name":"Muni Uno"}'),
-  ('00000000-0000-0000-0000-0000000005b2', 'muni.dos@test', now(), null),
-  ('00000000-0000-0000-0000-0000000005b3', 'muni.tres@test', now(), null),
-  ('00000000-0000-0000-0000-0000000005c1', 'sin.confirmar@test', null, null);
+  ('00000000-0000-0000-0000-0000000005a1', 'super@test.cl', now(), null),
+  ('00000000-0000-0000-0000-0000000005b1', 'muni.uno@test.cl', now(), '{"full_name":"Muni Uno"}'),
+  ('00000000-0000-0000-0000-0000000005b2', 'muni.dos@test.cl', now(), null),
+  ('00000000-0000-0000-0000-0000000005b3', 'muni.tres@test.cl', now(), null),
+  ('00000000-0000-0000-0000-0000000005c1', 'sin.confirmar@test.cl', null, null);
 insert into public.profiles (user_id, role) values
   ('00000000-0000-0000-0000-0000000005a1', 'superadmin');
 
@@ -29,7 +29,7 @@ select tests.eq('la invitación sirve',
 select tests.eq('un código inventado no sirve',
   public.staff_invite_info(repeat('a', 48)) ->> 'valid', 'false');
 select tests.eq('se reserva para el correo de la cuenta nueva',
-  public.claim_staff_invite((select v from team_t where k = 'i1'), 'Muni.Uno@test'), true);
+  public.claim_staff_invite((select v from team_t where k = 'i1'), 'Muni.Uno@test.cl'), true);
 select tests.eq('un correo inválido no reserva',
   public.claim_staff_invite((select v from team_t where k = 'i1'), 'no-es-correo'), false);
 select tests.logout();
@@ -47,7 +47,7 @@ select tests.eq('ya es admin', public.has_role('admin'), true);
 select tests.eq('un admin municipal no es superadmin', public.is_superadmin(), false);
 select tests.raises('un admin municipal no invita admins', $$select public.create_staff_invite(null)$$, '42501');
 select tests.eq('ve al equipo con correos',
-  (select string_agg(email, ',' order by email) from public.team_members()), 'muni.uno@test,super@test');
+  (select string_agg(email, ',' order by email) from public.team_members()), 'muni.uno@test.cl,super@test.cl');
 select tests.eq('un admin municipal no se cambia el rol (0 filas)',
   tests.rowcount($$update public.profiles set role = 'superadmin' where user_id = auth.uid()$$), 0);
 select tests.raises('un admin no quita accesos', $$select public.set_member_active('00000000-0000-0000-0000-0000000005a1', false)$$, '42501');

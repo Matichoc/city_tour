@@ -28,6 +28,7 @@ import {
   type Verification,
 } from "@/lib/admin/api";
 import { REVIEWS_TAG } from "@/lib/reviews";
+import { activateStaffInvite } from "@/lib/admin/team";
 import { NOTICES_TAG, SETTINGS_TAG } from "@/lib/business";
 import { ctaHref } from "@/lib/data";
 import {
@@ -48,7 +49,12 @@ export async function signIn(formData: FormData) {
     text(formData.get("password")),
   );
   // Solo el personal municipal entra: una cuenta sin perfil no recibe sesión.
-  const session = tokens ? await sessionFor(tokens.access_token) : null;
+  // La primera vez de alguien invitado, la invitación se activa aquí.
+  let session = tokens ? await sessionFor(tokens.access_token) : null;
+  if (tokens && !session) {
+    const activated = await activateStaffInvite(tokens.access_token);
+    if (activated) session = await sessionFor(tokens.access_token);
+  }
   if (!tokens || !session) redirect("/admin/ingresar?error=1");
 
   const jar = await cookies();

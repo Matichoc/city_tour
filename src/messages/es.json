@@ -612,14 +612,16 @@
       "password": "Contraseña",
       "submit": "Ingresar",
       "error": "Correo o contraseña incorrectos, o tu cuenta no tiene acceso al panel.",
-      "notConfigured": "El panel necesita la base de datos configurada."
+      "notConfigured": "El panel necesita la base de datos configurada.",
+      "confirmed": "Correo confirmado. Entra con tu correo y contraseña."
     },
     "signOut": "Salir",
     "role": {
       "admin": "Administración",
       "editor": "Edición",
       "verifier": "Verificación",
-      "org_manager": "Negocio"
+      "org_manager": "Negocio",
+      "superadmin": "Superadmin"
     },
     "tabs": {
       "lugar": "Lugares",
@@ -673,7 +675,8 @@
       "business": "Comercios",
       "reviewsBadge": "{count} por revisar",
       "proposals": "Propuestas",
-      "proposalsBadge": "{count} por revisar"
+      "proposalsBadge": "{count} por revisar",
+      "team": "Equipo"
     },
     "reviews": {
       "title": "Comentarios de visitantes",
@@ -1040,6 +1043,67 @@
       "error": "No se pudo guardar. Inténtalo de nuevo.",
       "back": "← Propuestas",
       "review": "Revisar"
+    },
+    "team": {
+      "title": "Equipo",
+      "intro": "Quién tiene acceso al panel. El superadmin (Matichoc) invita a los admin municipales; ellos administran la guía e invitan a los locatarios desde cada comercio.",
+      "members": "Personas con acceso",
+      "since": "desde el {date}",
+      "inactive": "sin acceso",
+      "deactivate": "Quitar acceso",
+      "activate": "Devolver acceso",
+      "saved": "Guardado.",
+      "revoked": "Invitación revocada: el enlace ya no funciona.",
+      "inviteTitle": "Invitar a un admin municipal",
+      "inviteIntro": "Hay {count} de {max} admin municipales activos. Cada invitación ocupa un cupo hasta que se usa, vence (7 días) o se revoca.",
+      "note": "Para quién es (opcional)",
+      "notePlaceholder": "Ej.: Encargada de Turismo",
+      "invite": "Generar invitación",
+      "linkTitle": "Enlace de invitación",
+      "linkOnce": "Cópialo ahora: por seguridad no se vuelve a mostrar. Vence en 7 días.",
+      "copy": "Copiar enlace",
+      "copied": "¡Copiado!",
+      "whatsapp": "Enviar por WhatsApp",
+      "message": "Hola, te invito a administrar «Papudo en tu Mano», la guía turística de la comuna. Con este enlace creas tu cuenta del panel municipal (vence en 7 días): {link}",
+      "noNote": "Sin nombre",
+      "expires": "vence el {date}",
+      "revoke": "Revocar",
+      "onlySuper": "Las invitaciones al municipio las hace el superadmin (Matichoc).",
+      "state": {
+        "open": "sin usar",
+        "claimed": "cuenta creada por {email}, falta que confirme y entre",
+        "used": "usada",
+        "revoked": "revocada",
+        "expired": "vencida"
+      },
+      "errors": {
+        "permiso": "Esa acción es solo del superadmin.",
+        "save": "No se pudo guardar. Revisa que las migraciones 0032 y 0033 estén aplicadas.",
+        "limit": "Ya hay 2 admin municipales (contando invitaciones abiertas). Revoca una invitación o quita un acceso."
+      }
+    },
+    "invite": {
+      "title": "Crea tu cuenta del panel municipal",
+      "intro": "Te invitaron como admin municipal de «Papudo en tu Mano». Crea tu cuenta con tu correo de trabajo; después confirmas el correo y entras al panel.",
+      "name": "Tu nombre",
+      "email": "Correo",
+      "password": "Contraseña",
+      "passwordHelp": "Al menos 10 caracteres. Usa una que no uses en otro sitio.",
+      "repeat": "Repite la contraseña",
+      "submit": "Crear mi cuenta",
+      "sentTitle": "Revisa tu correo",
+      "sentBody": "Te enviamos un correo para confirmar tu cuenta. Ábrelo, confírmala y entra al panel con tu correo y contraseña: tu acceso de admin municipal se activa en ese primer ingreso. Si ya tenías cuenta con ese correo, solo entra al panel.",
+      "invalidTitle": "Esta invitación no sirve",
+      "invalidBody": "El enlace no es válido, ya se usó, venció (dura 7 días) o fue revocado. Pide uno nuevo a quien te invitó.",
+      "errors": {
+        "invalid": "La invitación ya no sirve. Pide un enlace nuevo.",
+        "name": "Escribe tu nombre.",
+        "email": "Revisa el correo.",
+        "weak": "La contraseña debe tener al menos 10 caracteres y no ser muy común.",
+        "repeat": "Las contraseñas no coinciden.",
+        "limit": "Se enviaron muchos correos en poco rato. Inténtalo de nuevo en una hora.",
+        "error": "No se pudo crear la cuenta. Inténtalo de nuevo en un rato."
+      }
     }
   },
   "notices": {
