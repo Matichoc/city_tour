@@ -1,0 +1,281 @@
+import Link from "next/link";
+import { redirect } from "next/navigation";
+import { getTranslations } from "next-intl/server";
+import {
+  canModerate,
+  getSession,
+  isEntityKind,
+  listBusinessPlaces,
+  listEntities,
+  countReviewNotices,
+  listLocalities,
+  publicPath,
+  type EntityKind,
+  type EntitySummary,
+  type LocalitySummary,
+} from "@/lib/admin/api";
+import {
+  formatDate,
+  PublicationBadge,
+  VerificationBadge,
+} from "@/components/admin/badges";
+import { freshness } from "@/lib/freshness";
+
+const NAV_KEY = {
+  lugar: "places",
+  evento: "events",
+  ruta: "routes",
+  localidad: "localities",
+} as const;
+
+export default async function AdminFichas({
+  searchParams,
+}: {
+  searchParams: Promise<{ tipo?: string }>;
+}) {
+  const session = await getSession();
+  if (!session) redirect("/admin/ingresar");
+  const t = await getTranslations({ locale: "es", namespace: "admin" });
+  const { tipo } = await searchParams;
+  const kind: EntityKind | "localidad" =
+    tipo === "localidad"
+      ? "localidad"
+      : tipo && isEntityKind(tipo)
+        ? tipo
+        : "lugar";
+
+  let rows: EntitySummary[] = [];
+  let localities: LocalitySummary[] = [];
+  let staleBusinesses = 0;
+  const reviewNotices = await countReviewNotices(session.token);
+  try {
+    const [entities, businesses] = await Promise.all([
+      kind === "localidad"
+        ? listLocalities(session.token).then((l) => {
+            localities = l;
+            return [];
+          })
+        : listEntities(session.token, kind),
+      // El aviso es secundario: si falla, la lista de fichas igual se muestra.
+      listBusinessPlaces(session.token).catch(() => []),
+    ]);
+    rows = entities;
+    staleBusinesses = businesses.filter(
+      (b) => freshness(b.infoUpdatedAt) !== "ok",
+    ).length;
+  } catch (error) {
+    console.error("[admin] no se pudo listar", error);
+    return <p className="text-coral-ink">{t("loadError")}</p>;
+  }
+  // Crear y editar comercios: admin y editor (la base lo exige igual).
+  const canEdit = kind === "lugar" && canModerate(session);
+  const count = (v: EntitySummary["verification"]) =>
+    rows.filter((r) => r.verification === v).length;
+
+  return (
+    <>
+      {/* El tipo se elige en el menú lateral; el título usa el mismo nombre. */}
+      <h1 className="font-display text-sea-deep mb-4 text-3xl font-extrabold">
+        {t(`nav.${NAV_KEY[kind]}`)}
+      </h1>
+      {reviewNotices > 0 && (
+        <p
+          role="status"
+          className="bg-sun/30 text-earth mb-4 flex flex-wrap items-center gap-2 rounded-xl p-3 text-sm"
+        >
+          {t("reviews.newCount", { count: reviewNotices })}
+          <Link
+            href="/admin/comentarios?filtro=nuevos"
+            className="font-bold underline"
+          >
+            {t("reviews.reviewNow")}
+          </Link>
+        </p>
+      )}
+      {staleBusinesses > 0 && (
+        <p
+          role="status"
+          className="bg-sun/30 text-earth mb-4 flex flex-wrap items-center gap-2 rounded-xl p-3 text-sm"
+        >
+          {t("business.updates.pendingCount", { count: staleBusinesses })}
+          <Link
+            href="/admin/comercios#actualizacion"
+            className="font-bold underline"
+          >
+            {t("business.updates.review")}
+          </Link>
+        </p>
+      )}
+
+      {canEdit && (
+        <div className="mt-4 flex flex-wrap gap-2">
+          <Link
+            href="/admin/comercios/nuevo"
+            className="bg-sea-deep rounded-full px-5 py-2 font-bold text-white"
+          >
+            {t("places.nav.new")}
+          </Link>
+          <Link
+            href="/admin/comercios/importar"
+            className="border-border rounded-full border px-5 py-2 font-bold"
+          >
+            {t("places.nav.import")}
+          </Link>
+        </div>
+      )}
+
+      {kind === "localidad" ? (
+        <LocalityTable rows={localities} t={t} />
+      ) : (
+        <>
+          <p className="text-muted mt-4 text-sm">
+            {t("summary", {
+              total: rows.length,
+              verified: count("verified"),
+              pending: count("pending"),
+              outdated: count("outdated"),
+            })}
+          </p>
+
+          <div className="border-border bg-surface mt-4 overflow-x-auto rounded-2xl border">
+            <table className="w-full text-left text-sm">
+              <thead className="text-muted border-border border-b text-xs uppercase">
+                <tr>
+                  <th className="px-4 py-3">{t("columns.name")}</th>
+                  <th className="px-4 py-3">{t("columns.publication")}</th>
+                  <th className="px-4 py-3">{t("columns.verification")}</th>
+                  <th className="px-4 py-3">{t("columns.lastVerified")}</th>
+                  <th className="px-4 py-3">{t("columns.site")}</th>
+                  {canEdit && (
+                    <th className="px-4 py-3">{t("columns.edit")}</th>
+                  )}
+                </tr>
+              </thead>
+              <tbody>
+                {rows.map((r) => (
+                  <tr
+                    key={r.id}
+                    className="border-border border-b last:border-0"
+                  >
+                    <td className="px-4 py-3">
+                      <Link
+                        href={`/admin/${kind}/${r.id}`}
+                        className="text-sea-deep font-semibold underline-offset-2 hover:underline"
+                      >
+                        {r.name}
+                      </Link>
+                      {r.demo && (
+                        <span className="text-muted ml-2 text-xs">
+                          ({t("demo")})
+                        </span>
+                      )}
+                    </td>
+                    <td className="px-4 py-3">
+                      <PublicationBadge status={r.publication} />
+                    </td>
+                    <td className="px-4 py-3">
+                      <VerificationBadge status={r.verification} />
+                    </td>
+                    <td className="text-muted px-4 py-3">
+                      {formatDate(r.lastVerifiedAt) ?? t("never")}
+                    </td>
+                    <td className="px-4 py-3">
+                      {r.publication === "published" ? (
+                        <a
+                          href={publicPath(kind, r.slug)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-sea-deep font-semibold whitespace-nowrap underline"
+                        >
+                          {t("viewOnSite")} ↗
+                        </a>
+                      ) : (
+                        <span className="text-muted">{t("none")}</span>
+                      )}
+                    </td>
+                    {canEdit && (
+                      <td className="px-4 py-3">
+                        {r.demo ? (
+                          <span className="text-muted">{t("none")}</span>
+                        ) : (
+                          <Link
+                            href={`/admin/comercios/${r.id}`}
+                            className="bg-sea-soft text-sea-deep rounded-full px-3 py-1 text-sm font-bold whitespace-nowrap"
+                          >
+                            {t("places.nav.editFull")}
+                          </Link>
+                        )}
+                      </td>
+                    )}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </>
+      )}
+    </>
+  );
+}
+
+function LocalityTable({
+  rows,
+  t,
+}: {
+  rows: LocalitySummary[];
+  t: Awaited<ReturnType<typeof getTranslations<"admin">>>;
+}) {
+  return (
+    <>
+      <p className="text-muted mt-4 text-sm">{t("localitiesHelp")}</p>
+      <div className="border-border bg-surface mt-4 overflow-x-auto rounded-2xl border">
+        <table className="w-full text-left text-sm">
+          <thead className="text-muted border-border border-b text-xs uppercase">
+            <tr>
+              <th className="px-4 py-3">{t("columns.name")}</th>
+              <th className="px-4 py-3">{t("columns.places")}</th>
+              <th className="px-4 py-3">{t("columns.location")}</th>
+              <th className="px-4 py-3">{t("columns.source")}</th>
+              <th className="px-4 py-3">{t("columns.site")}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((r) => (
+              <tr key={r.id} className="border-border border-b last:border-0">
+                <td className="px-4 py-3 font-semibold">{r.name}</td>
+                <td className="px-4 py-3">{r.placeCount}</td>
+                <td className="text-muted px-4 py-3">
+                  {r.hasLocation ? t("yes") : t("pending")}
+                </td>
+                <td className="px-4 py-3">
+                  {r.source ? (
+                    <a
+                      href={r.source.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sea-deep underline"
+                    >
+                      {r.source.label}
+                    </a>
+                  ) : (
+                    <span className="text-muted">{t("none")}</span>
+                  )}
+                </td>
+                <td className="px-4 py-3">
+                  <a
+                    href={publicPath("localidad", r.slug)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sea-deep font-semibold whitespace-nowrap underline"
+                  >
+                    {t("viewOnSite")} ↗
+                  </a>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </>
+  );
+}

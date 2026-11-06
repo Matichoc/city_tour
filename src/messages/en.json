@@ -676,7 +676,53 @@
       "reviewsBadge": "{count} to review",
       "proposals": "Proposals",
       "proposalsBadge": "{count} to review",
-      "team": "Team"
+      "team": "Team",
+      "label": "Panel menu",
+      "menu": "Menu",
+      "closeMenu": "Close menu",
+      "home": "Home",
+      "places": "Places",
+      "events": "Events",
+      "routes": "Routes",
+      "localities": "Localities",
+      "ownerLinks": "Owner links",
+      "bulkImport": "Bulk upload",
+      "guide": "How to use",
+      "groups": {
+        "content": "Content",
+        "owners": "Businesses",
+        "visitors": "Visitors",
+        "team": "Team",
+        "superadmin": "Superadmin"
+      }
+    },
+    "home": {
+      "title": "Home",
+      "intro": "What needs doing in the guide today.",
+      "pendingTitle": "To review",
+      "allClear": "All up to date: nothing pending.",
+      "pending": {
+        "proposals": "{count, plural, one {proposal from a business} other {proposals from businesses}}",
+        "reviews": "{count, plural, one {new review} other {new reviews}}",
+        "overdue": "{count, plural, one {business with expired or missing details} other {businesses with expired or missing details}}",
+        "soon": "{count, plural, one {business expiring this month} other {businesses expiring this month}}",
+        "unverified": "{count, plural, one {published listing not verified} other {published listings not verified}}",
+        "invites": "{count, plural, one {unused invitation} other {unused invitations}}"
+      },
+      "action": {
+        "review": "Review",
+        "remind": "Remind",
+        "open": "View"
+      },
+      "quickTitle": "Shortcuts",
+      "quick": {
+        "newBusiness": "New business",
+        "ownerLinks": "Invite owners",
+        "bulkImport": "Bulk upload",
+        "inviteAdmin": "Invite municipal admin"
+      },
+      "help": "Questions about how it works?",
+      "helpLink": "See the guide"
     },
     "reviews": {
       "title": "Visitor reviews",

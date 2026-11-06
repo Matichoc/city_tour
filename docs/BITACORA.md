@@ -14,13 +14,13 @@ indicadas en cada versión.
 `docs/bitacora-notas.json` (clave `actual`, y el número de PR cuando exista),
 correr `pnpm bitacora` y subir el cambio en el mismo PR.
 
-## En preparación: v0.47 — Quien entra al panel también ve la vista previa
+## En preparación: v0.48 — Panel ordenado: menú lateral e inicio con lo pendiente
 
-Con el sitio cerrado, entrar al panel deja también el acceso a la vista previa por 30 días, así el admin municipal invitado (que no tiene el enlace del equipo) ve el sitio y la vista previa de cada ficha en la verificación. Si pierde el acceso al panel, la vista previa vence sola. Sin migraciones.
+El panel deja la barra de arriba por un menú lateral agrupado: Inicio; Contenido (Comercios, Lugares, Agenda, Rutas, Localidades); Locales (Propuestas, Enlaces de locatarios, Carga masiva); Visitantes (Comentarios) y Equipo (titulado «Superadmin» para el superadmin). En el celular se pliega bajo «Menú». El inicio muestra lo que hay por hacer, cada cosa con su botón: propuestas de locales, comentarios nuevos, comercios con datos vencidos o por vencer, fichas publicadas sin verificar e invitaciones sin usar; y accesos rápidos (nuevo comercio, invitar locatarios, carga masiva, invitar admin municipal). La lista de fichas pasa a /admin/fichas. Sin migraciones.
 
 - **Migraciones por correr en Supabase:** —
-- **Estado:** en revisión, [PR #55](https://github.com/Matichoc/city_tour/pull/55) (aún no está en `develop`).
-- **Última actualización de esta bitácora:** 2026-11-06 12:24
+- **Estado:** en revisión, [PR #56](https://github.com/Matichoc/city_tour/pull/56) (aún no está en `develop`).
+- **Última actualización de esta bitácora:** 2026-11-06 13:15
 
 ## Avance por día
 
@@ -29,7 +29,7 @@ trabajadas: hay pausas y trabajo sin registrar).
 
 | Día | Ventana de actividad | Registros | Versiones entregadas |
 | --- | --- | ---: | --- |
-| Viernes, 6 de noviembre de 2026 | 11:15 – 11:51 | 5 | v0.45, v0.46 |
+| Viernes, 6 de noviembre de 2026 | 11:15 – 13:01 | 8 | v0.45, v0.46, v0.47 |
 | Miércoles, 4 de noviembre de 2026 | 08:48 – 23:47 | 20 | v0.34, v0.35, v0.36, v0.37, v0.38, v0.39, v0.40, v0.41, v0.42, v0.43 |
 | Domingo, 1 de noviembre de 2026 | 01:52 – 02:37 | 4 | v0.32, v0.33 |
 | Domingo, 18 de octubre de 2026 | 00:09 – 00:39 | 7 | v0.29, v0.30, v0.31 |
@@ -41,6 +41,17 @@ trabajadas: hay pausas y trabajo sin registrar).
 | Lunes, 12 de octubre de 2026 | 15:43 – 17:53 | 10 | v0.1, v0.2, v0.3, v0.4 |
 
 ## Versiones
+
+### v0.47 — Quien entra al panel también ve la vista previa
+Viernes, 6 de noviembre de 2026, 13:14 · [PR #55](https://github.com/Matichoc/city_tour/pull/55)
+
+Con el sitio cerrado, entrar al panel deja también el acceso a la vista previa por 30 días, así el admin municipal invitado (que no tiene el enlace del equipo) ve el sitio y la vista previa de cada ficha en la verificación. Si pierde el acceso al panel, la vista previa vence sola. Sin migraciones.
+
+**Migraciones en Supabase:** —
+
+Registros:
+
+- 11-06 12:24 — Quien entra al panel también ve la vista previa del sitio cerrado (`36a1dc1`)
 
 ### v0.46 — Equipo en tres niveles, invitaciones y enlaces en lote
 Viernes, 6 de noviembre de 2026, 12:09 · [PR #54](https://github.com/Matichoc/city_tour/pull/54)
