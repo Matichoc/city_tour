@@ -14,13 +14,13 @@ indicadas en cada versión.
 `docs/bitacora-notas.json` (clave `actual`, y el número de PR cuando exista),
 correr `pnpm bitacora` y subir el cambio en el mismo PR.
 
-## En preparación: v0.46 — Equipo en tres niveles, invitaciones y enlaces en lote
+## En preparación: v0.47 — Quien entra al panel también ve la vista previa
 
-El acceso queda en tres niveles, siempre por invitación: el superadmin (Matichoc) invita desde «Equipo» a hasta 2 admin municipales con un enlace que vence en 7 días; la persona crea su cuenta, confirma el correo y al entrar queda como admin. Los admin invitan a los locatarios uno por uno o en lote («Comercios → Enlaces en lote»: generar, enviar a su WhatsApp, copiar o descargar la planilla). La carga masiva suma una plantilla CSV con las columnas que el panel reconoce. Nueva página «Cómo usar la guía» para turistas (español, inglés y portugués) y ayuda dentro de «Mi local». Solo el superadmin cambia perfiles del equipo; el panel va fuera del enlace del equipo porque tiene su propio ingreso.
+Con el sitio cerrado, entrar al panel deja también el acceso a la vista previa por 30 días, así el admin municipal invitado (que no tiene el enlace del equipo) ve el sitio y la vista previa de cada ficha en la verificación. Si pierde el acceso al panel, la vista previa vence sola. Sin migraciones.
 
-- **Migraciones por correr en Supabase:** 0032, 0033
-- **Estado:** en revisión, [PR #54](https://github.com/Matichoc/city_tour/pull/54) (aún no está en `develop`).
-- **Última actualización de esta bitácora:** 2026-11-06 11:49
+- **Migraciones por correr en Supabase:** —
+- **Estado:** en revisión, [PR #55](https://github.com/Matichoc/city_tour/pull/55) (aún no está en `develop`).
+- **Última actualización de esta bitácora:** 2026-11-06 12:24
 
 ## Avance por día
 
@@ -29,7 +29,7 @@ trabajadas: hay pausas y trabajo sin registrar).
 
 | Día | Ventana de actividad | Registros | Versiones entregadas |
 | --- | --- | ---: | --- |
-| Viernes, 6 de noviembre de 2026 | 11:15 – 11:41 | 4 | v0.45 |
+| Viernes, 6 de noviembre de 2026 | 11:15 – 11:51 | 5 | v0.45, v0.46 |
 | Miércoles, 4 de noviembre de 2026 | 08:48 – 23:47 | 20 | v0.34, v0.35, v0.36, v0.37, v0.38, v0.39, v0.40, v0.41, v0.42, v0.43 |
 | Domingo, 1 de noviembre de 2026 | 01:52 – 02:37 | 4 | v0.32, v0.33 |
 | Domingo, 18 de octubre de 2026 | 00:09 – 00:39 | 7 | v0.29, v0.30, v0.31 |
@@ -41,6 +41,20 @@ trabajadas: hay pausas y trabajo sin registrar).
 | Lunes, 12 de octubre de 2026 | 15:43 – 17:53 | 10 | v0.1, v0.2, v0.3, v0.4 |
 
 ## Versiones
+
+### v0.46 — Equipo en tres niveles, invitaciones y enlaces en lote
+Viernes, 6 de noviembre de 2026, 12:09 · [PR #54](https://github.com/Matichoc/city_tour/pull/54)
+
+El acceso queda en tres niveles, siempre por invitación: el superadmin (Matichoc) invita desde «Equipo» a hasta 2 admin municipales con un enlace que vence en 7 días; la persona crea su cuenta, confirma el correo y al entrar queda como admin. Los admin invitan a los locatarios uno por uno o en lote («Comercios → Enlaces en lote»: generar, enviar a su WhatsApp, copiar o descargar la planilla). La carga masiva suma una plantilla CSV con las columnas que el panel reconoce. Nueva página «Cómo usar la guía» para turistas (español, inglés y portugués) y ayuda dentro de «Mi local». Solo el superadmin cambia perfiles del equipo; el panel va fuera del enlace del equipo porque tiene su propio ingreso.
+
+**Migraciones en Supabase:** 0032, 0033
+
+Registros:
+
+- 11-06 11:35 — Equipo: rol superadmin e invitaciones al municipio (base de datos) (`ba15f70`)
+- 11-06 11:36 — Solo el superadmin cambia perfiles del equipo (`13746b9`)
+- 11-06 11:41 — Equipo: página Equipo, invitación del admin municipal y primer ingreso (`afc1c1e`)
+- 11-06 11:51 — Enlaces de locatarios en lote, plantilla de carga masiva y ayuda en la app (`73c22b4`)
 
 ### v0.45 — «Mi recorrido» con tiempos por calle
 Viernes, 6 de noviembre de 2026, 11:18 · [PR #53](https://github.com/Matichoc/city_tour/pull/53)

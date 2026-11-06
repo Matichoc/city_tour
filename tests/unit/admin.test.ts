@@ -34,6 +34,7 @@ import { jwtPayload, needsRefresh } from "@/lib/admin/auth";
 import { listEntities, listLocalities, publicPath } from "@/lib/admin/api";
 import { signIn, verify } from "@/app/admin/actions";
 import proxy from "@/proxy";
+import { verifyAccess } from "@/lib/share-link";
 
 const jwt = (payload: object) =>
   `x.${btoa(JSON.stringify(payload)).replace(/=+$/, "")}.y`;
@@ -110,6 +111,46 @@ describe("signIn", () => {
     );
     expect(to).toBe("/admin/ingresar?error=1");
     expect(jar.size).toBe(0);
+  });
+
+  it("con el sitio cerrado, quien entra al panel también ve la vista previa", async () => {
+    vi.stubEnv("SHARE_LINK_SECRET", "clave");
+    stubFetch((url) =>
+      url.includes("/auth/v1/token")
+        ? Response.json({
+            access_token: jwt({ sub: USER, exp: future() }),
+            refresh_token: "r",
+            expires_in: 3600,
+          })
+        : asRole("admin")(url),
+    );
+    await redirectOf(signIn(form({ email: "a@b.cl", password: "x" })));
+    const preview = jar.get("acceso_vista_previa");
+    const expires = await verifyAccess("clave", preview);
+    expect(expires).toBeGreaterThan(Date.now() + 29 * 24 * 3600 * 1000);
+    expect(expires).not.toBe(Infinity);
+  });
+
+  it("la primera vez de alguien invitado, activa la invitación y entra", async () => {
+    let activated = false;
+    stubFetch((url) => {
+      if (url.includes("/auth/v1/token"))
+        return Response.json({
+          access_token: jwt({ sub: USER, exp: future() }),
+          refresh_token: "r",
+          expires_in: 3600,
+        });
+      if (url.includes("rpc/activate_staff_invite")) {
+        activated = true;
+        return Response.json("admin");
+      }
+      return asRole(activated ? "admin" : null)(url);
+    });
+    const to = await redirectOf(
+      signIn(form({ email: "nueva@muni.cl", password: "x" })),
+    );
+    expect(to).toBe("/admin");
+    expect(activated).toBe(true);
   });
 
   it("con contraseña equivocada no llama más allá de Auth", async () => {
