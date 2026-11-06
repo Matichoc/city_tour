@@ -10,20 +10,28 @@ const field =
 export default async function SignInPage({
   searchParams,
 }: {
-  searchParams: Promise<{ error?: string }>;
+  searchParams: Promise<{ error?: string; confirmado?: string }>;
 }) {
   const t = await getTranslations({ locale: "es", namespace: "admin" });
   if (!supabaseConfig()) {
     return <p className="text-muted">{t("signIn.notConfigured")}</p>;
   }
   if (await getSession()) redirect("/admin");
-  const { error } = await searchParams;
+  const { error, confirmado } = await searchParams;
 
   return (
     <div className="mx-auto max-w-sm">
       <h1 className="font-display text-2xl font-extrabold">
         {t("signIn.title")}
       </h1>
+      {confirmado && !error && (
+        <p
+          role="status"
+          className="bg-field-soft text-field-deep mt-4 rounded-xl p-3 text-sm"
+        >
+          {t("signIn.confirmed")}
+        </p>
+      )}
       {error && (
         <p
           role="alert"

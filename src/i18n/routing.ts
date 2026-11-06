@@ -44,6 +44,7 @@ export const routing = defineRouting({
     },
     "/recorrido": { es: "/recorrido", en: "/my-trip", pt: "/meu-roteiro" },
     "/informacion": { es: "/informacion", en: "/info", pt: "/informacoes" },
+    "/como-usar": { es: "/como-usar", en: "/how-to-use", pt: "/como-usar" },
     "/negocios": {
       es: "/negocios",
       en: "/for-business",

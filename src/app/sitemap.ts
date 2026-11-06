@@ -14,6 +14,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       "/rutas",
       "/recorrido",
       "/informacion",
+      "/como-usar",
       "/negocios",
     ] as const) {
       entries.push({ url: localizedUrl(locale, href) });

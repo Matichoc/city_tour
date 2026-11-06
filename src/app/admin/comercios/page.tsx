@@ -92,6 +92,12 @@ export default async function BusinessAdmin({
             >
               {tp("nav.import")}
             </Link>
+            <Link
+              href="/admin/comercios/enlaces"
+              className="border-border rounded-full border px-5 py-2 font-bold"
+            >
+              {tp("nav.bulkLinks")}
+            </Link>
           </div>
         )}
       </div>

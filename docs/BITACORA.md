@@ -14,13 +14,13 @@ indicadas en cada versión.
 `docs/bitacora-notas.json` (clave `actual`, y el número de PR cuando exista),
 correr `pnpm bitacora` y subir el cambio en el mismo PR.
 
-## En preparación: v0.45 — «Mi recorrido» con tiempos por calle
+## En preparación: v0.46 — Equipo en tres niveles, invitaciones y enlaces en lote
 
-«Mi recorrido» deja de estimar los traslados en línea recta a 40 km/h: usa el tiempo y la distancia reales de cada tramo por calle, a pie o en auto, según el selector del mapa (el mismo camino que dibuja). La duración total, la distancia, la hora de llegada a cada parada y la vuelta al inicio se recalculan. Si el servicio de rutas no responde, vuelve a la estimación y lo avisa. Sin migraciones.
+El acceso queda en tres niveles, siempre por invitación: el superadmin (Matichoc) invita desde «Equipo» a hasta 2 admin municipales con un enlace que vence en 7 días; la persona crea su cuenta, confirma el correo y al entrar queda como admin. Los admin invitan a los locatarios uno por uno o en lote («Comercios → Enlaces en lote»: generar, enviar a su WhatsApp, copiar o descargar la planilla). La carga masiva suma una plantilla CSV con las columnas que el panel reconoce. Nueva página «Cómo usar la guía» para turistas (español, inglés y portugués) y ayuda dentro de «Mi local». Solo el superadmin cambia perfiles del equipo; el panel va fuera del enlace del equipo porque tiene su propio ingreso.
 
-- **Migraciones por correr en Supabase:** —
-- **Estado:** en revisión, [PR #53](https://github.com/Matichoc/city_tour/pull/53) (aún no está en `develop`).
-- **Última actualización de esta bitácora:** 2026-11-06 11:14
+- **Migraciones por correr en Supabase:** 0032, 0033
+- **Estado:** en revisión, [PR #54](https://github.com/Matichoc/city_tour/pull/54) (aún no está en `develop`).
+- **Última actualización de esta bitácora:** 2026-11-06 11:49
 
 ## Avance por día
 
@@ -29,6 +29,7 @@ trabajadas: hay pausas y trabajo sin registrar).
 
 | Día | Ventana de actividad | Registros | Versiones entregadas |
 | --- | --- | ---: | --- |
+| Viernes, 6 de noviembre de 2026 | 11:15 – 11:41 | 4 | v0.45 |
 | Miércoles, 4 de noviembre de 2026 | 08:48 – 23:47 | 20 | v0.34, v0.35, v0.36, v0.37, v0.38, v0.39, v0.40, v0.41, v0.42, v0.43 |
 | Domingo, 1 de noviembre de 2026 | 01:52 – 02:37 | 4 | v0.32, v0.33 |
 | Domingo, 18 de octubre de 2026 | 00:09 – 00:39 | 7 | v0.29, v0.30, v0.31 |
@@ -40,6 +41,15 @@ trabajadas: hay pausas y trabajo sin registrar).
 | Lunes, 12 de octubre de 2026 | 15:43 – 17:53 | 10 | v0.1, v0.2, v0.3, v0.4 |
 
 ## Versiones
+
+### v0.45 — «Mi recorrido» con tiempos por calle
+Viernes, 6 de noviembre de 2026, 11:18 · [PR #53](https://github.com/Matichoc/city_tour/pull/53)
+
+«Mi recorrido» deja de estimar los traslados en línea recta a 40 km/h: usa el tiempo y la distancia reales de cada tramo por calle, a pie o en auto, según el selector del mapa (el mismo camino que dibuja). La duración total, la distancia, la hora de llegada a cada parada y la vuelta al inicio se recalculan. Si el servicio de rutas no responde, vuelve a la estimación y lo avisa. Sin migraciones.
+
+Registros:
+
+- 11-06 11:15 — «Mi recorrido» con tiempos por calle (`3b2ad62`)
 
 ### v0.44 — Locatarios: enlace personal del local y validación municipal
 Jueves, 5 de noviembre de 2026, 00:43 · [PR #52](https://github.com/Matichoc/city_tour/pull/52)

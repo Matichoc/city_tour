@@ -56,7 +56,7 @@ const HEADERS: Record<Field, string[]> = {
   maps: ["enlace de google maps", "google maps"],
   photoHow: ["como nos mandas tus fotos"],
   photoBy: ["quien tomo las fotos"],
-  contactName: ["tu nombre"],
+  contactName: ["tu nombre", "nombre de contacto", "persona de contacto"],
   contactEmail: ["tu correo", "correo"],
   authorization: ["autorizacion"],
 };

@@ -22,6 +22,23 @@ export default async function ImportPlaces() {
         {t("import.title")}
       </h1>
       <p className="text-muted text-sm">{t("import.help")}</p>
+      <p className="text-sm">
+        {t("import.templateHelp")}{" "}
+        <a
+          href="/plantillas/carga-masiva-comercios.csv"
+          download
+          className="text-sea-deep font-semibold underline"
+        >
+          {t("import.template")}
+        </a>
+        {" · "}
+        <Link
+          href="/admin/comercios/enlaces"
+          className="text-sea-deep font-semibold underline"
+        >
+          {t("nav.bulkLinks")}
+        </Link>
+      </p>
       {canModerate(session) ? (
         <ImportPanel
           initialUrl={url}

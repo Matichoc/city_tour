@@ -57,6 +57,9 @@ export default async function AdminLayout({
               <Link href="/admin/comercios" className="text-sea-deep">
                 {t("nav.business")}
               </Link>
+              <Link href="/admin/equipo" className="text-sea-deep">
+                {t("nav.team")}
+              </Link>
               <Link href="/admin/propuestas" className="text-sea-deep">
                 {t("nav.proposals")}
                 {proposals > 0 && (
@@ -81,7 +84,9 @@ export default async function AdminLayout({
           {session && (
             <form action={signOut} className="flex items-center gap-3">
               <span className="text-muted text-sm">
-                {t(`role.${session.role}`)}
+                {session.superadmin
+                  ? t("role.superadmin")
+                  : t(`role.${session.role}`)}
               </span>
               <button
                 type="submit"

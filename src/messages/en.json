@@ -612,14 +612,16 @@
       "password": "Password",
       "submit": "Sign in",
       "error": "Wrong email or password, or your account has no access to the panel.",
-      "notConfigured": "The panel needs the database to be configured."
+      "notConfigured": "The panel needs the database to be configured.",
+      "confirmed": "Email confirmed. Sign in with your email and password."
     },
     "signOut": "Sign out",
     "role": {
       "admin": "Administration",
       "editor": "Editing",
       "verifier": "Verification",
-      "org_manager": "Business"
+      "org_manager": "Business",
+      "superadmin": "Superadmin"
     },
     "tabs": {
       "lugar": "Places",
@@ -673,7 +675,8 @@
       "business": "Businesses",
       "reviewsBadge": "{count} to review",
       "proposals": "Proposals",
-      "proposalsBadge": "{count} to review"
+      "proposalsBadge": "{count} to review",
+      "team": "Team"
     },
     "reviews": {
       "title": "Visitor reviews",
@@ -795,7 +798,8 @@
         "import": "Import spreadsheet",
         "edit": "Edit page",
         "counts": "{images, plural, =0 {No images} one {# image} other {# images}} · {videos, plural, =0 {no videos} one {# video} other {# videos}}",
-        "editFull": "Edit page, photos and videos"
+        "editFull": "Edit page, photos and videos",
+        "bulkLinks": "Links in bulk"
       },
       "back": "← Back to businesses",
       "newTitle": "New business",
@@ -965,7 +969,9 @@
           "source": "Could not read the spreadsheet again. Review it again."
         },
         "newFiles": "When you finish, open each new business to upload its logo, menu and photos.",
-        "open": "Open"
+        "open": "Open",
+        "templateHelp": "Template for the bulk upload:",
+        "template": "Download template (CSV)"
       },
       "sections": "Page sections",
       "sectionData": "Details",
@@ -1040,6 +1046,97 @@
       "error": "Couldn't save. Try again.",
       "back": "← Proposals",
       "review": "Review"
+    },
+    "team": {
+      "title": "Team",
+      "intro": "Who has access to the panel. The superadmin (Matichoc) invites the municipal admins; they run the guide and invite business owners from each listing.",
+      "members": "People with access",
+      "since": "since {date}",
+      "inactive": "no access",
+      "deactivate": "Remove access",
+      "activate": "Restore access",
+      "saved": "Saved.",
+      "revoked": "Invitation revoked: the link no longer works.",
+      "inviteTitle": "Invite a municipal admin",
+      "inviteIntro": "{count} of {max} municipal admins are active. Each invitation takes a slot until it's used, expires (7 days) or is revoked.",
+      "note": "Who it's for (optional)",
+      "notePlaceholder": "E.g.: Tourism officer",
+      "invite": "Create invitation",
+      "linkTitle": "Invitation link",
+      "linkOnce": "Copy it now: for security it won't be shown again. Expires in 7 days.",
+      "copy": "Copy link",
+      "copied": "Copied!",
+      "whatsapp": "Send on WhatsApp",
+      "message": "Hi, I'm inviting you to manage “Papudo en tu Mano”, the commune's tourist guide. With this link you create your municipal panel account (expires in 7 days): {link}",
+      "noNote": "No name",
+      "expires": "expires {date}",
+      "revoke": "Revoke",
+      "onlySuper": "Invitations to the municipality are made by the superadmin (Matichoc).",
+      "state": {
+        "open": "unused",
+        "claimed": "account created by {email}, waiting for confirmation and first sign-in",
+        "used": "used",
+        "revoked": "revoked",
+        "expired": "expired"
+      },
+      "errors": {
+        "permiso": "That action is for the superadmin only.",
+        "save": "Couldn't save. Check that migrations 0032 and 0033 are applied.",
+        "limit": "There are already 2 municipal admins (counting open invitations). Revoke an invitation or remove an access."
+      }
+    },
+    "invite": {
+      "title": "Create your municipal panel account",
+      "intro": "You were invited as a municipal admin of “Papudo en tu Mano”. Create your account with your work email; then confirm the email and sign in to the panel.",
+      "name": "Your name",
+      "email": "Email",
+      "password": "Password",
+      "passwordHelp": "At least 10 characters. Use one you don't use anywhere else.",
+      "repeat": "Repeat the password",
+      "submit": "Create my account",
+      "sentTitle": "Check your email",
+      "sentBody": "We sent you an email to confirm your account. Open it, confirm, and sign in to the panel with your email and password: your municipal admin access is activated on that first sign-in. If you already had an account with that email, just sign in.",
+      "invalidTitle": "This invitation doesn't work",
+      "invalidBody": "The link isn't valid, was already used, expired (it lasts 7 days) or was revoked. Ask whoever invited you for a new one.",
+      "errors": {
+        "invalid": "The invitation no longer works. Ask for a new link.",
+        "name": "Write your name.",
+        "email": "Check the email.",
+        "weak": "The password must have at least 10 characters and not be too common.",
+        "repeat": "The passwords don't match.",
+        "limit": "Too many emails were sent in a short time. Try again in an hour.",
+        "error": "The account couldn't be created. Try again in a while."
+      }
+    },
+    "bulkLinks": {
+      "back": "← Businesses",
+      "title": "Business owner links in bulk",
+      "intro": "Choose the businesses, create all their personal links at once and send them on WhatsApp (to the business number, if it has one) or download them as a spreadsheet. Ideal after a bulk upload.",
+      "denied": "Only admin or superadmin can create links.",
+      "empty": "There are no businesses yet. Create them or upload them in bulk.",
+      "all": "All",
+      "withoutLink": "Only without a link",
+      "none": "None",
+      "noLink": "No link",
+      "activeUnused": "Has a link, not opened yet",
+      "activeUsed": "Has a link, already used",
+      "warning": "If a business already had a link, the new one revokes the previous.",
+      "generate": "Create {count, plural, one {# link} other {# links}}",
+      "generating": "Creating…",
+      "ready": "{count, plural, one {# link ready.} other {# links ready.}}",
+      "failed": "{count, plural, one {# couldn't be created.} other {# couldn't be created.}}",
+      "once": "Send them now or download the spreadsheet: for security they won't be shown again.",
+      "copyAll": "Copy all",
+      "copied": "Copied!",
+      "download": "Download spreadsheet (CSV)",
+      "sendTo": "Send to their WhatsApp",
+      "send": "Send on WhatsApp",
+      "csv": {
+        "name": "Business",
+        "link": "Link",
+        "whatsapp": "WhatsApp",
+        "message": "Message"
+      }
     }
   },
   "notices": {
@@ -1139,6 +1236,76 @@
     "submit": "Send for review",
     "logout": "Sign out on this device",
     "loggedOut": "You signed out. To come back, open your business link again.",
-    "pendingDraft": "The form shows your proposal under review, so you can continue from there."
+    "pendingDraft": "The form shows your proposal under review, so you can continue from there.",
+    "helpTitle": "How does it work?",
+    "helpSteps": [
+      "Check your business details and change whatever is needed.",
+      "Write your name and tap “Send for review”.",
+      "The Municipality reviews your proposal and publishes it in the guide. Here you'll see if it was approved, or the note if something needs fixing.",
+      "Come back whenever you want with the same link: save it in your bookmarks or in your WhatsApp."
+    ],
+    "helpPhotos": "New photos or your menu? Send them to the Municipality: they upload them to the panel with your permission."
+  },
+  "howTo": {
+    "title": "How to use the guide",
+    "subtitle": "All of Papudo on your phone, in eleven steps. Nothing to download, no account needed.",
+    "footer": "How to use the guide",
+    "steps": {
+      "open": {
+        "title": "Open it from the link",
+        "body": "The guide works in the browser of your phone or computer. To keep it handy, add it to your home screen from the browser menu.",
+        "cta": "Go home"
+      },
+      "doors": {
+        "title": "Choose your door",
+        "body": "The four squares of the municipal logo are the doors: sea and sun, countryside and wetland, heritage, and walks and sports. Further down are food and lodging.",
+        "cta": "See the doors"
+      },
+      "explore": {
+        "title": "Search or explore",
+        "body": "Type what you're looking for (a beach, seafood, a village) or open Explore: choose List or Map and filter by door and village. Each map pin has the color of its door.",
+        "cta": "Explore Papudo"
+      },
+      "place": {
+        "title": "Check each place",
+        "body": "Each listing tells you if it's open now and its seasonal hours, how to contact it, how to get there, its photos and reviews, and whether its details were verified. You can save it, add it to your trip or share it.",
+        "cta": "See the places"
+      },
+      "listen": {
+        "title": "Listen to it",
+        "body": "Tap “Listen” and a natural voice tells you about the place or the route. On routes it keeps playing with the screen locked, stop by stop.",
+        "cta": "Try it on a route"
+      },
+      "routes": {
+        "title": "Follow a route",
+        "body": "Routes follow the streets, on foot or by car, with their distance and time. Choose the mode above the map.",
+        "cta": "See the routes"
+      },
+      "trip": {
+        "title": "Plan your trip",
+        "body": "Add places, order them, choose your start time and see street times. Share it on WhatsApp with the stops in order.",
+        "cta": "My trip"
+      },
+      "camera": {
+        "title": "Get guided on the way",
+        "body": "With “Start trip” the guide follows your location and takes you to each stop. On short walks, the camera shows an arrow to the place and tells you when you arrive.",
+        "cta": "Try the trip"
+      },
+      "events": {
+        "title": "Check the events",
+        "body": "Festivities and celebrations in the commune, with a countdown and their source.",
+        "cta": "See the events"
+      },
+      "languages": {
+        "title": "Change the language",
+        "body": "Spanish, English or Portuguese: choose the language at the top, under “ES”.",
+        "cta": "Go home"
+      },
+      "privacy": {
+        "title": "Your privacy",
+        "body": "No account needed. Your location is used on your phone; only if you accept street routing is it sent, rounded, to calculate it, and it isn't stored.",
+        "cta": "Information"
+      }
+    }
   }
 }

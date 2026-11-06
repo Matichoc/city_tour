@@ -88,6 +88,9 @@ export default async function proxy(request: NextRequest) {
   // «Mi local» va sin idioma y fuera del enlace del equipo: el locatario entra
   // con el enlace personal de su local, que la página misma valida.
   if (isOwnerArea(request)) return NextResponse.next();
+  // El panel tiene su propio ingreso: va fuera del enlace del equipo, así el
+  // admin municipal invitado puede crear su cuenta y entrar.
+  if (isAdmin(request)) return admin(request);
 
   const secret = process.env.SHARE_LINK_SECRET;
   if (!secret) {

@@ -603,7 +603,7 @@ describe("importar desde la planilla", () => {
     });
     stub();
     const res = await applyPlan(
-      { token: "t", userId: "u", role: "editor" },
+      { token: "t", userId: "u", role: "editor", superadmin: false },
       items,
       { publish: false, categories: {} },
     );
@@ -638,7 +638,7 @@ describe("importar desde la planilla", () => {
     ]);
     stub();
     const res = await applyPlan(
-      { token: "t", userId: "u", role: "admin" },
+      { token: "t", userId: "u", role: "admin", superadmin: false },
       items,
       { publish: true, categories: {} },
     );
@@ -659,10 +659,14 @@ describe("importar desde la planilla", () => {
     ]);
     expect(items[0]!.status).toBe("link");
     stub();
-    await applyPlan({ token: "t", userId: "u", role: "editor" }, items, {
-      publish: false,
-      categories: {},
-    });
+    await applyPlan(
+      { token: "t", userId: "u", role: "editor", superadmin: false },
+      items,
+      {
+        publish: false,
+        categories: {},
+      },
+    );
     const body = find("PATCH", `places?id=eq.${ID}`)[0]!.body as Record<
       string,
       unknown
@@ -1047,10 +1051,14 @@ describe("edición completa de un local", () => {
       },
     ]);
     stub();
-    await applyPlan({ token: "t", userId: "u", role: "editor" }, items, {
-      publish: false,
-      categories: {},
-    });
+    await applyPlan(
+      { token: "t", userId: "u", role: "editor", superadmin: false },
+      items,
+      {
+        publish: false,
+        categories: {},
+      },
+    );
     expect(find("PATCH", `places?id=eq.${ID}`)[0]!.body).toMatchObject({
       owner_validated: true,
     });
@@ -1071,10 +1079,14 @@ describe("snapshot de importación y datos personales", () => {
   it("un comercio nuevo no escribe el contacto en places.import_snapshot", async () => {
     const items = plan(csv(row()));
     stub();
-    await applyPlan({ token: "t", userId: "u", role: "editor" }, items, {
-      publish: false,
-      categories: {},
-    });
+    await applyPlan(
+      { token: "t", userId: "u", role: "editor", superadmin: false },
+      items,
+      {
+        publish: false,
+        categories: {},
+      },
+    );
     noContact(find("POST", "/rest/v1/places")[0]!.body);
     // Queda aparte, solo para el personal.
     const priv = find("POST", "place_import_private");
@@ -1106,10 +1118,14 @@ describe("snapshot de importación y datos personales", () => {
     );
     expect(items[0]!.changed).toEqual(["contactEmail"]);
     stub();
-    await applyPlan({ token: "t", userId: "u", role: "editor" }, items, {
-      publish: false,
-      categories: {},
-    });
+    await applyPlan(
+      { token: "t", userId: "u", role: "editor", superadmin: false },
+      items,
+      {
+        publish: false,
+        categories: {},
+      },
+    );
     const patch = find("PATCH", `places?id=eq.${ID}`)[0]!;
     noContact(patch.body);
     expect(JSON.stringify(patch.body)).not.toContain("otra@ejemplo.cl");
@@ -1133,10 +1149,14 @@ describe("snapshot de importación y datos personales", () => {
       },
     ]);
     stub();
-    await applyPlan({ token: "t", userId: "u", role: "editor" }, items, {
-      publish: false,
-      categories: {},
-    });
+    await applyPlan(
+      { token: "t", userId: "u", role: "editor", superadmin: false },
+      items,
+      {
+        publish: false,
+        categories: {},
+      },
+    );
     noContact(find("PATCH", `places?id=eq.${ID}`)[0]!.body);
     expect(find("POST", "place_import_private")[0]!.body).toMatchObject({
       place_id: ID,

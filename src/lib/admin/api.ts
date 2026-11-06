@@ -53,7 +53,10 @@ export const VERIFICATION_STATES: Verification[] = [
 export type Session = {
   token: string;
   userId: string;
+  /** El superadmin tiene todos los permisos de admin (y `superadmin: true`). */
   role: "admin" | "editor" | "verifier" | "org_manager";
+  /** Quien opera la plataforma (Matichoc): invita a los admin municipales. */
+  superadmin: boolean;
 };
 
 export type EntitySummary = {
@@ -117,12 +120,15 @@ export async function sessionFor(token: string): Promise<Session | null> {
   const userId = jwtPayload(token).sub;
   if (!userId) return null;
   try {
-    const role = await rest<Session["role"] | null>(
+    const role = await rest<Session["role"] | "superadmin" | null>(
       token,
       "rpc/current_app_role",
       { method: "POST", body: "{}" },
     );
-    return role && role !== "org_manager" ? { token, userId, role } : null;
+    if (!role || role === "org_manager") return null;
+    return role === "superadmin"
+      ? { token, userId, role: "admin", superadmin: true }
+      : { token, userId, role, superadmin: false };
   } catch {
     return null;
   }
