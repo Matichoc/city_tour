@@ -433,3 +433,44 @@ test("Mi local: sin enlace explica cómo pedirlo; uno inválido avisa", async ({
     ),
   ).toEqual([]);
 });
+
+test("recorrido: los tiempos salen del camino por calle, a pie o en auto", async ({
+  page,
+}) => {
+  await page.route("**/api/ruta/paradas**", (route) => {
+    const mode = new URL(route.request().url()).searchParams.get("mode");
+    const car = mode === "car";
+    return route.fulfill({
+      json: {
+        mode,
+        distanceMeters: car ? 2200 : 900,
+        durationSeconds: car ? 300 : 720,
+        coordinates: STREET_PATH.coordinates,
+        legs: [
+          {
+            distanceMeters: car ? 2200 : 900,
+            durationSeconds: car ? 300 : 720,
+          },
+        ],
+      },
+    });
+  });
+  await page.goto("/es/recorrido?l=papudo-plaza,playa-chica-papudo&h=10:00");
+  await expect(page.getByText("Tiempos por calle, a pie")).toBeVisible();
+  await expect(page.getByText("↓ 12 min de traslado · 0,9 km")).toBeVisible();
+  await page.getByRole("button", { name: "En auto" }).click();
+  await expect(page.getByText("Tiempos por calle, en auto")).toBeVisible();
+  await expect(page.getByText("↓ 5 min de traslado · 2,2 km")).toBeVisible();
+});
+
+test("recorrido: si no hay camino por calle, avisa que es una estimación", async ({
+  page,
+}) => {
+  await page.route("**/api/ruta/paradas**", (route) =>
+    route.fulfill({ status: 502, json: { error: "upstream" } }),
+  );
+  await page.goto("/es/recorrido?l=papudo-plaza,playa-chica-papudo&h=10:00");
+  await expect(
+    page.getByText(/Tiempos estimados: distancia en línea recta/),
+  ).toBeVisible();
+});

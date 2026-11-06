@@ -244,7 +244,8 @@
     "startDemo": "¿No estás en Papudo? Probar con ubicación simulada",
     "addShort": "A mi recorrido",
     "addedShort": "En mi recorrido",
-    "whatsappMessage": "Te comparto mi recorrido por Papudo ({count, plural, one {# parada} other {# paradas}}): {stops}. Ábrelo en Papudo en tu Mano:"
+    "whatsappMessage": "Te comparto mi recorrido por Papudo ({count, plural, one {# parada} other {# paradas}}): {stops}. Ábrelo en Papudo en tu Mano:",
+    "streetNote": "Tiempos por calle, {mode, select, car {en auto} other {a pie}}, más el tiempo de visita sugerido. Úsalo como guía, no como horario exacto."
   },
   "map": {
     "unavailable": "El mapa no está disponible en este momento. Puedes seguir usando la lista.",

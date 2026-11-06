@@ -14,13 +14,13 @@ indicadas en cada versión.
 `docs/bitacora-notas.json` (clave `actual`, y el número de PR cuando exista),
 correr `pnpm bitacora` y subir el cambio en el mismo PR.
 
-## En preparación: v0.44 — Locatarios: enlace personal del local y validación municipal
+## En preparación: v0.45 — «Mi recorrido» con tiempos por calle
 
-Los comercios ya pueden actualizar su ficha. El personal genera en el panel un enlace personal del local y se lo manda por WhatsApp o correo; con él, sin cuenta ni contraseña, el locatario entra a «Mi local» y propone cambios a la descripción, el horario, la dirección, el botón principal, Instagram y el sitio web. Nada se publica solo: en «Propuestas» el personal ve lo que hay ahora y lo propuesto, y al aprobar se aplica a la ficha, queda «confirmada por el local y validada por la Municipalidad» y con fecha de actualización; al rechazar, el locatario ve la nota. Del enlace solo se guarda su huella, vence al año y se puede cortar. Sin clave de servicio ni cambios en la configuración de Supabase.
+«Mi recorrido» deja de estimar los traslados en línea recta a 40 km/h: usa el tiempo y la distancia reales de cada tramo por calle, a pie o en auto, según el selector del mapa (el mismo camino que dibuja). La duración total, la distancia, la hora de llegada a cada parada y la vuelta al inicio se recalculan. Si el servicio de rutas no responde, vuelve a la estimación y lo avisa. Sin migraciones.
 
-- **Migraciones por correr en Supabase:** 0031
-- **Estado:** en revisión, [PR #52](https://github.com/Matichoc/city_tour/pull/52) (aún no está en `develop`).
-- **Última actualización de esta bitácora:** 2026-11-04 23:29
+- **Migraciones por correr en Supabase:** —
+- **Estado:** en revisión, [PR #53](https://github.com/Matichoc/city_tour/pull/53) (aún no está en `develop`).
+- **Última actualización de esta bitácora:** 2026-11-06 11:14
 
 ## Avance por día
 
@@ -29,7 +29,7 @@ trabajadas: hay pausas y trabajo sin registrar).
 
 | Día | Ventana de actividad | Registros | Versiones entregadas |
 | --- | --- | ---: | --- |
-| Miércoles, 4 de noviembre de 2026 | 08:48 – 23:16 | 19 | v0.34, v0.35, v0.36, v0.37, v0.38, v0.39, v0.40, v0.41, v0.42, v0.43 |
+| Miércoles, 4 de noviembre de 2026 | 08:48 – 23:47 | 20 | v0.34, v0.35, v0.36, v0.37, v0.38, v0.39, v0.40, v0.41, v0.42, v0.43 |
 | Domingo, 1 de noviembre de 2026 | 01:52 – 02:37 | 4 | v0.32, v0.33 |
 | Domingo, 18 de octubre de 2026 | 00:09 – 00:39 | 7 | v0.29, v0.30, v0.31 |
 | Sábado, 17 de octubre de 2026 | 00:01 – 23:30 | 34 | v0.16, v0.17, v0.18, v0.19, v0.20, v0.21, v0.22, v0.23, v0.24, v0.25, v0.26, v0.27, v0.28 |
@@ -40,6 +40,18 @@ trabajadas: hay pausas y trabajo sin registrar).
 | Lunes, 12 de octubre de 2026 | 15:43 – 17:53 | 10 | v0.1, v0.2, v0.3, v0.4 |
 
 ## Versiones
+
+### v0.44 — Locatarios: enlace personal del local y validación municipal
+Jueves, 5 de noviembre de 2026, 00:43 · [PR #52](https://github.com/Matichoc/city_tour/pull/52)
+
+Los comercios ya pueden actualizar su ficha. El personal genera en el panel un enlace personal del local y se lo manda por WhatsApp o correo; con él, sin cuenta ni contraseña, el locatario entra a «Mi local» y propone cambios a la descripción, el horario, la dirección, el botón principal, Instagram y el sitio web. Nada se publica solo: en «Propuestas» el personal ve lo que hay ahora y lo propuesto, y al aprobar se aplica a la ficha, queda «confirmada por el local y validada por la Municipalidad» y con fecha de actualización; al rechazar, el locatario ve la nota. Del enlace solo se guarda su huella, vence al año y se puede cortar. Sin clave de servicio ni cambios en la configuración de Supabase.
+
+**Migraciones en Supabase:** 0031
+
+Registros:
+
+- 11-04 23:16 — Locatarios: enlace personal del local y propuestas (base de datos) (`f0ea779`)
+- 11-04 23:47 — Locatarios: «Mi local» y propuestas en el panel (`c42dd69`)
 
 ### v0.43 — «Enviar por WhatsApp» en rutas y recorrido
 Miércoles, 4 de noviembre de 2026, 23:07 · [PR #51](https://github.com/Matichoc/city_tour/pull/51)

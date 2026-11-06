@@ -24,6 +24,8 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { PlacesMap } from "@/components/map/places-map";
 import { AddRouteToTripButton } from "@/components/trip/add-route-to-trip-button";
 import { LiveTrip } from "@/components/trip/live-trip";
+import { useStreetPath } from "@/components/map/use-street-path";
+import type { RouteMode } from "@/lib/routing/types";
 import { WhatsAppButton, usePageUrl } from "@/components/share/whatsapp-button";
 
 export type TripRouteOption = {
@@ -187,6 +189,32 @@ export function TripView({
     }
   }
 
+  // Tiempos por calle (a pie o en auto) en vez de línea recta. El mapa usa el
+  // mismo camino y su selector cambia también los tiempos.
+  const [mode, setMode] = useState<RouteMode>("walk");
+  const pathStops = useMemo(() => {
+    if (!itinerary || itinerary.stops.length < 2) return [];
+    const points = itinerary.stops.map((s) => {
+      const p = bySlug.get(s.placeId)!;
+      return { latitude: p.latitude, longitude: p.longitude };
+    });
+    return itinerary.returnLegDistanceKm !== null
+      ? [...points, points[0]!]
+      : points;
+  }, [itinerary, bySlug]);
+  const street = useStreetPath(pathStops, mode);
+  const timed = useMemo(() => {
+    const legs = street.route?.legs;
+    if (!itinerary || !legs) return itinerary;
+    return ItineraryEngine.withLegTimes(
+      itinerary,
+      legs.map((l) => ({
+        distanceKm: l.distanceMeters / 1000,
+        minutes: l.durationSeconds / 60,
+      })),
+    );
+  }, [itinerary, street.route]);
+
   if (!itinerary || selected.length === 0) {
     return (
       <div className="flex flex-col gap-6 px-4 py-6">
@@ -221,7 +249,9 @@ export function TripView({
     );
   }
 
-  const ordered = itinerary.stops.map((s) => ({
+  const shown = timed ?? itinerary;
+  const byStreet = shown !== itinerary;
+  const ordered = shown.stops.map((s) => ({
     stop: s,
     place: bySlug.get(s.placeId)!,
   }));
@@ -296,8 +326,8 @@ export function TripView({
         className="grid grid-cols-3 gap-2 text-center"
       >
         {[
-          [t("totalTime"), formatDuration(itinerary.totalDurationMinutes)],
-          [t("totalDistance"), formatKm(itinerary.totalDistanceKm)],
+          [t("totalTime"), formatDuration(shown.totalDurationMinutes)],
+          [t("totalDistance"), formatKm(shown.totalDistanceKm)],
           [t("stops"), String(ordered.length)],
         ].map(([label, value]) => (
           <div key={label} className="bg-sea-soft rounded-2xl p-3">
@@ -335,7 +365,12 @@ export function TripView({
         {t("startDemo")}
       </button>
 
-      <PlacesMap markers={markers} connect className="h-72" />
+      <PlacesMap
+        markers={markers}
+        connect
+        className="h-72"
+        street={{ mode, onModeChange: setMode, path: street }}
+      />
 
       <ol className="flex flex-col gap-3">
         {ordered.map(({ stop, place }, i) => {
@@ -425,18 +460,18 @@ export function TripView({
         })}
       </ol>
 
-      {itinerary.returnLegDurationMinutes ? (
+      {shown.returnLegDurationMinutes ? (
         <p className="text-muted text-sm font-semibold">
           ↩{" "}
           {t("returnLeg", {
-            time: formatDuration(itinerary.returnLegDurationMinutes),
-            distance: formatKm(itinerary.returnLegDistanceKm ?? 0),
+            time: formatDuration(shown.returnLegDurationMinutes),
+            distance: formatKm(shown.returnLegDistanceKm ?? 0),
           })}
         </p>
       ) : null}
 
       <p className="bg-earth-soft text-earth rounded-xl p-3 text-sm">
-        {t("estimateNote")}
+        {byStreet ? t("streetNote", { mode }) : t("estimateNote")}
       </p>
 
       {live ? (
