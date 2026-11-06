@@ -35,8 +35,7 @@ export async function PoweredBy({ locale }: { locale: Locale }) {
         />
       </p>
       <p className="inline-flex min-h-11 items-center gap-1.5 px-3">
-        {t("poweredBy")}
-        <span className="font-bold">{DEVELOPER.name}</span>
+        {t("poweredBy")} <span className="font-bold">{DEVELOPER.name}</span>
       </p>
     </footer>
   );
