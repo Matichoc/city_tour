@@ -29,6 +29,7 @@ import {
 } from "@/lib/admin/api";
 import { REVIEWS_TAG } from "@/lib/reviews";
 import { activateStaffInvite } from "@/lib/admin/team";
+import { ACCESS_COOKIE as PREVIEW_COOKIE, signAccess } from "@/lib/share-link";
 import { NOTICES_TAG, SETTINGS_TAG } from "@/lib/business";
 import { ctaHref } from "@/lib/data";
 import {
@@ -40,6 +41,7 @@ import {
   signOutRemote,
 } from "@/lib/admin/auth";
 
+const PREVIEW_DAYS = 30;
 const text = (v: FormDataEntryValue | null) =>
   typeof v === "string" ? v.trim() : "";
 
@@ -60,6 +62,19 @@ export async function signIn(formData: FormData) {
   const jar = await cookies();
   jar.set(ACCESS_COOKIE, tokens.access_token, cookieOptions(tokens.expires_in));
   jar.set(REFRESH_COOKIE, tokens.refresh_token, cookieOptions(REFRESH_MAX_AGE));
+  // Con el sitio cerrado, quien entra al panel también ve la vista previa
+  // (30 días; si pierde el acceso al panel, la vista previa vence sola).
+  const secret = process.env.SHARE_LINK_SECRET;
+  if (secret) {
+    const expiresAt = Date.now() + PREVIEW_DAYS * 24 * 3600 * 1000;
+    jar.set(PREVIEW_COOKIE, await signAccess(secret, expiresAt), {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      expires: new Date(expiresAt),
+    });
+  }
   redirect("/admin");
 }
 
