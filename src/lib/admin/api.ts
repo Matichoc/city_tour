@@ -55,7 +55,7 @@ export type Session = {
   userId: string;
   /** El superadmin tiene todos los permisos de admin (y `superadmin: true`). */
   role: "admin" | "editor" | "verifier" | "org_manager";
-  /** Quien opera la plataforma (Matichoc): invita a los admin municipales. */
+  /** Quien opera la plataforma: invita a los admin municipales. */
   superadmin: boolean;
 };
 

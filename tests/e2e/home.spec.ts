@@ -555,7 +555,16 @@ test("buscador: explica qué se puede buscar y los ejemplos llevan a resultados"
 
 test("información: presenta a quien desarrolla la guía", async ({ page }) => {
   await page.goto("/es/informacion");
-  await expect(page.getByText(/Cristóbal Roco/)).toBeVisible();
+  await expect(
+    page.getByText(/Esta guía la desarrolla Cristóbal Roco/),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("link", { name: "Escribir a Cristóbal Roco" }),
+  ).toHaveAttribute("href", /^mailto:/);
+  // El pie también lo nombra, sin Matichoc.
+  await expect(page.locator("footer")).toContainText(
+    "Desarrollado por Cristóbal Roco",
+  );
 });
 
 test("cámara a pie: se puede elegir la figura que señala y se recuerda", async ({

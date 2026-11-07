@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { LOCALITIES, PLACES } from "@/content/papudo-places";
 import { ROUTES } from "@/content/papudo-routes";
-import { MUNICIPALITY, SPONSOR } from "@/content/catalog";
+import { DEVELOPER, MUNICIPALITY } from "@/content/catalog";
 import { STATIC_CONTENT } from "@/content";
 import {
   canonicalCategory,
@@ -231,9 +231,10 @@ describe("completitud respecto de directorio_turistico (auditoría de Papudo)", 
     expect(MUNICIPALITY.website).toContain("munipapudo.cl");
     expect(MUNICIPALITY.sources.length).toBeGreaterThanOrEqual(2);
   });
-  it("Matichoc figura como créditos con su enlace", () => {
-    expect(SPONSOR.name).toBe("Matichoc");
-    expect(SPONSOR.websiteUrl).toBe("https://www.matichoc.cl");
+  it("los créditos nombran a Cristóbal Roco y no a Matichoc", () => {
+    expect(DEVELOPER.name).toBe("Cristóbal Roco");
+    for (const m of [es, en, pt])
+      expect(JSON.stringify(m)).not.toMatch(/matichoc/i);
   });
 });
 

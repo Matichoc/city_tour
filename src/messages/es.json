@@ -300,7 +300,7 @@
     "authorTitle": "Quién lo desarrolla",
     "authorBody": "Esta guía la desarrolla Cristóbal Roco, especialista en desarrollo y soluciones de inteligencia artificial para negocios.",
     "authorNote": "Las ilustraciones están hechas con IA y se muestran con su etiqueta. Los datos siempre se revisan con fuentes y con la comunidad.",
-    "authorLink": "Conocer a Matichoc",
+    "authorLink": "Escribir a Cristóbal Roco",
     "dataTitle": "Sobre estos datos",
     "dataBody": "Cada lugar muestra su fuente y su estado de verificación. Nada se da por confirmado hasta que lo revisa una persona: horarios, precios y accesos pueden cambiar.",
     "emergencyTitle": "Números de emergencia",
@@ -1095,7 +1095,7 @@
     },
     "team": {
       "title": "Equipo",
-      "intro": "Quién tiene acceso al panel. El superadmin (Matichoc) invita a los admin municipales; ellos administran la guía e invitan a los locatarios desde cada comercio.",
+      "intro": "Quién tiene acceso al panel. El superadmin invita a los admin municipales; ellos administran la guía e invitan a los locatarios desde cada comercio.",
       "members": "Personas con acceso",
       "since": "desde el {date}",
       "inactive": "sin acceso",
@@ -1117,7 +1117,7 @@
       "noNote": "Sin nombre",
       "expires": "vence el {date}",
       "revoke": "Revocar",
-      "onlySuper": "Las invitaciones al municipio las hace el superadmin (Matichoc).",
+      "onlySuper": "Las invitaciones al municipio las hace el superadmin.",
       "state": {
         "open": "sin usar",
         "claimed": "cuenta creada por {email}, falta que confirme y entre",

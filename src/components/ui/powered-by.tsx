@@ -1,9 +1,9 @@
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import { SPONSOR } from "@/content/catalog";
+import { DEVELOPER } from "@/content/catalog";
 import type { Locale } from "@/i18n/routing";
 
-/** Pie: Información (en celular no está en la barra) y "Desarrollado por Matichoc". */
+/** Pie: Información (en celular no está en la barra) y quién la desarrolla. */
 export async function PoweredBy({ locale }: { locale: Locale }) {
   const t = await getTranslations({ locale, namespace: "common" });
   const n = await getTranslations({ locale, namespace: "nav" });
@@ -34,25 +34,9 @@ export async function PoweredBy({ locale }: { locale: Locale }) {
           className="h-5 w-auto"
         />
       </p>
-      <a
-        href={SPONSOR.websiteUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        title={SPONSOR.tagline[locale]}
-        className="hover:text-foreground inline-flex min-h-11 items-center gap-1.5 rounded-full px-3 transition"
-      >
-        {t("poweredBy")}
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={SPONSOR.logoPath}
-          alt=""
-          width={16}
-          height={16}
-          loading="lazy"
-          className="size-4 rounded"
-        />
-        <span className="font-bold">{SPONSOR.name}</span>
-      </a>
+      <p className="inline-flex min-h-11 items-center gap-1.5 px-3">
+        {t("poweredBy")} <span className="font-bold">{DEVELOPER.name}</span>
+      </p>
     </footer>
   );
 }
