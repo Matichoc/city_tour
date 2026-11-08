@@ -613,7 +613,8 @@
       "submit": "Ingresar",
       "error": "Correo o contraseña incorrectos, o tu cuenta no tiene acceso al panel.",
       "notConfigured": "El panel necesita la base de datos configurada.",
-      "confirmed": "Correo confirmado. Entra con tu correo y contraseña."
+      "confirmed": "Correo confirmado. Entra con tu correo y contraseña.",
+      "sessionNote": "Por seguridad, la sesión se cierra sola tras 4 horas sin uso. En un computador compartido, pulsa «Salir» al terminar."
     },
     "signOut": "Salir",
     "role": {

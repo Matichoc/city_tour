@@ -200,10 +200,15 @@
     "resumen": "El panel deja la barra de arriba por un menú lateral agrupado: Inicio; Contenido (Comercios, Lugares, Agenda, Rutas, Localidades); Locales (Propuestas, Enlaces de locatarios, Carga masiva); Visitantes (Comentarios) y Equipo (titulado «Superadmin» para el superadmin). En el celular se pliega bajo «Menú». El inicio muestra lo que hay por hacer, cada cosa con su botón: propuestas de locales, comentarios nuevos, comercios con datos vencidos o por vencer, fichas publicadas sin verificar e invitaciones sin usar; y accesos rápidos (nuevo comercio, invitar locatarios, carga masiva, invitar admin municipal). La lista de fichas pasa a /admin/fichas. Sin migraciones.",
     "migraciones": "—"
   },
-  "actual": {
-    "pr": 57,
+  "57": {
     "titulo": "Créditos: desarrollado por Cristóbal Roco",
     "resumen": "El pie del sitio dice «Desarrollado por Cristóbal Roco» (sin el logo ni el enlace de Matichoc) y en Información el enlace pasa a «Escribir a Cristóbal Roco» (correo). Los textos del panel ya no nombran a Matichoc. Una prueba revisa que ningún texto de la app lo mencione. Sin migraciones.",
+    "migraciones": "—"
+  },
+  "actual": {
+    "pr": 58,
+    "titulo": "Sesión del panel de 4 horas y correo de confirmación propio",
+    "resumen": "La sesión del panel se cierra sola tras unas 4 horas sin uso (antes duraba 30 días mientras se usara), para que un computador compartido no quede abierto. La pantalla de ingreso lo avisa y pide pulsar «Salir» en computadores compartidos. Se suma la plantilla del correo de confirmación en español con la marca Papudo en tu Mano (supabase/templates/confirmacion.html) y el manual explica cómo aplicarla y por qué esperar al proyecto propio de Supabase. Sin migraciones.",
     "migraciones": "—"
   }
 }

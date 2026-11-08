@@ -68,6 +68,7 @@ export default async function SignInPage({
           {t("signIn.submit")}
         </button>
       </form>
+      <p className="text-muted mt-4 text-sm">{t("signIn.sessionNote")}</p>
     </div>
   );
 }
