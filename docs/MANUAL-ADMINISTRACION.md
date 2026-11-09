@@ -21,6 +21,10 @@ Los visitantes no tienen cuenta.
 2. Escribe tu **correo** y **contraseña** y pulsa **Ingresar**.
 3. Para terminar, pulsa **Salir**.
 
+La sesión se cierra sola tras unas **4 horas sin usar el panel**. En un
+computador compartido (por ejemplo, en la oficina municipal), pulsa siempre
+**Salir** al terminar.
+
 Si aparece «Correo o contraseña incorrectos, o tu cuenta no tiene acceso al
 panel», revisa los datos; si están bien, tu cuenta aún no tiene rol o está
 desactivada (ver sección 5).
@@ -175,6 +179,15 @@ El acceso funciona en tres niveles, siempre por **enlace de invitación**:
 - **Authentication → Sign In / Providers:** «Allow new users to sign up» debe
   quedar **activado**: las invitaciones crean la cuenta así. Una cuenta sin
   invitación no recibe ningún permiso.
+- **Authentication → Emails → Templates → Confirm signup:** asunto
+  «Confirma tu cuenta del panel · Papudo en tu Mano» y, como cuerpo, el
+  contenido de `supabase/templates/confirmacion.html`. **Ojo:** las plantillas
+  valen para todo el proyecto de Supabase. Mientras se comparta con otro
+  proyecto, sus usuarios también recibirían este correo: aplícalo cuando Papudo
+  tenga su propio proyecto.
+- **Remitente:** el correo sale como «Supabase Auth» hasta configurar un correo
+  propio (**Authentication → Emails → SMTP Settings**, con Resend u otro). Ahí se
+  pone el remitente «Papudo en tu Mano» y la dirección del dominio.
 - Marcar al superadmin (una sola vez, en **SQL Editor**, con tu correo):
 
 ```sql

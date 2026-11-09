@@ -23,8 +23,13 @@ export const cookieOptions = (maxAge: number) => ({
   path: "/admin",
   maxAge,
 });
-/** El token de renovación dura lo que permita Supabase; la cookie, 30 días. */
-export const REFRESH_MAX_AGE = 30 * 24 * 3600;
+/**
+ * Cierre por inactividad: la cookie de renovación dura 4 horas y se renueva
+ * con cada renovación del token de acceso (cada hora de uso). Sin usar el
+ * panel unas 4 horas, la sesión se cierra sola: un computador compartido no
+ * queda abierto de un día para otro.
+ */
+export const REFRESH_MAX_AGE = 4 * 3600;
 
 /** Contenido del JWT de acceso (sin verificar la firma: eso lo hace Supabase). */
 export function jwtPayload(token: string): { sub?: string; exp?: number } {

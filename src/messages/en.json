@@ -613,7 +613,8 @@
       "submit": "Sign in",
       "error": "Wrong email or password, or your account has no access to the panel.",
       "notConfigured": "The panel needs the database to be configured.",
-      "confirmed": "Email confirmed. Sign in with your email and password."
+      "confirmed": "Email confirmed. Sign in with your email and password.",
+      "sessionNote": "For security, your session ends on its own after 4 hours without use. On a shared computer, press “Sign out” when you finish."
     },
     "signOut": "Sign out",
     "role": {

@@ -30,7 +30,7 @@ vi.mock("next-intl/middleware", () => ({
   default: () => () => NextResponse.next(),
 }));
 
-import { jwtPayload, needsRefresh } from "@/lib/admin/auth";
+import { jwtPayload, needsRefresh, REFRESH_MAX_AGE } from "@/lib/admin/auth";
 import { listEntities, listLocalities, publicPath } from "@/lib/admin/api";
 import { signIn, verify } from "@/app/admin/actions";
 import proxy from "@/proxy";
@@ -372,5 +372,11 @@ describe("proxy en /admin", () => {
     vi.stubEnv("SHARE_LINK_SECRET", "clave");
     const res = await proxy(new NextRequest("https://x.vercel.app/es"));
     expect(res.status).toBe(403);
+  });
+});
+
+describe("sesión del panel", () => {
+  it("se cierra sola tras 4 horas sin uso", () => {
+    expect(REFRESH_MAX_AGE).toBe(4 * 3600);
   });
 });

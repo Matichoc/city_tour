@@ -613,7 +613,8 @@
       "submit": "Entrar",
       "error": "E-mail ou senha incorretos, ou sua conta não tem acesso ao painel.",
       "notConfigured": "O painel precisa do banco de dados configurado.",
-      "confirmed": "E-mail confirmado. Entre com seu e-mail e senha."
+      "confirmed": "E-mail confirmado. Entre com seu e-mail e senha.",
+      "sessionNote": "Por segurança, a sessão se encerra sozinha após 4 horas sem uso. Em um computador compartilhado, toque em «Sair» ao terminar."
     },
     "signOut": "Sair",
     "role": {

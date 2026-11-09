@@ -14,13 +14,13 @@ indicadas en cada versión.
 `docs/bitacora-notas.json` (clave `actual`, y el número de PR cuando exista),
 correr `pnpm bitacora` y subir el cambio en el mismo PR.
 
-## En preparación: v0.49 — Créditos: desarrollado por Cristóbal Roco
+## En preparación: v0.50 — Sesión del panel de 4 horas y correo de confirmación propio
 
-El pie del sitio dice «Desarrollado por Cristóbal Roco» (sin el logo ni el enlace de Matichoc) y en Información el enlace pasa a «Escribir a Cristóbal Roco» (correo). Los textos del panel ya no nombran a Matichoc. Una prueba revisa que ningún texto de la app lo mencione. Sin migraciones.
+La sesión del panel se cierra sola tras unas 4 horas sin uso (antes duraba 30 días mientras se usara), para que un computador compartido no quede abierto. La pantalla de ingreso lo avisa y pide pulsar «Salir» en computadores compartidos. Se suma la plantilla del correo de confirmación en español con la marca Papudo en tu Mano (supabase/templates/confirmacion.html) y el manual explica cómo aplicarla y por qué esperar al proyecto propio de Supabase. Sin migraciones.
 
 - **Migraciones por correr en Supabase:** —
-- **Estado:** en revisión, [PR #57](https://github.com/Matichoc/city_tour/pull/57) (aún no está en `develop`).
-- **Última actualización de esta bitácora:** 2026-11-06 20:04
+- **Estado:** en revisión, [PR #58](https://github.com/Matichoc/city_tour/pull/58) (aún no está en `develop`).
+- **Última actualización de esta bitácora:** 2026-11-08 12:10
 
 ## Avance por día
 
@@ -29,7 +29,7 @@ trabajadas: hay pausas y trabajo sin registrar).
 
 | Día | Ventana de actividad | Registros | Versiones entregadas |
 | --- | --- | ---: | --- |
-| Viernes, 6 de noviembre de 2026 | 11:15 – 13:01 | 8 | v0.45, v0.46, v0.47, v0.48 |
+| Viernes, 6 de noviembre de 2026 | 11:15 – 20:15 | 11 | v0.45, v0.46, v0.47, v0.48, v0.49 |
 | Miércoles, 4 de noviembre de 2026 | 08:48 – 23:47 | 20 | v0.34, v0.35, v0.36, v0.37, v0.38, v0.39, v0.40, v0.41, v0.42, v0.43 |
 | Domingo, 1 de noviembre de 2026 | 01:52 – 02:37 | 4 | v0.32, v0.33 |
 | Domingo, 18 de octubre de 2026 | 00:09 – 00:39 | 7 | v0.29, v0.30, v0.31 |
@@ -41,6 +41,19 @@ trabajadas: hay pausas y trabajo sin registrar).
 | Lunes, 12 de octubre de 2026 | 15:43 – 17:53 | 10 | v0.1, v0.2, v0.3, v0.4 |
 
 ## Versiones
+
+### v0.49 — Créditos: desarrollado por Cristóbal Roco
+Viernes, 6 de noviembre de 2026, 23:11 · [PR #57](https://github.com/Matichoc/city_tour/pull/57)
+
+El pie del sitio dice «Desarrollado por Cristóbal Roco» (sin el logo ni el enlace de Matichoc) y en Información el enlace pasa a «Escribir a Cristóbal Roco» (correo). Los textos del panel ya no nombran a Matichoc. Una prueba revisa que ningún texto de la app lo mencione. Sin migraciones.
+
+**Migraciones en Supabase:** —
+
+Registros:
+
+- 11-06 20:04 — Créditos: desarrollado por Cristóbal Roco (`d659822`)
+- 11-06 20:11 — E2E: el autor aparece en el texto, el enlace y el pie (`410abff`)
+- 11-06 20:15 — Pie: espacio entre «Desarrollado por» y el nombre (lectores de pantalla) (`c348231`)
 
 ### v0.48 — Panel ordenado: menú lateral e inicio con lo pendiente
 Viernes, 6 de noviembre de 2026, 13:20 · [PR #56](https://github.com/Matichoc/city_tour/pull/56)
