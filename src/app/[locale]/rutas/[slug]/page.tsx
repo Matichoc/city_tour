@@ -16,6 +16,7 @@ import { ShareButton } from "@/components/place/share-button";
 import { WhatsAppButton } from "@/components/share/whatsapp-button";
 import { PrintButton } from "@/components/ui/print-button";
 import { QrVisit } from "@/components/analytics/qr-visit";
+import { TrackView } from "@/components/analytics/track-view";
 import { ListenButton } from "@/components/listen/listen-button";
 import { routeListen } from "@/lib/listen-text";
 import { styleOf } from "@/lib/doors";
@@ -80,6 +81,7 @@ export default async function RoutePage({
   return (
     <main className="mx-auto flex w-full max-w-5xl flex-col sm:px-2">
       <QrVisit />
+      <TrackView event="route_view" props={{ slug: route.slug }} />
       <JsonLd
         data={{
           "@context": "https://schema.org",
@@ -121,7 +123,10 @@ export default async function RoutePage({
       </PageHero>
       <div className="flex flex-col gap-6 px-4 pt-3 pb-10">
         <div className="flex flex-wrap gap-2 print:hidden">
-          <AddRouteToTripButton slugs={route.stops.map((s) => s.place.slug)} />
+          <AddRouteToTripButton
+            route={route.slug}
+            slugs={route.stops.map((s) => s.place.slug)}
+          />
           <ShareButton title={route.name} />
           <WhatsAppButton
             message={t("whatsappMessage", {

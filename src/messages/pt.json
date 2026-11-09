@@ -671,6 +671,7 @@
     },
     "loadError": "Não foi possível ler o banco de dados. Tente de novo em instantes.",
     "nav": {
+      "metrics": "Métricas",
       "entities": "Fichas",
       "reviews": "Comentários",
       "business": "Negócios",
@@ -1155,6 +1156,77 @@
         "error": "Não foi possível criar a conta. Tente de novo em instantes."
       }
     },
+    "metrics": {
+      "title": "Métricas",
+      "intro": "Como o guia é usado: lugares, roteiros, QR e buscas. São contagens anônimas por dia.",
+      "loadError": "Não foi possível carregar as métricas. Verifique se a migração 0034 foi aplicada.",
+      "periodLabel": "Período",
+      "period": "{days} dias",
+      "csv": "Baixar CSV",
+      "empty": "Ainda não há interações neste período. As contagens começam quando os visitantes usam o guia.",
+      "summaryTitle": "Resumo",
+      "kpi": {
+        "placeViews": "Visualizações de lugares",
+        "directions": "Cliques em «Como chegar»",
+        "contacts": "Contatos com comércios",
+        "addedToTrip": "Adicionados à viagem",
+        "liveTrips": "Viagens ao vivo",
+        "qrVisits": "Visitas por QR"
+      },
+      "noPrevious": "Sem dados do período anterior",
+      "vsPrevious": "{sign}{pct} % em relação ao período anterior",
+      "dailyTitle": "Interações por dia",
+      "dailyHelp": "Tudo o que foi contado a cada dia. Passe o cursor sobre uma barra para ver o detalhe.",
+      "interactions": "interações",
+      "placesTitle": "Lugares com mais interações",
+      "noData": "Sem dados neste período.",
+      "place": "Lugar",
+      "col": {
+        "place_view": "Visualizações",
+        "navigate_click": "Como chegar",
+        "contacts": "Contatos",
+        "add_to_trip": "Na viagem",
+        "save_place": "Salvos"
+      },
+      "routesTitle": "Roteiros",
+      "funnel": {
+        "routeViews": "Visualizações de roteiros",
+        "routeAdded": "Roteiros adicionados à viagem",
+        "liveTrips": "Viagens ao vivo iniciadas"
+      },
+      "topRoutes": "Roteiros mais vistos",
+      "eventsTitle": "Eventos mais vistos",
+      "qrTitle": "Visitas por QR",
+      "qrHelp": "Qual placa ou comércio trouxe a visita, e para qual página.",
+      "qrRow": "{origin} → {page}",
+      "searchTitle": "Buscas sem resultados",
+      "searchHelp": "O que as pessoas procuram e o guia não tem: ideias de conteúdo para adicionar.",
+      "localesTitle": "Idiomas",
+      "localeRow": "{locale} · {pct} %",
+      "locale": {
+        "es": "Espanhol",
+        "en": "Inglês",
+        "pt": "Português"
+      },
+      "privacy": "Medição anônima: sem cookies, sem guardar o IP e sem identificar pessoas. Cada interação só soma um à contagem do dia. Robôs e o painel não são contados.",
+      "event": {
+        "place_view": "Visualização de lugar",
+        "route_view": "Visualização de roteiro",
+        "event_view": "Visualização de evento",
+        "search_empty": "Busca sem resultados",
+        "add_to_trip": "Lugar adicionado à viagem",
+        "add_route": "Roteiro adicionado à viagem",
+        "navigate_click": "Como chegar",
+        "contact_click": "Contato (Instagram ou site)",
+        "cta_click": "Botão do comércio",
+        "share": "Compartilhado",
+        "qr_visit": "Visita por QR",
+        "save_place": "Salvo",
+        "live_start": "Viagem ao vivo iniciada",
+        "camera_start": "Câmera aberta",
+        "listen_play": "Áudio ouvido"
+      }
+    },
     "bulkLinks": {
       "back": "← Negócios",
       "title": "Links dos comerciantes em lote",
@@ -1350,7 +1422,7 @@
       },
       "privacy": {
         "title": "Sua privacidade",
-        "body": "Não precisa de conta. Sua localização é usada no seu telefone; só se você aceitar a rota pelas ruas ela é enviada, arredondada, para calculá-la, e não é guardada.",
+        "body": "Não precisa de conta. Sua localização é usada no seu telefone; só se você aceitar a rota pelas ruas ela é enviada, arredondada, para calculá-la, e não é guardada. Para melhorar o guia contamos de forma anônima quais páginas e botões são usados, sem cookies nem dados seus.",
         "cta": "Informações"
       }
     }

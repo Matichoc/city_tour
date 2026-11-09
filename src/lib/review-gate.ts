@@ -8,7 +8,8 @@ import { createHash, createHmac, randomBytes } from "node:crypto";
  * Diseño: docs/DISENO-ABUSE-01-02.md. El formato debe coincidir con
  * `private.verify_proof` (supabase/migrations/0027_review_gate.sql).
  */
-export type ProofAct = "review" | "media" | "finish";
+/** `metric`: un envío de métricas anónimas (migración 0034). */
+export type ProofAct = "review" | "media" | "finish" | "metric";
 
 /** Secreto de firma, o null si no está configurado (entonces no se envía nada). */
 export function gateSecret(
@@ -29,6 +30,11 @@ export function reviewBind(c: {
   return createHash("sha256")
     .update(`${c.entity}|${c.slug}|${c.author}|${c.rating}|${c.body}`, "utf8")
     .digest("hex");
+}
+
+/** Resumen de un envío de métricas: igual a `private.metric_bind` (0034). */
+export function metricsBind(payload: string): string {
+  return createHash("sha256").update(payload, "utf8").digest("hex");
 }
 
 export function signProof(p: {

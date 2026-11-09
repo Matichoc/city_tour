@@ -49,7 +49,10 @@ export function navGroups(opts: {
     },
     {
       key: "visitors",
-      items: [{ key: "reviews", href: "/admin/comentarios", badge: "reviews" }],
+      items: [
+        { key: "reviews", href: "/admin/comentarios", badge: "reviews" },
+        { key: "metrics", href: "/admin/metricas" },
+      ],
     },
     {
       key: opts.superadmin ? "superadmin" : "team",

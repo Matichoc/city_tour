@@ -205,10 +205,15 @@
     "resumen": "El pie del sitio dice «Desarrollado por Cristóbal Roco» (sin el logo ni el enlace de Matichoc) y en Información el enlace pasa a «Escribir a Cristóbal Roco» (correo). Los textos del panel ya no nombran a Matichoc. Una prueba revisa que ningún texto de la app lo mencione. Sin migraciones.",
     "migraciones": "—"
   },
-  "actual": {
-    "pr": 58,
+  "58": {
     "titulo": "Sesión del panel de 4 horas y correo de confirmación propio",
     "resumen": "La sesión del panel se cierra sola tras unas 4 horas sin uso (antes duraba 30 días mientras se usara), para que un computador compartido no quede abierto. La pantalla de ingreso lo avisa y pide pulsar «Salir» en computadores compartidos. Se suma la plantilla del correo de confirmación en español con la marca Papudo en tu Mano (supabase/templates/confirmacion.html) y el manual explica cómo aplicarla y por qué esperar al proyecto propio de Supabase. Sin migraciones.",
     "migraciones": "—"
+  },
+  "actual": {
+    "pr": 59,
+    "titulo": "Métricas anónimas del sitio y panel «Métricas»",
+    "resumen": "El sitio cuenta, de forma anónima y sin cookies, vistas de lugares, rutas y eventos, clics en «Cómo llegar» y en contactos, agregados al viaje, viajes en vivo, visitas por QR, audios y búsquedas sin resultados. Los conteos se guardan por día en Supabase (sin IP ni datos de personas) y solo el servidor puede sumar, con la misma prueba firmada de los comentarios y topes contra abuso. Nueva sección Visitantes › Métricas en el panel: resumen con comparación al período anterior (7, 30 o 90 días), interacciones por día, lugares con más interacciones, embudo de rutas, eventos, QR, búsquedas sin resultados, idiomas y descarga CSV. «Cómo usar» avisa de la medición anónima.",
+    "migraciones": "0034"
   }
 }

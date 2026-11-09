@@ -11,7 +11,7 @@ las rutas por calles en auto o a pie) está en `docs/PLAN-RUTAS-AUTO-Y-A-PIE.md`
 | **Superadmin** | Todo lo de Administración, más invitar y quitar admins municipales en **Equipo** (sección 4). |
 | **Administración** (admin municipal, máximo 2) | Todo lo municipal: publicar y archivar, verificar, eventos y rutas, comentarios, carga masiva, invitar locatarios (uno por uno o en lote) y aprobar sus propuestas. |
 | **Edición** y **Verificación** | Roles antiguos: siguen funcionando para quien ya los tenía, pero ya no se invitan. |
-| **Locatario** | No entra al panel. Propone cambios en **Mi local** con el enlace de su local (3.7). |
+| **Locatario** | No entra al panel. Propone cambios en **Mi local** con el enlace de su local (3.8). |
 
 Los visitantes no tienen cuenta.
 
@@ -101,7 +101,27 @@ En **Comentarios**:
   **Aprobar** o **Rechazar**. Las marcadas «Revisar con cuidado» merecen una
   mirada atenta.
 
-### 3.7 Locatarios: enlace del local y propuestas
+### 3.7 Métricas: cómo se usa la guía
+En **Visitantes › Métricas** (todo el equipo):
+
+- Elige el período: **7, 30 o 90 días**. Cada indicador se compara con el
+  período anterior del mismo largo.
+- **Resumen**: vistas de lugares, clics en «Cómo llegar», contactos a comercios
+  (botón del comercio, Instagram y web), agregados al viaje, viajes en vivo y
+  visitas por QR.
+- **Interacciones por día**: pasa el cursor sobre una barra para ver el total.
+- **Lugares con más interacciones**, **rutas** (vistas → agregadas al viaje →
+  viajes en vivo), **eventos más vistos**, **visitas por QR** (qué letrero o
+  local trajo la visita), **búsquedas sin resultados** (ideas de contenido) e
+  **idiomas**.
+- **Descargar CSV**: una fila por día y evento, para informes o el concejo.
+
+Es una medición anónima: sin cookies, sin guardar la IP y sin identificar
+personas; los robots no cuentan. Mientras el sitio esté cerrado con enlace
+temporal, solo cuentan las visitas con acceso, así que los números reales
+empiezan cuando la guía se abra al público. Requiere la migración `0034`.
+
+### 3.8 Locatarios: enlace del local y propuestas
 
 Cada comercio puede proponer cambios a su ficha (descripción, horario,
 dirección, botón principal, Instagram y sitio web) sin cuenta ni contraseña,
@@ -135,7 +155,7 @@ El acceso funciona en tres niveles, siempre por **enlace de invitación**:
 | --- | --- | --- | --- |
 | **Superadmin** | Matichoc (quien opera la plataforma) | Su cuenta en `/admin` | Todo lo del admin, más invitar y quitar admins municipales (**Equipo**). |
 | **Admin municipal** | 1 o 2 personas del municipio | Invitación del superadmin | Publica y verifica fichas, rutas y eventos; carga masiva; invita a los locatarios y aprueba sus propuestas. |
-| **Locatario** | El dueño o encargado de cada local | Enlace personal del local | Propone cambios a su ficha en **Mi local** (3.7). |
+| **Locatario** | El dueño o encargado de cada local | Enlace personal del local | Propone cambios a su ficha en **Mi local** (3.8). |
 
 ### 4.1 Invitar a un admin municipal (superadmin)
 1. En el panel, **Equipo → Invitar a un admin municipal**. Escribe para quién es
@@ -151,7 +171,7 @@ El acceso funciona en tres niveles, siempre por **enlace de invitación**:
 5. **Quitar acceso** la deja fuera de inmediato (y libera el cupo).
 
 ### 4.2 Invitar a los locatarios (admin o superadmin)
-- **Uno por uno:** en cada comercio, **Acceso del locatario** (3.7).
+- **Uno por uno:** en cada comercio, **Acceso del locatario** (3.8).
 - **En lote:** **Comercios → Enlaces en lote**. Marca los locales (por defecto,
   los que aún no tienen enlace), pulsa **Generar**, y envía cada enlace con
   **Enviar a su WhatsApp** (usa el número del botón del local, si lo tiene),
