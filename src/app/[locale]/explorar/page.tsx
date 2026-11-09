@@ -14,6 +14,7 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { BusinessInvite } from "@/components/business/business-invite";
 import { PlaceRow } from "@/components/place/place-row";
 import { PlacesMap } from "@/components/map/places-map";
+import { TrackView } from "@/components/analytics/track-view";
 import { FilterMenu, type FilterItem } from "@/components/ui/filter-menu";
 import {
   DOORS,
@@ -342,6 +343,9 @@ export default async function ExplorePage({
         </ul>
       ) : null}
 
+      {places.length === 0 && query ? (
+        <TrackView event="search_empty" props={{ term: query }} />
+      ) : null}
       {places.length === 0 ? (
         <EmptyState
           title={t("empty")}

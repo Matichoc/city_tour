@@ -14,13 +14,13 @@ indicadas en cada versión.
 `docs/bitacora-notas.json` (clave `actual`, y el número de PR cuando exista),
 correr `pnpm bitacora` y subir el cambio en el mismo PR.
 
-## En preparación: v0.50 — Sesión del panel de 4 horas y correo de confirmación propio
+## En preparación: v0.51 — Métricas anónimas del sitio y panel «Métricas»
 
-La sesión del panel se cierra sola tras unas 4 horas sin uso (antes duraba 30 días mientras se usara), para que un computador compartido no quede abierto. La pantalla de ingreso lo avisa y pide pulsar «Salir» en computadores compartidos. Se suma la plantilla del correo de confirmación en español con la marca Papudo en tu Mano (supabase/templates/confirmacion.html) y el manual explica cómo aplicarla y por qué esperar al proyecto propio de Supabase. Sin migraciones.
+El sitio cuenta, de forma anónima y sin cookies, vistas de lugares, rutas y eventos, clics en «Cómo llegar» y en contactos, agregados al viaje, viajes en vivo, visitas por QR, audios y búsquedas sin resultados. Los conteos se guardan por día en Supabase (sin IP ni datos de personas) y solo el servidor puede sumar, con la misma prueba firmada de los comentarios y topes contra abuso. Nueva sección Visitantes › Métricas en el panel: resumen con comparación al período anterior (7, 30 o 90 días), interacciones por día, lugares con más interacciones, embudo de rutas, eventos, QR, búsquedas sin resultados, idiomas y descarga CSV. «Cómo usar» avisa de la medición anónima.
 
-- **Migraciones por correr en Supabase:** —
-- **Estado:** en revisión, [PR #58](https://github.com/Matichoc/city_tour/pull/58) (aún no está en `develop`).
-- **Última actualización de esta bitácora:** 2026-11-08 12:10
+- **Migraciones por correr en Supabase:** 0034
+- **Estado:** en revisión, [PR #59](https://github.com/Matichoc/city_tour/pull/59) (aún no está en `develop`).
+- **Última actualización de esta bitácora:** 2026-11-09 00:33
 
 ## Avance por día
 
@@ -29,6 +29,7 @@ trabajadas: hay pausas y trabajo sin registrar).
 
 | Día | Ventana de actividad | Registros | Versiones entregadas |
 | --- | --- | ---: | --- |
+| Domingo, 8 de noviembre de 2026 | 12:13 – 12:13 | 1 | v0.50 |
 | Viernes, 6 de noviembre de 2026 | 11:15 – 20:15 | 11 | v0.45, v0.46, v0.47, v0.48, v0.49 |
 | Miércoles, 4 de noviembre de 2026 | 08:48 – 23:47 | 20 | v0.34, v0.35, v0.36, v0.37, v0.38, v0.39, v0.40, v0.41, v0.42, v0.43 |
 | Domingo, 1 de noviembre de 2026 | 01:52 – 02:37 | 4 | v0.32, v0.33 |
@@ -41,6 +42,17 @@ trabajadas: hay pausas y trabajo sin registrar).
 | Lunes, 12 de octubre de 2026 | 15:43 – 17:53 | 10 | v0.1, v0.2, v0.3, v0.4 |
 
 ## Versiones
+
+### v0.50 — Sesión del panel de 4 horas y correo de confirmación propio
+Domingo, 8 de noviembre de 2026, 22:26 · [PR #58](https://github.com/Matichoc/city_tour/pull/58)
+
+La sesión del panel se cierra sola tras unas 4 horas sin uso (antes duraba 30 días mientras se usara), para que un computador compartido no quede abierto. La pantalla de ingreso lo avisa y pide pulsar «Salir» en computadores compartidos. Se suma la plantilla del correo de confirmación en español con la marca Papudo en tu Mano (supabase/templates/confirmacion.html) y el manual explica cómo aplicarla y por qué esperar al proyecto propio de Supabase. Sin migraciones.
+
+**Migraciones en Supabase:** —
+
+Registros:
+
+- 11-08 12:13 — Panel: sesión de 4 horas sin uso y correo de confirmación propio (`f741f40`)
 
 ### v0.49 — Créditos: desarrollado por Cristóbal Roco
 Viernes, 6 de noviembre de 2026, 23:11 · [PR #57](https://github.com/Matichoc/city_tour/pull/57)

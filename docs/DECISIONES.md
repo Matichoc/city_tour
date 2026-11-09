@@ -30,8 +30,25 @@ opcional: si falta la traducción de un lugar, se muestra el español y se avisa
 
 ## Analítica
 
-Vercel Web Analytics (sin cookies, sin datos personales). Eventos propios en
-`src/lib/analytics.ts`: `add_to_trip`, `add_route`, `navigate_click`, `share`,
+**Métricas propias (panel /admin/metricas, migración 0034).** Conteos anónimos
+por día en `metric_daily`: día, evento, ficha (`subject`), detalle (tipo de
+botón, origen del QR, vía de compartir) e idioma. Sin cookies, sin IP y sin
+identificar personas. El navegador junta los eventos y los manda en grupo a
+`/api/metricas` (`navigator.sendBeacon`); el servidor descarta robots, valida
+la lista cerrada (`src/lib/metrics.ts`) y suma con `record_metrics`, que exige
+la misma prueba firmada de los comentarios (acción `metric`): nadie puede
+inflar los números llamando a la base con la clave pública. Topes en
+`private.abuse_limits`: 20 eventos por envío, 300 por hora por huella (la
+huella es un hash con sal de la IP y se borra a las 3 horas) y 50.000 por día
+en todo el sitio. Lo buscado sin resultados se guarda sin números ni arrobas
+(nunca un teléfono o un correo). Solo el personal lee los conteos
+(`metrics_report`, con RLS). Eventos propios de las métricas: `place_view`,
+`route_view`, `event_view`, `search_empty` y `contact_click` (Instagram o
+web de la ficha), además de los de abajo.
+
+**Vercel Web Analytics** (sin cookies, sin datos personales) recibe los mismos
+eventos menos las vistas y las búsquedas, que Vercel ya cuenta como páginas.
+Eventos en `src/lib/analytics.ts`: `add_to_trip`, `add_route`, `navigate_click`, `share`,
 `qr_visit` (con el `origen` del QR), `save_place`, `live_start` (recorrido en
 vivo), `camera_start` (guía con cámara), `cta_click` (botón de acción de un
 comercio, con su `slug` y tipo) y `listen_play` (primera vez que se toca

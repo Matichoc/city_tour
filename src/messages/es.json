@@ -671,6 +671,7 @@
     },
     "loadError": "No se pudo leer la base de datos. Intenta de nuevo en un momento.",
     "nav": {
+      "metrics": "Métricas",
       "entities": "Fichas",
       "reviews": "Comentarios",
       "business": "Comercios",
@@ -1155,6 +1156,77 @@
         "error": "No se pudo crear la cuenta. Inténtalo de nuevo en un rato."
       }
     },
+    "metrics": {
+      "title": "Métricas",
+      "intro": "Cómo se usa la guía: lugares, rutas, QR y búsquedas. Son conteos anónimos por día.",
+      "loadError": "No se pudieron cargar las métricas. Revisa que la migración 0034 esté aplicada.",
+      "periodLabel": "Período",
+      "period": "{days} días",
+      "csv": "Descargar CSV",
+      "empty": "Todavía no hay interacciones en este período. Los conteos empiezan cuando los visitantes usan la guía.",
+      "summaryTitle": "Resumen",
+      "kpi": {
+        "placeViews": "Vistas de lugares",
+        "directions": "Clics en «Cómo llegar»",
+        "contacts": "Contactos a comercios",
+        "addedToTrip": "Agregados al viaje",
+        "liveTrips": "Viajes en vivo",
+        "qrVisits": "Visitas por QR"
+      },
+      "noPrevious": "Sin datos del período anterior",
+      "vsPrevious": "{sign}{pct} % frente al período anterior",
+      "dailyTitle": "Interacciones por día",
+      "dailyHelp": "Todo lo que se contó cada día. Pasa el cursor sobre una barra para ver el detalle.",
+      "interactions": "interacciones",
+      "placesTitle": "Lugares con más interacciones",
+      "noData": "Sin datos en este período.",
+      "place": "Lugar",
+      "col": {
+        "place_view": "Vistas",
+        "navigate_click": "Cómo llegar",
+        "contacts": "Contactos",
+        "add_to_trip": "Al viaje",
+        "save_place": "Guardados"
+      },
+      "routesTitle": "Rutas",
+      "funnel": {
+        "routeViews": "Vistas de rutas",
+        "routeAdded": "Rutas agregadas al viaje",
+        "liveTrips": "Viajes en vivo iniciados"
+      },
+      "topRoutes": "Rutas más vistas",
+      "eventsTitle": "Eventos más vistos",
+      "qrTitle": "Visitas por QR",
+      "qrHelp": "Qué letrero o local trajo la visita, y a qué página.",
+      "qrRow": "{origin} → {page}",
+      "searchTitle": "Búsquedas sin resultados",
+      "searchHelp": "Lo que la gente busca y la guía no tiene: ideas de contenido para agregar.",
+      "localesTitle": "Idiomas",
+      "localeRow": "{locale} · {pct} %",
+      "locale": {
+        "es": "Español",
+        "en": "Inglés",
+        "pt": "Portugués"
+      },
+      "privacy": "Medición anónima: sin cookies, sin guardar la IP y sin identificar personas. Solo se suma uno al conteo del día. No se cuentan los robots ni el panel.",
+      "event": {
+        "place_view": "Vista de lugar",
+        "route_view": "Vista de ruta",
+        "event_view": "Vista de evento",
+        "search_empty": "Búsqueda sin resultados",
+        "add_to_trip": "Lugar agregado al viaje",
+        "add_route": "Ruta agregada al viaje",
+        "navigate_click": "Cómo llegar",
+        "contact_click": "Contacto (Instagram o web)",
+        "cta_click": "Botón del comercio",
+        "share": "Compartido",
+        "qr_visit": "Visita por QR",
+        "save_place": "Guardado",
+        "live_start": "Viaje en vivo iniciado",
+        "camera_start": "Cámara abierta",
+        "listen_play": "Audio escuchado"
+      }
+    },
     "bulkLinks": {
       "back": "← Comercios",
       "title": "Enlaces de locatarios en lote",
@@ -1350,7 +1422,7 @@
       },
       "privacy": {
         "title": "Tu privacidad",
-        "body": "No necesitas cuenta. Tu ubicación se usa en tu teléfono; solo si aceptas la ruta por calles se envía, redondeada, para calcularla, y no se guarda.",
+        "body": "No necesitas cuenta. Tu ubicación se usa en tu teléfono; solo si aceptas la ruta por calles se envía, redondeada, para calcularla, y no se guarda. Para mejorar la guía contamos de forma anónima qué fichas y botones se usan, sin cookies ni datos tuyos.",
         "cta": "Información"
       }
     }

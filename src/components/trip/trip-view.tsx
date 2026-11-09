@@ -239,7 +239,7 @@ export function TripView({
                   className="border-border bg-surface flex flex-wrap items-center justify-between gap-3 rounded-2xl border p-4"
                 >
                   <span className="font-bold">{r.name}</span>
-                  <AddRouteToTripButton slugs={r.stopSlugs} />
+                  <AddRouteToTripButton route={r.slug} slugs={r.stopSlugs} />
                 </li>
               ))}
             </ul>

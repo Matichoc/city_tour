@@ -671,6 +671,7 @@
     },
     "loadError": "Could not read the database. Try again in a moment.",
     "nav": {
+      "metrics": "Metrics",
       "entities": "Listings",
       "reviews": "Reviews",
       "business": "Businesses",
@@ -1155,6 +1156,77 @@
         "error": "The account couldn't be created. Try again in a while."
       }
     },
+    "metrics": {
+      "title": "Metrics",
+      "intro": "How the guide is used: places, routes, QR codes and searches. Anonymous daily counts.",
+      "loadError": "Metrics could not be loaded. Check that migration 0034 has been applied.",
+      "periodLabel": "Period",
+      "period": "{days} days",
+      "csv": "Download CSV",
+      "empty": "No interactions in this period yet. Counts start when visitors use the guide.",
+      "summaryTitle": "Summary",
+      "kpi": {
+        "placeViews": "Place views",
+        "directions": "“Directions” clicks",
+        "contacts": "Business contacts",
+        "addedToTrip": "Added to trip",
+        "liveTrips": "Live trips",
+        "qrVisits": "QR visits"
+      },
+      "noPrevious": "No data for the previous period",
+      "vsPrevious": "{sign}{pct}% vs. previous period",
+      "dailyTitle": "Interactions per day",
+      "dailyHelp": "Everything counted each day. Hover over a bar to see the detail.",
+      "interactions": "interactions",
+      "placesTitle": "Places with the most interactions",
+      "noData": "No data in this period.",
+      "place": "Place",
+      "col": {
+        "place_view": "Views",
+        "navigate_click": "Directions",
+        "contacts": "Contacts",
+        "add_to_trip": "To trip",
+        "save_place": "Saved"
+      },
+      "routesTitle": "Routes",
+      "funnel": {
+        "routeViews": "Route views",
+        "routeAdded": "Routes added to trip",
+        "liveTrips": "Live trips started"
+      },
+      "topRoutes": "Most viewed routes",
+      "eventsTitle": "Most viewed events",
+      "qrTitle": "QR visits",
+      "qrHelp": "Which sign or business brought the visit, and to which page.",
+      "qrRow": "{origin} → {page}",
+      "searchTitle": "Searches with no results",
+      "searchHelp": "What people look for and the guide doesn't have: content ideas to add.",
+      "localesTitle": "Languages",
+      "localeRow": "{locale} · {pct}%",
+      "locale": {
+        "es": "Spanish",
+        "en": "English",
+        "pt": "Portuguese"
+      },
+      "privacy": "Anonymous measurement: no cookies, no stored IP and no personal identification. Each interaction only adds one to the daily count. Bots and the panel are not counted.",
+      "event": {
+        "place_view": "Place view",
+        "route_view": "Route view",
+        "event_view": "Event view",
+        "search_empty": "Search with no results",
+        "add_to_trip": "Place added to trip",
+        "add_route": "Route added to trip",
+        "navigate_click": "Directions",
+        "contact_click": "Contact (Instagram or website)",
+        "cta_click": "Business button",
+        "share": "Shared",
+        "qr_visit": "QR visit",
+        "save_place": "Saved",
+        "live_start": "Live trip started",
+        "camera_start": "Camera opened",
+        "listen_play": "Audio played"
+      }
+    },
     "bulkLinks": {
       "back": "← Businesses",
       "title": "Business owner links in bulk",
@@ -1350,7 +1422,7 @@
       },
       "privacy": {
         "title": "Your privacy",
-        "body": "No account needed. Your location is used on your phone; only if you accept street routing is it sent, rounded, to calculate it, and it isn't stored.",
+        "body": "No account needed. Your location is used on your phone; only if you accept street routing is it sent, rounded, to calculate it, and it isn't stored. To improve the guide we anonymously count which pages and buttons are used, with no cookies or personal data.",
         "cta": "Information"
       }
     }

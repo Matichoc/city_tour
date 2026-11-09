@@ -21,6 +21,7 @@ import { ShareButton } from "@/components/place/share-button";
 import { AddToTripButton } from "@/components/trip/add-to-trip-button";
 import { PlacesMap } from "@/components/map/places-map";
 import { QrVisit } from "@/components/analytics/qr-visit";
+import { TrackView } from "@/components/analytics/track-view";
 import { DEMO_REVIEWS } from "@/content/demo-content";
 import { DemoReviews, RatingSummary } from "@/components/place/demo-reviews";
 import { Gallery } from "@/components/place/gallery";
@@ -150,6 +151,7 @@ export default async function PlacePage({
   return (
     <main className="mx-auto flex w-full max-w-5xl flex-col gap-6 px-4 pt-4 pb-10 sm:px-6">
       <QrVisit />
+      <TrackView event="place_view" props={{ slug: place.slug }} />
       {place.demo ? null : (
         <JsonLd
           data={{
@@ -514,14 +516,16 @@ export default async function PlacePage({
                   <div className="flex justify-between gap-4 p-4">
                     <dt className="font-bold">{t("instagram")}</dt>
                     <dd>
-                      <a
+                      <TrackedAnchor
+                        event="contact_click"
+                        eventProps={{ slug: place.slug, kind: "instagram" }}
                         href={place.instagram}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-sea underline"
                       >
                         @{place.instagram.replace(/\/+$/, "").split("/").at(-1)}
-                      </a>
+                      </TrackedAnchor>
                     </dd>
                   </div>
                 ) : null}
@@ -529,7 +533,9 @@ export default async function PlacePage({
                   <div className="flex justify-between gap-4 p-4">
                     <dt className="font-bold">{t("website")}</dt>
                     <dd className="min-w-0 text-right">
-                      <a
+                      <TrackedAnchor
+                        event="contact_click"
+                        eventProps={{ slug: place.slug, kind: "website" }}
                         href={place.website}
                         target="_blank"
                         rel="noopener noreferrer"
@@ -538,7 +544,7 @@ export default async function PlacePage({
                         {place.website
                           .replace(/^https?:\/\/(www\.)?/, "")
                           .replace(/\/$/, "")}
-                      </a>
+                      </TrackedAnchor>
                     </dd>
                   </div>
                 ) : null}

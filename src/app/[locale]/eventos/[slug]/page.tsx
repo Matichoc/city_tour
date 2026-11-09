@@ -14,6 +14,7 @@ import { StatusBadge } from "@/components/place/status-badge";
 import { ShareButton } from "@/components/place/share-button";
 import { ReviewsPanel } from "@/components/place/reviews-panel";
 import { DemoReviews } from "@/components/place/demo-reviews";
+import { TrackView } from "@/components/analytics/track-view";
 
 export async function generateStaticParams() {
   const data = await getData();
@@ -73,6 +74,7 @@ export default async function EventPage({
 
   return (
     <main className="mx-auto flex w-full max-w-3xl flex-col gap-5 pb-10">
+      <TrackView event="event_view" props={{ slug: event.slug }} />
       <div className="relative isolate h-72 overflow-hidden text-white">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
