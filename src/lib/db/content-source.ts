@@ -402,7 +402,10 @@ async function fetchRows(cfg: SupabaseConfig): Promise<ContentRows> {
  */
 export const forceRepoContent = (
   env: Record<string, string | undefined> = process.env,
-) => env.CONTENT_SOURCE?.trim() === "repo";
+) =>
+  env.CONTENT_SOURCE?.trim() === "repo" ||
+  // El demo muestra la propuesta municipal con el contenido de la guía.
+  env.VERCEL_GIT_COMMIT_REF === "demo";
 
 export async function loadContent(
   cfg: SupabaseConfig | null = supabaseConfig(),

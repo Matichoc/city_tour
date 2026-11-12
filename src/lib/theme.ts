@@ -9,8 +9,18 @@
  */
 export type Theme = "base" | "municipal";
 
+/**
+ * El demo (rama `demo` en Vercel) muestra la propuesta municipal: tema
+ * municipal, contenido de la guía (del repo) y sin fichas de ejemplo. Vercel
+ * entrega el nombre de la rama en NEXT_PUBLIC_VERCEL_GIT_COMMIT_REF.
+ */
+export const IS_DEMO_BRANCH =
+  process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_REF === "demo";
+
 export const THEME: Theme =
-  process.env.NEXT_PUBLIC_THEME === "municipal" ? "municipal" : "base";
+  process.env.NEXT_PUBLIC_THEME === "municipal" || IS_DEMO_BRANCH
+    ? "municipal"
+    : "base";
 
 /** Símbolo junto al nombre (barra superior, quiosco, «Mi local»). */
 export const BRAND_SYMBOL =
