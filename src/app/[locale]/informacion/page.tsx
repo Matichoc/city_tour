@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { Link } from "@/i18n/navigation";
 import { resolveLocale } from "@/i18n/utils";
 import { getData } from "@/lib/data";
-import { DEVELOPER, MUNICIPALITY } from "@/content/catalog";
+import { MUNICIPALITY } from "@/content/catalog";
 import { INFO_BLOCKS } from "@/content/papudo-info";
 import { buildPageMetadata } from "@/lib/seo";
 import { PageHero } from "@/components/ui/page-hero";
@@ -242,23 +242,7 @@ export default async function InfoPage({
             {t("platformTitle")}
           </h2>
           <p className="text-sm">{t("platformBody")}</p>
-        </section>
-
-        <section
-          aria-labelledby="autor"
-          className="border-border bg-surface rounded-2xl border p-4"
-        >
-          <h2 id="autor" className="font-display text-xl font-extrabold">
-            {t("authorTitle")}
-          </h2>
-          <p className="mt-2 text-sm font-bold">{t("authorBody")}</p>
-          <p className="text-muted mt-2 text-sm">{t("authorNote")}</p>
-          <a
-            href={`mailto:${DEVELOPER.email}`}
-            className="text-sea mt-2 inline-flex min-h-11 items-center text-sm font-bold underline"
-          >
-            {t("authorLink")}
-          </a>
+          <p className="text-muted text-sm">{t("authorNote")}</p>
         </section>
         <Link
           href="/negocios"
