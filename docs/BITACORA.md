@@ -14,13 +14,13 @@ indicadas en cada versión.
 `docs/bitacora-notas.json` (clave `actual`, y el número de PR cuando exista),
 correr `pnpm bitacora` y subir el cambio en el mismo PR.
 
-## En preparación: v0.51 — Métricas anónimas del sitio y panel «Métricas»
+## En preparación: v0.52 — Métricas anónimas del sitio y panel «Métricas»
 
 El sitio cuenta, de forma anónima y sin cookies, vistas de lugares, rutas y eventos, clics en «Cómo llegar» y en contactos, agregados al viaje, viajes en vivo, visitas por QR, audios y búsquedas sin resultados. Los conteos se guardan por día en Supabase (sin IP ni datos de personas) y solo el servidor puede sumar, con la misma prueba firmada de los comentarios y topes contra abuso. Nueva sección Visitantes › Métricas en el panel: resumen con comparación al período anterior (7, 30 o 90 días), interacciones por día, lugares con más interacciones, embudo de rutas, eventos, QR, búsquedas sin resultados, idiomas y descarga CSV. «Cómo usar» avisa de la medición anónima.
 
 - **Migraciones por correr en Supabase:** 0034
 - **Estado:** en revisión, [PR #59](https://github.com/Matichoc/city_tour/pull/59) (aún no está en `develop`).
-- **Última actualización de esta bitácora:** 2026-11-09 00:33
+- **Última actualización de esta bitácora:** 2026-11-12 00:19
 
 ## Avance por día
 
@@ -29,6 +29,7 @@ trabajadas: hay pausas y trabajo sin registrar).
 
 | Día | Ventana de actividad | Registros | Versiones entregadas |
 | --- | --- | ---: | --- |
+| Lunes, 9 de noviembre de 2026 | 00:34 – 00:34 | 1 | v0.51 |
 | Domingo, 8 de noviembre de 2026 | 12:13 – 12:13 | 1 | v0.50 |
 | Viernes, 6 de noviembre de 2026 | 11:15 – 20:15 | 11 | v0.45, v0.46, v0.47, v0.48, v0.49 |
 | Miércoles, 4 de noviembre de 2026 | 08:48 – 23:47 | 20 | v0.34, v0.35, v0.36, v0.37, v0.38, v0.39, v0.40, v0.41, v0.42, v0.43 |
@@ -42,6 +43,15 @@ trabajadas: hay pausas y trabajo sin registrar).
 | Lunes, 12 de octubre de 2026 | 15:43 – 17:53 | 10 | v0.1, v0.2, v0.3, v0.4 |
 
 ## Versiones
+
+### v0.51 — Tema municipal (Manual de Marca) y datos de la Guía Turística 2026
+Lunes, 9 de noviembre de 2026, 16:47 · [PR #59](https://github.com/Matichoc/city_tour/pull/59)
+
+Nuevo tema visual «municipal» según el Manual de Marca de la Municipalidad de Papudo: azul institucional, colores del isotipo y de los cinco sentidos, Montserrat en títulos y Archivo en el texto, e isotipo municipal en la barra, el quiosco y «Mi local». Se activa con NEXT_PUBLIC_THEME=municipal, sin cambiar los demás ambientes. Se cargan desde la Guía Turística Papudo 2026 los atractivos, operadores, ferias, restaurantes y alojamientos de Papudo, Pullally y Las Salinas (sin coordenadas, pendientes de verificar y con la guía como fuente), los resúmenes de los pueblos y 13 festividades del calendario municipal. CONTENT_SOURCE=repo permite mostrar ese contenido en un ambiente sin tocar la base compartida.
+
+Registros:
+
+- 11-09 00:34 — Métricas anónimas del sitio y sección «Métricas» en el panel (`36e6185`)
 
 ### v0.50 — Sesión del panel de 4 horas y correo de confirmación propio
 Domingo, 8 de noviembre de 2026, 22:26 · [PR #58](https://github.com/Matichoc/city_tour/pull/58)

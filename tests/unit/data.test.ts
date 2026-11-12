@@ -16,6 +16,7 @@ import en from "@/messages/en.json";
 import pt from "@/messages/pt.json";
 import { locales } from "@/i18n/routing";
 import { DEMO_PLACES, DEMO_REVIEWS } from "@/content/demo-content";
+import { GUIDE_PLACES, GUIDE_SOURCE } from "@/content/guia-municipal-2026";
 
 // El contenido del repo: el mismo que muestra el sitio sin base de datos.
 const {
@@ -48,7 +49,11 @@ describe("contenido de Papudo", () => {
     }
   });
   it("los lugares agregados desde la web tienen al menos dos fuentes", () => {
-    for (const p of listPlaces("es").filter((x) => !x.hasLocation && !x.demo)) {
+    // La guía municipal es fuente oficial: basta con ella sola.
+    const guide = new Set(GUIDE_PLACES.map((p) => p.slug));
+    for (const p of listPlaces("es").filter(
+      (x) => !x.hasLocation && !x.demo && !guide.has(x.slug),
+    )) {
       expect(p.sources.length, p.slug).toBeGreaterThanOrEqual(2);
     }
   });
@@ -57,7 +62,10 @@ describe("contenido de Papudo", () => {
     const negocios = listPlaces("es")
       .filter((p) => p.business && !p.demo)
       .map((p) => p.slug);
-    expect(negocios.sort()).toEqual([
+    const guide = new Set(
+      GUIDE_PLACES.filter((p) => p.business).map((p) => p.slug),
+    );
+    expect(negocios.filter((s) => !guide.has(s)).sort()).toEqual([
       "fuente-papudo",
       "hotel-carande",
       "restaurante-donde-pablo",
@@ -131,16 +139,18 @@ describe("capa de datos", () => {
     );
     expect(listPlaces("es", { query: "zzz" })).toHaveLength(0);
   });
-  it("cuenta lugares por categoría (deportes aún vacía)", () => {
+  it("cuenta lugares por categoría", () => {
     const c = listCategories("es");
     // Cada producto tiene al menos una ficha de EJEMPLO para la demostración.
     for (const cat of c) expect(cat.count, cat.slug).toBeGreaterThan(0);
+    // Deportes y alojamiento reales vienen de la guía municipal.
     expect(
-      listPlaces("es", { category: "deportes" }).every((p) => p.demo),
+      listPlaces("es", { category: "deportes" }).some((p) => !p.demo),
     ).toBe(true);
     expect(
-      listPlaces("es", { category: "alojamiento" }).filter((p) => !p.demo),
-    ).toHaveLength(1);
+      listPlaces("es", { category: "alojamiento" }).filter((p) => !p.demo)
+        .length,
+    ).toBeGreaterThan(1);
     expect(isCategorySlug("balneario")).toBe(true);
     expect(isCategorySlug("nada")).toBe(false);
   });
@@ -285,6 +295,7 @@ describe("ilustraciones", () => {
     expect(roots.ownerValidated).toBe(true);
     expect(roots.sources.map((s) => s.label)).toEqual([
       "Google Maps — Roots Salinas (HHMQ+F7, Papudo)",
+      GUIDE_SOURCE.label,
     ]);
     expect(JSON.stringify(roots).toLowerCase()).not.toContain("formulario");
     expect(getPlace("playa-papudo", "es")!.ownerValidated).toBe(false);

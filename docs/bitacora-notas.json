@@ -1,5 +1,4 @@
 {
-  "_ayuda": "Notas a mano de cada entrega, por número de PR. `pnpm bitacora` las junta con el historial de git (días, horas y commits) y escribe docs/BITACORA.md. La entrega en curso va en «actual» con el número de su PR en «pr»; al fusionarse, la bitácora la une sola con su versión.",
   "1": {
     "titulo": "Plan de trabajo y flujo de ramas",
     "resumen": "Plan del proyecto, financiamiento y herramientas, y el flujo de ramas."
@@ -33,13 +32,13 @@
     "titulo": "Ajuste de la cámara del recorrido",
     "resumen": "La cámara también se ofrece lejos de la parada."
   },
-  "11": {
-    "titulo": "Alineación con el PLADETUR",
-    "resumen": "Categorías según los productos del plan, agenda anual de eventos y modo quiosco para las oficinas de información."
-  },
   "10": {
     "titulo": "Cámara a pie y documentos del PLADETUR",
     "resumen": "Figura guía a elegir (flecha, mano, huellas, gaviota o velero) y alineación del producto y del precio con el plan."
+  },
+  "11": {
+    "titulo": "Alineación con el PLADETUR",
+    "resumen": "Categorías según los productos del plan, agenda anual de eventos y modo quiosco para las oficinas de información."
   },
   "12": {
     "titulo": "Formulario para comercios y revisión legal",
@@ -210,6 +209,12 @@
     "resumen": "La sesión del panel se cierra sola tras unas 4 horas sin uso (antes duraba 30 días mientras se usara), para que un computador compartido no quede abierto. La pantalla de ingreso lo avisa y pide pulsar «Salir» en computadores compartidos. Se suma la plantilla del correo de confirmación en español con la marca Papudo en tu Mano (supabase/templates/confirmacion.html) y el manual explica cómo aplicarla y por qué esperar al proyecto propio de Supabase. Sin migraciones.",
     "migraciones": "—"
   },
+  "59": {
+    "pr": 60,
+    "titulo": "Tema municipal (Manual de Marca) y datos de la Guía Turística 2026",
+    "resumen": "Nuevo tema visual «municipal» según el Manual de Marca de la Municipalidad de Papudo: azul institucional, colores del isotipo y de los cinco sentidos, Montserrat en títulos y Archivo en el texto, e isotipo municipal en la barra, el quiosco y «Mi local». Se activa con NEXT_PUBLIC_THEME=municipal, sin cambiar los demás ambientes. Se cargan desde la Guía Turística Papudo 2026 los atractivos, operadores, ferias, restaurantes y alojamientos de Papudo, Pullally y Las Salinas (sin coordenadas, pendientes de verificar y con la guía como fuente), los resúmenes de los pueblos y 13 festividades del calendario municipal. CONTENT_SOURCE=repo permite mostrar ese contenido en un ambiente sin tocar la base compartida."
+  },
+  "_ayuda": "Notas a mano de cada entrega, por número de PR. `pnpm bitacora` las junta con el historial de git (días, horas y commits) y escribe docs/BITACORA.md. La entrega en curso va en «actual» con el número de su PR en «pr»; al fusionarse, la bitácora la une sola con su versión.",
   "actual": {
     "pr": 59,
     "titulo": "Métricas anónimas del sitio y panel «Métricas»",

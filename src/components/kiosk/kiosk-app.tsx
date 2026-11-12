@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/category-card";
 import { IllustratedImage } from "@/components/ui/illustrated-image";
 import { LocaleSwitcher } from "@/components/ui/locale-switcher";
+import { BRAND_SYMBOL } from "@/lib/theme";
 
 export type KioskCategory = { slug: CategorySlug; name: string; count: number };
 
@@ -169,10 +170,10 @@ export function KioskApp({
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/brand/papudo-simbolo.webp"
+            src={BRAND_SYMBOL.src}
             alt=""
-            width={43}
-            height={50}
+            width={BRAND_SYMBOL.width}
+            height={BRAND_SYMBOL.height}
             className="h-12 w-auto"
           />
           <span>

@@ -36,6 +36,7 @@
   /* Tinta de cada cuadro para texto sobre blanco (≥ 6:1). */
   --cuadro-mar-ink: #7a5c00;
   --cuadro-campo-ink: #0f6d6c;
+  --cuadro-campo-on: #14164a; /* texto sobre el cuadro de campo */
   --cuadro-patri-ink: #b51d18;
   --cuadro-paseo-ink: #a3066a;
   --dune: #f2e2b3;
@@ -74,24 +75,88 @@
   --color-cuadro-paseo: var(--cuadro-paseo);
   --color-cuadro-mar-ink: var(--cuadro-mar-ink);
   --color-cuadro-campo-ink: var(--cuadro-campo-ink);
+  --color-cuadro-campo-on: var(--cuadro-campo-on);
   --color-cuadro-patri-ink: var(--cuadro-patri-ink);
   --color-cuadro-paseo-ink: var(--cuadro-paseo-ink);
+  /* Las fuentes van por variable (--app-font-*) para que un tema las cambie. */
+  --font-sans: var(--app-font-sans);
+  --font-display: var(--app-font-display);
+  --font-script: var(--app-font-script);
+}
+
+:root {
   /* Texto: Figtree, clara y cálida; los títulos siguen en Baloo 2. */
-  --font-sans:
+  --app-font-sans:
     "Figtree Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
     Roboto, "Helvetica Neue", Arial, sans-serif;
   /* Títulos: Baloo 2, redondeada y de trazo gordo (surfera, juvenil). */
-  --font-display:
+  --app-font-display:
     "Baloo 2", ui-rounded, "Avenir Next", "Trebuchet MS", ui-sans-serif,
     system-ui, sans-serif;
   /* Acentos sueltos (kickers, lemas): Pacifico, estilo letrero de playa. */
-  --font-script: "Pacifico", "Brush Script MT", cursive;
+  --app-font-script: "Pacifico", "Brush Script MT", cursive;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans);
+}
+
+/*
+ * Tema municipal: Manual de Marca de la Municipalidad de Papudo (2026).
+ * Institucionales: azul #283270, lavanda #6E7AB7 y blanco. Del isotipo:
+ * azul #1D70B7, verde #358434, amarillo #FFBC00 y naranja #E06C1E. Sentidos:
+ * vista (patrimonio, café), oído (balneario, amarillo), olfato (naturaleza,
+ * verde), gusto (gastronomía, rojo) y tacto (deporte, naranja).
+ * Títulos en Montserrat; texto en Archivo (en vez de Acumin, que es de pago).
+ */
+:root[data-theme="municipal"] {
+  --foreground: #283270;
+  --muted: #4a5080;
+  --border: #e3e6f2;
+  --soft: #f2f4fa;
+
+  --sea: #1d70b7; /* azul del isotipo: enlaces y botones (5,2:1 sobre blanco) */
+  --sea-bright: #6e7ab7;
+  --sea-deep: #283270;
+  --sea-soft: #e4eef8;
+  --sky: #bcd6ee;
+
+  --sun: #ffbc00;
+  --coral: #283270; /* acción principal: azul institucional */
+  --coral-ink: #4f230b;
+
+  --cuadro-mar: #ffbc00; /* oído · balneario */
+  --cuadro-campo: #358434; /* olfato · naturaleza y ruralidad */
+  --cuadro-patri: #6b3410; /* vista · patrimonio y cultura */
+  --cuadro-paseo: #e06c1e; /* tacto · deporte */
+
+  --cuadro-mar-ink: #6e5000;
+  --cuadro-campo-ink: #2a6a29;
+  --cuadro-campo-on: #ffffff; /* blanco sobre el verde del manual */
+  --cuadro-patri-ink: #6b3410;
+  --cuadro-paseo-ink: #a3480f;
+  --dune: #fff1c7;
+  --earth: #c2272d; /* gusto · gastronomía, como tinta */
+  --earth-soft: #fde4e4;
+
+  --field: #358434;
+  --field-deep: #245c23;
+  --field-soft: #e2f0df;
+
+  --app-font-sans:
+    "Archivo Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+    Roboto, "Helvetica Neue", Arial, sans-serif;
+  --app-font-display: "Montserrat", ui-sans-serif, system-ui, sans-serif;
+  --app-font-script:
+    "Montserrat Alternates", "Montserrat", ui-sans-serif, sans-serif;
+}
+
+/* El tema municipal usa Montserrat Alternates en los acentos, no cursiva. */
+:root[data-theme="municipal"] .font-script {
+  font-weight: 700;
+  letter-spacing: 0.02em;
 }
 
 :focus-visible {

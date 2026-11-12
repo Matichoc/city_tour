@@ -395,10 +395,19 @@ async function fetchRows(cfg: SupabaseConfig): Promise<ContentRows> {
   return { localities, places, events, routes };
 }
 
+/**
+ * CONTENT_SOURCE=repo fuerza el contenido del repo aunque haya base: sirve para
+ * mostrar en un ambiente (por ejemplo el demo) datos que aún no se cargan a la
+ * base compartida, sin tocar lo que ven los demás.
+ */
+export const forceRepoContent = (
+  env: Record<string, string | undefined> = process.env,
+) => env.CONTENT_SOURCE?.trim() === "repo";
+
 export async function loadContent(
   cfg: SupabaseConfig | null = supabaseConfig(),
 ): Promise<SiteContent> {
-  if (!cfg) return STATIC_CONTENT;
+  if (!cfg || forceRepoContent()) return STATIC_CONTENT;
   try {
     const content = rowsToContent(await fetchRows(cfg));
     if (content.places.length === 0) {

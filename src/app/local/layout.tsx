@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { getTranslations } from "next-intl/server";
+import { BRAND_SYMBOL } from "@/lib/theme";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations({ locale: "es", namespace: "owner" });
@@ -19,10 +20,10 @@ export default function OwnerLayout({ children }: { children: ReactNode }) {
         <div className="mx-auto flex w-full max-w-3xl items-center gap-3 px-4 py-3">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/brand/papudo-simbolo.webp"
+            src={BRAND_SYMBOL.src}
             alt=""
-            width={32}
-            height={37}
+            width={BRAND_SYMBOL.width}
+            height={BRAND_SYMBOL.height}
             className="h-9 w-auto"
           />
           <span className="font-display text-lg font-extrabold">

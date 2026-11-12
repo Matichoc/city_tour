@@ -6,7 +6,7 @@ import { AiBadge } from "@/components/ui/ai-badge";
 /** Color de cada cuadro y del texto encima (contrastes AA en MARCA-REFERENCIA). */
 const TONE: Record<DoorKey, { tile: string; text: string }> = {
   mar: { tile: "bg-cuadro-mar", text: "text-foreground" },
-  campo: { tile: "bg-cuadro-campo", text: "text-foreground" },
+  campo: { tile: "bg-cuadro-campo", text: "text-cuadro-campo-on" },
   patrimonio: { tile: "bg-cuadro-patri", text: "text-white" },
   paseos: { tile: "bg-cuadro-paseo", text: "text-white" },
 };
