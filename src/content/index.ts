@@ -4,6 +4,7 @@ import {
   GUIDE_EVENTS,
   GUIDE_LOCALITY_SUMMARIES,
   GUIDE_PLACES,
+  GUIDE_QR,
   GUIDE_SOURCE,
 } from "@/content/guia-municipal-2026";
 import { EVENTS } from "@/content/papudo-events";
@@ -25,10 +26,22 @@ export type SiteContent = {
 };
 
 /** Lugares del repo, con la guía municipal como fuente adicional donde aplica. */
-const withGuideSource = (p: PlaceContent): PlaceContent =>
-  GUIDE_ALSO_IN.includes(p.slug)
-    ? { ...p, extraSources: [...(p.extraSources ?? []), GUIDE_SOURCE] }
-    : p;
+const withGuideSource = (p: PlaceContent): PlaceContent => {
+  if (!GUIDE_ALSO_IN.includes(p.slug)) return p;
+  const pin = GUIDE_QR[p.slug];
+  return {
+    ...p,
+    // La ubicación del QR municipal reemplaza una aproximada o la que faltaba.
+    ...(pin
+      ? {
+          latitude: pin.lat,
+          longitude: pin.lng,
+          mapsUrl: p.mapsUrl ?? pin.maps,
+        }
+      : {}),
+    extraSources: [...(p.extraSources ?? []), GUIDE_SOURCE],
+  };
+};
 
 const localities: LocalityContent[] = LOCALITIES.map((l) =>
   GUIDE_LOCALITY_SUMMARIES[l.slug]

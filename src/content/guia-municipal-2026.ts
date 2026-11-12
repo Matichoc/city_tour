@@ -43,12 +43,71 @@ type Entry = {
   business?: boolean;
 };
 
+/**
+ * Ubicaciones de los códigos QR de la guía: cada atractivo trae un QR a
+ * Google Maps. Se leyeron el 12 de noviembre de 2026 y se asociaron por su
+ * posición en la página. El QR de la Plaza de Armas no se pudo leer.
+ */
+type QrPin = { lat: number; lng: number; maps: string };
+const qr = (lat: number, lng: number, code: string): QrPin => ({
+  lat,
+  lng,
+  maps: `https://maps.app.goo.gl/${code}`,
+});
+
+export const GUIDE_QR: Record<string, QrPin> = {
+  // Nuevos
+  "playa-las-playillas": qr(-32.4587709, -71.4312745, "9xVWzrjb14dWYBa4A"),
+  "quebrada-del-maqui": qr(-32.490755, -71.424261, "vicrHDZvuzPdU7bP8"),
+  "playa-espejito": qr(-32.487444, -71.431404, "15ZDebqpeSf1HKu57"),
+  "playa-grande-papudo": qr(-32.504288, -71.4440143, "kBcke2GCJpGqX5VT6"),
+  "templo-san-pedro-pescador": qr(
+    -32.5069727,
+    -71.4354009,
+    "HkXxevCVJAXo6PBK8",
+  ),
+  "edificio-consistorial": qr(-32.5080784, -71.4457043, "SJk9HwppJXqyYdRM6"),
+  "chalet-recart": qr(-32.5064673, -71.4477106, "F2yunN77ynDzPZCs6"),
+  "gruta-virgen-de-lourdes": qr(-32.5048445, -71.4515048, "BsnGSYyZkMkifE4F8"),
+  "playa-de-los-changos": qr(-32.502222, -71.454445, "SW1yUncjgCfBR3JP9"),
+  "quebrada-del-frances": qr(-32.519536, -71.445635, "sTyr6TMFz4KFh2YPA"),
+  "la-casona-pullally": qr(-32.4346124, -71.3195471, "7w6QkZ1HAn6BLz7V9"),
+  "parque-de-pullally": qr(-32.4346481, -71.3177554, "DyYSjcLaEwK7rxpD6"),
+  "la-santita-pullally": qr(-32.4349814, -71.3140982, "4NqKahjWvAzNvrjR8"),
+  "el-llano-pullally": qr(-32.431214, -71.322366, "svxLynGFfjAmPsmN6"),
+  "dunas-las-salinas": qr(-32.420069, -71.379807, "SLtCQn5K36sryS4k7"),
+  // El QR de «Escuelas de surf» marca dónde están las dos escuelas.
+  "escuela-de-surf-salinas-experience": qr(
+    -32.416194,
+    -71.412421,
+    "uGHM8NVFRRr8bJKo9",
+  ),
+  "escuela-de-surf-salinas-de-pullally": qr(
+    -32.416194,
+    -71.412421,
+    "uGHM8NVFRRr8bJKo9",
+  ),
+  // Ya existían sin coordenada o con una aproximada: se usa la del QR.
+  "humedal-urbano-estero-agua-salada": qr(
+    -32.5020827,
+    -71.435157,
+    "psfvBEZRQbrt5ks6A",
+  ),
+  "iglesia-nuestra-senora-de-las-mercedes": qr(
+    -32.5063536,
+    -71.4495344,
+    "bf4FB3LZwXBR7tnJ7",
+  ),
+  "playa-chica-papudo": qr(-32.5057388, -71.4484262, "RjG2cSVevgHTwYn87"),
+};
+
 const place = (e: Entry): PlaceContent => ({
   slug: e.slug,
   localitySlug: e.loc,
   categorySlug: e.cat,
-  latitude: null,
-  longitude: null,
+  latitude: GUIDE_QR[e.slug]?.lat ?? null,
+  longitude: GUIDE_QR[e.slug]?.lng ?? null,
+  ...(GUIDE_QR[e.slug] ? { mapsUrl: GUIDE_QR[e.slug].maps } : {}),
   ...(e.address ? { address: e.address } : {}),
   ...(e.business ? { business: true } : {}),
   es: { name: e.name, short: e.short, description: e.description ?? e.short },
