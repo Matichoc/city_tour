@@ -23,7 +23,6 @@
     "subApp": "Papudo en tu Mano is a sub-app of Turismo en tu Mano",
     "logoParent": "Turismo en tu Mano logo",
     "logoPapudo": "Papudo en tu Mano logo",
-    "poweredBy": "Powered by",
     "aiIllustration": "AI illustration",
     "whatsapp": "Send on WhatsApp"
   },
@@ -297,10 +296,7 @@
     },
     "platformTitle": "A sub-app of Turismo en tu Mano",
     "platformBody": "Turismo en tu Mano is the platform of tourist guides and local-business management for communes and destinations. Papudo en tu Mano is its sub-app for Papudo, Las Salinas and Pullally.",
-    "authorTitle": "Who builds it",
-    "authorBody": "This guide is built by Cristóbal Roco, a specialist in development and artificial-intelligence solutions for businesses.",
     "authorNote": "Illustrations are made with AI and shown with their label. Data is always checked against sources and the community.",
-    "authorLink": "Email Cristóbal Roco",
     "dataTitle": "About this data",
     "dataBody": "Every place shows its source and verification status. Nothing is treated as confirmed until a person reviews it: opening hours, prices and access may change.",
     "emergencyTitle": "Emergency numbers",

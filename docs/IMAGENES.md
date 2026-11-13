@@ -121,7 +121,7 @@ de cada lugar, cuando existan, reemplazan a la ilustración de su ficha.
 
 ## Marca
 
-Dos logos de marca, creados por Cristóbal Roco y recortados con fondo
+Dos logos de marca, creados para el proyecto y recortados con fondo
 transparente para usarlos sobre cualquier color:
 
 | Archivo | Qué es | Dónde se usa |

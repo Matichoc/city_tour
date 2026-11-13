@@ -1,9 +1,8 @@
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import { DEVELOPER } from "@/content/catalog";
 import type { Locale } from "@/i18n/routing";
 
-/** Pie: Información (en celular no está en la barra) y quién la desarrolla. */
+/** Pie: Información (en celular no está en la barra) y la marca madre. */
 export async function PoweredBy({ locale }: { locale: Locale }) {
   const t = await getTranslations({ locale, namespace: "common" });
   const n = await getTranslations({ locale, namespace: "nav" });
@@ -33,9 +32,6 @@ export async function PoweredBy({ locale }: { locale: Locale }) {
           loading="lazy"
           className="h-5 w-auto"
         />
-      </p>
-      <p className="inline-flex min-h-11 items-center gap-1.5 px-3">
-        {t("poweredBy")} <span className="font-bold">{DEVELOPER.name}</span>
       </p>
     </footer>
   );
