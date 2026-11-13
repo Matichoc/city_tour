@@ -46,7 +46,7 @@ export const DOOR_STYLE: Record<
   },
   campo: {
     frame: "bg-cuadro-campo",
-    on: "text-foreground",
+    on: "text-cuadro-campo-on",
     ink: "text-cuadro-campo-ink",
   },
   patrimonio: {
@@ -56,7 +56,7 @@ export const DOOR_STYLE: Record<
   },
   paseos: {
     frame: "bg-cuadro-paseo",
-    on: "text-white",
+    on: "text-cuadro-paseo-on",
     ink: "text-cuadro-paseo-ink",
   },
   servicio: {

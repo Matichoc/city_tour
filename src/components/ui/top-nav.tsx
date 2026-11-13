@@ -1,6 +1,7 @@
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { LocaleSwitcher } from "@/components/ui/locale-switcher";
+import { BRAND_SYMBOL } from "@/lib/theme";
 
 export function TopNav() {
   const t = useTranslations("brand");
@@ -21,10 +22,10 @@ export function TopNav() {
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/brand/papudo-simbolo.webp"
+            src={BRAND_SYMBOL.src}
             alt=""
-            width={27}
-            height={32}
+            width={BRAND_SYMBOL.width}
+            height={BRAND_SYMBOL.height}
             className="h-8 w-auto"
           />
           {t("name")}

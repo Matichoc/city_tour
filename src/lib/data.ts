@@ -31,7 +31,10 @@ import { loadContent } from "@/lib/db/content-source";
  * Las fichas y eventos de EJEMPLO (ficticios) se muestran por defecto en la
  * demostración y se ocultan con NEXT_PUBLIC_SHOW_DEMO=0 (docs/DECISIONES.md).
  */
-export const SHOW_DEMO = process.env.NEXT_PUBLIC_SHOW_DEMO !== "0";
+// El demo (rama `demo`) muestra la propuesta municipal sin fichas de ejemplo.
+export const SHOW_DEMO =
+  process.env.NEXT_PUBLIC_SHOW_DEMO !== "0" &&
+  process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_REF !== "demo";
 
 /** Promedio y cantidad de las opiniones simuladas de una ficha de ejemplo. */
 export function seededRating(slug: string): {

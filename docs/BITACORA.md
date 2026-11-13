@@ -14,13 +14,13 @@ indicadas en cada versión.
 `docs/bitacora-notas.json` (clave `actual`, y el número de PR cuando exista),
 correr `pnpm bitacora` y subir el cambio en el mismo PR.
 
-## En preparación: v0.52 — Sin nombre del desarrollador en el sitio
+## En preparación: v0.53 — Tema municipal (Manual de Marca) y datos de la Guía Turística 2026
 
-El pie deja de decir «Desarrollado por…» y queda solo «Papudo en tu Mano es una sub-app de Turismo en tu Mano». En Información se quita la sección «Quién lo desarrolla» con su enlace de correo; la nota sobre ilustraciones con IA pasa a la sección de Turismo en tu Mano. Las pruebas revisan que ningún texto de la app nombre al desarrollador. Sin migraciones.
+Nuevo tema visual «municipal» según el Manual de Marca de la Municipalidad de Papudo: azul institucional, colores del isotipo y de los cinco sentidos, Montserrat en títulos y Archivo en el texto, e isotipo municipal en la barra, el quiosco y «Mi local». Con la autorización de la Municipalidad es el tema de todos los ambientes (develop, producción y demo); NEXT_PUBLIC_THEME=base vuelve a la paleta propia. Se cargan desde la Guía Turística Papudo 2026 los atractivos, operadores, ferias, restaurantes y alojamientos de Papudo, Pullally y Las Salinas (sin coordenadas, pendientes de verificar y con la guía como fuente), los resúmenes de los pueblos y 13 festividades del calendario municipal. CONTENT_SOURCE=repo permite mostrar ese contenido en un ambiente sin tocar la base compartida.
 
 - **Migraciones por correr en Supabase:** —
-- **Estado:** en revisión, [PR #61](https://github.com/Matichoc/city_tour/pull/61) (aún no está en `develop`).
-- **Última actualización de esta bitácora:** 2026-11-12 12:14
+- **Estado:** en revisión, [PR #60](https://github.com/Matichoc/city_tour/pull/60) (aún no está en `develop`).
+- **Última actualización de esta bitácora:** 2026-11-12 21:46
 
 ## Avance por día
 
@@ -29,6 +29,7 @@ trabajadas: hay pausas y trabajo sin registrar).
 
 | Día | Ventana de actividad | Registros | Versiones entregadas |
 | --- | --- | ---: | --- |
+| Jueves, 12 de noviembre de 2026 | 00:25 – 18:33 | 4 | v0.52 |
 | Lunes, 9 de noviembre de 2026 | 00:34 – 00:34 | 1 | v0.51 |
 | Domingo, 8 de noviembre de 2026 | 12:13 – 12:13 | 1 | v0.50 |
 | Viernes, 6 de noviembre de 2026 | 11:15 – 20:15 | 11 | v0.45, v0.46, v0.47, v0.48, v0.49 |
@@ -43,6 +44,17 @@ trabajadas: hay pausas y trabajo sin registrar).
 | Lunes, 12 de octubre de 2026 | 15:43 – 17:53 | 10 | v0.1, v0.2, v0.3, v0.4 |
 
 ## Versiones
+
+### v0.52 — Sin nombre del desarrollador en el sitio
+Jueves, 12 de noviembre de 2026, 21:36 · [PR #61](https://github.com/Matichoc/city_tour/pull/61)
+
+El pie deja de decir «Desarrollado por…» y queda solo «Papudo en tu Mano es una sub-app de Turismo en tu Mano». En Información se quita la sección «Quién lo desarrolla» con su enlace de correo; la nota sobre ilustraciones con IA pasa a la sección de Turismo en tu Mano. Las pruebas revisan que ningún texto de la app nombre al desarrollador. Sin migraciones.
+
+**Migraciones en Supabase:** —
+
+Registros:
+
+- 11-12 18:33 — Sin nombre del desarrollador en el sitio (`fea6759`)
 
 ### v0.51 — Métricas anónimas del sitio y panel «Métricas»
 Lunes, 9 de noviembre de 2026, 16:47 · [PR #59](https://github.com/Matichoc/city_tour/pull/59)
