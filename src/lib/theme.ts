@@ -4,8 +4,9 @@
  * - `base`: la paleta propia de «Papudo en tu Mano» (globals.css, :root).
  * - `municipal`: el Manual de Marca de la Municipalidad de Papudo (2026):
  *   azul institucional, colores del isotipo y de los cinco sentidos,
- *   Montserrat en títulos. Se activa con NEXT_PUBLIC_THEME=municipal, así se
- *   puede mostrar en un ambiente sin cambiar los demás.
+ *   Montserrat en títulos. Es el tema de todos los ambientes (la
+ *   Municipalidad autorizó usar su marca); NEXT_PUBLIC_THEME=base vuelve a la
+ *   paleta propia.
  */
 export type Theme = "base" | "municipal";
 
@@ -18,9 +19,9 @@ export const IS_DEMO_BRANCH =
   process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_REF === "demo";
 
 export const THEME: Theme =
-  process.env.NEXT_PUBLIC_THEME === "municipal" || IS_DEMO_BRANCH
-    ? "municipal"
-    : "base";
+  process.env.NEXT_PUBLIC_THEME === "base" && !IS_DEMO_BRANCH
+    ? "base"
+    : "municipal";
 
 /** Símbolo junto al nombre (barra superior, quiosco, «Mi local»). */
 export const BRAND_SYMBOL =

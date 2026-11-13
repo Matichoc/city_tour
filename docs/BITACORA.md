@@ -16,11 +16,11 @@ correr `pnpm bitacora` y subir el cambio en el mismo PR.
 
 ## En preparación: v0.53 — Tema municipal (Manual de Marca) y datos de la Guía Turística 2026
 
-Nuevo tema visual «municipal» según el Manual de Marca de la Municipalidad de Papudo: azul institucional, colores del isotipo y de los cinco sentidos, Montserrat en títulos y Archivo en el texto, e isotipo municipal en la barra, el quiosco y «Mi local». Se activa con NEXT_PUBLIC_THEME=municipal, sin cambiar los demás ambientes. Se cargan desde la Guía Turística Papudo 2026 los atractivos, operadores, ferias, restaurantes y alojamientos de Papudo, Pullally y Las Salinas (sin coordenadas, pendientes de verificar y con la guía como fuente), los resúmenes de los pueblos y 13 festividades del calendario municipal. CONTENT_SOURCE=repo permite mostrar ese contenido en un ambiente sin tocar la base compartida.
+Nuevo tema visual «municipal» según el Manual de Marca de la Municipalidad de Papudo: azul institucional, colores del isotipo y de los cinco sentidos, Montserrat en títulos y Archivo en el texto, e isotipo municipal en la barra, el quiosco y «Mi local». Con la autorización de la Municipalidad es el tema de todos los ambientes (develop, producción y demo); NEXT_PUBLIC_THEME=base vuelve a la paleta propia. Se cargan desde la Guía Turística Papudo 2026 los atractivos, operadores, ferias, restaurantes y alojamientos de Papudo, Pullally y Las Salinas (sin coordenadas, pendientes de verificar y con la guía como fuente), los resúmenes de los pueblos y 13 festividades del calendario municipal. CONTENT_SOURCE=repo permite mostrar ese contenido en un ambiente sin tocar la base compartida.
 
 - **Migraciones por correr en Supabase:** —
 - **Estado:** en revisión, [PR #60](https://github.com/Matichoc/city_tour/pull/60) (aún no está en `develop`).
-- **Última actualización de esta bitácora:** 2026-11-12 21:38
+- **Última actualización de esta bitácora:** 2026-11-12 21:46
 
 ## Avance por día
 
