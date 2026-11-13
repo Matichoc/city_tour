@@ -1,5 +1,4 @@
 {
-  "_ayuda": "Notas a mano de cada entrega, por número de PR. `pnpm bitacora` las junta con el historial de git (días, horas y commits) y escribe docs/BITACORA.md. La entrega en curso va en «actual» con el número de su PR en «pr»; al fusionarse, la bitácora la une sola con su versión.",
   "1": {
     "titulo": "Plan de trabajo y flujo de ramas",
     "resumen": "Plan del proyecto, financiamiento y herramientas, y el flujo de ramas."
@@ -33,13 +32,13 @@
     "titulo": "Ajuste de la cámara del recorrido",
     "resumen": "La cámara también se ofrece lejos de la parada."
   },
-  "11": {
-    "titulo": "Alineación con el PLADETUR",
-    "resumen": "Categorías según los productos del plan, agenda anual de eventos y modo quiosco para las oficinas de información."
-  },
   "10": {
     "titulo": "Cámara a pie y documentos del PLADETUR",
     "resumen": "Figura guía a elegir (flecha, mano, huellas, gaviota o velero) y alineación del producto y del precio con el plan."
+  },
+  "11": {
+    "titulo": "Alineación con el PLADETUR",
+    "resumen": "Categorías según los productos del plan, agenda anual de eventos y modo quiosco para las oficinas de información."
   },
   "12": {
     "titulo": "Formulario para comercios y revisión legal",
@@ -210,10 +209,16 @@
     "resumen": "La sesión del panel se cierra sola tras unas 4 horas sin uso (antes duraba 30 días mientras se usara), para que un computador compartido no quede abierto. La pantalla de ingreso lo avisa y pide pulsar «Salir» en computadores compartidos. Se suma la plantilla del correo de confirmación en español con la marca Papudo en tu Mano (supabase/templates/confirmacion.html) y el manual explica cómo aplicarla y por qué esperar al proyecto propio de Supabase. Sin migraciones.",
     "migraciones": "—"
   },
-  "actual": {
-    "pr": 59,
+  "59": {
     "titulo": "Métricas anónimas del sitio y panel «Métricas»",
     "resumen": "El sitio cuenta, de forma anónima y sin cookies, vistas de lugares, rutas y eventos, clics en «Cómo llegar» y en contactos, agregados al viaje, viajes en vivo, visitas por QR, audios y búsquedas sin resultados. Los conteos se guardan por día en Supabase (sin IP ni datos de personas) y solo el servidor puede sumar, con la misma prueba firmada de los comentarios y topes contra abuso. Nueva sección Visitantes › Métricas en el panel: resumen con comparación al período anterior (7, 30 o 90 días), interacciones por día, lugares con más interacciones, embudo de rutas, eventos, QR, búsquedas sin resultados, idiomas y descarga CSV. «Cómo usar» avisa de la medición anónima.",
     "migraciones": "0034"
+  },
+  "_ayuda": "Notas a mano de cada entrega, por número de PR. `pnpm bitacora` las junta con el historial de git (días, horas y commits) y escribe docs/BITACORA.md. La entrega en curso va en «actual» con el número de su PR en «pr»; al fusionarse, la bitácora la une sola con su versión.",
+  "actual": {
+    "pr": 61,
+    "titulo": "Sin nombre del desarrollador en el sitio",
+    "resumen": "El pie deja de decir «Desarrollado por…» y queda solo «Papudo en tu Mano es una sub-app de Turismo en tu Mano». En Información se quita la sección «Quién lo desarrolla» con su enlace de correo; la nota sobre ilustraciones con IA pasa a la sección de Turismo en tu Mano. Las pruebas revisan que ningún texto de la app nombre al desarrollador. Sin migraciones.",
+    "migraciones": "—"
   }
 }

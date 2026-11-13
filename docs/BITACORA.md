@@ -14,13 +14,13 @@ indicadas en cada versión.
 `docs/bitacora-notas.json` (clave `actual`, y el número de PR cuando exista),
 correr `pnpm bitacora` y subir el cambio en el mismo PR.
 
-## En preparación: v0.51 — Métricas anónimas del sitio y panel «Métricas»
+## En preparación: v0.52 — Sin nombre del desarrollador en el sitio
 
-El sitio cuenta, de forma anónima y sin cookies, vistas de lugares, rutas y eventos, clics en «Cómo llegar» y en contactos, agregados al viaje, viajes en vivo, visitas por QR, audios y búsquedas sin resultados. Los conteos se guardan por día en Supabase (sin IP ni datos de personas) y solo el servidor puede sumar, con la misma prueba firmada de los comentarios y topes contra abuso. Nueva sección Visitantes › Métricas en el panel: resumen con comparación al período anterior (7, 30 o 90 días), interacciones por día, lugares con más interacciones, embudo de rutas, eventos, QR, búsquedas sin resultados, idiomas y descarga CSV. «Cómo usar» avisa de la medición anónima.
+El pie deja de decir «Desarrollado por…» y queda solo «Papudo en tu Mano es una sub-app de Turismo en tu Mano». En Información se quita la sección «Quién lo desarrolla» con su enlace de correo; la nota sobre ilustraciones con IA pasa a la sección de Turismo en tu Mano. Las pruebas revisan que ningún texto de la app nombre al desarrollador. Sin migraciones.
 
-- **Migraciones por correr en Supabase:** 0034
-- **Estado:** en revisión, [PR #59](https://github.com/Matichoc/city_tour/pull/59) (aún no está en `develop`).
-- **Última actualización de esta bitácora:** 2026-11-09 00:33
+- **Migraciones por correr en Supabase:** —
+- **Estado:** en revisión, [PR #61](https://github.com/Matichoc/city_tour/pull/61) (aún no está en `develop`).
+- **Última actualización de esta bitácora:** 2026-11-12 12:14
 
 ## Avance por día
 
@@ -29,6 +29,7 @@ trabajadas: hay pausas y trabajo sin registrar).
 
 | Día | Ventana de actividad | Registros | Versiones entregadas |
 | --- | --- | ---: | --- |
+| Lunes, 9 de noviembre de 2026 | 00:34 – 00:34 | 1 | v0.51 |
 | Domingo, 8 de noviembre de 2026 | 12:13 – 12:13 | 1 | v0.50 |
 | Viernes, 6 de noviembre de 2026 | 11:15 – 20:15 | 11 | v0.45, v0.46, v0.47, v0.48, v0.49 |
 | Miércoles, 4 de noviembre de 2026 | 08:48 – 23:47 | 20 | v0.34, v0.35, v0.36, v0.37, v0.38, v0.39, v0.40, v0.41, v0.42, v0.43 |
@@ -42,6 +43,17 @@ trabajadas: hay pausas y trabajo sin registrar).
 | Lunes, 12 de octubre de 2026 | 15:43 – 17:53 | 10 | v0.1, v0.2, v0.3, v0.4 |
 
 ## Versiones
+
+### v0.51 — Métricas anónimas del sitio y panel «Métricas»
+Lunes, 9 de noviembre de 2026, 16:47 · [PR #59](https://github.com/Matichoc/city_tour/pull/59)
+
+El sitio cuenta, de forma anónima y sin cookies, vistas de lugares, rutas y eventos, clics en «Cómo llegar» y en contactos, agregados al viaje, viajes en vivo, visitas por QR, audios y búsquedas sin resultados. Los conteos se guardan por día en Supabase (sin IP ni datos de personas) y solo el servidor puede sumar, con la misma prueba firmada de los comentarios y topes contra abuso. Nueva sección Visitantes › Métricas en el panel: resumen con comparación al período anterior (7, 30 o 90 días), interacciones por día, lugares con más interacciones, embudo de rutas, eventos, QR, búsquedas sin resultados, idiomas y descarga CSV. «Cómo usar» avisa de la medición anónima.
+
+**Migraciones en Supabase:** 0034
+
+Registros:
+
+- 11-09 00:34 — Métricas anónimas del sitio y sección «Métricas» en el panel (`36e6185`)
 
 ### v0.50 — Sesión del panel de 4 horas y correo de confirmación propio
 Domingo, 8 de noviembre de 2026, 22:26 · [PR #58](https://github.com/Matichoc/city_tour/pull/58)

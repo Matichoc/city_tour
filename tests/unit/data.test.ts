@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { LOCALITIES, PLACES } from "@/content/papudo-places";
 import { ROUTES } from "@/content/papudo-routes";
-import { DEVELOPER, MUNICIPALITY } from "@/content/catalog";
+import { MUNICIPALITY } from "@/content/catalog";
 import { STATIC_CONTENT } from "@/content";
 import {
   canonicalCategory,
@@ -231,10 +231,9 @@ describe("completitud respecto de directorio_turistico (auditoría de Papudo)", 
     expect(MUNICIPALITY.website).toContain("munipapudo.cl");
     expect(MUNICIPALITY.sources.length).toBeGreaterThanOrEqual(2);
   });
-  it("los créditos nombran a Cristóbal Roco y no a Matichoc", () => {
-    expect(DEVELOPER.name).toBe("Cristóbal Roco");
+  it("ningún texto de la app nombra al desarrollador ni a Matichoc", () => {
     for (const m of [es, en, pt])
-      expect(JSON.stringify(m)).not.toMatch(/matichoc/i);
+      expect(JSON.stringify(m)).not.toMatch(/matichoc|roco|desarrollado por/i);
   });
 });
 

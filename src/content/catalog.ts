@@ -100,9 +100,3 @@ export const MUNICIPALITY = {
     },
   ],
 } as const;
-
-/** Quien desarrolla y opera la guía: aparece en el pie y en Información. */
-export const DEVELOPER = {
-  name: "Cristóbal Roco",
-  email: "c.roco.saavedra@gmail.com",
-} as const;

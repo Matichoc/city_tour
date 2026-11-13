@@ -553,18 +553,19 @@ test("buscador: explica qué se puede buscar y los ejemplos llevan a resultados"
   ).toBeVisible();
 });
 
-test("información: presenta a quien desarrolla la guía", async ({ page }) => {
+test("información: presenta Turismo en tu Mano, sin nombres personales", async ({
+  page,
+}) => {
   await page.goto("/es/informacion");
   await expect(
-    page.getByText(/Esta guía la desarrolla Cristóbal Roco/),
+    page.getByRole("heading", { name: "Una sub-app de Turismo en tu Mano" }),
   ).toBeVisible();
   await expect(
-    page.getByRole("link", { name: "Escribir a Cristóbal Roco" }),
-  ).toHaveAttribute("href", /^mailto:/);
-  // El pie también lo nombra, sin Matichoc.
-  await expect(page.locator("footer")).toContainText(
-    "Desarrollado por Cristóbal Roco",
-  );
+    page.getByText(/ilustraciones están hechas con IA/),
+  ).toBeVisible();
+  // Ni la página ni el pie nombran a quien la desarrolla.
+  await expect(page.locator("body")).not.toContainText("Roco");
+  await expect(page.locator("footer")).not.toContainText("Desarrollado por");
 });
 
 test("cámara a pie: se puede elegir la figura que señala y se recuerda", async ({
