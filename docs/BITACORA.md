@@ -14,13 +14,13 @@ indicadas en cada versión.
 `docs/bitacora-notas.json` (clave `actual`, y el número de PR cuando exista),
 correr `pnpm bitacora` y subir el cambio en el mismo PR.
 
-## En preparación: v0.53 — Tema municipal (Manual de Marca) y datos de la Guía Turística 2026
+## En preparación: v0.54 — Íconos de la app con el isotipo de Papudo
 
-Nuevo tema visual «municipal» según el Manual de Marca de la Municipalidad de Papudo: azul institucional, colores del isotipo y de los cinco sentidos, Montserrat en títulos y Archivo en el texto, e isotipo municipal en la barra, el quiosco y «Mi local». Con la autorización de la Municipalidad es el tema de todos los ambientes (develop, producción y demo); NEXT_PUBLIC_THEME=base vuelve a la paleta propia. Se cargan desde la Guía Turística Papudo 2026 los atractivos, operadores, ferias, restaurantes y alojamientos de Papudo, Pullally y Las Salinas (sin coordenadas, pendientes de verificar y con la guía como fuente), los resúmenes de los pueblos y 13 festividades del calendario municipal. CONTENT_SOURCE=repo permite mostrar ese contenido en un ambiente sin tocar la base compartida.
+La app deja de usar la «P» de Papudo en tu Mano: los íconos (favicon, ícono de Apple y los de la app instalable, incluido el «maskable») llevan el isotipo de la Municipalidad sobre fondo blanco, y la barra, el quiosco y «Mi local» muestran el isotipo en los dos temas. docs/IMAGENES.md explica de dónde salen los íconos. Sin migraciones.
 
 - **Migraciones por correr en Supabase:** —
-- **Estado:** en revisión, [PR #60](https://github.com/Matichoc/city_tour/pull/60) (aún no está en `develop`).
-- **Última actualización de esta bitácora:** 2026-11-12 21:46
+- **Estado:** en revisión, [PR #62](https://github.com/Matichoc/city_tour/pull/62) (aún no está en `develop`).
+- **Última actualización de esta bitácora:** 2026-11-16 23:54
 
 ## Avance por día
 
@@ -29,7 +29,7 @@ trabajadas: hay pausas y trabajo sin registrar).
 
 | Día | Ventana de actividad | Registros | Versiones entregadas |
 | --- | --- | ---: | --- |
-| Jueves, 12 de noviembre de 2026 | 00:25 – 18:33 | 4 | v0.52 |
+| Jueves, 12 de noviembre de 2026 | 00:25 – 21:58 | 6 | v0.52, v0.53 |
 | Lunes, 9 de noviembre de 2026 | 00:34 – 00:34 | 1 | v0.51 |
 | Domingo, 8 de noviembre de 2026 | 12:13 – 12:13 | 1 | v0.50 |
 | Viernes, 6 de noviembre de 2026 | 11:15 – 20:15 | 11 | v0.45, v0.46, v0.47, v0.48, v0.49 |
@@ -44,6 +44,22 @@ trabajadas: hay pausas y trabajo sin registrar).
 | Lunes, 12 de octubre de 2026 | 15:43 – 17:53 | 10 | v0.1, v0.2, v0.3, v0.4 |
 
 ## Versiones
+
+### v0.53 — Tema municipal (Manual de Marca) y datos de la Guía Turística 2026
+Jueves, 12 de noviembre de 2026, 22:11 · [PR #60](https://github.com/Matichoc/city_tour/pull/60)
+
+Nuevo tema visual «municipal» según el Manual de Marca de la Municipalidad de Papudo: azul institucional, colores del isotipo y de los cinco sentidos, Montserrat en títulos y Archivo en el texto, e isotipo municipal en la barra, el quiosco y «Mi local». Con la autorización de la Municipalidad es el tema de todos los ambientes (develop, producción y demo); NEXT_PUBLIC_THEME=base vuelve a la paleta propia. Se cargan desde la Guía Turística Papudo 2026 los atractivos, operadores, ferias, restaurantes y alojamientos de Papudo, Pullally y Las Salinas (sin coordenadas, pendientes de verificar y con la guía como fuente), los resúmenes de los pueblos y 13 festividades del calendario municipal. CONTENT_SOURCE=repo permite mostrar ese contenido en un ambiente sin tocar la base compartida.
+
+**Migraciones en Supabase:** —
+
+Registros:
+
+- 11-12 00:25 — Tema municipal (Manual de Marca) y datos de la Guía Turística 2026 (`9bab093`)
+- 11-12 00:30 — El demo muestra la propuesta municipal (tema, guía y sin fichas de ejemplo) (`31349fc`)
+- 11-12 00:46 — Ubicaciones de los QR de la guía municipal en el mapa (`b5133f3`)
+- 11-12 21:42 — Integra develop: sin nombre del desarrollador (`d06fd40`)
+- 11-12 21:49 — Tema municipal por defecto en todos los ambientes (`d363559`)
+- 11-12 21:58 — Contraste AA en las puertas del tema municipal (`d02cab9`)
 
 ### v0.52 — Sin nombre del desarrollador en el sitio
 Jueves, 12 de noviembre de 2026, 21:36 · [PR #61](https://github.com/Matichoc/city_tour/pull/61)
