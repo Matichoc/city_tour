@@ -121,15 +121,20 @@ de cada lugar, cuando existan, reemplazan a la ilustración de su ficha.
 
 ## Marca
 
-Dos logos de marca, creados para el proyecto y recortados con fondo
-transparente para usarlos sobre cualquier color:
+Logos de marca, con fondo transparente para usarlos sobre cualquier color:
 
 | Archivo | Qué es | Dónde se usa |
 | ------- | ------ | ------------ |
 | `public/brand/turismo-en-tu-mano.webp` | Turismo en tu Mano, logo completo (marca madre) | Página de Información |
 | `public/brand/turismo-simbolo.webp` | Solo el símbolo de la mano | Pie de página («sub-app de Turismo en tu Mano») |
-| `public/brand/papudo-en-tu-mano.webp` | Papudo en tu Mano, logo completo | Disponible para portadas e impresos |
-| `public/brand/papudo-simbolo.webp` | Solo la «P» | Barra superior, quiosco e ícono de la app |
+| `public/brand/municipal/papudo-isotipo.webp` | Isotipo de la Municipalidad (Manual de Marca) | Barra superior, quiosco, «Mi local» e íconos de la app (`src/app/icon.png`, `src/app/apple-icon.png`, `public/icons/`) |
+| `public/brand/municipal/papudo-logo.webp` | Logo municipal completo (isotipo y «Papudo») | Fuente del isotipo de los íconos |
+| `public/brand/papudo-en-tu-mano.webp` | Papudo en tu Mano con la «P» | **Ya no se usa** (desde noviembre de 2026 la app usa el isotipo municipal) |
+| `public/brand/papudo-simbolo.webp` | Solo la «P» | **Ya no se usa** |
+
+Los íconos se generan desde `papudo-logo.webp`: se recorta el isotipo y se
+centra sobre fondo blanco (80 % del alto; 60 % en el ícono «maskable», por su
+zona segura).
 
 **Turismo en tu Mano** es la plataforma que se ofrece a cualquier comuna o
 destino. **Papudo en tu Mano** es su sub-app para Papudo, Las Salinas y

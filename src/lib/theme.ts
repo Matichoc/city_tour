@@ -23,11 +23,17 @@ export const THEME: Theme =
     ? "base"
     : "municipal";
 
-/** Símbolo junto al nombre (barra superior, quiosco, «Mi local»). */
-export const BRAND_SYMBOL =
-  THEME === "municipal"
-    ? { src: "/brand/municipal/papudo-isotipo.webp", width: 96, height: 256 }
-    : { src: "/brand/papudo-simbolo.webp", width: 27, height: 32 };
+/**
+ * Símbolo junto al nombre (barra superior, quiosco, «Mi local»): el isotipo
+ * de la Municipalidad en los dos temas. La «P» de Papudo en tu Mano ya no se
+ * usa en la app; los íconos (src/app/icon.png, public/icons) también llevan
+ * el isotipo.
+ */
+export const BRAND_SYMBOL = {
+  src: "/brand/municipal/papudo-isotipo.webp",
+  width: 96,
+  height: 256,
+};
 
 /** Color de la barra del navegador en el celular. */
 export const THEME_COLOR = THEME === "municipal" ? "#283270" : "#1b7070";
