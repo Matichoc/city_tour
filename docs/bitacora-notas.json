@@ -224,11 +224,16 @@
     "resumen": "El pie deja de decir «Desarrollado por…» y queda solo «Papudo en tu Mano es una sub-app de Turismo en tu Mano». En Información se quita la sección «Quién lo desarrolla» con su enlace de correo; la nota sobre ilustraciones con IA pasa a la sección de Turismo en tu Mano. Las pruebas revisan que ningún texto de la app nombre al desarrollador. Sin migraciones.",
     "migraciones": "—"
   },
-  "_ayuda": "Notas a mano de cada entrega, por número de PR. `pnpm bitacora` las junta con el historial de git (días, horas y commits) y escribe docs/BITACORA.md. La entrega en curso va en «actual» con el número de su PR en «pr»; al fusionarse, la bitácora la une sola con su versión.",
-  "actual": {
-    "pr": 62,
+  "62": {
     "titulo": "Íconos de la app con el isotipo de Papudo",
     "resumen": "La app deja de usar la «P» de Papudo en tu Mano: los íconos (favicon, ícono de Apple y los de la app instalable, incluido el «maskable») llevan el isotipo de la Municipalidad sobre fondo blanco, y la barra, el quiosco y «Mi local» muestran el isotipo en los dos temas. docs/IMAGENES.md explica de dónde salen los íconos. Sin migraciones.",
+    "migraciones": "—"
+  },
+  "_ayuda": "Notas a mano de cada entrega, por número de PR. `pnpm bitacora` las junta con el historial de git (días, horas y commits) y escribe docs/BITACORA.md. La entrega en curso va en «actual» con el número de su PR en «pr»; al fusionarse, la bitácora la une sola con su versión.",
+  "actual": {
+    "pr": 63,
+    "titulo": "Seguridad: Next.js 16.4.6",
+    "resumen": "Actualiza Next.js y eslint-config-next de 16.3.8 a 16.4.6 para cerrar los avisos de seguridad de Next publicados para 16.3.8 (dos críticos de ejecución remota en «use cache» y en la optimización de imágenes con SVG, uno alto de denegación de servicio con Server Actions y dos moderados de caché). Sin cambios de funcionalidad. Sin migraciones.",
     "migraciones": "—"
   }
 }
