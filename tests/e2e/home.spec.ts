@@ -429,6 +429,13 @@ test("QR por hito: el afiche lleva a la ficha del lugar; la ruta trae su QR", as
   await expect(
     page.getByText(/\/es\/lugares\/playa-chica-papudo\?origen=hito-/),
   ).toBeVisible();
+  // En el celular el QR de la ruta no sirve (es la misma página): no se muestra.
+  await page.goto("/es/rutas/papudo-a-pie");
+  await expect(
+    page.getByRole("img", { name: "Código QR de esta ruta" }),
+  ).toBeHidden();
+  // En computador (o quiosco) sí, para pasar la ruta al celular e imprimirla.
+  await page.setViewportSize({ width: 1280, height: 900 });
   await page.goto("/es/rutas/papudo-a-pie");
   await expect(
     page.getByRole("img", { name: "Código QR de esta ruta" }),

@@ -115,6 +115,68 @@ select tests.eq('la propuesta queda aprobada con quién y cuándo',
   (select status::text || ' ' || (reviewed_by is not null)::text from public.place_change_requests
     where id = (select v::uuid from owner_t where k = 'p2')), 'approved true');
 
+-- Horario con selector (migración 0035): se valida y, al aprobar, reemplaza
+-- el horario por temporada de la ficha.
+select tests.login('anon');
+select tests.eq('Mi local recibe las filas del horario',
+  jsonb_typeof(public.owner_session((select v from owner_t where k = 'key')) -> 'hours_rows'), 'array');
+select tests.raises('un horario mal formado no se acepta',
+  $$select public.submit_owner_proposal((select v from owner_t where k = 'key'),
+    '{"hours":"[{\"fromMonth\":13,\"toMonth\":2,\"days\":[1],\"opens\":\"09:00\",\"closes\":\"18:00\"}]"}', 'Ana')$$, '22023');
+select tests.raises('un día fuera de la semana no se acepta',
+  $$select public.submit_owner_proposal((select v from owner_t where k = 'key'),
+    '{"hours":"[{\"fromMonth\":1,\"toMonth\":12,\"days\":[7],\"opens\":\"09:00\",\"closes\":\"18:00\"}]"}', 'Ana')$$, '22023');
+insert into owner_t select 'ph', public.submit_owner_proposal((select v from owner_t where k = 'key'),
+  jsonb_build_object('hours', '[{"fromMonth":1,"toMonth":2,"days":[0,1,2,3,4,5,6],"holidays":true,"opens":"09:00","closes":"22:00"},{"fromMonth":3,"toMonth":12,"days":[0,6],"opens":"10:00","closes":"19:00"}]'),
+  'Ana Pérez');
+select tests.logout();
+select tests.login('authenticated', '00000000-0000-0000-0000-00000000eb31');
+select public.review_owner_proposal((select v::uuid from owner_t where k = 'ph'), true);
+select tests.logout();
+select tests.eq('al aprobar, el horario queda por día y temporada',
+  (select count(*)::int from public.place_hours h join public.places p on p.id = h.place_id
+    where p.slug = 'roots-salinas'), 9);
+select tests.eq('con las horas y los festivos de verano',
+  (select count(*)::int from public.place_hours h join public.places p on p.id = h.place_id
+    where p.slug = 'roots-salinas' and h.from_month = 1 and h.to_month = 2
+      and h.opens_at = '09:00' and h.closes_at = '22:00' and h.holidays), 7);
+
+-- Entrar con el correo y un código (migración 0036): el personal registra el
+-- correo del local; con una sesión de ese correo se ve y se propone.
+select tests.login('anon');
+select tests.raises('anon no registra correos',
+  $$select public.set_owner_email((select id from public.places where slug = 'roots-salinas'), 'dueno@roots.cl')$$, '42501');
+select tests.logout();
+select tests.login('authenticated', '00000000-0000-0000-0000-00000000eb31');
+select tests.raises('el correo es solo para comercios',
+  $$select public.set_owner_email((select id from public.places where slug = 'playa-papudo'), 'x@y.cl')$$, '22023');
+select tests.raises('un correo mal escrito no se acepta',
+  $$select public.set_owner_email((select id from public.places where slug = 'roots-salinas'), 'no-es-correo')$$, '22023');
+select public.set_owner_email((select id from public.places where slug = 'roots-salinas'), '  Dueno@Roots.cl ');
+select tests.eq('el personal ve el correo, en minúsculas',
+  public.owner_email_of((select id from public.places where slug = 'roots-salinas')), 'dueno@roots.cl');
+select tests.logout();
+
+select tests.login('authenticated', '00000000-0000-0000-0000-00000000dd36');
+select set_config('request.jwt.claims', '{"email":"otra@persona.cl"}', true);
+select tests.eq('otro correo no ve locales',
+  (select count(*)::int from public.owner_my_places()), 0);
+select tests.eq('ni la ficha',
+  public.owner_session_mine((select id from public.places where slug = 'roots-salinas')), null::jsonb);
+select tests.raises('ni propone',
+  $$select public.submit_owner_proposal_mine((select id from public.places where slug = 'roots-salinas'), '{"website":"https://otro.cl"}', 'Intruso')$$, '28000');
+select set_config('request.jwt.claims', '{"email":"DUENO@roots.cl"}', true);
+select tests.eq('con su correo ve su local',
+  (select slug from public.owner_my_places()), 'roots-salinas');
+select tests.eq('y su ficha, con el horario',
+  jsonb_typeof(public.owner_session_mine((select id from public.places where slug = 'roots-salinas')) -> 'hours_rows'), 'array');
+insert into owner_t select 'pm', public.submit_owner_proposal_mine(
+  (select id from public.places where slug = 'roots-salinas'), '{"instagram":"https://www.instagram.com/roots/"}', 'Dueño');
+select set_config('request.jwt.claims', '', true);
+select tests.logout();
+select tests.eq('la propuesta por correo queda pendiente',
+  (select status::text from public.place_change_requests where id = (select v::uuid from owner_t where k = 'pm')), 'pending');
+
 -- Rechazar no toca la ficha; cortar el enlace deja fuera al locatario.
 select tests.login('anon');
 insert into owner_t select 'p3', public.submit_owner_proposal((select v from owner_t where k = 'key'),

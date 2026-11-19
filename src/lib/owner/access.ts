@@ -5,6 +5,8 @@
  * que el personal lo apruebe.
  */
 import { supabaseConfig } from "@/lib/db/content-source";
+import { groupHours } from "@/lib/hours";
+import { hoursKey, parseHours } from "@/lib/owner/hours";
 
 /** Cookie con el enlace del local (httpOnly, solo para /local). */
 export const OWNER_COOKIE = "ml_llave";
@@ -20,6 +22,8 @@ export const OWNER_FIELDS = {
   cta_value: 300,
   instagram: 100,
   website: 300,
+  /** Horario con selector: temporadas en JSON (src/lib/owner/hours.ts). */
+  hours: 4000,
 } as const;
 export type OwnerField = keyof typeof OWNER_FIELDS;
 export type OwnerValues = Record<OwnerField, string | null>;
@@ -83,12 +87,16 @@ async function anonRpc<T>(
   }
 }
 
-type RawSession = {
+type HoursRow = Parameters<typeof groupHours>[0][number];
+
+export type RawSession = {
   place_id: string;
   slug: string;
   name: string | null;
   published: boolean;
-  current: OwnerValues;
+  current: Omit<OwnerValues, "hours">;
+  /** Filas del horario de la ficha (migración 0035; antes no venían). */
+  hours_rows?: HoursRow[];
   last: {
     status: ProposalStatus;
     changes: Partial<OwnerValues>;
@@ -104,14 +112,18 @@ export async function getOwnerSession(
 ): Promise<OwnerSession | null> {
   if (!isOwnerToken(token)) return null;
   const res = await anonRpc<RawSession>("owner_session", { p_token: token });
-  if (!res.ok || !res.data) return null;
-  const s = res.data;
+  return res.ok ? toOwnerSession(res.data) : null;
+}
+
+/** Lo que entrega la base (por enlace o por correo), listo para la página. */
+export function toOwnerSession(s: RawSession): OwnerSession | null {
+  if (!s) return null;
   return {
     placeId: s.place_id,
     slug: s.slug,
     name: s.name ?? s.slug,
     published: s.published,
-    current: s.current,
+    current: { ...s.current, hours: hoursKey(groupHours(s.hours_rows ?? [])) },
     last: s.last
       ? {
           status: s.last.status,
@@ -158,7 +170,8 @@ const isHttp = (v: string) => {
   }
 };
 
-export type OwnerFormError = "cta" | "ctaValue" | "website" | "instagram";
+export type OwnerFormError =
+  "cta" | "ctaValue" | "website" | "instagram" | "hours";
 
 /** Lee el formulario del locatario y revisa los formatos (la base revisa de nuevo). */
 export function readOwnerForm(form: FormData): {
@@ -187,6 +200,11 @@ export function readOwnerForm(form: FormData): {
   }
   if (values.website && !isHttp(values.website)) errors.push("website");
   if (values.instagram && !isHttp(values.instagram)) errors.push("instagram");
+  // El horario llega como JSON desde el selector: se valida y se deja en su
+  // forma única, para compararlo con el de la ficha.
+  const hours = parseHours(values.hours);
+  if (hours === null) errors.push("hours");
+  else values.hours = hoursKey(hours);
   return { values, errors };
 }
 
@@ -197,7 +215,8 @@ export function changedFields(
 ): Partial<OwnerValues> {
   const out: Partial<OwnerValues> = {};
   for (const f of Object.keys(OWNER_FIELDS) as OwnerField[]) {
-    if ((current[f] ?? null) !== (next[f] ?? null)) out[f] = next[f];
+    // Un texto vacío en la ficha y un campo vacío en el formulario son lo mismo.
+    if ((current[f] || null) !== (next[f] || null)) out[f] = next[f];
   }
   if ("cta_kind" in out || "cta_value" in out) {
     out.cta_kind = next.cta_kind;

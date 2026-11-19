@@ -12,7 +12,7 @@ import { PhotoManager } from "@/components/admin/photo-manager";
 import { HoursEditor } from "@/components/admin/hours-editor";
 import { PublicationBadge } from "@/components/admin/badges";
 import { OwnerAccess } from "@/components/admin/owner-access";
-import { getOwnerKeyStatus } from "@/lib/admin/owner";
+import { getOwnerEmail, getOwnerKeyStatus } from "@/lib/admin/owner";
 
 export default async function EditPlace({
   params,
@@ -24,6 +24,8 @@ export default async function EditPlace({
     creado?: string;
     error?: string;
     accesoCortado?: string;
+    correoGuardado?: string;
+    correoError?: string;
   }>;
 }) {
   const session = await getSession();
@@ -39,7 +41,12 @@ export default async function EditPlace({
   ]);
   if (!place) notFound();
   const editable = canModerate(session);
-  const ownerKey = editable ? await getOwnerKeyStatus(session, place.id) : null;
+  const [ownerKey, ownerEmail] = editable
+    ? await Promise.all([
+        getOwnerKeyStatus(session, place.id),
+        getOwnerEmail(session, place.id),
+      ])
+    : [null, null];
   const isAdmin = session.role === "admin";
 
   return (
@@ -203,6 +210,9 @@ export default async function EditPlace({
             placeName={place.name}
             status={ownerKey}
             revoked={Boolean(sp.accesoCortado)}
+            email={ownerEmail}
+            emailSaved={Boolean(sp.correoGuardado)}
+            emailError={Boolean(sp.correoError)}
           />
         </section>
       )}

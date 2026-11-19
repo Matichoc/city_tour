@@ -14,13 +14,13 @@ indicadas en cada versión.
 `docs/bitacora-notas.json` (clave `actual`, y el número de PR cuando exista),
 correr `pnpm bitacora` y subir el cambio en el mismo PR.
 
-## En preparación: v0.56 — Sin fichas de ejemplo: solo locales y servicios reales
+## En preparación: v0.57 — Locatarios con código por correo, horario con selector, recorrido del mapa y métricas en Excel
 
-Con los más de 100 lugares y servicios de la Guía Turística Papudo 2026 ya cargados, se quitan las 7 fichas y los 2 eventos de ejemplo (ficticios) con sus opiniones simuladas; supabase/content.sql ya no los carga y supabase/manual/quitar-fichas-ejemplo.sql los borra de la base. La interfaz conserva cómo rotular una ficha de ejemplo, sin ninguna cargada. Pruebas ajustadas. Sin migraciones.
+«Mi local»: el horario se elige con un selector día por día (abre, hora de apertura y de cierre), con verano y resto del año y festivos; al aprobarse reemplaza el horario de la ficha y «Abierto ahora» queda al día (migración 0035). El locatario también puede entrar con su correo y un código de 6 dígitos, sin contraseña ni enlace que venza: el municipio registra el correo en la ficha (migración 0036; guía en docs/MI-LOCAL-CORREO.md). El mapa 3D de la portada recorre solo los lugares con una tarjeta (imagen, nombre y «Ver ficha»), con pausa. Métricas: descarga en Excel (una hoja por tema) y cada gráfico como imagen PNG; los rankings pasan a barras. El QR de las rutas se muestra solo en computador e impresión. Migraciones 0035 y 0036.
 
-- **Migraciones por correr en Supabase:** —
-- **Estado:** en revisión, [PR #64](https://github.com/Matichoc/city_tour/pull/64) (aún no está en `develop`).
-- **Última actualización de esta bitácora:** 2026-11-18 22:54
+- **Migraciones por correr en Supabase:** 0035, 0036
+- **Estado:** en revisión, [PR #65](https://github.com/Matichoc/city_tour/pull/65) (aún no está en `develop`).
+- **Última actualización de esta bitácora:** 2026-11-19 00:06
 
 ## Avance por día
 
@@ -29,6 +29,7 @@ trabajadas: hay pausas y trabajo sin registrar).
 
 | Día | Ventana de actividad | Registros | Versiones entregadas |
 | --- | --- | ---: | --- |
+| Miércoles, 18 de noviembre de 2026 | 23:16 – 23:16 | 1 | v0.56 |
 | Martes, 17 de noviembre de 2026 | 00:05 – 18:31 | 2 | v0.54, v0.55 |
 | Jueves, 12 de noviembre de 2026 | 00:25 – 21:58 | 6 | v0.52, v0.53 |
 | Lunes, 9 de noviembre de 2026 | 00:34 – 00:34 | 1 | v0.51 |
@@ -45,6 +46,17 @@ trabajadas: hay pausas y trabajo sin registrar).
 | Lunes, 12 de octubre de 2026 | 15:43 – 17:53 | 10 | v0.1, v0.2, v0.3, v0.4 |
 
 ## Versiones
+
+### v0.56 — Sin fichas de ejemplo: solo locales y servicios reales
+Miércoles, 18 de noviembre de 2026, 23:31 · [PR #64](https://github.com/Matichoc/city_tour/pull/64)
+
+Con los más de 100 lugares y servicios de la Guía Turística Papudo 2026 ya cargados, se quitan las 7 fichas y los 2 eventos de ejemplo (ficticios) con sus opiniones simuladas; supabase/content.sql ya no los carga y supabase/manual/quitar-fichas-ejemplo.sql los borra de la base. La interfaz conserva cómo rotular una ficha de ejemplo, sin ninguna cargada. Pruebas ajustadas. Sin migraciones.
+
+**Migraciones en Supabase:** —
+
+Registros:
+
+- 11-18 23:16 — Sin fichas de ejemplo: solo locales y servicios reales (`020f3f5`)
 
 ### v0.55 — Seguridad: Next.js 16.4.6
 Martes, 17 de noviembre de 2026, 18:35 · [PR #63](https://github.com/Matichoc/city_tour/pull/63)

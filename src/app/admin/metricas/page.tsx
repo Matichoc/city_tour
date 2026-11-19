@@ -19,6 +19,8 @@ import {
   type MetricsReport,
 } from "@/lib/metrics";
 import { DailyBars } from "@/components/admin/daily-bars";
+import { RankBars } from "@/components/admin/rank-bars";
+import { PngButton } from "@/components/admin/png-button";
 
 /** Métricas de uso de la guía: conteos anónimos por día (migración 0034). */
 export default async function MetricsAdmin({
@@ -63,6 +65,8 @@ export default async function MetricsAdmin({
   const qr = detailsOf(report, "qr_visit", 10);
   const searches = topOf(report, "search_empty", 10);
   const locales = localeShare(report);
+  /** Nombre base de las imágenes descargadas. */
+  const file = `metricas-papudo-${report.today}-${days}d`;
 
   const card = "border-border bg-surface rounded-2xl border p-4";
   const h2 = "font-display text-sea-deep text-xl font-extrabold";
@@ -94,12 +98,20 @@ export default async function MetricsAdmin({
             ))}
           </nav>
           {empty ? null : (
-            <a
-              href={`/admin/metricas/csv?dias=${days}`}
-              className="text-sea inline-flex min-h-11 items-center px-3 text-sm font-bold underline"
-            >
-              {t("csv")}
-            </a>
+            <>
+              <a
+                href={`/admin/metricas/excel?dias=${days}`}
+                className="bg-sea-deep inline-flex min-h-11 items-center rounded-full px-4 text-sm font-bold text-white"
+              >
+                {t("excel")}
+              </a>
+              <a
+                href={`/admin/metricas/csv?dias=${days}`}
+                className="text-sea inline-flex min-h-11 items-center px-3 text-sm font-bold underline"
+              >
+                {t("csv")}
+              </a>
+            </>
           )}
         </div>
       </header>
@@ -139,10 +151,15 @@ export default async function MetricsAdmin({
         </ul>
       </section>
 
-      <section aria-labelledby="m-dias" className={card}>
-        <h2 id="m-dias" className={h2}>
-          {t("dailyTitle")}
-        </h2>
+      <section id="g-dias" aria-labelledby="m-dias" className={card}>
+        <ChartHead
+          id="m-dias"
+          title={t("dailyTitle")}
+          target="g-dias"
+          file={`${file}-por-dia.png`}
+          png={t("png")}
+          className={h2}
+        />
         <p className="text-muted mt-1 text-sm">{t("dailyHelp")}</p>
         <DailyBars
           series={series}
@@ -151,13 +168,30 @@ export default async function MetricsAdmin({
         />
       </section>
 
-      <section aria-labelledby="m-lugares">
-        <h2 id="m-lugares" className={h2}>
-          {t("placesTitle")}
-        </h2>
+      <section id="g-lugares" aria-labelledby="m-lugares">
+        <ChartHead
+          id="m-lugares"
+          title={t("placesTitle")}
+          target="g-lugares"
+          file={`${file}-lugares.png`}
+          png={t("png")}
+          className={h2}
+          hidePng={places.length === 0}
+        />
         {places.length === 0 ? (
           <p className="text-muted mt-2">{t("noData")}</p>
         ) : (
+          <RankBars
+            rows={places.map((p) => ({
+              key: p.slug,
+              label: placeName(p.slug) ?? p.slug,
+              n: p.total,
+            }))}
+            label={t("placesTitle")}
+            empty={t("noData")}
+          />
+        )}
+        {places.length === 0 ? null : (
           <div className="mt-3 overflow-x-auto">
             <table className="w-full min-w-[36rem] text-sm">
               <thead className="border-border border-b">
@@ -197,21 +231,25 @@ export default async function MetricsAdmin({
       </section>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <section aria-labelledby="m-rutas" className={card}>
-          <h2 id="m-rutas" className={h2}>
-            {t("routesTitle")}
-          </h2>
-          <ol className="mt-3 flex flex-col gap-2">
-            {funnel.map((f, i) => (
-              <li key={f.key} className="flex items-baseline gap-2">
-                <span className="text-muted w-5 text-sm font-bold">
-                  {i + 1}.
-                </span>
-                <span className="flex-1">{t(`funnel.${f.key}`)}</span>
-                <span className="font-extrabold tabular-nums">{num(f.n)}</span>
-              </li>
-            ))}
-          </ol>
+        <section id="g-rutas" aria-labelledby="m-rutas" className={card}>
+          <ChartHead
+            id="m-rutas"
+            title={t("routesTitle")}
+            target="g-rutas"
+            file={`${file}-rutas.png`}
+            png={t("png")}
+            className={h2}
+          />
+          <RankBars
+            rows={funnel.map((f) => ({
+              key: f.key,
+              label: t(`funnel.${f.key}`),
+              n: f.n,
+            }))}
+            label={t("routesTitle")}
+            empty={t("noData")}
+            compact
+          />
           <h3 className="mt-4 font-bold">{t("topRoutes")}</h3>
           <RankList
             rows={routes.map((r) => ({
@@ -224,76 +262,145 @@ export default async function MetricsAdmin({
           />
         </section>
 
-        <section aria-labelledby="m-eventos" className={card}>
-          <h2 id="m-eventos" className={h2}>
-            {t("eventsTitle")}
-          </h2>
-          <RankList
-            rows={events.map((e) => ({
-              key: e.subject,
-              label: eventName(e.subject) ?? e.subject,
-              n: e.n,
-            }))}
-            empty={t("noData")}
-            num={num}
-          />
-        </section>
+        <ChartCard
+          id="eventos"
+          title={t("eventsTitle")}
+          file={`${file}-eventos.png`}
+          png={t("png")}
+          h2={h2}
+          card={card}
+          empty={t("noData")}
+          rows={events.map((e) => ({
+            key: e.subject,
+            label: eventName(e.subject) ?? e.subject,
+            n: e.n,
+          }))}
+        />
 
-        <section aria-labelledby="m-qr" className={card}>
-          <h2 id="m-qr" className={h2}>
-            {t("qrTitle")}
-          </h2>
-          <p className="text-muted mt-1 text-sm">{t("qrHelp")}</p>
-          <RankList
-            rows={qr.map((q) => ({
-              key: `${q.detail}|${q.subject}`,
-              label: q.subject
-                ? t("qrRow", { origin: q.detail, page: anyName(q.subject) })
-                : q.detail,
-              n: q.n,
-            }))}
-            empty={t("noData")}
-            num={num}
-          />
-        </section>
+        <ChartCard
+          id="qr"
+          title={t("qrTitle")}
+          help={t("qrHelp")}
+          file={`${file}-qr.png`}
+          png={t("png")}
+          h2={h2}
+          card={card}
+          empty={t("noData")}
+          rows={qr.map((q) => ({
+            key: `${q.detail}|${q.subject}`,
+            label: q.subject
+              ? t("qrRow", { origin: q.detail, page: anyName(q.subject) })
+              : q.detail,
+            n: q.n,
+          }))}
+        />
 
-        <section aria-labelledby="m-busquedas" className={card}>
-          <h2 id="m-busquedas" className={h2}>
-            {t("searchTitle")}
-          </h2>
-          <p className="text-muted mt-1 text-sm">{t("searchHelp")}</p>
-          <RankList
-            rows={searches.map((s) => ({
-              key: s.subject,
-              label: `«${s.subject}»`,
-              n: s.n,
-            }))}
-            empty={t("noData")}
-            num={num}
-          />
-        </section>
+        <ChartCard
+          id="busquedas"
+          title={t("searchTitle")}
+          help={t("searchHelp")}
+          file={`${file}-busquedas.png`}
+          png={t("png")}
+          h2={h2}
+          card={card}
+          empty={t("noData")}
+          rows={searches.map((s) => ({
+            key: s.subject,
+            label: `«${s.subject}»`,
+            n: s.n,
+          }))}
+        />
 
-        <section aria-labelledby="m-idiomas" className={card}>
-          <h2 id="m-idiomas" className={h2}>
-            {t("localesTitle")}
-          </h2>
-          <RankList
-            rows={locales.map((l) => ({
-              key: l.locale,
-              label: t("localeRow", {
-                locale: t(`locale.${l.locale}`),
-                pct: l.pct,
-              }),
-              n: l.n,
-            }))}
-            empty={t("noData")}
-            num={num}
-          />
-        </section>
+        <ChartCard
+          id="idiomas"
+          title={t("localesTitle")}
+          file={`${file}-idiomas.png`}
+          png={t("png")}
+          h2={h2}
+          card={card}
+          empty={t("noData")}
+          rows={locales.map((l) => ({
+            key: l.locale,
+            label: t("localeRow", {
+              locale: t(`locale.${l.locale}`),
+              pct: l.pct,
+            }),
+            n: l.n,
+          }))}
+        />
       </div>
 
       <p className="text-muted text-sm">{t("privacy")}</p>
     </div>
+  );
+}
+
+/** Título de un gráfico con su botón «Descargar imagen». */
+function ChartHead({
+  id,
+  title,
+  target,
+  file,
+  png,
+  className,
+  hidePng = false,
+}: {
+  id: string;
+  title: string;
+  target: string;
+  file: string;
+  png: string;
+  className: string;
+  hidePng?: boolean;
+}) {
+  return (
+    <div className="flex flex-wrap items-baseline justify-between gap-x-3">
+      <h2 id={id} className={className}>
+        {title}
+      </h2>
+      {hidePng ? null : (
+        <PngButton target={target} title={title} filename={file} label={png} />
+      )}
+    </div>
+  );
+}
+
+/** Tarjeta con un ranking en barras y su descarga como imagen. */
+function ChartCard({
+  id,
+  title,
+  help,
+  file,
+  png,
+  h2,
+  card,
+  empty,
+  rows,
+}: {
+  id: string;
+  title: string;
+  help?: string;
+  file: string;
+  png: string;
+  h2: string;
+  card: string;
+  empty: string;
+  rows: { key: string; label: string; n: number }[];
+}) {
+  return (
+    <section id={`g-${id}`} aria-labelledby={`m-${id}`} className={card}>
+      <ChartHead
+        id={`m-${id}`}
+        title={title}
+        target={`g-${id}`}
+        file={file}
+        png={png}
+        className={h2}
+        hidePng={rows.length === 0}
+      />
+      {help ? <p className="text-muted mt-1 text-sm">{help}</p> : null}
+      <RankBars rows={rows} label={title} empty={empty} compact />
+    </section>
   );
 }
 

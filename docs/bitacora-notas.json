@@ -234,11 +234,16 @@
     "resumen": "Actualiza Next.js y eslint-config-next de 16.3.8 a 16.4.6 para cerrar los avisos de seguridad de Next publicados para 16.3.8 (dos críticos de ejecución remota en «use cache» y en la optimización de imágenes con SVG, uno alto de denegación de servicio con Server Actions y dos moderados de caché). Sin cambios de funcionalidad. Sin migraciones.",
     "migraciones": "—"
   },
-  "_ayuda": "Notas a mano de cada entrega, por número de PR. `pnpm bitacora` las junta con el historial de git (días, horas y commits) y escribe docs/BITACORA.md. La entrega en curso va en «actual» con el número de su PR en «pr»; al fusionarse, la bitácora la une sola con su versión.",
-  "actual": {
-    "pr": 64,
+  "64": {
     "titulo": "Sin fichas de ejemplo: solo locales y servicios reales",
     "resumen": "Con los más de 100 lugares y servicios de la Guía Turística Papudo 2026 ya cargados, se quitan las 7 fichas y los 2 eventos de ejemplo (ficticios) con sus opiniones simuladas; supabase/content.sql ya no los carga y supabase/manual/quitar-fichas-ejemplo.sql los borra de la base. La interfaz conserva cómo rotular una ficha de ejemplo, sin ninguna cargada. Pruebas ajustadas. Sin migraciones.",
     "migraciones": "—"
+  },
+  "_ayuda": "Notas a mano de cada entrega, por número de PR. `pnpm bitacora` las junta con el historial de git (días, horas y commits) y escribe docs/BITACORA.md. La entrega en curso va en «actual» con el número de su PR en «pr»; al fusionarse, la bitácora la une sola con su versión.",
+  "actual": {
+    "pr": 65,
+    "titulo": "Locatarios con código por correo, horario con selector, recorrido del mapa y métricas en Excel",
+    "resumen": "«Mi local»: el horario se elige con un selector día por día (abre, hora de apertura y de cierre), con verano y resto del año y festivos; al aprobarse reemplaza el horario de la ficha y «Abierto ahora» queda al día (migración 0035). El locatario también puede entrar con su correo y un código de 6 dígitos, sin contraseña ni enlace que venza: el municipio registra el correo en la ficha (migración 0036; guía en docs/MI-LOCAL-CORREO.md). El mapa 3D de la portada recorre solo los lugares con una tarjeta (imagen, nombre y «Ver ficha»), con pausa. Métricas: descarga en Excel (una hoja por tema) y cada gráfico como imagen PNG; los rankings pasan a barras. El QR de las rutas se muestra solo en computador e impresión. Migraciones 0035 y 0036.",
+    "migraciones": "0035, 0036"
   }
 }

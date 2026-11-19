@@ -1,13 +1,20 @@
 import { cookies } from "next/headers";
+import Link from "next/link";
+import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import {
   CTA_KINDS,
   OWNER_COOKIE,
   OWNER_FIELDS,
-  getOwnerSession,
   type OwnerField,
 } from "@/lib/owner/access";
-import { leave, submitProposal } from "@/app/local/actions";
+import { parseHours } from "@/lib/owner/hours";
+import { getOwnerContext } from "@/lib/owner/current";
+import { choosePlace, leave, submitProposal } from "@/app/local/actions";
+import {
+  HoursPicker,
+  type HoursPickerLabels,
+} from "@/components/owner/hours-picker";
 
 const input =
   "border-border bg-surface mt-1 w-full rounded-xl border px-3 py-2.5 text-base";
@@ -21,6 +28,7 @@ const ERRORS = [
   "website",
   "instagram",
   "name",
+  "hours",
 ] as const;
 
 const day = (iso: string) =>
@@ -38,9 +46,17 @@ export default async function OwnerPage({
   const t = await getTranslations({ locale: "es", namespace: "owner" });
   const sp = await searchParams;
   const token = (await cookies()).get(OWNER_COOKIE)?.value;
-  const session = await getOwnerSession(token);
+  const ctx = await getOwnerContext();
+  if (ctx?.kind === "expired") redirect("/local/renovar");
+  const logout = (
+    <form action={leave}>
+      <button type="submit" className="text-muted text-sm underline">
+        {t("logout")}
+      </button>
+    </form>
+  );
 
-  if (!session) {
+  if (!ctx) {
     return (
       <div className="space-y-4">
         <h1 className="font-display text-3xl font-extrabold">
@@ -57,9 +73,53 @@ export default async function OwnerPage({
           </p>
         ) : null}
         <p className="text-muted text-lg">{t("noAccessBody")}</p>
+        <Link
+          href="/local/ingresar"
+          className="bg-coral inline-flex min-h-12 items-center rounded-full px-6 font-bold text-white"
+        >
+          {t("email.cta")}
+        </Link>
       </div>
     );
   }
+
+  // Con el correo: sin locales registrados, o con varios para elegir.
+  if (ctx.kind === "email" && !ctx.session) {
+    return (
+      <div className="space-y-4">
+        <h1 className="font-display text-3xl font-extrabold">
+          {ctx.places.length === 0
+            ? t("email.noPlacesTitle")
+            : t("email.chooseTitle")}
+        </h1>
+        {ctx.email ? (
+          <p className="text-muted">{t("email.as", { email: ctx.email })}</p>
+        ) : null}
+        {ctx.places.length === 0 ? (
+          <p className="text-lg">{t("email.noPlacesBody")}</p>
+        ) : (
+          <ul className="space-y-2">
+            {ctx.places.map((p) => (
+              <li key={p.placeId}>
+                <form action={choosePlace}>
+                  <input type="hidden" name="placeId" value={p.placeId} />
+                  <button
+                    type="submit"
+                    className="border-border bg-surface w-full rounded-2xl border p-4 text-left font-bold"
+                  >
+                    {p.name}
+                  </button>
+                </form>
+              </li>
+            ))}
+          </ul>
+        )}
+        {logout}
+      </div>
+    );
+  }
+
+  const session = ctx.session!;
 
   const pending = session.last?.status === "pending" ? session.last : null;
   // Si hay una propuesta en revisión, se sigue desde ella.
@@ -178,7 +238,12 @@ export default async function OwnerPage({
           </legend>
           {area("short_description", 2)}
           {area("full_description", 7)}
-          {area("hours_text", 3)}
+          <HoursPicker
+            name="hours"
+            initial={parseHours(values.hours) ?? []}
+            labels={t.raw("hoursPicker") as HoursPickerLabels}
+          />
+          {area("hours_text", 2)}
           {line("address")}
         </fieldset>
 
@@ -248,11 +313,20 @@ export default async function OwnerPage({
         </fieldset>
       </form>
 
-      <form action={leave}>
-        <button type="submit" className="text-muted text-sm underline">
-          {t("logout")}
-        </button>
-      </form>
+      {ctx.kind === "email" ? (
+        <div className="text-muted space-y-1 text-sm">
+          {ctx.email ? <p>{t("email.as", { email: ctx.email })}</p> : null}
+          {ctx.places.length > 1 ? (
+            <form action={choosePlace}>
+              <input type="hidden" name="placeId" value="" />
+              <button type="submit" className="underline">
+                {t("email.switch")}
+              </button>
+            </form>
+          ) : null}
+        </div>
+      ) : null}
+      {logout}
     </div>
   );
 }

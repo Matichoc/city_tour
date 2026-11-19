@@ -4,6 +4,8 @@
  */
 import { rest, type Session } from "@/lib/admin/api";
 import type { OwnerValues, ProposalStatus } from "@/lib/owner/access";
+import { groupHours } from "@/lib/hours";
+import { hoursKey } from "@/lib/owner/hours";
 
 const enc = encodeURIComponent;
 
@@ -149,17 +151,19 @@ export async function getProposal(
   );
   if (!row) return null;
   const [place] = await rest<
-    (Omit<OwnerValues, "short_description" | "full_description"> & {
+    (Omit<OwnerValues, "short_description" | "full_description" | "hours"> & {
       translations: {
         locale: string;
         short_description: string | null;
         full_description: string | null;
       }[];
+      hours: Parameters<typeof groupHours>[0];
     })[]
   >(
     session.token,
     `places?select=hours_text,address,cta_kind,cta_value,instagram,website,` +
-      `translations:place_translations(locale,short_description,full_description)` +
+      `translations:place_translations(locale,short_description,full_description),` +
+      `hours:place_hours(day_of_week,opens_at,closes_at,closed,from_month,to_month,holidays)` +
       `&id=eq.${enc(row.place_id)}&limit=1`,
   );
   const es = place?.translations.find((t) => t.locale === "es");
@@ -172,6 +176,7 @@ export async function getProposal(
     cta_value: place?.cta_value ?? null,
     instagram: place?.instagram ?? null,
     website: place?.website ?? null,
+    hours: hoursKey(groupHours(place?.hours ?? [])),
   };
   return { proposal: toProposal(row), current };
 }
@@ -186,5 +191,32 @@ export async function reviewProposal(
   await rest<null>(session.token, "rpc/review_owner_proposal", {
     method: "POST",
     body: JSON.stringify({ p_id: id, p_approve: approve, p_note: note }),
+  });
+}
+
+/** Correo con que el locatario entra a «Mi local» (migración 0036), o null. */
+export async function getOwnerEmail(
+  session: Session,
+  placeId: string,
+): Promise<string | null> {
+  try {
+    return await rest<string | null>(session.token, "rpc/owner_email_of", {
+      method: "POST",
+      body: JSON.stringify({ p_place: placeId }),
+    });
+  } catch {
+    return null;
+  }
+}
+
+/** Registra (o quita, si va vacío) el correo del locatario. */
+export async function setOwnerEmail(
+  session: Session,
+  placeId: string,
+  email: string,
+) {
+  await rest<null>(session.token, "rpc/set_owner_email", {
+    method: "POST",
+    body: JSON.stringify({ p_place: placeId, p_email: email }),
   });
 }

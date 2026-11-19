@@ -20,6 +20,7 @@ import { TrackView } from "@/components/analytics/track-view";
 import { ListenButton } from "@/components/listen/listen-button";
 import { routeListen } from "@/lib/listen-text";
 import { styleOf } from "@/lib/doors";
+import { THEME } from "@/lib/theme";
 
 export async function generateStaticParams() {
   const data = await getData();
@@ -74,7 +75,10 @@ export default async function RoutePage({
       type: "svg",
       margin: 1,
       errorCorrectionLevel: "M",
-      color: { dark: "#14164a", light: "#ffffff" },
+      color: {
+        dark: THEME === "municipal" ? "#283270" : "#14164a",
+        light: "#ffffff",
+      },
     },
   );
 
@@ -245,9 +249,12 @@ export default async function RoutePage({
           {t("pendingNote")}
         </p>
 
+        {/* El QR pasa la ruta del computador o del quiosco al celular: en el
+            celular no sirve (es la misma página), así que solo se muestra
+            desde pantallas medianas y al imprimir. */}
         <section
           aria-labelledby="llevatela"
-          className="border-foreground flex flex-wrap items-center gap-5 rounded-[1.6rem] border-2 p-5"
+          className="border-foreground hidden flex-wrap items-center gap-5 rounded-[1.6rem] border-2 p-5 md:flex print:flex"
         >
           <div
             className="w-36 shrink-0"
