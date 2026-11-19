@@ -283,7 +283,10 @@
       "helpWindows": "Use Ctrl + roda do mouse para aproximar o mapa",
       "helpMac": "Use ⌘ + roda do mouse para aproximar o mapa",
       "helpMobile": "Use dois dedos para mover o mapa"
-    }
+    },
+    "tourStart": "▶ Percorrer a comuna",
+    "tourPause": "⏸ Pausar passeio",
+    "tourOf": "{n} de {total}"
   },
   "info": {
     "title": "Informações",
@@ -1050,7 +1053,14 @@
       "copied": "Copiado!",
       "whatsapp": "Enviar pelo WhatsApp",
       "message": "Olá, escrevemos da Prefeitura de Papudo, do guia «Papudo en tu Mano». Com este link você pode atualizar a ficha de {name} (horário, contato e descrição). Revisamos antes de publicar: {link}",
-      "error": "Não foi possível gerar o link. Verifique se a migração 0031 está aplicada no Supabase."
+      "error": "Não foi possível gerar o link. Verifique se a migração 0031 está aplicada no Supabase.",
+      "emailTitle": "Entrar com e-mail e código",
+      "emailIntro": "Se você registrar o e-mail do responsável, ele pode entrar em «Meu negócio» quando quiser: digita o e-mail e recebe um código, sem senha e sem link que vence.",
+      "emailLabel": "E-mail do responsável",
+      "emailSave": "Salvar e-mail",
+      "emailSaved": "E-mail salvo. O responsável já pode entrar em /local/ingresar.",
+      "emailError": "Não foi possível salvar: confira se o e-mail está correto.",
+      "linkSection": "Link pessoal (sem e-mail)"
     },
     "proposals": {
       "title": "Propostas dos negócios",
@@ -1071,12 +1081,13 @@
       "fields": {
         "short_description": "Descrição curta",
         "full_description": "Descrição completa",
-        "hours_text": "Horário",
+        "hours_text": "Observações do horário",
         "address": "Endereço",
         "cta_kind": "Botão principal da sua ficha",
         "cta_value": "Número ou link do botão",
         "instagram": "Instagram",
-        "website": "Site"
+        "website": "Site",
+        "hours": "Horário"
       },
       "localNote": "Nota do negócio: {note}",
       "reviewNote": "Nota para o negócio (opcional; aparece em «Meu negócio»)",
@@ -1089,7 +1100,8 @@
       "notPending": "Esta proposta não está mais pendente.",
       "error": "Não foi possível salvar. Tente de novo.",
       "back": "← Propostas",
-      "review": "Revisar"
+      "review": "Revisar",
+      "hoursApplied": "Ao aprovar, este horário substitui o da ficha e «Aberto agora» fica em dia."
     },
     "team": {
       "title": "Equipe",
@@ -1221,6 +1233,31 @@
         "live_start": "Viagem ao vivo iniciada",
         "camera_start": "Câmera aberta",
         "listen_play": "Áudio ouvido"
+      },
+      "excel": "Baixar Excel",
+      "png": "Baixar imagem",
+      "xlsx": {
+        "indicator": "Indicador",
+        "previous": "Período anterior",
+        "change": "Variação",
+        "periodEnds": "Período até",
+        "date": "Data",
+        "interactions": "Interações",
+        "detailSheet": "Detalhe por dia",
+        "event": "Evento",
+        "count": "Quantidade",
+        "placesSheet": "Lugares",
+        "total": "Total",
+        "step": "Etapa",
+        "views": "Visualizações",
+        "eventsSheet": "Eventos",
+        "origin": "Origem (placa ou local)",
+        "page": "Página",
+        "visits": "Visitas",
+        "searchSheet": "Buscas sem resultado",
+        "search": "Busca",
+        "times": "Vezes",
+        "language": "Idioma"
       }
     },
     "bulkLinks": {
@@ -1297,7 +1334,8 @@
       "ctaValue": "O botão precisa do número (com código do país) ou do link completo com https://.",
       "website": "O site deve ser um link completo com https://.",
       "instagram": "O Instagram deve ser um link completo com https://.",
-      "name": "Escreva seu nome (entre 2 e 80 letras)."
+      "name": "Escreva seu nome (entre 2 e 80 letras).",
+      "hours": "O horário não é válido: confira os horários de abertura e de fechamento."
     },
     "sectionAbout": "Seu negócio",
     "sectionContact": "Contato",
@@ -1312,8 +1350,8 @@
         "help": "O que você oferece, serviços, como chegar, o que o visitante precisa saber."
       },
       "hours_text": {
-        "label": "Horário",
-        "help": "Por exemplo: «Janeiro e fevereiro, todos os dias das 12:00 às 22:00. Março a dezembro, fins de semana e feriados»."
+        "label": "Observações do horário (opcional)",
+        "help": "Por exemplo: «Fechado em 25 de dezembro» ou «No inverno, só com reserva»."
       },
       "address": {
         "label": "Endereço",
@@ -1359,7 +1397,48 @@
       "A Prefeitura revisa sua proposta e a publica no guia. Aqui você verá se foi aprovada, ou a nota se houver algo a corrigir.",
       "Volte quando quiser com o mesmo link: salve nos favoritos ou no seu WhatsApp."
     ],
-    "helpPhotos": "Fotos novas ou seu cardápio? Envie à Prefeitura: ela os sobe ao painel com sua permissão."
+    "helpPhotos": "Fotos novas ou seu cardápio? Envie à Prefeitura: ela os sobe ao painel com sua permissão.",
+    "hoursPicker": {
+      "legend": "Horário",
+      "help": "Marque os dias em que abre e escolha o horário de abertura e de fechamento. Se for igual todos os dias, use «Copiar para todos os dias».",
+      "split": "Meu horário muda no verão (janeiro e fevereiro)",
+      "summer": "Verão: janeiro e fevereiro",
+      "rest": "Resto do ano: março a dezembro",
+      "allYear": "O ano todo",
+      "open": "abre",
+      "opens": "Abre",
+      "closes": "Fecha",
+      "closed": "Fechado",
+      "copyAll": "Copiar para todos os dias",
+      "holidays": "Também abro nos feriados com este horário",
+      "days": ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"]
+    },
+    "email": {
+      "cta": "Entrar com meu e-mail",
+      "kicker": "Meu negócio",
+      "title": "Entre com seu e-mail",
+      "intro": "Digite o e-mail que você registrou na Prefeitura. Enviamos um código de 6 dígitos para entrar, sem senha.",
+      "emailLabel": "Seu e-mail",
+      "emailHelp": "O mesmo que você deixou na Prefeitura para o seu negócio.",
+      "send": "Enviar o código",
+      "sent": "Enviamos um código para {email}. Confira também a pasta de spam.",
+      "codeLabel": "Código de 6 dígitos",
+      "codeHelp": "Vence em alguns minutos. Se não chegou, peça outro.",
+      "enter": "Entrar",
+      "otherEmail": "Usar outro e-mail ou pedir um código novo",
+      "as": "Você entrou com {email}.",
+      "switch": "Trocar de negócio",
+      "chooseTitle": "Qual negócio você quer atualizar?",
+      "noPlacesTitle": "Seu e-mail não tem negócios",
+      "noPlacesBody": "Este e-mail não está registrado para nenhum negócio. Peça à Prefeitura que o registre na ficha do seu negócio, ou entre com o link que enviaram.",
+      "errors": {
+        "correo": "Digite um e-mail válido.",
+        "envio": "Não conseguimos enviar o código. Tente de novo mais tarde.",
+        "espera": "Você pediu vários códigos: espere alguns minutos e tente de novo.",
+        "codigo": "O código está errado ou venceu. Confira ou peça um novo.",
+        "sesion": "Sua sessão terminou. Entre de novo com seu e-mail."
+      }
+    }
   },
   "howTo": {
     "title": "Como usar o guia",

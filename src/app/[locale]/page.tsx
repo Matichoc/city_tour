@@ -68,6 +68,9 @@ export default async function HomePage({
       latitude: p.latitude,
       longitude: p.longitude,
       category: p.categorySlug,
+      categoryName: p.categoryName,
+      short: p.shortDescription,
+      picture: p.picture,
     }));
   const localities = data.listLocalities(locale);
   const allEvents = data.listEvents(locale);

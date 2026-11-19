@@ -283,7 +283,10 @@
       "helpWindows": "Usa Ctrl + rueda del mouse para acercar el mapa",
       "helpMac": "Usa ⌘ + rueda del mouse para acercar el mapa",
       "helpMobile": "Usa dos dedos para mover el mapa"
-    }
+    },
+    "tourStart": "▶ Recorrer la comuna",
+    "tourPause": "⏸ Pausar recorrido",
+    "tourOf": "{n} de {total}"
   },
   "info": {
     "title": "Información",
@@ -1050,7 +1053,14 @@
       "copied": "¡Copiado!",
       "whatsapp": "Enviar por WhatsApp",
       "message": "Hola, te escribimos de la Municipalidad de Papudo, de la guía «Papudo en tu Mano». Con este enlace puedes actualizar la ficha de {name} (horario, contacto y descripción). La revisamos antes de publicarla: {link}",
-      "error": "No se pudo generar el enlace. Revisa que la migración 0031 esté aplicada en Supabase."
+      "error": "No se pudo generar el enlace. Revisa que la migración 0031 esté aplicada en Supabase.",
+      "emailTitle": "Entrar con correo y código",
+      "emailIntro": "Si registras el correo del locatario, puede entrar a «Mi local» cuando quiera: escribe su correo y le llega un código, sin contraseña y sin enlace que venza.",
+      "emailLabel": "Correo del locatario",
+      "emailSave": "Guardar correo",
+      "emailSaved": "Correo guardado. El locatario ya puede entrar en /local/ingresar.",
+      "emailError": "No se pudo guardar: revisa que el correo esté bien escrito.",
+      "linkSection": "Enlace personal (sin correo)"
     },
     "proposals": {
       "title": "Propuestas de los locales",
@@ -1071,12 +1081,13 @@
       "fields": {
         "short_description": "Descripción corta",
         "full_description": "Descripción completa",
-        "hours_text": "Horario",
+        "hours_text": "Notas del horario",
         "address": "Dirección",
         "cta_kind": "Botón principal de tu ficha",
         "cta_value": "Número o enlace del botón",
         "instagram": "Instagram",
-        "website": "Sitio web"
+        "website": "Sitio web",
+        "hours": "Horario"
       },
       "localNote": "Nota del local: {note}",
       "reviewNote": "Nota para el local (opcional; la verá en «Mi local»)",
@@ -1089,7 +1100,8 @@
       "notPending": "Esta propuesta ya no está pendiente.",
       "error": "No se pudo guardar. Inténtalo de nuevo.",
       "back": "← Propuestas",
-      "review": "Revisar"
+      "review": "Revisar",
+      "hoursApplied": "Al aprobar, este horario reemplaza el de la ficha y «Abierto ahora» queda al día."
     },
     "team": {
       "title": "Equipo",
@@ -1221,6 +1233,31 @@
         "live_start": "Viaje en vivo iniciado",
         "camera_start": "Cámara abierta",
         "listen_play": "Audio escuchado"
+      },
+      "excel": "Descargar Excel",
+      "png": "Descargar imagen",
+      "xlsx": {
+        "indicator": "Indicador",
+        "previous": "Período anterior",
+        "change": "Cambio",
+        "periodEnds": "Período hasta",
+        "date": "Fecha",
+        "interactions": "Interacciones",
+        "detailSheet": "Detalle por día",
+        "event": "Evento",
+        "count": "Cantidad",
+        "placesSheet": "Lugares",
+        "total": "Total",
+        "step": "Paso",
+        "views": "Vistas",
+        "eventsSheet": "Eventos",
+        "origin": "Origen (letrero o local)",
+        "page": "Página",
+        "visits": "Visitas",
+        "searchSheet": "Búsquedas sin resultado",
+        "search": "Búsqueda",
+        "times": "Veces",
+        "language": "Idioma"
       }
     },
     "bulkLinks": {
@@ -1297,7 +1334,8 @@
       "ctaValue": "El botón necesita su número (con código de país) o su enlace completo con https://.",
       "website": "El sitio web debe ser un enlace completo con https://.",
       "instagram": "Instagram debe ser un enlace completo con https://.",
-      "name": "Escribe tu nombre (entre 2 y 80 letras)."
+      "name": "Escribe tu nombre (entre 2 y 80 letras).",
+      "hours": "El horario no es válido: revisa las horas de apertura y de cierre."
     },
     "sectionAbout": "Tu local",
     "sectionContact": "Contacto",
@@ -1312,8 +1350,8 @@
         "help": "Qué ofreces, servicios, cómo llegar, lo que un visitante debe saber."
       },
       "hours_text": {
-        "label": "Horario",
-        "help": "Por ejemplo: «Enero y febrero, todos los días de 12:00 a 22:00. Marzo a diciembre, fines de semana y festivos»."
+        "label": "Notas del horario (opcional)",
+        "help": "Por ejemplo: «Cerrado el 25 de diciembre» o «En invierno, solo con reserva»."
       },
       "address": {
         "label": "Dirección",
@@ -1359,7 +1397,48 @@
       "La Municipalidad revisa tu propuesta y la publica en la guía. Aquí verás si se aprobó, o la nota si hay algo que corregir.",
       "Puedes volver cuando quieras con el mismo enlace: guárdalo en tus favoritos o en tu WhatsApp."
     ],
-    "helpPhotos": "¿Fotos nuevas o tu carta? Envíaselas a la Municipalidad: las sube al panel con tu permiso."
+    "helpPhotos": "¿Fotos nuevas o tu carta? Envíaselas a la Municipalidad: las sube al panel con tu permiso.",
+    "hoursPicker": {
+      "legend": "Horario",
+      "help": "Marca los días que abres y elige la hora de apertura y de cierre. Si es igual todos los días, usa «Copiar a todos los días».",
+      "split": "Mi horario cambia en verano (enero y febrero)",
+      "summer": "Verano: enero y febrero",
+      "rest": "Resto del año: marzo a diciembre",
+      "allYear": "Todo el año",
+      "open": "abre",
+      "opens": "Abre",
+      "closes": "Cierra",
+      "closed": "Cerrado",
+      "copyAll": "Copiar a todos los días",
+      "holidays": "También abro los festivos con este horario",
+      "days": ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"]
+    },
+    "email": {
+      "cta": "Entrar con mi correo",
+      "kicker": "Mi local",
+      "title": "Entra con tu correo",
+      "intro": "Escribe el correo que registraste en la Municipalidad. Te mandamos un código de 6 dígitos para entrar, sin contraseña.",
+      "emailLabel": "Tu correo",
+      "emailHelp": "El mismo que dejaste en la Municipalidad para tu local.",
+      "send": "Mandarme el código",
+      "sent": "Te mandamos un código a {email}. Revisa también la carpeta de spam.",
+      "codeLabel": "Código de 6 dígitos",
+      "codeHelp": "Vence en unos minutos. Si no llegó, vuelve a pedirlo.",
+      "enter": "Entrar",
+      "otherEmail": "Usar otro correo o pedir un código nuevo",
+      "as": "Entraste con {email}.",
+      "switch": "Cambiar de local",
+      "chooseTitle": "¿Qué local quieres actualizar?",
+      "noPlacesTitle": "Tu correo no tiene locales",
+      "noPlacesBody": "Este correo no está registrado para ningún local. Pídele a la Municipalidad que lo registre en la ficha de tu local, o entra con el enlace que te mandaron.",
+      "errors": {
+        "correo": "Escribe un correo válido.",
+        "envio": "No pudimos mandar el código. Intenta de nuevo en un rato.",
+        "espera": "Ya pediste varios códigos: espera unos minutos y vuelve a intentarlo.",
+        "codigo": "El código no es correcto o ya venció. Revísalo o pide uno nuevo.",
+        "sesion": "Tu sesión terminó. Entra de nuevo con tu correo."
+      }
+    }
   },
   "howTo": {
     "title": "Cómo usar la guía",

@@ -27,6 +27,7 @@ const CURRENT: OwnerValues = {
   cta_value: "+56 9 1234 5678",
   instagram: "https://www.instagram.com/roots.salinas/",
   website: null,
+  hours: null,
 };
 const form = (data: Record<string, string>) => {
   const f = new FormData();

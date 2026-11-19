@@ -5,6 +5,8 @@ import { canModerate, getSession } from "@/lib/admin/api";
 import { getProposal } from "@/lib/admin/owner";
 import { reviewProposalAction } from "@/app/admin/owner-actions";
 import { OWNER_FIELDS, type OwnerField } from "@/lib/owner/access";
+import { parseHours } from "@/lib/owner/hours";
+import { formatHours } from "@/lib/hours";
 
 export default async function ProposalPage({
   params,
@@ -28,12 +30,37 @@ export default async function ProposalPage({
   const changed = (Object.keys(OWNER_FIELDS) as OwnerField[]).filter(
     (f) => f in p.changes,
   );
-  const show = (v: string | null | undefined) =>
-    v ? (
-      <span className="whitespace-pre-line">{v}</span>
-    ) : (
-      <span className="text-muted italic">{t("emptyValue")}</span>
-    );
+  const tp = await getTranslations({ locale: "es", namespace: "place" });
+  const hoursWords = {
+    everyDay: tp("hoursEveryDay"),
+    holidays: tp("hoursHolidays"),
+    and: tp("hoursAnd"),
+    allYear: tp("hoursAllYear"),
+    monthRange: (from: string, to: string) => tp("hoursMonths", { from, to }),
+  };
+  const empty = <span className="text-muted italic">{t("emptyValue")}</span>;
+  const show = (v: string | null | undefined, f?: OwnerField) => {
+    if (!v) return empty;
+    if (f === "hours") {
+      // El horario viene como temporadas (JSON): se muestra legible.
+      const seasons = parseHours(v) ?? [];
+      if (seasons.length === 0) return empty;
+      return (
+        <ul className="space-y-1">
+          {seasons.map((h, i) => {
+            const x = formatHours(h, "es", hoursWords);
+            return (
+              <li key={i}>
+                <span className="font-semibold">{x.season}</span> · {x.days} ·{" "}
+                {x.time}
+              </li>
+            );
+          })}
+        </ul>
+      );
+    }
+    return <span className="whitespace-pre-line">{v}</span>;
+  };
 
   return (
     <div className="space-y-6">
@@ -90,15 +117,19 @@ export default async function ProposalPage({
                 <th scope="row" className="p-3 font-semibold">
                   {t(`fields.${f}`)}
                 </th>
-                <td className="text-muted p-3">{show(current[f])}</td>
-                <td className="bg-sea-soft/40 p-3">{show(p.changes[f])}</td>
+                <td className="text-muted p-3">{show(current[f], f)}</td>
+                <td className="bg-sea-soft/40 p-3">{show(p.changes[f], f)}</td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
 
-      {"hours_text" in p.changes ? (
+      {"hours" in p.changes ? (
+        <p className="bg-sea-soft rounded-xl p-3 text-sm">
+          {t("hoursApplied")}
+        </p>
+      ) : "hours_text" in p.changes ? (
         <p className="bg-earth-soft text-earth rounded-xl p-3 text-sm">
           {t("hoursReminder")}{" "}
           <Link

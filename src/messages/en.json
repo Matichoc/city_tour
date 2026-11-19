@@ -283,7 +283,10 @@
       "helpWindows": "Use Ctrl + scroll to zoom the map",
       "helpMac": "Use ⌘ + scroll to zoom the map",
       "helpMobile": "Use two fingers to move the map"
-    }
+    },
+    "tourStart": "▶ Tour the commune",
+    "tourPause": "⏸ Pause tour",
+    "tourOf": "{n} of {total}"
   },
   "info": {
     "title": "Info",
@@ -1050,7 +1053,14 @@
       "copied": "Copied!",
       "whatsapp": "Send on WhatsApp",
       "message": "Hi, this is the Municipality of Papudo, from the “Papudo en tu Mano” guide. With this link you can update the listing of {name} (hours, contact and description). We review it before publishing: {link}",
-      "error": "The link couldn't be created. Check that migration 0031 is applied in Supabase."
+      "error": "The link couldn't be created. Check that migration 0031 is applied in Supabase.",
+      "emailTitle": "Sign in with email and code",
+      "emailIntro": "If you register the owner’s email, they can sign in to “My business” any time: they enter their email and get a code, with no password and no expiring link.",
+      "emailLabel": "Owner’s email",
+      "emailSave": "Save email",
+      "emailSaved": "Email saved. The owner can now sign in at /local/ingresar.",
+      "emailError": "Could not save: check that the email is written correctly.",
+      "linkSection": "Personal link (without email)"
     },
     "proposals": {
       "title": "Business proposals",
@@ -1071,12 +1081,13 @@
       "fields": {
         "short_description": "Short description",
         "full_description": "Full description",
-        "hours_text": "Opening hours",
+        "hours_text": "Notes about the hours",
         "address": "Address",
         "cta_kind": "Main button on your listing",
         "cta_value": "Button number or link",
         "instagram": "Instagram",
-        "website": "Website"
+        "website": "Website",
+        "hours": "Opening hours"
       },
       "localNote": "Note from the business: {note}",
       "reviewNote": "Note for the business (optional; shown in “My business”)",
@@ -1089,7 +1100,8 @@
       "notPending": "This proposal is no longer pending.",
       "error": "Couldn't save. Try again.",
       "back": "← Proposals",
-      "review": "Review"
+      "review": "Review",
+      "hoursApplied": "When approved, these hours replace the listing’s hours and “Open now” stays up to date."
     },
     "team": {
       "title": "Team",
@@ -1221,6 +1233,31 @@
         "live_start": "Live trip started",
         "camera_start": "Camera opened",
         "listen_play": "Audio played"
+      },
+      "excel": "Download Excel",
+      "png": "Download image",
+      "xlsx": {
+        "indicator": "Indicator",
+        "previous": "Previous period",
+        "change": "Change",
+        "periodEnds": "Period ending",
+        "date": "Date",
+        "interactions": "Interactions",
+        "detailSheet": "Daily detail",
+        "event": "Event",
+        "count": "Count",
+        "placesSheet": "Places",
+        "total": "Total",
+        "step": "Step",
+        "views": "Views",
+        "eventsSheet": "Events",
+        "origin": "Origin (sign or business)",
+        "page": "Page",
+        "visits": "Visits",
+        "searchSheet": "Searches with no results",
+        "search": "Search",
+        "times": "Times",
+        "language": "Language"
       }
     },
     "bulkLinks": {
@@ -1297,7 +1334,8 @@
       "ctaValue": "The button needs its number (with country code) or its full link with https://.",
       "website": "The website must be a full link with https://.",
       "instagram": "Instagram must be a full link with https://.",
-      "name": "Write your name (2 to 80 characters)."
+      "name": "Write your name (2 to 80 characters).",
+      "hours": "The opening hours are not valid: check the opening and closing times."
     },
     "sectionAbout": "Your business",
     "sectionContact": "Contact",
@@ -1312,8 +1350,8 @@
         "help": "What you offer, services, how to get there, what a visitor should know."
       },
       "hours_text": {
-        "label": "Opening hours",
-        "help": "For example: “January and February, every day 12:00–22:00. March to December, weekends and holidays”."
+        "label": "Notes about your hours (optional)",
+        "help": "For example: “Closed on 25 December” or “In winter, by reservation only”."
       },
       "address": {
         "label": "Address",
@@ -1359,7 +1397,48 @@
       "The Municipality reviews your proposal and publishes it in the guide. Here you'll see if it was approved, or the note if something needs fixing.",
       "Come back whenever you want with the same link: save it in your bookmarks or in your WhatsApp."
     ],
-    "helpPhotos": "New photos or your menu? Send them to the Municipality: they upload them to the panel with your permission."
+    "helpPhotos": "New photos or your menu? Send them to the Municipality: they upload them to the panel with your permission.",
+    "hoursPicker": {
+      "legend": "Opening hours",
+      "help": "Tick the days you open and choose the opening and closing time. If it is the same every day, use “Copy to every day”.",
+      "split": "My hours change in summer (January and February)",
+      "summer": "Summer: January and February",
+      "rest": "Rest of the year: March to December",
+      "allYear": "All year",
+      "open": "open",
+      "opens": "Opens",
+      "closes": "Closes",
+      "closed": "Closed",
+      "copyAll": "Copy to every day",
+      "holidays": "I also open on public holidays with these hours",
+      "days": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+    },
+    "email": {
+      "cta": "Sign in with my email",
+      "kicker": "My business",
+      "title": "Sign in with your email",
+      "intro": "Enter the email you registered with the Municipality. We will send you a 6-digit code to sign in, no password needed.",
+      "emailLabel": "Your email",
+      "emailHelp": "The same one you gave the Municipality for your business.",
+      "send": "Send me the code",
+      "sent": "We sent a code to {email}. Check your spam folder too.",
+      "codeLabel": "6-digit code",
+      "codeHelp": "It expires in a few minutes. If it did not arrive, ask for a new one.",
+      "enter": "Sign in",
+      "otherEmail": "Use another email or ask for a new code",
+      "as": "Signed in as {email}.",
+      "switch": "Switch business",
+      "chooseTitle": "Which business do you want to update?",
+      "noPlacesTitle": "Your email has no businesses",
+      "noPlacesBody": "This email is not registered for any business. Ask the Municipality to add it to your business listing, or use the link they sent you.",
+      "errors": {
+        "correo": "Enter a valid email.",
+        "envio": "We could not send the code. Please try again later.",
+        "espera": "You have asked for several codes: wait a few minutes and try again.",
+        "codigo": "The code is wrong or has expired. Check it or ask for a new one.",
+        "sesion": "Your session ended. Sign in again with your email."
+      }
+    }
   },
   "howTo": {
     "title": "How to use the guide",

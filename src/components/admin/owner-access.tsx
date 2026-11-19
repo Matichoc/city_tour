@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import {
   generateOwnerLinkAction,
   revokeOwnerLinkAction,
+  saveOwnerEmailAction,
   type OwnerLinkState,
 } from "@/app/admin/owner-actions";
 import { whatsappHref } from "@/components/share/whatsapp-button";
@@ -27,11 +28,18 @@ export function OwnerAccess({
   placeName,
   status,
   revoked,
+  email,
+  emailSaved = false,
+  emailError = false,
 }: {
   placeId: string;
   placeName: string;
   status: OwnerKeyStatus;
   revoked: boolean;
+  /** Correo con que el locatario entra con código (null si no hay). */
+  email?: string | null;
+  emailSaved?: boolean;
+  emailError?: boolean;
 }) {
   const t = useTranslations("admin.owner");
   const [state, generate, busy] = useActionState<OwnerLinkState, FormData>(
@@ -54,6 +62,42 @@ export function OwnerAccess({
 
   return (
     <div className="space-y-3 text-sm">
+      <form
+        action={saveOwnerEmailAction}
+        className="border-border space-y-2 rounded-xl border p-3"
+      >
+        <input type="hidden" name="placeId" value={placeId} />
+        <p className="font-bold">{t("emailTitle")}</p>
+        <p className="text-muted">{t("emailIntro")}</p>
+        {emailSaved ? (
+          <p role="status" className="bg-sea-soft rounded-lg p-2">
+            {t("emailSaved")}
+          </p>
+        ) : null}
+        {emailError ? (
+          <p role="alert" className="bg-coral/10 text-coral-ink rounded-lg p-2">
+            {t("emailError")}
+          </p>
+        ) : null}
+        <label className="block font-semibold">
+          {t("emailLabel")}
+          <input
+            name="email"
+            type="email"
+            defaultValue={email ?? ""}
+            autoComplete="off"
+            className="border-border bg-surface mt-1 w-full rounded-lg border px-2 py-1.5"
+          />
+        </label>
+        <button
+          type="submit"
+          className="bg-sea-deep rounded-full px-4 py-1.5 font-bold text-white"
+        >
+          {t("emailSave")}
+        </button>
+      </form>
+
+      <p className="font-bold">{t("linkSection")}</p>
       <p className="text-muted">{t("intro")}</p>
       {revoked && !state.link ? (
         <p role="status" className="bg-soft rounded-xl p-3">

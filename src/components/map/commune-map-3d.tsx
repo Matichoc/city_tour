@@ -13,7 +13,9 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { labelMarker, useMapLocale } from "@/components/map/map-locale";
+import { IllustratedImage } from "@/components/ui/illustrated-image";
 import type { CategorySlug } from "@/content/types";
+import type { Picture } from "@/lib/data";
 import {
   CATEGORY_PIN_COLOR,
   MAP_CENTER,
@@ -28,6 +30,10 @@ export type CommunePlace = {
   latitude: number;
   longitude: number;
   category: CategorySlug;
+  /** Para la tarjeta del recorrido automático. */
+  categoryName?: string;
+  short?: string;
+  picture?: Picture;
 };
 
 export type CommuneLocality = {
@@ -47,11 +53,23 @@ const COMMUNE_VIEW_BOUNDS: [number, number, number, number] = [
 ];
 const PITCH_3D = 62;
 const BEARING_3D = -28;
+/** Recorrido automático: cuánto se queda en cada lugar y cómo lo mira. */
+const TOUR_STEP_MS = 7000;
+const TOUR_FLY_MS = 3200;
+const TOUR_ZOOM = 14.6;
+const TOUR_PITCH = 58;
+/** Espera tras el vuelo de entrada antes de empezar a recorrer. */
+const TOUR_START_DELAY_MS = 5200;
 
 /**
  * Mapa de la comuna con relieve 3D, cámara inclinada y vuelo de entrada (se
  * omite si el usuario pidió reducir el movimiento). Los mismos lugares y
  * pueblos están en enlaces bajo el mapa, para quien no use el mapa.
+ *
+ * Recorrido automático: al quedar a la vista, la cámara vuela de un lugar a
+ * otro y muestra una tarjeta con su imagen, nombre y «Ver ficha». Se pausa
+ * con el botón o en cuanto la persona mueve el mapa o toca un punto. No
+ * arranca solo si el usuario pidió reducir el movimiento.
  */
 export function CommuneMap3D({
   places,
@@ -71,6 +89,58 @@ export function CommuneMap3D({
   const [firstSymbolId, setFirstSymbolId] = useState<string | undefined>();
   const [ready, setReady] = useState(false);
   const [selected, setSelected] = useState<Selected | null>(null);
+  const boxRef = useRef<HTMLDivElement>(null);
+  const [touring, setTouring] = useState(false);
+  const [tourIdx, setTourIdx] = useState(0);
+  const autoStarted = useRef(false);
+  const tourStop = places[tourIdx % Math.max(places.length, 1)] ?? null;
+
+  // Arranca solo la primera vez que el mapa queda a la vista (tras el vuelo
+  // de entrada), salvo que se haya pedido reducir el movimiento.
+  useEffect(() => {
+    const box = boxRef.current;
+    if (!box || !ready || places.length === 0 || autoStarted.current) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting || autoStarted.current) return;
+        autoStarted.current = true;
+        io.disconnect();
+        timer = setTimeout(() => setTouring(true), TOUR_START_DELAY_MS);
+      },
+      { threshold: 0.5 },
+    );
+    io.observe(box);
+    return () => {
+      io.disconnect();
+      if (timer) clearTimeout(timer);
+    };
+  }, [ready, places.length]);
+
+  // Cada paso: vuela al lugar y, al rato, pasa al siguiente.
+  useEffect(() => {
+    if (!touring || !ready || !tourStop) return;
+    const map = mapRef.current;
+    if (!map) return;
+    setSelected(null);
+    map.flyTo({
+      center: [tourStop.longitude, tourStop.latitude],
+      zoom: TOUR_ZOOM,
+      pitch: TOUR_PITCH,
+      bearing: ((tourIdx * 47) % 120) - 60,
+      duration: TOUR_FLY_MS,
+      essential: true,
+    });
+    const next = setTimeout(
+      () => setTourIdx((i) => (i + 1) % places.length),
+      TOUR_STEP_MS,
+    );
+    return () => clearTimeout(next);
+  }, [touring, ready, tourIdx, tourStop, places.length]);
+
+  /** La persona toma el control: el recorrido se detiene. */
+  const stopTour = useCallback(() => setTouring(false), []);
 
   const camera = useCallback(
     (threeD: boolean, animate: boolean) => {
@@ -128,6 +198,7 @@ export function CommuneMap3D({
 
   return (
     <div
+      ref={boxRef}
       className={`border-border relative overflow-hidden rounded-3xl border shadow-lg ${className}`}
     >
       <Map
@@ -164,6 +235,17 @@ export function CommuneMap3D({
         }}
         onError={() => {
           if (!loaded.current) setFailed(true);
+        }}
+        // Solo los gestos de la persona (no los vuelos del recorrido) traen
+        // originalEvent: con ellos, el recorrido se detiene.
+        onDragStart={(e) => {
+          if (e.originalEvent) stopTour();
+        }}
+        onZoomStart={(e) => {
+          if (e.originalEvent) stopTour();
+        }}
+        onRotateStart={(e) => {
+          if (e.originalEvent) stopTour();
         }}
         attributionControl={{
           compact: true,
@@ -213,6 +295,7 @@ export function CommuneMap3D({
             anchor="center"
             onClick={(e) => {
               e.originalEvent.stopPropagation();
+              stopTour();
               setSelected({ kind: "place", item: p });
             }}
           >
@@ -233,6 +316,7 @@ export function CommuneMap3D({
             anchor="bottom"
             onClick={(e) => {
               e.originalEvent.stopPropagation();
+              stopTour();
               setSelected({ kind: "locality", item: l });
             }}
           >
@@ -284,7 +368,69 @@ export function CommuneMap3D({
           {t("communeBadge")}
         </span>
       </div>
-      <div className="absolute bottom-8 left-3 flex gap-2">
+      {touring && tourStop ? (
+        <div
+          aria-live="polite"
+          className="bg-surface/95 absolute top-3 right-14 left-3 flex max-w-sm gap-3 rounded-2xl p-2 shadow-lg sm:right-auto"
+          data-testid="tour-card"
+        >
+          {tourStop.picture ? (
+            <IllustratedImage
+              picture={tourStop.picture}
+              className="size-20 shrink-0 rounded-xl"
+            />
+          ) : null}
+          <div className="min-w-0 flex-1">
+            <p className="text-muted text-xs font-bold">
+              {[
+                tourStop.categoryName,
+                t("tourOf", {
+                  n: (tourIdx % places.length) + 1,
+                  total: places.length,
+                }),
+              ]
+                .filter(Boolean)
+                .join(" · ")}
+            </p>
+            <p className="font-display truncate text-base leading-tight font-extrabold">
+              {tourStop.name}
+            </p>
+            {tourStop.short ? (
+              <p className="text-muted line-clamp-2 text-xs">
+                {tourStop.short}
+              </p>
+            ) : null}
+            <Link
+              href={{
+                pathname: "/lugares/[slug]",
+                params: { slug: tourStop.slug },
+              }}
+              className="text-sea text-sm font-bold underline"
+            >
+              {t("viewPlace")}
+            </Link>
+          </div>
+        </div>
+      ) : null}
+
+      <div className="absolute bottom-8 left-3 flex flex-wrap gap-2">
+        {places.length > 0 ? (
+          <button
+            type="button"
+            aria-pressed={touring}
+            onClick={() => {
+              if (touring) {
+                stopTour();
+                return;
+              }
+              autoStarted.current = true;
+              setTouring(true);
+            }}
+            className="bg-sea-deep min-h-11 rounded-full px-4 text-sm font-extrabold text-white shadow-lg active:scale-95"
+          >
+            {touring ? t("tourPause") : t("tourStart")}
+          </button>
+        ) : null}
         <button
           type="button"
           aria-pressed={is3d}
@@ -299,7 +445,10 @@ export function CommuneMap3D({
         </button>
         <button
           type="button"
-          onClick={() => camera(is3d, true)}
+          onClick={() => {
+            stopTour();
+            camera(is3d, true);
+          }}
           className="text-sea-deep min-h-11 rounded-full bg-white/95 px-4 text-sm font-extrabold shadow-lg active:scale-95"
         >
           {t("recenter")}

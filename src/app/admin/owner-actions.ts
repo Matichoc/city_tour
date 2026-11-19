@@ -8,6 +8,7 @@ import {
   createOwnerKey,
   reviewProposal,
   revokeOwnerKeys,
+  setOwnerEmail,
 } from "@/lib/admin/owner";
 
 const UUID = /^[0-9a-f-]{36}$/;
@@ -118,4 +119,23 @@ export async function reviewProposalAction(formData: FormData) {
   }
   if (approve) updateTag("content");
   redirect(`/admin/propuestas?${approve ? "aprobada" : "rechazada"}=1`);
+}
+
+/** Registra o quita el correo con que el locatario entra a «Mi local». */
+export async function saveOwnerEmailAction(formData: FormData) {
+  const session = await moderator();
+  const placeId = text(formData.get("placeId"));
+  const email = text(formData.get("email")).toLowerCase();
+  const back = `/admin/comercios/${placeId}`;
+  if (!UUID.test(placeId) || !canModerate(session))
+    redirect(`${back}?error=save#acceso`);
+  if (email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email))
+    redirect(`${back}?correoError=1#acceso`);
+  try {
+    await setOwnerEmail(session, placeId, email);
+  } catch (error) {
+    console.error("[admin] no se pudo guardar el correo del local", error);
+    redirect(`${back}?correoError=1#acceso`);
+  }
+  redirect(`${back}?correoGuardado=1#acceso`);
 }
