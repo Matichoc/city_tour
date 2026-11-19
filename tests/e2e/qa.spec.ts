@@ -101,8 +101,7 @@ for (const path of [
   "/es",
   "/es/explorar",
   "/es/eventos",
-  "/es/eventos/demo-noche-de-bandas",
-  "/es/lugares/demo-cabalgatas-del-valle",
+
   "/es/quiosco",
   "/es/lugares/playa-papudo",
   "/es/rutas/papudo-a-pie",

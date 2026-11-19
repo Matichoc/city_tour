@@ -6,8 +6,8 @@ select tests.eq('ningún contenido cargado aparece verificado',
 select tests.eq('todo lugar publicado tiene ficha en español',
   (select count(*)::int from public.places p where publication_status = 'published'
      and not exists (select 1 from public.place_translations t where t.place_id = p.id and t.locale = 'es')), 0);
-select tests.eq('las fichas de ejemplo quedan marcadas',
-  (select count(*)::int > 0 from public.places where is_demo and slug like 'demo-%'), true);
+select tests.eq('no se cargan fichas de ejemplo',
+  (select count(*)::int from public.places where is_demo), 0);
 select tests.eq('ningún lugar real quedó marcado como ejemplo',
   (select count(*)::int from public.places where is_demo and slug not like 'demo-%'), 0);
 select tests.eq('hay traducciones al portugués',

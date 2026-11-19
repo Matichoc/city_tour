@@ -362,10 +362,9 @@ describe("contenido de EJEMPLO (ficticio) para la demostración", () => {
     }
     expect(DEMO_PLACES.every((p) => p.slug.startsWith("demo-"))).toBe(true);
   });
-  it("hay un ejemplo por cada producto de la guía", () => {
-    expect(new Set(DEMO_PLACES.map((p) => p.categorySlug))).toEqual(
-      new Set(listCategories("es").map((c) => c.slug)),
-    );
+  it("ya no hay fichas, eventos ni opiniones de ejemplo: la guía usa locales reales", () => {
+    expect(DEMO_PLACES).toEqual([]);
+    expect(Object.keys(DEMO_REVIEWS)).toEqual([]);
   });
   it("las opiniones simuladas solo existen sobre fichas y eventos ficticios, nunca reales", () => {
     for (const slug of Object.keys(DEMO_REVIEWS)) {
@@ -379,13 +378,5 @@ describe("contenido de EJEMPLO (ficticio) para la demostración", () => {
       expect(demoSlugs.has(s)).toBe(false);
     for (const s of listIndexableEventSlugs())
       expect(s.startsWith("demo-")).toBe(false);
-  });
-  it("calcula el promedio de las opiniones simuladas", () => {
-    const r = seededRating("demo-cabalgatas-del-valle");
-    expect(r.count).toBe(3);
-    expect(r.average).toBeCloseTo((5 + 4 + 5) / 3, 5);
-    expect(getPlace("demo-cabalgatas-del-valle", "en")!.fallbackToSpanish).toBe(
-      false,
-    );
   });
 });

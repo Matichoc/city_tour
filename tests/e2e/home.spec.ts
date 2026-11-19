@@ -293,44 +293,6 @@ test("eventos destacados: carrusel con flechas, puntos y pausa, y detalle con va
   await expect(page.getByText("Sin valoraciones aún").first()).toBeVisible();
 });
 
-test("ficha de ejemplo: opiniones simuladas y el visitante puede escribir la suya (demo)", async ({
-  page,
-}) => {
-  await page.goto("/es/lugares/demo-cabalgatas-del-valle");
-  await expect(
-    page.getByText(/Ficha de ejemplo: este negocio es ficticio/),
-  ).toBeVisible();
-  await expect(page.getByText("4.7").first()).toBeVisible();
-  // Una ficha de ejemplo no tiene "Cómo llegar" ni se indexa.
-  await expect(page.getByRole("link", { name: "Cómo llegar" })).toHaveCount(0);
-  await expect(page.locator('meta[name="robots"]')).toHaveAttribute(
-    "content",
-    /noindex/,
-  );
-  // El visitante escribe su opinión.
-  await page.getByRole("button", { name: "Publicar mi opinión" }).click();
-  await expect(page.getByText("Elige de 1 a 5 estrellas.")).toBeVisible();
-  await page
-    .getByRole("radio", { name: "5 de 5 estrellas" })
-    .check({ force: true });
-  await page
-    .getByLabel(/^Tu opinión/)
-    .fill("Prueba de demostración: lo pasamos genial.");
-  await page.getByLabel("Tu nombre (opcional)").fill("Cristóbal");
-  await page.getByRole("button", { name: "Publicar mi opinión" }).click();
-  await expect(page.getByRole("status")).toContainText("¡Gracias!");
-  const lista = page.getByRole("list", { name: "Lista de opiniones" });
-  await expect(lista).toContainText(
-    "Prueba de demostración: lo pasamos genial.",
-  );
-  await expect(lista).toContainText("Tu opinión · demo");
-  // Se conserva en este dispositivo y se puede borrar.
-  await page.reload();
-  await expect(lista).toContainText("Prueba de demostración");
-  await page.getByRole("button", { name: "Borrar mi opinión" }).click();
-  await expect(lista).not.toContainText("Prueba de demostración");
-});
-
 test("una ficha real no tiene formulario de opiniones ni opiniones inventadas", async ({
   page,
 }) => {
