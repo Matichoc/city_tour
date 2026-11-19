@@ -14,13 +14,13 @@ indicadas en cada versión.
 `docs/bitacora-notas.json` (clave `actual`, y el número de PR cuando exista),
 correr `pnpm bitacora` y subir el cambio en el mismo PR.
 
-## En preparación: v0.55 — Seguridad: Next.js 16.4.6
+## En preparación: v0.56 — Sin fichas de ejemplo: solo locales y servicios reales
 
-Actualiza Next.js y eslint-config-next de 16.3.8 a 16.4.6 para cerrar los avisos de seguridad de Next publicados para 16.3.8 (dos críticos de ejecución remota en «use cache» y en la optimización de imágenes con SVG, uno alto de denegación de servicio con Server Actions y dos moderados de caché). Sin cambios de funcionalidad. Sin migraciones.
+Con los más de 100 lugares y servicios de la Guía Turística Papudo 2026 ya cargados, se quitan las 7 fichas y los 2 eventos de ejemplo (ficticios) con sus opiniones simuladas; supabase/content.sql ya no los carga y supabase/manual/quitar-fichas-ejemplo.sql los borra de la base. La interfaz conserva cómo rotular una ficha de ejemplo, sin ninguna cargada. Pruebas ajustadas. Sin migraciones.
 
 - **Migraciones por correr en Supabase:** —
-- **Estado:** en revisión, [PR #63](https://github.com/Matichoc/city_tour/pull/63) (aún no está en `develop`).
-- **Última actualización de esta bitácora:** 2026-11-17 18:14
+- **Estado:** en revisión, [PR #64](https://github.com/Matichoc/city_tour/pull/64) (aún no está en `develop`).
+- **Última actualización de esta bitácora:** 2026-11-18 22:54
 
 ## Avance por día
 
@@ -29,7 +29,7 @@ trabajadas: hay pausas y trabajo sin registrar).
 
 | Día | Ventana de actividad | Registros | Versiones entregadas |
 | --- | --- | ---: | --- |
-| Martes, 17 de noviembre de 2026 | 00:05 – 00:05 | 1 | v0.54 |
+| Martes, 17 de noviembre de 2026 | 00:05 – 18:31 | 2 | v0.54, v0.55 |
 | Jueves, 12 de noviembre de 2026 | 00:25 – 21:58 | 6 | v0.52, v0.53 |
 | Lunes, 9 de noviembre de 2026 | 00:34 – 00:34 | 1 | v0.51 |
 | Domingo, 8 de noviembre de 2026 | 12:13 – 12:13 | 1 | v0.50 |
@@ -45,6 +45,17 @@ trabajadas: hay pausas y trabajo sin registrar).
 | Lunes, 12 de octubre de 2026 | 15:43 – 17:53 | 10 | v0.1, v0.2, v0.3, v0.4 |
 
 ## Versiones
+
+### v0.55 — Seguridad: Next.js 16.4.6
+Martes, 17 de noviembre de 2026, 18:35 · [PR #63](https://github.com/Matichoc/city_tour/pull/63)
+
+Actualiza Next.js y eslint-config-next de 16.3.8 a 16.4.6 para cerrar los avisos de seguridad de Next publicados para 16.3.8 (dos críticos de ejecución remota en «use cache» y en la optimización de imágenes con SVG, uno alto de denegación de servicio con Server Actions y dos moderados de caché). Sin cambios de funcionalidad. Sin migraciones.
+
+**Migraciones en Supabase:** —
+
+Registros:
+
+- 11-17 18:31 — Seguridad: Next.js 16.4.6 (`44b99b8`)
 
 ### v0.54 — Íconos de la app con el isotipo de Papudo
 Martes, 17 de noviembre de 2026, 00:06 · [PR #62](https://github.com/Matichoc/city_tour/pull/62)

@@ -13,7 +13,7 @@ select tests.login('anon');
 select tests.eq('anon comenta un lugar publicado',
   (select tests.submit_review('place', 'playa-papudo', 'Ana', 5::smallint, 'Muy linda la playa', repeat('a', 32))) is not null, true);
 select tests.eq('anon comenta un evento publicado',
-  (select tests.submit_review('event', 'demo-noche-de-bandas', 'Beto', 4::smallint, 'Buen ambiente', repeat('b', 32))) is not null, true);
+  (select tests.submit_review('event', 'feria-internacional-integracion-papudo', 'Beto', 4::smallint, 'Buen ambiente', repeat('b', 32))) is not null, true);
 select tests.raises('no se comenta lo que no existe',
   $$select tests.submit_review('place', 'no-existe', 'Ana', 5::smallint, 'Hola hola', repeat('c', 32))$$, 'P0002');
 select tests.raises('estrellas fuera de rango',
