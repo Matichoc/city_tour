@@ -18,6 +18,9 @@ import {
   type PathStatus,
 } from "@/components/map/use-street-path";
 import { formatMeters } from "@/lib/live-nav";
+import { useNear } from "@/lib/near-store";
+import { FAR_FROM_COMMUNE_KM } from "@/lib/near";
+import { haversineDistanceKm } from "@/lib/itinerary-engine/geo";
 import type { RouteMode, StreetRoute } from "@/lib/routing/types";
 import type { CategorySlug } from "@/content/types";
 import {
@@ -63,8 +66,14 @@ export function PlacesMap({
   connect = false,
   className = "h-72",
   street,
+  nearOrigin = false,
 }: {
   markers: MapMarker[];
+  /**
+   * Explorar: muestra el punto de partida de «Cerca de ti» (tu ubicación o el
+   * pueblo elegido) y acerca el mapa ahí. Se lee del teléfono, nunca del servidor.
+   */
+  nearOrigin?: boolean;
   /** Une los puntos en orden con el camino por calles (a pie o en auto). */
   connect?: boolean;
   className?: string;
@@ -86,6 +95,23 @@ export function PlacesMap({
   const [selected, setSelected] = useState<MapMarker | null>(null);
   const [failed, setFailed] = useState(false);
   const loaded = useRef(false);
+  const near = useNear();
+  const origin = nearOrigin && near.sortNear ? near.origin : null;
+
+  // Al elegir un punto de partida en la comuna, el mapa se acerca ahí.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !origin) return;
+    const km = haversineDistanceKm(origin, MAP_CENTER);
+    if (km > FAR_FROM_COMMUNE_KM) return;
+    map.easeTo({
+      center: [origin.longitude, origin.latitude],
+      zoom: 14,
+      duration: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+        ? 0
+        : 600,
+    });
+  }, [origin]);
 
   const fit = useCallback(() => {
     const map = mapRef.current;
@@ -267,6 +293,19 @@ export function PlacesMap({
             </span>
           </Marker>
         ))}
+        {origin ? (
+          <Marker
+            latitude={origin.latitude}
+            longitude={origin.longitude}
+            anchor="center"
+          >
+            <span
+              title={origin.kind === "gps" ? t("youAreHere") : t("startHere")}
+              data-testid="near-origin"
+              className="bg-sea block size-5 rounded-full border-[3px] border-white shadow-[0_0_0_6px_rgba(40,50,112,.25)]"
+            />
+          </Marker>
+        ) : null}
         {selected && !selected.detail ? (
           <Popup
             latitude={selected.latitude}

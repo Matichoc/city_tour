@@ -14,6 +14,8 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { BusinessInvite } from "@/components/business/business-invite";
 import { PlaceRow } from "@/components/place/place-row";
 import { PlacesMap } from "@/components/map/places-map";
+import { NearList } from "@/components/near/near-list";
+import { nearLocalities } from "@/lib/near";
 import { TrackView } from "@/components/analytics/track-view";
 import { FilterMenu, type FilterItem } from "@/components/ui/filter-menu";
 import {
@@ -195,6 +197,9 @@ export default async function ExplorePage({
       ? categories.find((c) => c.slug === category)
       : undefined;
 
+  // Pueblos con coordenadas: puntos de partida de «Cerca de ti».
+  const nearTowns = nearLocalities(localities);
+
   const markers = places.filter(isLocated).map((p) => ({
     slug: p.slug,
     name: p.name,
@@ -371,16 +376,19 @@ export default async function ExplorePage({
         </EmptyState>
       ) : (
         <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)]">
-          <ul
-            aria-label={t("placesList")}
-            className={view === "map" ? "hidden lg:block" : ""}
-          >
-            {places.map((p) => (
-              <li key={p.slug}>
-                <PlaceRow place={p} doorName={doorName(p.categorySlug)} />
-              </li>
-            ))}
-          </ul>
+          <NearList
+            label={t("placesList")}
+            hidden={view === "map"}
+            localities={nearTowns}
+            items={places.map((p) => ({
+              slug: p.slug,
+              latitude: p.latitude,
+              longitude: p.longitude,
+              localitySlug: p.localitySlug,
+              localityName: p.localityName,
+              node: <PlaceRow place={p} doorName={doorName(p.categorySlug)} />,
+            }))}
+          />
           {/* En computador el mapa acompaña a la lista; en el celular solo se
               muestra al elegir «Mapa». */}
           <div
@@ -389,6 +397,7 @@ export default async function ExplorePage({
             <PlacesMap
               className="h-[70dvh] lg:h-[calc(100dvh-7rem)]"
               markers={markers}
+              nearOrigin
             />
           </div>
         </div>

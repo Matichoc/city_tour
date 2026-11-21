@@ -20,7 +20,9 @@ import {
 } from "@/components/home/featured-card";
 import { eventWhen } from "@/lib/event-format";
 import { daysUntil, eventsInWindow, todayInChile } from "@/lib/featured";
-import { DOORS, SERVICE_CATEGORIES } from "@/lib/doors";
+import { DOORS, SERVICE_CATEGORIES, styleOf } from "@/lib/doors";
+import { NearHome } from "@/components/near/near-home";
+import { nearLocalities } from "@/lib/near";
 import { QrVisit } from "@/components/analytics/qr-visit";
 import { JsonLd } from "@/components/seo/json-ld";
 import { PAPUDO_CENTER } from "@/content/catalog";
@@ -238,6 +240,23 @@ export default async function HomePage({
           <NoticeList notices={notices} />
         </div>
       ) : null}
+
+      <NearHome
+        localities={nearLocalities(localities)}
+        places={candidates.map((p) => ({
+          slug: p.slug,
+          name: p.name,
+          latitude: p.latitude,
+          longitude: p.longitude,
+          localitySlug: p.localitySlug,
+          localityName: p.localityName,
+          categorySlug: p.categorySlug,
+          image: p.logo?.src ?? p.picture.src,
+          frame: styleOf(p.categorySlug).frame,
+          logo: Boolean(p.logo) || p.picture.kind === "logo",
+          ai: !p.logo && !p.picture.kind,
+        }))}
+      />
 
       <div className="grid gap-10 pt-12 lg:grid-cols-[1fr_1.5fr]">
         {upcoming.length > 0 ? (
