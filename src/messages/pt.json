@@ -286,7 +286,9 @@
     },
     "tourStart": "▶ Percorrer a comuna",
     "tourPause": "⏸ Pausar passeio",
-    "tourOf": "{n} de {total}"
+    "tourOf": "{n} de {total}",
+    "youAreHere": "Você está aqui",
+    "startHere": "Ponto de partida"
   },
   "info": {
     "title": "Informações",
@@ -1501,5 +1503,34 @@
         "cta": "Informações"
       }
     }
+  },
+  "near": {
+    "sortLabel": "Ordenar:",
+    "suggested": "Sugeridos",
+    "nearest": "Mais perto",
+    "pickTitle": "De onde buscamos o mais próximo?",
+    "useLocation": "Usar minha localização",
+    "locating": "Buscando sua localização…",
+    "orFrom": "ou a partir de",
+    "change": "Mudar ponto de partida",
+    "fromYou": "A partir da sua localização",
+    "fromTown": "A partir de {town}",
+    "fromFar": "Você está a {km} de Papudo: mostramos o mais próximo da sua chegada",
+    "inTown": "Em {town}",
+    "noLocation": "Sem localização",
+    "away": "A {distance}",
+    "straightLine": "Distâncias em linha reta. Os lugares sem localização exata aparecem pela sua cidade. Sua localização é usada só no seu telefone: não é enviada nem salva.",
+    "privacy": "Sua localização é usada só no seu telefone, durante a sua visita.",
+    "denied": "Você não permitiu ver sua localização. Escolha uma cidade ou ative-a nos ajustes do navegador.",
+    "unavailable": "Não conseguimos encontrar sua localização. Escolha uma cidade para continuar.",
+    "homeTitle": "Perto de você",
+    "homeIntro": "Diga onde você está —ou para onde vai— e mostramos o mais próximo para comer, dormir e passear.",
+    "group": {
+      "eat": "Para comer",
+      "sleep": "Para dormir",
+      "visit": "O que visitar"
+    },
+    "seeMore": "Ver mais",
+    "noneYet": "Ainda não há lugares nesta seção."
   }
 }
